@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Story Time - Magical Personalized Stories</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .account-section {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .account-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        select.form-control {
+            background: white;
+            cursor: pointer;
+        }
+
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .theme-card {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .theme-card:hover, .theme-card.selected {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-card .emoji {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .theme-card .title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .generate-section {
+            text-align: center;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .generate-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .story-output {
+            margin-top: 30px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            display: none;
+        }
+
+        .story-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .story-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #444;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .auth-form {
+            margin-top: 20px;
+        }
+
+        .auth-form h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .auth-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        .user-info {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .limits-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .upgrade-prompt {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .main-content {
+                padding: 25px;
+            }
+            
+            .account-buttons {
+                flex-direction: column;
+            }
+            
+            .themes-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 10px;
+            }
+            
+            .theme-card {
+                padding: 15px;
+            }
+            
+            .theme-card .emoji {
+                font-size: 1.5rem;
+            }
+        }
+
+        .alert {
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+  <div class="container">
+      <header class="header">
+          <div class="logo">✨ Kids Story Time ✨</div>
+          <div class="tagline">Magical Personalized Stories for Your Child</div>
+      </header>
+
+      <main class="main-content">
+          <!-- User Authentication Section -->
+          <div id="authSection" class="account-section">
+              <h2>Create Your Free Account</h2>
+              <p>Join thousands of parents creating magical stories for their children!</p>
+              <div class="account-buttons">
+                  <button id="createAccountBtn" class="btn btn-primary">Create Free Account</button>
+                  <button id="loginBtn" class="btn btn-secondary">Login</button>
+              </div>
+          </div>
+
+          <!-- Logged In User Info -->
+          <div id="userInfo" class="user-info" style="display: none;">
+              <h3>Welcome back, <span id="userName"></span>!</h3>
+              <p>Child: <span id="childName"></span></p>
+              <div id="limitsDisplay" class="limits-info">
+                  <p><strong>Free Plan:</strong> <span id="storiesRemaining">1</span> story remaining today</p>
+              </div>
+              <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+          </div>
+
+          <!-- Story Creation Form -->
+          <div class="form-section">
+              <div class="form-group">
+                  <label for="childName">Child's Name</label>
+                  <input type="text" id="childNameInput" class="form-control" placeholder="Enter your child's name" required>
+              </div>
+
+              <div class="form-group">
+                  <label for="childAge">Child's Age</label>
+                  <select id="childAge" class="form-control" required>
+                      <option value="">Select age</option>
+                      <option value="3">3 years old</option>
+                      <option value="4">4 years old</option>
+                      <option value="5">5 years old</option>
+                      <option value="6">6 years old</option>
+                      <option value="7">7 years old</option>
+                      <option value="8">8 years old</option>
+                      <option value="9">9 years old</option>
+                      <option value="10">10 years old</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="storyLength">Story Length</label>
+                  <select id="storyLength" class="form-control" required>
+                      <option value="">Select length</option>
+                      <option value="short">Short (2-3 minutes)</option>
+                      <option value="medium">Medium (5-7 minutes)</option>
+                      <option value="long">Long (10-15 minutes)</option>
+                  </select>
+              </div>
+          </div>
+
+          <!-- Story Themes -->
+          <div class="form-section">
+              <label>Choose a Story Theme</label>
+              <div class="themes-grid">
+                  <div class="theme-card" data-theme="adventure">
+                      <span class="emoji">🏰</span>
+                      <div class="title">Adventure</div>
+                  </div>
+                  <div class="theme-card" data-theme="animals">
+                      <span class="emoji">🦁</span>
+                      <div class="title">Animals</div>
+                  </div>
+                  <div class="theme-card" data-theme="space">
+                      <span class="emoji">🚀</span>
+                      <div class="title">Space</div>
+                  </div>
+                  <div class="theme-card" data-theme="fantasy">
+                      <span class="emoji">🧚</span>
+                      <div class="title">Fantasy</div>
+                  </div>
+                  <div class="theme-card" data-theme="ocean">
+                      <span class="emoji">🌊</span>
+                      <div class="title">Ocean</div>
+                  </div>
+                  <div class="theme-card" data-theme="friendship">
+                      <span class="emoji">🤝</span>
+                      <div class="title">Friendship</div>
+                  </div>
+                  <div class="theme-card" data-theme="nature">
+                      <span class="emoji">🌳</span>
+                      <div class="title">Nature</div>
+                  </div>
+                  <div class="theme-card" data-theme="superhero">
+                      <span class="emoji">🦸</span>
+                      <div class="title">Superhero</div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Generate Button -->
+          <div class="generate-section">
+              <button id="generateBtn" class="generate-btn">Generate My Story! ✨</button>
+          </div>
+
+          <!-- Loading Animation -->
+          <div id="loading" class="loading">
+              <div class="spinner"></div>
+              <p>Creating your magical story...</p>
+          </div>
+
+          <!-- Story Output -->
+          <div id="storyOutput" class="story-output">
+              <div class="story-title" id="storyTitle"></div>
+              <div class="story-content" id="storyContent"></div>
+              
+              <!-- Upgrade Prompt for Free Users -->
+              <div id="upgradePrompt" class="upgrade-prompt" style="display: none;">
+                  <h4>🌟 Enjoyed this story? Get unlimited access!</h4>
+                  <p>Upgrade to Premium for unlimited stories, custom themes, and exclusive features!</p>
+                  <button class="btn btn-primary">Upgrade to Premium - £4.99/month</button>
+              </div>
+          </div>
+      </main>
+
+      <footer class="footer">
+          <p>&copy; 2025 Kids Story Time. All rights reserved.</p>
+          <p>
+              <a href="terms.html" target="_blank">Terms of Service</a> | 
+              <a href="privacy.html" target="_blank">Privacy Policy</a> | 
+              <a href="mailto:support@kidsstorytime.org">Contact Us</a>
+          </p>
+      </footer>
+  </div>
+
+  <!-- Account Creation Modal -->
+  <div id="accountModal" class="modal">
+      <div class="modal-content">
+          <span class="close" id="closeModal">&times;</span>
+          <div class="auth-form">
+              <h3>Create Your Free Account</h3>
+              <div id="authAlert"></div>
+              <form id="signupForm">
+                  <div class="form-group">
+                      <label for="signupEmail">Email Address</label>
+                      <input type="email" id="signupEmail" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="signupPassword">Password</label>
+                      <input type="password" id="signupPassword" class="form-control" required minlength="6">
+                  </div>
+                  <div class="form-group">
+                      <label for="signupChildName">Child's Name</label>
+                      <input type="text" id="signupChildName" class="form-control" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+              </form>
+              <div class="auth-links">
+                  <p>By creating an account, you agree to our <a href="terms.html" target="_blank">Terms of Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a></p>
+                  <p><a href="#" id="switchToLogin">Already have an account? Login here</a></p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+      <div class="modal-content">
+          <span class="close" id="closeLoginModal">&times;</span>
+          <div class="auth-form">
+              <h3>Login to Your Account</h3>
+              <div id="loginAlert"></div>
+              <form id="loginForm">
+                  <div class="form-group">
+                      <label for="loginEmail">Email Address</label>
+                      <input type="email" id="loginEmail" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="loginPassword">Password</label>
+                      <input type="password" id="loginPassword" class="form-control" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+              </form>
+              <div class="auth-links">
+                  <p><a href="#" id="switchToSignup">Don't have an account? Sign up here</a></p>
+                  <p><a href="#" id="forgotPassword">Forgot your password?</a></p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Include Supabase configuration and managers -->
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth-manager.js"></script>
+  <script src="js/database-manager.js"></script>
+  
+  <script>
+      // Global variables
+      let selectedTheme = '';
+      let currentUser = null;
+
+      // Utility function to get currency based on location
+      function getCurrency() {
+          const locale = navigator.language || 'en-US';
+          return locale.startsWith('en-GB') ? '£' : '$';
+      }
+
+      // Initialize the application
+      document.addEventListener('DOMContentLoaded', async function() {
+          console.log('Kids Story Time app initializing...');
+          
+          // Wait for auth manager to be ready
+          if (typeof window.authManager !== 'undefined') {
+              // Check if user is already logged in
+              currentUser = await window.authManager.getCurrentUser();
+              updateUI();
+          }
+
+          // Theme selection
+          document.querySelectorAll('.theme-card').forEach(card => {
+              card.addEventListener('click', function() {
+                  // Remove selected class from all cards
+                  document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+                  // Add selected class to clicked card
+                  this.classList.add('selected');
+                  selectedTheme = this.dataset.theme;
+              });
+          });
+
+          // Generate button click
+          document.getElementById('generateBtn').addEventListener('click', generateStory);
+
+          // Modal controls
+          document.getElementById('createAccountBtn').addEventListener('click', () => {
+              document.getElementById('accountModal').style.display = 'block';
+          });
+
+          document.getElementById('loginBtn').addEventListener('click', () => {
+              document.getElementById('loginModal').style.display = 'block';
+          });
+
+          document.getElementById('closeModal').addEventListener('click', () => {
+              document.getElementById('accountModal').style.display = 'none';
+          });
+
+          document.getElementById('closeLoginModal').addEventListener('click', () => {
+              document.getElementById('loginModal').style.display = 'none';
+          });
+
+          document.getElementById('switchToLogin').addEventListener('click', (e) => {
+              e.preventDefault();
+              document.getElementById('accountModal').style.display = 'none';
+              document.getElementById('loginModal').style.display = 'block';
+          });
+
+          document.getElementById('switchToSignup').addEventListener('click', (e) => {
+              e.preventDefault();
+              document.getElementById('loginModal').style.display = 'none';
+              document.getElementById('accountModal').style.display = 'block';
+          });
+
+          // Form submissions
+          document.getElementById('signupForm').addEventListener('submit', handleSignup);
+          document.getElementById('loginForm').addEventListener('submit', handleLogin);
+
+          // Logout button
+          document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+
+          // Close modals when clicking outside
+          window.addEventListener('click', function(event) {
+              const accountModal = document.getElementById('accountModal');
+              const loginModal = document.getElementById('loginModal');
+              if (event.target === accountModal) {
+                  accountModal.style.display = 'none';
+              }
+              if (event.target === loginModal) {
+                  loginModal.style.display = 'none';
+              }
+          });
+      });
+
+      // Authentication functions
+      async function handleSignup(e) {
+          e.preventDefault();
+          const submitBtn = e.target.querySelector('button[type="submit"]');
+          const originalText = submitBtn.textContent;
+          
+          try {
+              submitBtn.textContent = 'Creating Account...';
+              submitBtn.disabled = true;
+
+              const email = document.getElementById('signupEmail').value;
+              const password = document.getElementById('signupPassword').value;
+              const childName = document.getElementById('signupChildName').value;
+
+              const result = await window.authManager.signUp(email, password, {
+                  child_name: childName
+              });
+
+              if (result.error) {
+                  showAlert('authAlert', result.error.message, 'error');
+              } else {
+                  showAlert('authAlert', 'Account created! Please check your email to confirm your account.', 'success');
+                  document.getElementById('signupForm').reset();
+              }
+          } catch (error) {
+              showAlert('authAlert', 'An error occurred. Please try again.', 'error');
+          } finally {
+              submitBtn.textContent = originalText;
+              submitBtn.disabled = false;
+          }
+      }
+
+      async function handleLogin(e) {
+          e.preventDefault();
+          const submitBtn = e.target.querySelector('button[type="submit"]');
+          const originalText = submitBtn.textContent;
+          
+          try {
+              submitBtn.textContent = 'Logging in...';
+              submitBtn.disabled = true;
+
+              const email = document.getElementById('loginEmail').value;
+              const password = document.getElementById('loginPassword').value;
+
+              const result = await window.authManager.signIn(email, password);
+
+              if (result.error) {
+                  showAlert('loginAlert', result.error.message, 'error');
+              } else {
+                  currentUser = result.data.user;
+                  document.getElementById('loginModal').style.display = 'none';
+                  updateUI();
+                  showAlert('main', 'Welcome back! You\'re now logged in.', 'success');
+              }
+          } catch (error) {
+              showAlert('loginAlert', 'An error occurred. Please try again.', 'error');
+          } finally {
+              submitBtn.textContent = originalText;
+              submitBtn.disabled = false;
+          }
+      }
+
+      async function handleLogout() {
+          try {
+              await window.authManager.signOut();
+              currentUser = null;
+              updateUI();
+              showAlert('main', 'You\'ve been logged out successfully.', 'info');
+          } catch (error) {
+              console.error('Logout error:', error);
+          }
+      }
+
+      // UI update functions
+      function updateUI() {
+          const authSection = document.getElementById('authSection');
+          const userInfo = document.getElementById('userInfo');
+          
+          if (currentUser) {
+              authSection.style.display = 'none';
+              userInfo.style.display = 'block';
+              
+              // Update user info
+              document.getElementById('userName').textContent = currentUser.email;
+              // Child name would come from profile data
+              document.getElementById('childName').textContent = 'Loading...';
+              
+              // Load user profile and update UI
+              loadUserProfile();
+          } else {
+              authSection.style.display = 'block';
+              userInfo.style.display = 'none';
+          }
+      }
+
+      async function loadUserProfile() {
+          if (!window.dbManager || !currentUser) return;
+          
+          try {
+              const profile = await window.dbManager.getUserProfile(currentUser.id);
+              if (profile) {
+                  document.getElementById('childName').textContent = profile.child_name || 'Not set';
+              }
+              
+              // Check daily limits
+              const canGenerate = await window.dbManager.canGenerateStory(currentUser.id);
+              updateLimitsDisplay(canGenerate);
+          } catch (error) {
+              console.error('Error loading profile:', error);
+          }
+      }
+
+      function updateLimitsDisplay(canGenerate) {
+          const limitsDisplay = document.getElementById('limitsDisplay');
+          const generateBtn = document.getElementById('generateBtn');
+          
+          if (canGenerate) {
+              limitsDisplay.innerHTML = '<p><strong>Free Plan:</strong> 1 story remaining today</p>';
+              generateBtn.disabled = false;
+          } else {
+              limitsDisplay.innerHTML = '<p><strong>Free Plan:</strong> Daily limit reached. <a href="#upgrade">Upgrade to Premium</a> for unlimited stories!</p>';
+              generateBtn.disabled = true;
+          }
+      }
+
+      // Story generation function
+      async function generateStory() {
+          const childName = document.getElementById('childNameInput').value;
+          const childAge = document.getElementById('childAge').value;
+          const storyLength = document.getElementById('storyLength').value;
+
+          if (!childName || !childAge || !storyLength || !selectedTheme) {
+              alert('Please fill in all fields and select a theme!');
+              return;
+          }
+
+          // Check if user is logged in and has remaining stories
+          if (currentUser) {
+              const canGenerate = await window.dbManager.canGenerateStory(currentUser.id);
+              if (!canGenerate) {
+                  alert('You\'ve reached your daily limit. Please upgrade to Premium for unlimited stories!');
+                  return;
+              }
+          }
+
+          // Show loading
+          document.getElementById('loading').style.display = 'block';
+          document.getElementById('storyOutput').style.display = 'none';
+          document.getElementById('generateBtn').disabled = true;
+
+          try {
+              // Simulate story generation (replace with actual OpenAI API call)
+              const story = await generateStoryContent(childName, childAge, storyLength, selectedTheme);
+              
+              // Save story to database if user is logged in
+              if (currentUser && window.dbManager) {
+                  await window.dbManager.saveStory(currentUser.id, {
+                      title: story.title,
+                      content: story.content,
+                      theme: selectedTheme,
+                      child_name: childName,
+                      child_age: childAge,
+                      story_length: storyLength
+                  });
+                  
+                  // Track usage
+                  await window.dbManager.trackUsage(currentUser.id, 'story_generation');
+                  
+                  // Update limits display
+                  const canGenerate = await window.dbManager.canGenerateStory(currentUser.id);
+                  updateLimitsDisplay(canGenerate);
+              }
+
+              // Display story
+              document.getElementById('storyTitle').textContent = story.title;
+              document.getElementById('storyContent').textContent = story.content;
+              document.getElementById('storyOutput').style.display = 'block';
+              
+              // Show upgrade prompt for free users
+              if (!currentUser || !currentUser.subscription) {
+                  document.getElementById('upgradePrompt').style.display = 'block';
+              }
+
+          } catch (error) {
+              alert('Sorry, there was an error generating your story. Please try again!');
+              console.error('Story generation error:', error);
+          } finally {
+              document.getElementById('loading').style.display = 'none';
+              document.getElementById('generateBtn').disabled = false;
+          }
+      }
+
+      // Mock story generation (replace with OpenAI API)
+      async function generateStoryContent(childName, childAge, storyLength, theme) {
+          // Simulate API delay
+          await new Promise(resolve => setTimeout(resolve, 3000));
+          
+          const stories = {
+              adventure: {
+                  title: `${childName}'s Great Adventure`,
+                  content: `Once upon a time, ${childName} discovered a magical map in their backyard. The map showed a path to a hidden treasure deep in the Enchanted Forest. With courage and determination, ${childName} set off on an amazing adventure. Along the way, they met friendly woodland creatures who helped them solve riddles and overcome challenges. After a day full of excitement and discovery, ${childName} found the treasure - a chest full of golden stars that granted one special wish. ${childName} wished for all children to have magical adventures of their own, and the stars scattered across the sky, making dreams come true everywhere. The end.`
+              },
+              animals: {
+                  title: `${childName} and the Talking Animals`,
+                  content: `In a magical forest, ${childName} discovered they could understand what animals were saying! First, they met Ruby the Red Squirrel, who was worried about finding enough acorns for winter. Then ${childName} helped Oliver the Owl solve a mystery about missing berries. Together with their new animal friends, ${childName} learned about friendship, kindness, and how every creature in the forest has an important role to play. By the end of the day, ${childName} had saved the forest and made friends that would last forever.`
+              },
+              space: {
+                  title: `${childName}'s Space Adventure`,
+                  content: `Captain ${childName} was the youngest astronaut ever to command a space mission! When alien friends from Planet Zoomba sent a distress signal, brave ${childName} jumped into their rocket ship and zoomed through the stars. On Planet Zoomba, ${childName} met colorful alien friends who needed help fixing their rainbow generator that made their planet beautiful. Using creativity and teamwork, ${childName} helped repair the machine, and the grateful aliens gave them a special star crystal that would always remind them that friendship knows no boundaries - not even in space!`
+              },
+              fantasy: {
+                  title: `${childName} and the Magic Kingdom`,
+                  content: `When ${childName} found a glowing key in their garden, it opened a door to a magical kingdom where dragons were friendly and unicorns needed help! The kind Dragon Queen asked ${childName} to help find her lost baby dragon who was hiding because he was afraid to breathe fire. With the help of wise unicorns and brave fairy friends, ${childName} found the little dragon and taught him that being different made him special. The grateful kingdom made ${childName} an honorary prince/princess, with a crown that sparkled with the magic of kindness.`
+              },
+              ocean: {
+                  title: `${childName}'s Underwater Adventure`,
+                  content: `When ${childName} put on magical swimming goggles at the beach, they could suddenly breathe underwater and talk to sea creatures! Dolphin friends invited ${childName} to visit the underwater city of Coral Castle, where the Seahorse King needed help finding his lost crown. Swimming through colorful coral reefs and playing with friendly fish, ${childName} discovered the crown had been borrowed by baby sea turtles who were using it as a playground. The kind Seahorse King was so happy that he let the turtles keep the crown and gave ${childName} a special seashell that would always bring them back to visit their ocean friends.`
+              },
+              friendship: {
+                  title: `${childName} and the New Friend`,
+                  content: `At the playground, ${childName} noticed a lonely child sitting by themselves. Even though they felt a little shy, brave ${childName} walked over and said hello. The new friend, Sam, had just moved to town and didn't know anyone. ${childName} showed Sam all the best parts of the playground and taught them their favorite games. Soon they were laughing and having the best time together! When it was time to go home, they promised to be best friends forever. ${childName} learned that sometimes the best adventures happen when you're kind to someone new.`
+              },
+              nature: {
+                  title: `${childName} and the Secret Garden`,
+                  content: `Behind ${childName}'s house was a forgotten garden where flowers could sing and trees could dance! When ${childName} discovered this magical place, they found that the garden was sad because no one had visited in years. With gentle care, ${childName} watered the singing flowers, helped the dancing trees stretch their branches, and planted new seeds with the help of chattering chipmunks. As the garden bloomed back to life, it rewarded ${childName} with the most beautiful butterfly garden anyone had ever seen, where every butterfly carried a wish that would come true.`
+              },
+              superhero: {
+                  title: `Super ${childName} Saves the Day`,
+                  content: `One morning, ${childName} woke up with amazing superpowers! They could fly, had super strength, and could make things better just by caring about them. When the town's ice cream truck broke down on the hottest day of summer, Super ${childName} flew into action! Using their powers of kindness and creativity, they helped fix the truck and even made the ice cream extra delicious. All the children in town cheered for Super ${childName}, who learned that the greatest superpower of all is helping others and making people happy.`
+              }
+          };
+
+          const selectedStory = stories[theme] || stories.adventure;
+          
+          // Adjust story length based on selection
+          let content = selectedStory.content;
+          if (storyLength === 'short') {
+              content = content.substring(0, content.length * 0.6) + ' The end.';
+          } else if (storyLength === 'long') {
+              content = content + ' ' + content.substring(content.length * 0.5);
+          }
+
+          return {
+              title: selectedStory.title,
+              content: content
+          };
+      }
+
+      // Utility function to show alerts
+      function showAlert(containerId, message, type) {
+          const container = containerId === 'main' ? 
+              document.querySelector('.main-content') : 
+              document.getElementById(containerId);
+          
+          // Remove existing alerts
+          const existingAlert = container.querySelector('.alert');
+          if (existingAlert) {
+              existingAlert.remove();
+          }
+
+          // Create new alert
+          const alert = document.createElement('div');
+          alert.className = `alert alert-${type}`;
+          alert.textContent = message;
+          
+          if (containerId === 'main') {
+              container.insertBefore(alert, container.firstChild);
+          } else {
+              container.insertBefore(alert, container.firstChild);
+          }
+
+          // Auto remove after 5 seconds
+          setTimeout(() => {
+              if (alert.parentNode) {
+                  alert.remove();
+              }
+          }, 5000);
+      }
+  </script>
+</body>
+</html>
