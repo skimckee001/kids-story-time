@@ -445,6 +445,60 @@
                       <option value="long">Long (10-15 minutes)</option>
                   </select>
               </div>
+              <!-- Child Interests (Optional) -->
+              <div class="form-group">
+                  <label>What does your child love? (Optional)</label>
+                  <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Select interests to make the story extra special!</p>
+                  <div class="interests-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
+                      <label class="interest-item" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="checkbox" name="interests" value="animals" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🐾</span>
+                          <span style="font-size: 14px;">Animals</span>
+                      </label>
+                      <label class="interest-item" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="checkbox" name="interests" value="dinosaurs" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦕</span>
+                          <span style="font-size: 14px;">Dinosaurs</span>
+                      </label>
+                      <label class="interest-item" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="checkbox" name="interests" value="princesses" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">👸</span>
+                          <span style="font-size: 14px;">Princesses</span>
+                      </label>
+                      <label class="interest-item" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="checkbox" name="interests" value="superheroes" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦸</span>
+                          <span style="font-size: 14px;">Superheroes</span>
+                      </label>
+                      <label class="interest-item" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="checkbox" name="interests" value="cars" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🚗</span>
+                          <span style="font-size: 14px;">Cars</span>
+                      </label>
+                      <label class="interest-item" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="checkbox" name="interests" value="sports" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">⚽</span>
+                          <span style="font-size: 14px;">Sports</span>
+                      </label>
+                      <label class="interest-item" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="checkbox" name="interests" value="music" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🎵</span>
+                          <span style="font-size: 14px;">Music</span>
+                      </label>
+                      <label class="interest-item" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="checkbox" name="interests" value="art" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🎨</span>
+                          <span style="font-size: 14px;">Art</span>
+                      </label>
+                  </div>
+              </div>
+
+              <!-- Custom Story Ideas (Optional) -->
+              <div class="form-group">
+                  <label for="customPrompt">Special requests for the story? (Optional)</label>
+                  <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Add any special details you'd like in the story!</p>
+                  <textarea id="customPrompt" class="form-control" rows="2" placeholder="Example: Include a pet dog named Buddy, or make it about learning to ride a bike..."></textarea>
+              </div>
           </div>
 
           <!-- Story Themes -->
@@ -581,6 +635,7 @@
   <script src="js/supabase-config.js"></script>
   <script src="js/auth-manager.js"></script>
   <script src="js/database-manager.js"></script>
+  <script src="js/ai-story-service.js"></script>
   
   <script>
       // Global variables
@@ -612,6 +667,40 @@
                   // Add selected class to clicked card
                   this.classList.add('selected');
                   selectedTheme = this.dataset.theme;
+              });
+          });
+
+          // Interest selection
+          document.querySelectorAll('.interest-item').forEach(item => {
+              item.addEventListener('click', function(e) {
+                  e.preventDefault();
+                  const checkbox = this.querySelector('input[type="checkbox"]');
+                  checkbox.checked = !checkbox.checked;
+                  
+                  if (checkbox.checked) {
+                      this.style.borderColor = '#667eea';
+                      this.style.backgroundColor = '#f0f4ff';
+                      this.style.transform = 'scale(1.05)';
+                  } else {
+                      this.style.borderColor = '#e0e0e0';
+                      this.style.backgroundColor = 'transparent';
+                      this.style.transform = 'scale(1)';
+                  }
+              });
+
+              // Hover effects
+              item.addEventListener('mouseenter', function() {
+                  if (!this.querySelector('input[type="checkbox"]').checked) {
+                      this.style.borderColor = '#667eea';
+                      this.style.backgroundColor = '#f8faff';
+                  }
+              });
+
+              item.addEventListener('mouseleave', function() {
+                  if (!this.querySelector('input[type="checkbox"]').checked) {
+                      this.style.borderColor = '#e0e0e0';
+                      this.style.backgroundColor = 'transparent';
+                  }
               });
           });
 
@@ -797,66 +886,63 @@
           const childName = document.getElementById('childNameInput').value;
           const childAge = document.getElementById('childAge').value;
           const storyLength = document.getElementById('storyLength').value;
+          const interests = getSelectedInterests(); // Get child's interests
 
           if (!childName || !childAge || !storyLength || !selectedTheme) {
               alert('Please fill in all fields and select a theme!');
               return;
           }
 
+          // Validate child name (only letters and spaces)
+          if (!/^[a-zA-Z\s]+$/.test(childName)) {
+              alert('Please enter a valid name (letters and spaces only).');
+              return;
+          }
+
           // Check if user is logged in and has remaining stories
-          if (currentUser) {
-              const canGenerate = await window.dbManager.canGenerateStory(currentUser.id);
-              if (!canGenerate) {
-                  alert('You\'ve reached your daily limit. Please upgrade to Premium for unlimited stories!');
-                  return;
+          if (currentUser && window.dbManager) {
+              try {
+                  const stats = await window.dbManager.getUserUsageStats(currentUser.id);
+                  if (stats.success && stats.data.length >= 3) { // Free limit: 3 stories per month
+                      alert('You\'ve reached your monthly limit. Please upgrade to Premium for unlimited stories!');
+                      return;
+                  }
+              } catch (error) {
+                  console.error('Error checking usage stats:', error);
               }
           }
 
-          // Show loading
-          document.getElementById('loading').style.display = 'block';
-          document.getElementById('storyOutput').style.display = 'none';
+          // Prepare story parameters
+          const storyParams = {
+              childName: childName.trim(),
+              childAge: childAge,
+              storyLength: storyLength,
+              theme: selectedTheme,
+              interests: interests,
+              customPrompt: document.getElementById('customPrompt')?.value || ''
+          };
+
+          // Save to localStorage for the story page
+          localStorage.setItem('pendingStory', JSON.stringify(storyParams));
+
+          // Show loading state and redirect to story page
           document.getElementById('generateBtn').disabled = true;
+          document.getElementById('generateBtn').innerHTML = '✨ Creating Magic...';
+          
+          // Small delay for UX, then redirect
+          setTimeout(() => {
+              window.location.href = 'story.html';
+          }, 800);
+      }
 
-          try {
-              // Simulate story generation (replace with actual OpenAI API call)
-              const story = await generateStoryContent(childName, childAge, storyLength, selectedTheme);
-              
-              // Save story to database if user is logged in
-              if (currentUser && window.dbManager) {
-                  await window.dbManager.saveStory(currentUser.id, {
-                      title: story.title,
-                      content: story.content,
-                      theme: selectedTheme,
-                      child_name: childName,
-                      child_age: childAge,
-                      story_length: storyLength
-                  });
-                  
-                  // Track usage
-                  await window.dbManager.trackUsage(currentUser.id, 'story_generation');
-                  
-                  // Update limits display
-                  const canGenerate = await window.dbManager.canGenerateStory(currentUser.id);
-                  updateLimitsDisplay(canGenerate);
-              }
-
-              // Display story
-              document.getElementById('storyTitle').textContent = story.title;
-              document.getElementById('storyContent').textContent = story.content;
-              document.getElementById('storyOutput').style.display = 'block';
-              
-              // Show upgrade prompt for free users
-              if (!currentUser || !currentUser.subscription) {
-                  document.getElementById('upgradePrompt').style.display = 'block';
-              }
-
-          } catch (error) {
-              alert('Sorry, there was an error generating your story. Please try again!');
-              console.error('Story generation error:', error);
-          } finally {
-              document.getElementById('loading').style.display = 'none';
-              document.getElementById('generateBtn').disabled = false;
-          }
+      // Get selected interests/preferences
+      function getSelectedInterests() {
+          const interests = [];
+          const checkboxes = document.querySelectorAll('input[name="interests"]:checked');
+          checkboxes.forEach(checkbox => {
+              interests.push(checkbox.value);
+          });
+          return interests;
       }
 
       // Mock story generation (replace with OpenAI API)

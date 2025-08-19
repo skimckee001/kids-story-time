@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Magic Story - Kids Story Time</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF6B9D',
+                        secondary: '#4ECDC4',
+                        accent: '#FFE66D'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .story-text {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.8;
+        }
+        
+        .loading-dots::after {
+            content: '...';
+            animation: dots 2s steps(4, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .sparkle {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sparkle::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, transparent, rgba(255, 107, 157, 0.3), transparent);
+            border-radius: inherit;
+            animation: sparkle 3s linear infinite;
+            z-index: -1;
+        }
+        
+        @keyframes sparkle {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-100 via-blue-50 to-pink-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-sm sticky top-0 z-50 border-b border-purple-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-lg">📚</span>
+                    </div>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                        Kids Story Time
+                    </span>
+                </div>
+                <a href="index.html" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200 font-medium">
+                    ← Create New Story
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Loading State -->
+        <div id="loadingState" class="text-center py-20">
+            <div class="sparkle w-24 h-24 bg-gradient-to-r from-primary to-secondary rounded-full mx-auto mb-8 flex items-center justify-center">
+                <span class="text-white text-4xl animate-bounce">✨</span>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Creating Your Magic Story</h2>
+            <p class="text-xl text-gray-600 mb-6">
+                <span class="loading-dots">Our storytelling wizard is crafting something special just for you</span>
+            </p>
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 max-w-md mx-auto">
+                <div class="flex items-center space-x-4">
+                    <div class="w-4 h-4 bg-primary rounded-full animate-pulse"></div>
+                    <div class="w-4 h-4 bg-secondary rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+                    <div class="w-4 h-4 bg-accent rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Story Display -->
+        <div id="storyDisplay" class="hidden">
+            <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden fade-in">
+                <!-- Story Header -->
+                <div class="bg-gradient-to-r from-primary via-secondary to-accent p-8 text-white relative overflow-hidden">
+                    <div class="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+                    <div class="relative z-10">
+                        <h1 id="storyTitle" class="text-4xl md:text-5xl font-bold mb-4 text-center">
+                            <!-- Story title will be inserted here -->
+                        </h1>
+                        <div id="storyMeta" class="text-center space-y-2 opacity-90">
+                            <!-- Story metadata will be inserted here -->
+                        </div>
+                    </div>
+                    <div class="absolute top-4 right-4">
+                        <span class="text-6xl opacity-30">🌟</span>
+                    </div>
+                    <div class="absolute bottom-4 left-4">
+                        <span class="text-4xl opacity-30">📖</span>
+                    </div>
+                </div>
+
+                <!-- Story Content -->
+                <div class="p-8 md:p-12">
+                    <div id="storyContent" class="story-text text-lg md:text-xl text-gray-700 space-y-6 leading-relaxed">
+                        <!-- Story content will be inserted here -->
+                    </div>
+
+                    <!-- Story Actions -->
+                    <div class="mt-12 pt-8 border-t border-gray-200">
+                        <div class="flex flex-wrap gap-4 justify-center">
+                            <button id="saveStoryBtn" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium flex items-center space-x-2">
+                                <span>💖</span>
+                                <span>Save to Favorites</span>
+                            </button>
+                            <button id="shareStoryBtn" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium flex items-center space-x-2">
+                                <span>📤</span>
+                                <span>Share Story</span>
+                            </button>
+                            <button id="readAloudBtn" class="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium flex items-center space-x-2">
+                                <span>🔊</span>
+                                <span>Read Aloud</span>
+                            </button>
+                            <button id="printStoryBtn" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium flex items-center space-x-2">
+                                <span>🖨️</span>
+                                <span>Print Story</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="mt-8 text-center">
+                <a href="index.html" class="inline-flex items-center space-x-2 text-primary hover:text-primary/80 font-medium text-lg transition-colors">
+                    <span>←</span>
+                    <span>Create Another Story</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="hidden text-center py-20">
+            <div class="w-24 h-24 bg-red-100 rounded-full mx-auto mb-8 flex items-center justify-center">
+                <span class="text-red-600 text-4xl">😔</span>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Oops! Something went wrong</h2>
+            <p class="text-xl text-gray-600 mb-8">
+                Our storytelling wizard encountered a problem. Don't worry, we can try again!
+            </p>
+            <button id="retryBtn" class="bg-gradient-to-r from-primary to-secondary text-white px-8 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium text-lg">
+                Try Again ✨
+            </button>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth-manager.js"></script>
+    <script src="js/database-manager.js"></script>
+    <script src="js/ai-story-service.js"></script>
+
+    <script>
+        class StoryPageManager {
+            constructor() {
+                this.currentStory = null;
+                this.storyParams = null;
+                this.init();
+            }
+
+            init() {
+                // Get story parameters from URL or localStorage
+                this.storyParams = this.getStoryParams();
+                
+                if (!this.storyParams) {
+                    // No story parameters, redirect to home
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                // Generate the story
+                this.generateStory();
+                
+                // Set up event listeners
+                this.setupEventListeners();
+            }
+
+            getStoryParams() {
+                // Try to get from URL parameters first
+                const urlParams = new URLSearchParams(window.location.search);
+                
+                if (urlParams.has('childName')) {
+                    return {
+                        childName: urlParams.get('childName'),
+                        childAge: urlParams.get('childAge'),
+                        storyLength: urlParams.get('storyLength'),
+                        theme: urlParams.get('theme'),
+                        interests: urlParams.get('interests') ? urlParams.get('interests').split(',') : [],
+                        customPrompt: urlParams.get('customPrompt') || ''
+                    };
+                }
+
+                // Fallback to localStorage
+                const stored = localStorage.getItem('pendingStory');
+                if (stored) {
+                    localStorage.removeItem('pendingStory');
+                    return JSON.parse(stored);
+                }
+
+                return null;
+            }
+
+            async generateStory() {
+                try {
+                    this.showLoadingState();
+                    
+                    // Generate story using AI service
+                    const result = await window.aiStoryService.generateStory(this.storyParams);
+                    
+                    if (result.success) {
+                        this.currentStory = result.story;
+                        this.displayStory();
+                        
+                        // Save to database if user is logged in
+                        if (window.authManager && window.authManager.isUserAuthenticated()) {
+                            this.saveStoryToDatabase();
+                        }
+                    } else {
+                        console.error('Story generation failed:', result.error);
+                        if (result.fallback) {
+                            this.currentStory = result.fallback.story;
+                            this.displayStory();
+                        } else {
+                            this.showErrorState();
+                        }
+                    }
+                } catch (error) {
+                    console.error('Story generation error:', error);
+                    this.showErrorState();
+                }
+            }
+
+            displayStory() {
+                const { title, content, metadata } = this.currentStory;
+                
+                // Update title
+                document.getElementById('storyTitle').textContent = title;
+                
+                // Update metadata
+                const metaElement = document.getElementById('storyMeta');
+                metaElement.innerHTML = `
+                    <div class="flex flex-wrap justify-center items-center gap-4 text-sm">
+                        <span class="bg-white/20 px-3 py-1 rounded-full">
+                            👶 Age ${metadata.childAge}
+                        </span>
+                        <span class="bg-white/20 px-3 py-1 rounded-full">
+                            ⏱️ ${this.getReadingTimeText(metadata.storyLength)}
+                        </span>
+                        <span class="bg-white/20 px-3 py-1 rounded-full">
+                            🎭 ${this.capitalizeFirst(metadata.theme)}
+                        </span>
+                    </div>
+                `;
+                
+                // Update content with proper paragraph formatting
+                const contentElement = document.getElementById('storyContent');
+                const paragraphs = content.split('\n').filter(p => p.trim());
+                contentElement.innerHTML = paragraphs
+                    .map(paragraph => `<p>${this.escapeHtml(paragraph.trim())}</p>`)
+                    .join('');
+                
+                // Show story display
+                this.showStoryState();
+            }
+
+            getReadingTimeText(length) {
+                const times = {
+                    short: '2-3 minutes',
+                    medium: '5-7 minutes',
+                    long: '10-15 minutes'
+                };
+                return times[length] || times.medium;
+            }
+
+            capitalizeFirst(str) {
+                return str.charAt(0).toUpperCase() + str.slice(1);
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            async saveStoryToDatabase() {
+                if (!window.dbManager || !this.currentStory) return;
+                
+                try {
+                    const user = window.authManager.getCurrentUser();
+                    const storyData = {
+                        user_id: user.id,
+                        title: this.currentStory.title,
+                        content: this.currentStory.content,
+                        age_group: this.storyParams.childAge,
+                        genre: this.storyParams.theme,
+                        characters: [this.storyParams.childName],
+                        settings: {
+                            storyLength: this.storyParams.storyLength,
+                            interests: this.storyParams.interests,
+                            customPrompt: this.storyParams.customPrompt
+                        }
+                    };
+                    
+                    await window.dbManager.createStory(storyData);
+                } catch (error) {
+                    console.error('Error saving story to database:', error);
+                }
+            }
+
+            setupEventListeners() {
+                // Save story
+                document.getElementById('saveStoryBtn').addEventListener('click', () => {
+                    this.saveToFavorites();
+                });
+
+                // Share story
+                document.getElementById('shareStoryBtn').addEventListener('click', () => {
+                    this.shareStory();
+                });
+
+                // Read aloud
+                document.getElementById('readAloudBtn').addEventListener('click', () => {
+                    this.readAloud();
+                });
+
+                // Print story
+                document.getElementById('printStoryBtn').addEventListener('click', () => {
+                    this.printStory();
+                });
+
+                // Retry button
+                document.getElementById('retryBtn').addEventListener('click', () => {
+                    this.generateStory();
+                });
+            }
+
+            saveToFavorites() {
+                // Add visual feedback
+                const btn = document.getElementById('saveStoryBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span>💖</span><span>Saved!</span>';
+                btn.classList.add('bg-green-600');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('bg-green-600');
+                }, 2000);
+                
+                // Save to localStorage for now (can be enhanced with database)
+                const favorites = JSON.parse(localStorage.getItem('favoriteStories') || '[]');
+                favorites.push({
+                    ...this.currentStory,
+                    savedAt: new Date().toISOString()
+                });
+                localStorage.setItem('favoriteStories', JSON.stringify(favorites));
+            }
+
+            shareStory() {
+                if (navigator.share && this.currentStory) {
+                    navigator.share({
+                        title: this.currentStory.title,
+                        text: `Check out this magical story: ${this.currentStory.title}`,
+                        url: window.location.href
+                    });
+                } else {
+                    // Fallback: copy to clipboard
+                    const shareText = `${this.currentStory.title}\n\n${this.currentStory.content}`;
+                    navigator.clipboard.writeText(shareText).then(() => {
+                        alert('Story copied to clipboard! You can now share it anywhere.');
+                    });
+                }
+            }
+
+            readAloud() {
+                if ('speechSynthesis' in window && this.currentStory) {
+                    const utterance = new SpeechSynthesisUtterance();
+                    utterance.text = `${this.currentStory.title}. ${this.currentStory.content}`;
+                    utterance.rate = 0.8; // Slower for children
+                    utterance.pitch = 1.1; // Slightly higher pitch
+                    
+                    // Stop any current speech
+                    speechSynthesis.cancel();
+                    
+                    // Start speaking
+                    speechSynthesis.speak(utterance);
+                    
+                    // Update button state
+                    const btn = document.getElementById('readAloudBtn');
+                    btn.innerHTML = '<span>⏸️</span><span>Stop Reading</span>';
+                    
+                    utterance.onend = () => {
+                        btn.innerHTML = '<span>🔊</span><span>Read Aloud</span>';
+                    };
+                } else {
+                    alert('Sorry, text-to-speech is not supported in your browser.');
+                }
+            }
+
+            printStory() {
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>${this.currentStory.title}</title>
+                            <style>
+                                body { font-family: Georgia, serif; line-height: 1.6; margin: 40px; }
+                                h1 { color: #FF6B9D; text-align: center; margin-bottom: 30px; }
+                                .meta { text-align: center; color: #666; margin-bottom: 30px; }
+                                p { margin-bottom: 15px; }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>${this.currentStory.title}</h1>
+                            <div class="meta">
+                                A magical story for ${this.storyParams.childName}, age ${this.storyParams.childAge}
+                            </div>
+                            <div>
+                                ${this.currentStory.content.split('\n').map(p => p.trim() ? `<p>${p}</p>` : '').join('')}
+                            </div>
+                        </body>
+                    </html>
+                `);
+                printWindow.document.close();
+                printWindow.print();
+            }
+
+            showLoadingState() {
+                document.getElementById('loadingState').classList.remove('hidden');
+                document.getElementById('storyDisplay').classList.add('hidden');
+                document.getElementById('errorState').classList.add('hidden');
+            }
+
+            showStoryState() {
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('storyDisplay').classList.remove('hidden');
+                document.getElementById('errorState').classList.add('hidden');
+            }
+
+            showErrorState() {
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('storyDisplay').classList.add('hidden');
+                document.getElementById('errorState').classList.remove('hidden');
+            }
+        }
+
+        // Initialize story page when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new StoryPageManager();
+        });
+    </script>
+</body>
+</html>
