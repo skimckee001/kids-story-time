@@ -48,22 +48,36 @@ class AuthManager {
                 email,
                 password,
                 options: {
-                    data: userData
+                    data: userData,
+                    emailRedirectTo: undefined // Disable email confirmation for now
                 }
             });
 
             if (error) {
+                console.error('Supabase sign up error:', error);
                 throw error;
             }
 
-            // For demo: If account created but needs verification, provide helpful message
-            if (data.user && !data.session) {
-                return { 
-                    success: true, 
-                    data,
-                    needsVerification: true,
-                    message: "Account created! You may need to verify your email or it might take a moment to activate. Try logging in with the same credentials."
-                };
+            console.log('Sign up successful:', data);
+
+            // Check if user was created successfully
+            if (data.user) {
+                if (data.session) {
+                    // User is immediately signed in (email confirmation disabled)
+                    return { 
+                        success: true, 
+                        data,
+                        message: "Account created and you're now signed in!"
+                    };
+                } else {
+                    // User created but needs verification
+                    return { 
+                        success: true, 
+                        data,
+                        needsVerification: true,
+                        message: "Account created! Please check your email to verify your account, or try logging in directly."
+                    };
+                }
             }
 
             return { success: true, data };
@@ -82,9 +96,22 @@ class AuthManager {
             });
 
             if (error) {
-                throw error;
+                console.error('Supabase sign in error:', error);
+                
+                // Provide better error messages for common issues
+                let userFriendlyMessage = error.message;
+                if (error.message.includes('Invalid login credentials')) {
+                    userFriendlyMessage = 'Invalid email or password. Please check your credentials and try again.';
+                } else if (error.message.includes('Email not confirmed')) {
+                    userFriendlyMessage = 'Please check your email and click the confirmation link before signing in.';
+                } else if (error.message.includes('Too many requests')) {
+                    userFriendlyMessage = 'Too many login attempts. Please wait a moment and try again.';
+                }
+                
+                throw new Error(userFriendlyMessage);
             }
 
+            console.log('Sign in successful:', data);
             return { success: true, data };
         } catch (error) {
             console.error('Sign in error:', error);

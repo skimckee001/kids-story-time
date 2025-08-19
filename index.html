@@ -860,10 +860,19 @@
               });
 
               if (result.error) {
-                  showAlert('authAlert', result.error.message, 'error');
+                  showAlert('authAlert', result.error, 'error');
               } else {
-                  showAlert('authAlert', 'Account created! Please check your email to confirm your account.', 'success');
+                  const message = result.message || 'Account created successfully!';
+                  showAlert('authAlert', message, 'success');
                   document.getElementById('signupForm').reset();
+                  
+                  // If user is immediately signed in, refresh the UI
+                  if (result.data && result.data.session) {
+                      setTimeout(() => {
+                          updateUserInterface();
+                          location.reload(); // Refresh to show authenticated state
+                      }, 1500);
+                  }
               }
           } catch (error) {
               showAlert('authAlert', 'An error occurred. Please try again.', 'error');
@@ -888,7 +897,7 @@
               const result = await window.authManager.signIn(email, password);
 
               if (result.error) {
-                  showAlert('loginAlert', result.error.message, 'error');
+                  showAlert('loginAlert', result.error, 'error');
               } else {
                   currentUser = result.data.user;
                   document.getElementById('loginModal').style.display = 'none';
