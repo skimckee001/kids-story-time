@@ -1,11 +1,11 @@
 [build]
-  # Skip build process since we're deploying HTML directly
-  command = "echo 'No build needed for HTML files'"
+  # Skip build process entirely - deploy static HTML files
+  command = ""
   publish = "."
-
-[build.environment]
-  # Disable automatic builds
-  NODE_VERSION = "18"
+  
+# Disable all build detection
+[build.processing]
+  skip_processing = true
 
 [[redirects]]
   # Handle client-side routing for story pages
