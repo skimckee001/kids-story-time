@@ -371,7 +371,9 @@ The End.`
             }
         };
 
-        const selectedStory = stories[selectedTheme] || stories.adventure;
+        // Get age and gender appropriate story content
+        const appropriateStories = this.getAgeAppropriateContent(stories, childAge, gender, characterName, selectedTheme);
+        const selectedStory = appropriateStories;
         
         // For demo purposes, map extended lengths to available stories
         let effectiveLength = storyLength;
@@ -384,12 +386,15 @@ The End.`
         }
         
         const selectedLength = selectedStory[effectiveLength] || selectedStory.short;
+        
+        // Adjust content length to match the requested story length
+        const adjustedContent = this.adjustStoryLength(selectedLength.content, storyLength, characterName);
 
         return {
             success: true,
             story: {
                 title: selectedLength.title,
-                content: selectedLength.content,
+                content: adjustedContent,
                 metadata: {
                     childName,
                     childAge,
@@ -454,6 +459,160 @@ The End.`
             .replace(/^TITLE:\s*.+?(?:\n|$)/i, '')
             .trim()
             .replace(/\n{3,}/g, '\n\n'); // Replace multiple newlines
+    }
+
+    // Adjust story content length to match the requested length
+    adjustStoryLength(baseContent, targetLength, characterName) {
+        const targetWordCounts = {
+            short: 250,        // 2-3 minutes
+            medium: 500,       // 5-7 minutes  
+            long: 1000,        // 10-15 minutes
+            extended: 1750,    // 20 minutes
+            'long-extended': 2750,  // 30 minutes
+            'extra-long': 4000      // 45 minutes
+        };
+        
+        const targetWords = targetWordCounts[targetLength] || targetWordCounts.medium;
+        const currentWords = baseContent.split(/\s+/).length;
+        
+        if (currentWords >= targetWords * 0.8) {
+            // If close enough to target, just return as is
+            return baseContent;
+        }
+        
+        // For longer stories, add additional content
+        const expansions = [
+            `\n\nAs ${characterName} continued the adventure, they discovered even more amazing things. The magical world seemed to grow bigger and more wonderful with each step.`,
+            `\n\n${characterName} met new friends along the way who shared their own special talents and wisdom. Each friend taught ${characterName} something valuable about courage, kindness, and believing in yourself.`,
+            `\n\nThe journey took ${characterName} through enchanted forests where the trees whispered ancient secrets, across sparkling rivers that sang beautiful melodies, and over rolling hills that seemed to stretch on forever.`,
+            `\n\nAlong the path, ${characterName} faced new challenges that tested their bravery and cleverness. But with each obstacle overcome, ${characterName} grew stronger and more confident.`,
+            `\n\nThe magical creatures of this special world shared their stories with ${characterName}, tales of friendship, adventure, and the power of believing in yourself even when things seem impossible.`,
+            `\n\n${characterName} discovered hidden treasures that weren't made of gold or jewels, but were far more valuable - treasures of friendship, wisdom, and the joy that comes from helping others.`,
+            `\n\nAs the sun began to set, painting the sky in brilliant colors of orange, pink, and purple, ${characterName} realized that the greatest adventures are the ones we share with others.`,
+            `\n\nThe magical journey taught ${characterName} that being brave doesn't mean not being scared - it means doing the right thing even when you are afraid.`
+        ];
+        
+        let expandedContent = baseContent;
+        let expansionIndex = 0;
+        
+        while (expandedContent.split(/\s+/).length < targetWords && expansionIndex < expansions.length) {
+            expandedContent += expansions[expansionIndex];
+            expansionIndex++;
+        }
+        
+        // If still not long enough, repeat some expansions with variations
+        if (expandedContent.split(/\s+/).length < targetWords && targetLength !== 'short') {
+            expandedContent += `\n\n${characterName} spent more time exploring this wonderful world, discovering new places and meeting more amazing friends. Each new experience added to the growing collection of memories that ${characterName} would treasure forever.`;
+            
+            if (targetLength === 'extra-long') {
+                expandedContent += `\n\nThe adventure continued as ${characterName} learned about the history of this magical place, the legends of brave heroes who came before, and the important role that kindness and courage play in making the world a better place for everyone.`;
+            }
+        }
+        
+        return expandedContent;
+    }
+
+    // Generate age and gender appropriate story content
+    getAgeAppropriateContent(baseStories, childAge, gender, characterName, selectedTheme) {
+        const isOlderReader = childAge === 'fluent-reader' || childAge === 'insightful-reader';
+        const isMaleCharacter = gender === 'boy';
+        
+        if (isOlderReader) {
+            // Create more mature, age-appropriate stories for older readers (8-16+)
+            const matureStories = {
+                adventure: {
+                    short: {
+                        title: isMaleCharacter ? `${characterName} and the Hidden Code` : `${characterName}'s Secret Mission`,
+                        content: isMaleCharacter ?
+                            `${characterName} was always good with puzzles, but the encrypted message he found hidden in his locker was unlike anything he'd seen before. The sequence of numbers and letters seemed random, but ${characterName} suspected there was more to it.
+
+After school, ${characterName} spread the code across his desk and began working. Hours passed as he tried different decryption methods he'd learned online. Finally, a pattern emerged.
+
+The message revealed coordinates to an abandoned warehouse on the edge of town. ${characterName} knew he should tell someone, but curiosity got the better of him.
+
+At the warehouse, ${characterName} discovered a group of teenagers working on a community project to create a digital time capsule for their town's 150th anniversary. They had been leaving coded messages for anyone smart enough to solve them.
+
+"We could use someone with your skills," said their leader, Maya. "${characterName}, want to help us preserve our town's history for the next generation?"
+
+${characterName} realized that the best adventures weren't about danger or mystery—they were about using your talents to make a difference.`
+                            :
+                            `${characterName} had always felt like she was meant for something bigger than her small town. When she discovered an old journal in her grandmother's attic detailing a family tradition of strong women who made a difference, she knew it was time to find her own path.
+
+The journal mentioned a scholarship program that ${characterName} had never heard of—one that supported young women pursuing environmental science. The application deadline was in just two weeks.
+
+${characterName} threw herself into the application, researching water conservation projects and designing her own proposal for improving the local river ecosystem. She interviewed scientists, gathered water samples, and created presentations.
+
+When other students doubted her chances, ${characterName} remembered her grandmother's words: "Courage isn't the absence of fear—it's acting despite it."
+
+The day the acceptance letter arrived, ${characterName} realized her adventure was just beginning. She had discovered that her true strength came from combining her passion for science with her determination to create positive change.
+
+College would bring new challenges, but ${characterName} was ready to continue her family's legacy of making a difference in the world.`
+                    },
+                    medium: {
+                        title: isMaleCharacter ? `${characterName} and the Tech Startup Challenge` : `${characterName}'s Innovation Lab`,
+                        content: isMaleCharacter ?
+                            `${characterName} had been coding since he was ten, but the high school entrepreneurship competition would test more than just his programming skills. Teams had six weeks to develop an app that could make a real difference in their community.
+
+His idea was simple: a platform connecting elderly residents with tech-savvy teenagers for digital literacy support. But making it work required more than code—it needed real human connections.
+
+${characterName} spent weekends visiting senior centers, learning about their struggles with technology. Mrs. Chen couldn't video call her grandchildren. Mr. Rodriguez couldn't access his medical records online. Each conversation shaped his app's features.
+
+The development process wasn't smooth. The database crashed twice, and ${characterName} had to rebuild the user interface from scratch. His teammates, Sarah and Alex, handled marketing and user testing while ${characterName} coded late into the night.
+
+During the competition presentation, ${characterName} demonstrated how his app had already helped twelve seniors in just two weeks of beta testing. The judges were impressed not just by the technology, but by the real relationships he'd built.
+
+"Success in tech isn't just about writing code," the lead judge explained as they announced ${characterName}'s team as winners. "It's about understanding people and solving real problems."
+
+The prize money would fund the app's expansion to other communities, but ${characterName} had already gained something more valuable: the knowledge that technology's true power lies in bringing people together.`
+                            :
+                            `${characterName} had always been fascinated by robotics, but the regional STEM competition would be her biggest challenge yet. While other teams focused on complex mechanisms, ${characterName} had a different vision: a robot designed to help students with learning disabilities.
+
+Her inspiration came from her younger brother Jake, who struggled with dyslexia. Traditional reading methods frustrated him, but he learned better through interactive, multi-sensory approaches.
+
+${characterName} designed a robot companion that could read text aloud while highlighting words, provide visual learning cues, and adapt to different learning styles. The engineering was complex—voice recognition, text processing, and adaptive algorithms all had to work seamlessly.
+
+Late nights in the school's maker space became routine. ${characterName} taught herself advanced programming languages and collaborated with special education teachers to understand learning differences better.
+
+When her first prototype malfunctioned during testing, ${characterName} didn't give up. She redesigned the entire system, making it more reliable and user-friendly.
+
+At the competition, ${characterName} watched nervously as judges evaluated her robot. When eight-year-old Emma, who had been struggling with reading, successfully completed a story with the robot's help and smiled brightly, ${characterName} knew she had succeeded regardless of the competition results.
+
+The first-place trophy was wonderful, but seeing how her innovation could transform learning experiences was the real reward. ${characterName} was already planning improvements for version 2.0.`
+                    }
+                },
+                friendship: {
+                    short: {
+                        title: `${characterName} and the New Student`,
+                        content: `Starting junior year at a new school would be challenging enough, but ${characterName} noticed that Alex, another new student, was having an even harder time. While ${characterName} was naturally outgoing, Alex seemed overwhelmed and alone.
+
+During lunch, ${characterName} saw Alex sitting alone, so ${characterName} approached with a friendly smile. "Mind if I join you? I'm still figuring out where everything is too."
+
+Over the following weeks, ${characterName} and Alex discovered they both loved photography and environmental science. They started a small photography club focused on documenting local wildlife and environmental changes.
+
+Their friendship deepened when Alex confided about moving frequently due to a parent's military service. ${characterName} realized that being a good friend meant understanding that everyone's struggles are different.
+
+When Alex's photographs were selected for the state environmental contest, ${characterName} felt genuinely proud. True friendship, ${characterName} learned, means celebrating others' successes as much as your own.`
+                    },
+                    medium: {
+                        title: `${characterName}'s Leadership Journey`,
+                        content: `When ${characterName} was elected class president, the real challenge wasn't winning votes—it was bringing together students with completely different perspectives and priorities.
+
+The senior class was divided over prom venue choices, graduation ceremony changes, and fundraising priorities. Some students wanted traditional approaches, while others pushed for innovative alternatives.
+
+${characterName} organized listening sessions where every student could voice their concerns. Initially, meetings were heated and unproductive. But ${characterName} learned to facilitate discussions, helping classmates find common ground.
+
+The breakthrough came when ${characterName} suggested combining ideas rather than choosing sides. They could have a traditional graduation ceremony AND innovative fundraising. The prom could feature both classic and modern elements.
+
+By graduation, ${characterName} had learned that effective leadership isn't about having all the answers—it's about helping others find solutions together. The experience prepared ${characterName} for college leadership roles and future career challenges.`
+                    }
+                }
+            };
+
+            return matureStories[selectedTheme] || matureStories.adventure;
+        }
+        
+        // For younger readers, use the existing age-appropriate stories
+        return baseStories[selectedTheme] || baseStories.adventure;
     }
 
     // Set API key (in production, this should be handled by backend)
