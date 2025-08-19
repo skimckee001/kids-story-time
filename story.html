@@ -75,18 +75,22 @@
 
         .star {
             font-size: 32px;
-            color: #ddd;
+            color: transparent;
+            text-shadow: 0 0 0 #ddd;
             cursor: pointer;
-            transition: color 0.2s;
+            transition: all 0.3s ease;
         }
 
         .star.active {
             color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .star:hover,
         .star.hover {
             color: #FFD700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+            transform: scale(1.1);
         }
     </style>
 </head>
