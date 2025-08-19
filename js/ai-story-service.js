@@ -90,17 +90,20 @@ class AIStoryService {
             long: 'Write a longer story (800-1200 words, 10-15 minutes reading time)'
         };
 
-        const ageGuidelines = {
-            '3-5': 'Use simple vocabulary, short sentences, and focus on basic concepts like colors, shapes, and emotions',
-            '6-8': 'Use slightly more complex vocabulary, include simple problem-solving, and basic moral lessons',
-            '9-12': 'Use age-appropriate vocabulary, include character development and more complex themes'
+        const readingLevelGuidelines = {
+            'pre-reader': 'Use very simple vocabulary, short sentences (3-5 words), repetitive phrases, focus on basic concepts like colors, shapes, emotions, and simple actions. Include lots of sound effects and interactive elements.',
+            'early-phonics': 'Use simple vocabulary with some phonics patterns, short sentences (5-7 words), repetitive story structure, focus on basic problem-solving and familiar experiences.',
+            'beginning-reader': 'Use sight words and simple phonetic words, sentences up to 8-10 words, clear story structure with beginning/middle/end, include basic character emotions and simple conflicts.',
+            'developing-reader': 'Use more varied vocabulary including some challenging words, longer sentences (10-15 words), include character development, cause-and-effect relationships, and moral lessons.',
+            'fluent-reader': 'Use rich vocabulary with descriptive language, complex sentence structures, detailed character development, multiple plot threads, and meaningful themes.',
+            'insightful-reader': 'Use sophisticated vocabulary, complex narrative structures, deep character psychology, nuanced themes, and thought-provoking concepts that encourage critical thinking.'
         };
 
         let prompt = `${lengthInstructions[storyLength] || lengthInstructions.medium}.
 
-Create a ${theme} story for ${childName}, who is ${childAge} years old.
+Create a ${theme} story for ${childName}, who is at the ${this.getReadingLevelDisplay(childAge)} reading level.
 
-Age Guidelines: ${ageGuidelines[this.getAgeGroup(childAge)] || ageGuidelines['6-8']}
+Reading Level Guidelines: ${readingLevelGuidelines[childAge] || readingLevelGuidelines['beginning-reader']}
 
 Story Requirements:
 - Feature ${childName} as the main character
@@ -250,11 +253,28 @@ The End.`
         return tokenLimits[length] || tokenLimits.medium;
     }
 
-    getAgeGroup(age) {
-        const numAge = parseInt(age);
-        if (numAge <= 5) return '3-5';
-        if (numAge <= 8) return '6-8';
-        return '9-12';
+    getReadingLevelDisplay(readingLevel) {
+        const displays = {
+            'pre-reader': 'Pre-Reader',
+            'early-phonics': 'Early Phonics Reader',
+            'beginning-reader': 'Beginning Reader',
+            'developing-reader': 'Developing Reader',
+            'fluent-reader': 'Fluent Reader',
+            'insightful-reader': 'Insightful Reader'
+        };
+        return displays[readingLevel] || 'Beginning Reader';
+    }
+
+    getReadingLevelAgeRange(readingLevel) {
+        const ageRanges = {
+            'pre-reader': '3-6',
+            'early-phonics': '4-7',
+            'beginning-reader': '5-8',
+            'developing-reader': '6-10',
+            'fluent-reader': '8-13',
+            'insightful-reader': '10-16+'
+        };
+        return ageRanges[readingLevel] || '5-8';
     }
 
     extractTitle(storyText) {

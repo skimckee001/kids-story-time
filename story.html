@@ -282,7 +282,7 @@
                 metaElement.innerHTML = `
                     <div class="flex flex-wrap justify-center items-center gap-4 text-sm">
                         <span class="bg-white/20 px-3 py-1 rounded-full">
-                            👶 Age ${metadata.childAge}
+                            📚 ${this.getReadingLevelDisplay(metadata.childAge)}
                         </span>
                         <span class="bg-white/20 px-3 py-1 rounded-full">
                             ⏱️ ${this.getReadingTimeText(metadata.storyLength)}
@@ -311,6 +311,18 @@
                     long: '10-15 minutes'
                 };
                 return times[length] || times.medium;
+            }
+
+            getReadingLevelDisplay(readingLevel) {
+                const displays = {
+                    'pre-reader': 'Pre-Reader (ages 3-6)',
+                    'early-phonics': 'Early Phonics (ages 4-7)',
+                    'beginning-reader': 'Beginning Reader (ages 5-8)',
+                    'developing-reader': 'Developing Reader (ages 6-10)',
+                    'fluent-reader': 'Fluent Reader (ages 8-13)',
+                    'insightful-reader': 'Insightful Reader (ages 10-16+)'
+                };
+                return displays[readingLevel] || 'Beginning Reader';
             }
 
             capitalizeFirst(str) {
@@ -453,7 +465,7 @@
                         <body>
                             <h1>${this.currentStory.title}</h1>
                             <div class="meta">
-                                A magical story for ${this.storyParams.childName}, age ${this.storyParams.childAge}
+                                A magical story for ${this.storyParams.childName} (${this.getReadingLevelDisplay(this.storyParams.childAge)})
                             </div>
                             <div>
                                 ${this.currentStory.content.split('\n').map(p => p.trim() ? `<p>${p}</p>` : '').join('')}
