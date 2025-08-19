@@ -58,56 +58,52 @@ class SubscriptionManager {
                         ${featureName ? `The ${featureName} feature` : 'This feature'} is available with our Premium plan!
                     </p>
                     
-                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 mb-6">
-                        <h4 class="font-bold text-gray-800 mb-3">Premium (£4.99/mo) includes:</h4>
-                        <ul class="text-left space-y-2 text-gray-600 text-sm">
-                            <li class="flex items-center space-x-2">
-                                <span class="text-green-500">✓</span>
-                                <span>Unlimited text stories (up to 3000 words)</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <span class="text-green-500">✓</span>
-                                <span>Story history & favorites</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <span class="text-green-500">✓</span>
-                                <span>3 AI read-aloud stories per month</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <span class="text-green-500">✓</span>
-                                <span>Images with stories</span>
-                            </li>
-                            <li class="flex items-center space-x-2">
-                                <span class="text-green-500">✓</span>
-                                <span>Export stories (PDF/Print)</span>
-                            </li>
-                        </ul>
-                        
-                        <div class="mt-4 pt-3 border-t border-purple-200">
-                            <h5 class="font-bold text-gray-800 mb-2">Family (£9.99/mo) adds:</h5>
+                    <!-- Pricing Plans -->
+                    <div class="space-y-4 mb-6">
+                        <!-- Free Plan -->
+                        <div class="bg-gray-50 rounded-xl p-4 border-2 border-gray-200">
+                            <h4 class="font-bold text-gray-800 mb-2">Free (Forever) — £0</h4>
                             <ul class="text-left space-y-1 text-gray-600 text-sm">
-                                <li class="flex items-center space-x-2">
-                                    <span class="text-blue-500">✓</span>
-                                    <span>Up to 6 child profiles</span>
-                                </li>
-                                <li class="flex items-center space-x-2">
-                                    <span class="text-blue-500">✓</span>
-                                    <span>30 AI read-aloud stories/month</span>
-                                </li>
-                                <li class="flex items-center space-x-2">
-                                    <span class="text-blue-500">✓</span>
-                                    <span>Custom AI-generated images</span>
-                                </li>
+                                <li>• 3 text-only stories per day (max 10 per month)</li>
+                                <li>• 1 child profile</li>
+                                <li style="color: #6b7280; font-style: italic;">Best for: trying it out and building a bedtime routine</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Premium Plan -->
+                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-300">
+                            <h4 class="font-bold text-gray-800 mb-2">Premium (Individual) — £4.99/mo</h4>
+                            <ul class="text-left space-y-1 text-gray-600 text-sm">
+                                <li>• Story history (read favourite stories again later)</li>
+                                <li>• Unlimited text stories* (up to 3000 words each)</li>
+                                <li>• Up to 3 stories read aloud using AI</li>
+                                <li>• Images to accompany the stories</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Family Plan -->
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border-2 border-blue-300">
+                            <h4 class="font-bold text-gray-800 mb-2">Family — £9.99/mo</h4>
+                            <ul class="text-left space-y-1 text-gray-600 text-sm">
+                                <li>• Everything in Premium</li>
+                                <li>• AI Generated Images specifically for each story / your child</li>
+                                <li>• Up to 30 stories read aloud using AI</li>
+                                <li>• Up to 6 child profiles (great for the family)</li>
                             </ul>
                         </div>
                     </div>
                     
-                    <div class="flex gap-4">
-                        <button id="cancelUpgrade" class="flex-1 px-6 py-3 border border-gray-300 rounded-full hover:bg-gray-50 transition-all duration-200">
+                    <div class="flex flex-col gap-3">
+                        <div class="flex gap-3">
+                            <button id="upgradePremium" class="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-3 rounded-full hover:shadow-lg transition-all duration-200 text-sm font-medium">
+                                Choose Premium £4.99/mo
+                            </button>
+                            <button id="upgradeFamily" class="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-3 rounded-full hover:shadow-lg transition-all duration-200 text-sm font-medium">
+                                Choose Family £9.99/mo
+                            </button>
+                        </div>
+                        <button id="cancelUpgrade" class="w-full px-6 py-2 border border-gray-300 rounded-full hover:bg-gray-50 transition-all duration-200 text-sm">
                             Maybe Later
-                        </button>
-                        <button id="upgradeNow" class="flex-1 bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200">
-                            Upgrade Now
                         </button>
                     </div>
                 </div>
@@ -121,9 +117,14 @@ class SubscriptionManager {
             document.body.removeChild(modal);
         });
 
-        modal.querySelector('#upgradeNow').addEventListener('click', () => {
+        modal.querySelector('#upgradePremium').addEventListener('click', () => {
             document.body.removeChild(modal);
-            this.redirectToUpgrade();
+            this.redirectToUpgrade('premium');
+        });
+
+        modal.querySelector('#upgradeFamily').addEventListener('click', () => {
+            document.body.removeChild(modal);
+            this.redirectToUpgrade('family');
         });
 
         // Close on backdrop click
@@ -206,26 +207,28 @@ class SubscriptionManager {
     }
 
     // Redirect to upgrade page/process
-    redirectToUpgrade() {
+    redirectToUpgrade(planType = 'premium') {
         // In a real app, this would redirect to your subscription/payment page
-        alert('Redirecting to upgrade page... (This would integrate with Stripe, PayPal, etc.)');
+        const planName = planType === 'family' ? 'Family (£9.99/mo)' : 'Premium (£4.99/mo)';
+        alert(`Redirecting to upgrade page for ${planName}... (This would integrate with Stripe, PayPal, etc.)`);
         
         // For demo purposes, you could simulate upgrading the user
-        // this.simulateUpgrade();
+        this.simulateUpgrade(planType);
     }
 
     // Demo function to simulate upgrading a user (for testing)
-    async simulateUpgrade() {
+    async simulateUpgrade(planType = 'premium') {
         if (window.authManager.isUserAuthenticated()) {
             const user = window.authManager.getCurrentUser();
             
-            // Update user profile with premium subscription
+            // Update user profile with selected subscription
             const result = await window.dbManager.updateUserProfile(user.id, {
-                subscription_type: 'premium'
+                subscription_type: planType
             });
 
             if (result.success) {
-                alert('Demo: Account upgraded to Premium! 🎉');
+                const planName = planType === 'family' ? 'Family' : 'Premium';
+                alert(`Demo: Account upgraded to ${planName}! 🎉`);
                 // Refresh the page to update UI
                 window.location.reload();
             }
