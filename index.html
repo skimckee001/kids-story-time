@@ -423,7 +423,6 @@
           <div class="form-section">
               <div class="form-group">
                   <label for="childNameInput">Child's Name</label>
-                  <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Optional</p>
                   <div style="display: flex; gap: 15px; align-items: center;">
                       <input type="text" id="childNameInput" class="form-control" placeholder="Enter your child's name" style="flex: 1;">
                       <div style="display: flex; background: #f0f0f0; border-radius: 25px; padding: 3px;">
@@ -435,126 +434,142 @@
                           </button>
                       </div>
                   </div>
+                  <div style="margin-top: 10px;">
+                      <label style="display: flex; align-items: center; font-size: 14px; cursor: pointer;">
+                          <input type="checkbox" id="includeNameToggle" style="margin-right: 8px;" checked>
+                          <span>Include child's name as main character in story</span>
+                      </label>
+                      <p style="font-size: 12px; color: #666; margin-top: 5px; margin-left: 22px;">When unchecked, the story will use a generic character name</p>
+                  </div>
               </div>
 
+              <!-- Story Prompt Section (moved to top) -->
               <div class="form-group">
-                  <label for="childAge">Child's Reading Level</label>
-                  <select id="childAge" class="form-control" required>
-                      <option value="">Select reading level</option>
-                      <option value="pre-reader">Pre-Reader (ages 3–6)</option>
-                      <option value="early-phonics">Early Phonics Reader (ages 4–7)</option>
-                      <option value="beginning-reader">Beginning Reader (ages 5–8)</option>
-                      <option value="developing-reader">Developing Reader (ages 6–10)</option>
-                      <option value="fluent-reader">Fluent Reader (ages 8–13)</option>
-                      <option value="insightful-reader">Insightful Reader (ages 10–16+)</option>
-                  </select>
+                  <label for="customPrompt">What would you like this story to be about? <span style="color: #007acc;">🎤</span>
+                  <button type="button" id="infoBtn" style="background: none; border: none; color: #007acc; font-size: 16px; margin-left: 5px; cursor: pointer;" title="Click for examples">ℹ️</button></label>
+                  <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Tell us what adventure you'd like to hear about</p>
+                  <div style="position: relative;">
+                      <textarea id="customPrompt" class="form-control" rows="3" placeholder="Example: A brave princess who loves football and goes on an adventure with her pet dragon to save the enchanted forest..."></textarea>
+                      <button type="button" id="micBtn" style="position: absolute; right: 10px; top: 10px; background: #007acc; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; font-size: 16px;" title="Voice input">🎤</button>
+                  </div>
               </div>
 
+              <!-- Theme Selection -->
               <div class="form-group">
-                  <label for="storyLength">Story Length</label>
-                  <select id="storyLength" class="form-control" required>
-                      <option value="">Select length</option>
-                      <option value="short">Short (2-3 minutes)</option>
-                      <option value="medium">Medium (5-7 minutes)</option>
-                      <option value="long">Long (10-15 minutes)</option>
-                  </select>
-              </div>
-              <!-- Choose a topic for this story -->
-              <div class="form-group">
-                  <label>Choose a topic for this story</label>
-                  <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Select what your child loves to make the story extra special - Optional</p>
+                  <label>Would you like to add a theme for this story?</label>
+                  <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Pick one or more themes to make it extra special - Optional</p>
                   <div class="interests-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
                       <!-- Story Themes -->
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="adventure" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="adventure" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🏰</span>
                           <span style="font-size: 14px;">Adventure</span>
                       </label>
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="animals" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="animals" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦁</span>
                           <span style="font-size: 14px;">Animals</span>
                       </label>
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="space" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="space" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🚀</span>
                           <span style="font-size: 14px;">Space</span>
                       </label>
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="fantasy" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="fantasy" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🧚</span>
                           <span style="font-size: 14px;">Fantasy</span>
                       </label>
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="ocean" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="ocean" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🌊</span>
                           <span style="font-size: 14px;">Ocean</span>
                       </label>
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="friendship" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="friendship" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🤝</span>
                           <span style="font-size: 14px;">Friendship</span>
                       </label>
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="nature" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="nature" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🌳</span>
                           <span style="font-size: 14px;">Nature</span>
                       </label>
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="superhero" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="superhero" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦸</span>
                           <span style="font-size: 14px;">Superhero</span>
                       </label>
                       <!-- New themes -->
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="funny" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="funny" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">😄</span>
                           <span style="font-size: 14px;">Funny</span>
                       </label>
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="unicorns" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="unicorns" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦄</span>
                           <span style="font-size: 14px;">Unicorns</span>
                       </label>
                       <!-- Interest options (now as additional themes) -->
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="dinosaurs" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="dinosaurs" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦕</span>
                           <span style="font-size: 14px;">Dinosaurs</span>
                       </label>
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="princesses" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="princesses" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">👸</span>
                           <span style="font-size: 14px;">Princesses</span>
                       </label>
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="cars" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="cars" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🚗</span>
                           <span style="font-size: 14px;">Cars</span>
                       </label>
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="sports" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="sports" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">⚽</span>
                           <span style="font-size: 14px;">Sports</span>
                       </label>
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="music" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="music" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🎵</span>
                           <span style="font-size: 14px;">Music</span>
                       </label>
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="radio" name="story-theme" value="art" style="display: none;">
+                          <input type="checkbox" class="story-theme" value="art" style="display: none;">
                           <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🎨</span>
                           <span style="font-size: 14px;">Art</span>
                       </label>
                   </div>
               </div>
 
-              <!-- Custom Story Ideas -->
+              <!-- Reading Level and Story Length (moved to bottom) -->
               <div class="form-group">
-                  <label for="customPrompt">Special requests for the story?</label>
-                  <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Add any special details you'd like in the story - Optional</p>
-                  <textarea id="customPrompt" class="form-control" rows="2" placeholder="Example: Include a pet dog named Buddy, or make it about learning to ride a bike..."></textarea>
+                  <label for="childAge">Child's Reading Level <span style="color: red;">*</span></label>
+                  <select id="childAge" class="form-control" required>
+                      <option value="">Select reading level</option>
+                      <option value="pre-reader">Pre-Reader (ages 3–6)</option>
+                      <option value="early-phonics">Early Phonics Reader (ages 4–7)</option>
+                      <option value="beginning-reader">Beginning Reader (ages 5–8)</option>
+                      <option value="developing-reader" selected>Developing Reader (ages 6–10)</option>
+                      <option value="fluent-reader">Fluent Reader (ages 8–13)</option>
+                      <option value="insightful-reader">Insightful Reader (ages 10–16+)</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="storyLength">Story Length <span style="color: red;">*</span></label>
+                  <select id="storyLength" class="form-control" required>
+                      <option value="">Select length</option>
+                      <option value="short">Short (2-3 minutes)</option>
+                      <option value="medium">Medium (5-7 minutes)</option>
+                      <option value="long">Long (10-15 minutes)</option>
+                      <option value="extended" selected>Extended (20 minutes)</option>
+                      <option value="long-extended">Long Extended (30 minutes)</option>
+                      <option value="extra-long">Extra Long (45 minutes)</option>
+                  </select>
               </div>
           </div>
 
@@ -787,40 +802,43 @@
               }
           }
 
-          // Theme selection (now radio buttons in the combined section)
+          // Theme selection (now supports multiple checkboxes)
+          let selectedThemes = [];
           document.querySelectorAll('.theme-option').forEach(item => {
               item.addEventListener('click', function(e) {
                   e.preventDefault();
-                  const radio = this.querySelector('input[type="radio"]');
+                  const checkbox = this.querySelector('input[type="checkbox"]');
                   
-                  // Uncheck all other radios
-                  document.querySelectorAll('input[name="story-theme"]').forEach(r => r.checked = false);
-                  document.querySelectorAll('.theme-option').forEach(t => {
-                      t.style.borderColor = '#e0e0e0';
-                      t.style.backgroundColor = 'transparent';
-                      t.style.transform = 'scale(1)';
-                  });
+                  // Toggle the checkbox
+                  checkbox.checked = !checkbox.checked;
                   
-                  // Check this radio and style it
-                  radio.checked = true;
-                  selectedTheme = radio.value;
-                  this.style.borderColor = '#667eea';
-                  this.style.backgroundColor = '#f0f4ff';
-                  this.style.transform = 'scale(1.05)';
+                  if (checkbox.checked) {
+                      // Add to selected themes
+                      selectedThemes.push(checkbox.value);
+                      this.style.borderColor = '#667eea';
+                      this.style.backgroundColor = '#f0f4ff';
+                      this.style.transform = 'scale(1.05)';
+                  } else {
+                      // Remove from selected themes
+                      selectedThemes = selectedThemes.filter(theme => theme !== checkbox.value);
+                      this.style.borderColor = '#e0e0e0';
+                      this.style.backgroundColor = 'transparent';
+                      this.style.transform = 'scale(1)';
+                  }
               });
 
               // Hover effects
               item.addEventListener('mouseenter', function() {
-                  const radio = this.querySelector('input[type="radio"]');
-                  if (!radio.checked) {
+                  const checkbox = this.querySelector('input[type="checkbox"]');
+                  if (!checkbox.checked) {
                       this.style.borderColor = '#667eea';
                       this.style.backgroundColor = '#f8faff';
                   }
               });
 
               item.addEventListener('mouseleave', function() {
-                  const radio = this.querySelector('input[type="radio"]');
-                  if (!radio.checked) {
+                  const checkbox = this.querySelector('input[type="checkbox"]');
+                  if (!checkbox.checked) {
                       this.style.borderColor = '#e0e0e0';
                       this.style.backgroundColor = 'transparent';
                   }
@@ -834,6 +852,7 @@
               this.style.backgroundColor = '#667eea';
               this.style.color = 'white';
               selectedGender = 'boy';
+              saveUserPreferences();
           });
 
           document.getElementById('genderGirl').addEventListener('click', function() {
@@ -842,10 +861,108 @@
               this.style.backgroundColor = '#FF6B9D';
               this.style.color = 'white';
               selectedGender = 'girl';
+              saveUserPreferences();
           });
+
+          // Save preferences when reading level or story length changes
+          document.getElementById('childAge').addEventListener('change', saveUserPreferences);
+          document.getElementById('storyLength').addEventListener('change', saveUserPreferences);
+          document.getElementById('includeNameToggle').addEventListener('change', saveUserPreferences);
 
           // Generate button click
           document.getElementById('generateBtn').addEventListener('click', generateStory);
+
+          // Microphone button functionality
+          document.getElementById('micBtn').addEventListener('click', function() {
+              if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                  const recognition = new SpeechRecognition();
+                  
+                  recognition.continuous = false;
+                  recognition.interimResults = false;
+                  recognition.lang = 'en-US';
+                  
+                  // Change button appearance during recording
+                  this.innerHTML = '🔴';
+                  this.style.backgroundColor = '#dc2626';
+                  
+                  recognition.onstart = function() {
+                      console.log('Voice recognition started');
+                  };
+                  
+                  recognition.onresult = function(event) {
+                      const transcript = event.results[0][0].transcript;
+                      const textarea = document.getElementById('customPrompt');
+                      if (textarea.value) {
+                          textarea.value += ' ' + transcript;
+                      } else {
+                          textarea.value = transcript;
+                      }
+                  };
+                  
+                  recognition.onerror = function(event) {
+                      console.error('Speech recognition error:', event.error);
+                      alert('Sorry, speech recognition failed. Please try typing instead.');
+                  };
+                  
+                  recognition.onend = function() {
+                      // Reset button appearance
+                      document.getElementById('micBtn').innerHTML = '🎤';
+                      document.getElementById('micBtn').style.backgroundColor = '#007acc';
+                  };
+                  
+                  recognition.start();
+              } else {
+                  alert('Speech recognition is not supported in your browser. Please use Chrome or Safari.');
+              }
+          });
+
+          // Info button functionality
+          document.getElementById('infoBtn').addEventListener('click', function() {
+              const modal = document.createElement('div');
+              modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;';
+              modal.innerHTML = `
+                  <div style="background: white; border-radius: 15px; padding: 30px; max-width: 500px; max-height: 80vh; overflow-y: auto;">
+                      <h3 style="margin-bottom: 20px; color: #333;">💡 Story Ideas & Examples</h3>
+                      <div style="text-align: left;">
+                          <h4 style="color: #667eea; margin-top: 20px;">Popular Story Ideas:</h4>
+                          <ul style="margin-left: 20px; line-height: 1.8;">
+                              <li>A brave princess who loves football and saves her kingdom</li>
+                              <li>A dinosaur detective solving mysteries in the jungle</li>
+                              <li>Twin astronauts discovering a planet made of candy</li>
+                              <li>A superhero cat who can fly and loves ice cream</li>
+                              <li>Friends building a magical treehouse that can travel anywhere</li>
+                          </ul>
+                          
+                          <h4 style="color: #667eea; margin-top: 20px;">Make it Personal:</h4>
+                          <ul style="margin-left: 20px; line-height: 1.8;">
+                              <li>Include your child's name as the main character</li>
+                              <li>Add their favorite toy, pet, or stuffed animal</li>
+                              <li>Use places they know (their school, park, grandma's house)</li>
+                              <li>Include their friends or siblings as characters</li>
+                              <li>Add their current interests or hobbies</li>
+                          </ul>
+                          
+                          <h4 style="color: #667eea; margin-top: 20px;">Learning Opportunities:</h4>
+                          <ul style="margin-left: 20px; line-height: 1.8;">
+                              <li>Stories about sharing, kindness, or being brave</li>
+                              <li>Adventures that teach colors, numbers, or letters</li>
+                              <li>Tales about different cultures or countries</li>
+                              <li>Stories that help with bedtime fears or new experiences</li>
+                          </ul>
+                      </div>
+                      <button onclick="this.parentElement.parentElement.remove()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 20px; cursor: pointer;">Got it!</button>
+                  </div>
+              `;
+              document.body.appendChild(modal);
+              
+              // Close on backdrop click
+              modal.addEventListener('click', function(e) {
+                  if (e.target === modal) {
+                      document.body.removeChild(modal);
+                  }
+              });
+          });
 
           // Modal controls
           document.getElementById('createAccountBtn').addEventListener('click', () => {
@@ -990,6 +1107,9 @@
               // Update welcome message (will be personalized when profile loads)
               document.getElementById('welcomeMessage').textContent = 'Welcome back!';
               
+              // Auto-populate child's name from user metadata or profile
+              populateChildName();
+              
               // Show story library button for premium users (for now, all logged-in users)
               document.getElementById('storyLibraryBtn').style.display = 'inline-block';
               
@@ -1024,11 +1144,128 @@
                   welcomeMsg.textContent = 'Welcome back!';
               }
               
+              // Load user preferences
+              await loadUserPreferences(profile);
+              
               // Check daily limits
               const canGenerate = await window.dbManager.canGenerateStory(currentUser.id);
               updateLimitsDisplay(canGenerate);
           } catch (error) {
               console.error('Error loading profile:', error);
+          }
+      }
+
+      async function populateChildName() {
+          if (!currentUser) return;
+          
+          try {
+              // Check if child name should be populated from profile/metadata
+              let childName = null;
+              
+              // For test users, get from metadata
+              if (currentUser.id && currentUser.id.startsWith('test-') && currentUser.user_metadata && currentUser.user_metadata.child_name) {
+                  childName = currentUser.user_metadata.child_name;
+              } else if (window.dbManager) {
+                  // For real users, get from profile
+                  const profile = await window.dbManager.getUserProfile(currentUser.id);
+                  if (profile && profile.child_name) {
+                      childName = profile.child_name;
+                  }
+              }
+              
+              // Populate the child name field if we found a name
+              if (childName) {
+                  document.getElementById('childNameInput').value = childName;
+              }
+          } catch (error) {
+              console.error('Error populating child name:', error);
+          }
+      }
+
+      async function loadUserPreferences(profile = null) {
+          try {
+              // Load from localStorage first (most recent)
+              const savedPrefs = localStorage.getItem('storyPreferences');
+              if (savedPrefs) {
+                  const prefs = JSON.parse(savedPrefs);
+                  
+                  // Set reading level if saved
+                  if (prefs.readingLevel) {
+                      document.getElementById('childAge').value = prefs.readingLevel;
+                  }
+                  
+                  // Set story length if saved
+                  if (prefs.storyLength) {
+                      document.getElementById('storyLength').value = prefs.storyLength;
+                  }
+                  
+                  // Set gender if saved
+                  if (prefs.gender) {
+                      setGenderSelection(prefs.gender);
+                  }
+                  
+                  // Set include name toggle if saved
+                  if (prefs.hasOwnProperty('includeNameInStory')) {
+                      document.getElementById('includeNameToggle').checked = prefs.includeNameInStory;
+                  }
+                  
+                  return; // Use localStorage preferences
+              }
+              
+              // Fallback to profile preferences for real users
+              if (profile && profile.preferences) {
+                  if (profile.preferences.reading_level) {
+                      document.getElementById('childAge').value = profile.preferences.reading_level;
+                  }
+                  if (profile.preferences.story_length) {
+                      document.getElementById('storyLength').value = profile.preferences.story_length;
+                  }
+                  if (profile.preferences.gender) {
+                      setGenderSelection(profile.preferences.gender);
+                  }
+                  if (profile.preferences.hasOwnProperty('includeNameInStory')) {
+                      document.getElementById('includeNameToggle').checked = profile.preferences.includeNameInStory;
+                  }
+              }
+          } catch (error) {
+              console.error('Error loading user preferences:', error);
+          }
+      }
+
+      function setGenderSelection(gender) {
+          const boyBtn = document.getElementById('genderBoy');
+          const girlBtn = document.getElementById('genderGirl');
+          
+          // Reset both buttons
+          boyBtn.style.backgroundColor = 'transparent';
+          boyBtn.style.color = '#666';
+          girlBtn.style.backgroundColor = 'transparent';
+          girlBtn.style.color = '#666';
+          
+          // Set the selected gender
+          if (gender === 'boy') {
+              boyBtn.style.backgroundColor = '#667eea';
+              boyBtn.style.color = 'white';
+              selectedGender = 'boy';
+          } else if (gender === 'girl') {
+              girlBtn.style.backgroundColor = '#FF6B9D';
+              girlBtn.style.color = 'white';
+              selectedGender = 'girl';
+          }
+      }
+
+      function saveUserPreferences() {
+          try {
+              const prefs = {
+                  readingLevel: document.getElementById('childAge').value,
+                  storyLength: document.getElementById('storyLength').value,
+                  gender: selectedGender,
+                  includeNameInStory: document.getElementById('includeNameToggle').checked,
+                  timestamp: Date.now()
+              };
+              localStorage.setItem('storyPreferences', JSON.stringify(prefs));
+          } catch (error) {
+              console.error('Error saving preferences:', error);
           }
       }
 
@@ -1071,11 +1308,15 @@
           const childName = document.getElementById('childNameInput').value || 'the hero';
           const childAge = document.getElementById('childAge').value;
           const storyLength = document.getElementById('storyLength').value;
+          const customPrompt = document.getElementById('customPrompt').value;
 
-          if (!childAge || !storyLength || !selectedTheme) {
-              alert('Please select reading level, story length, and a theme!');
+          if (!childAge || !storyLength) {
+              alert('Please select reading level and story length!');
               return;
           }
+
+          // Save preferences when generating story
+          saveUserPreferences();
 
           // Validate child name if provided (only letters and spaces)
           if (childName !== 'the hero' && !/^[a-zA-Z\s]+$/.test(childName)) {
@@ -1101,9 +1342,10 @@
               childName: childName.trim(),
               childAge: childAge,
               storyLength: storyLength,
-              theme: selectedTheme,
+              themes: selectedThemes, // Now supports multiple themes
               gender: selectedGender,
-              customPrompt: document.getElementById('customPrompt')?.value || ''
+              customPrompt: document.getElementById('customPrompt')?.value || '',
+              includeNameInStory: document.getElementById('includeNameToggle').checked
           };
 
           // Save to localStorage for the story page

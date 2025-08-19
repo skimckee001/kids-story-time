@@ -287,18 +287,12 @@ class SubscriptionManager {
     }
 
     updateFormElementsForSubscription(hasPremium) {
-        // Show/hide custom prompt field based on subscription
+        // Custom prompt field is now available to all users with examples
         const customPromptField = document.getElementById('customPrompt');
         if (customPromptField) {
-            if (!hasPremium) {
-                customPromptField.disabled = true;
-                customPromptField.placeholder = 'Upgrade to Premium for custom prompts';
-                
-                // Add upgrade click listener
-                customPromptField.addEventListener('click', () => {
-                    this.showUpgradeModal('Custom Prompts');
-                });
-            }
+            // No restrictions - all users can use custom prompts
+            customPromptField.disabled = false;
+            customPromptField.placeholder = 'Example: A brave princess who loves football and goes on an adventure with her pet dragon to save the enchanted forest...';
         }
     }
 

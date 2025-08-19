@@ -284,7 +284,8 @@
                         storyLength: urlParams.get('storyLength'),
                         theme: urlParams.get('theme'),
                         interests: urlParams.get('interests') ? urlParams.get('interests').split(',') : [],
-                        customPrompt: urlParams.get('customPrompt') || ''
+                        customPrompt: urlParams.get('customPrompt') || '',
+                        includeNameInStory: urlParams.get('includeNameInStory') === 'true'
                     };
                 }
 
@@ -317,7 +318,8 @@
                     storyLength: story.story_length,
                     theme: story.genre,
                     gender: story.gender,
-                    customPrompt: story.custom_prompt
+                    customPrompt: story.custom_prompt,
+                    includeNameInStory: story.include_name_in_story !== false // Default to true if not specified
                 };
 
                 // Display the story
@@ -448,10 +450,12 @@
                         story_length: this.storyParams.storyLength,
                         gender: this.storyParams.gender || null,
                         custom_prompt: this.storyParams.customPrompt || null,
+                        include_name_in_story: this.storyParams.includeNameInStory !== false, // Default to true
                         settings: {
                             storyLength: this.storyParams.storyLength,
                             customPrompt: this.storyParams.customPrompt,
-                            gender: this.storyParams.gender
+                            gender: this.storyParams.gender,
+                            includeNameInStory: this.storyParams.includeNameInStory
                         }
                     };
                     
