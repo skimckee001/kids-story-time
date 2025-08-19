@@ -410,7 +410,7 @@
               <h3>Welcome back, <span id="userName"></span>!</h3>
               <p>Child: <span id="childName"></span></p>
               <div id="limitsDisplay" class="limits-info">
-                  <p><strong>Free Plan:</strong> <span id="storiesRemaining">1</span> story remaining today</p>
+                  <p id="planStatusText"><strong>Free Plan:</strong> <span id="storiesRemaining">1</span> story remaining today</p>
               </div>
               <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
                   <a href="story-library.html" id="storyLibraryBtn" class="btn btn-primary" style="display: none;">
@@ -685,35 +685,83 @@
           if (!window.authManager || !window.authManager.isUserAuthenticated()) return;
           
           const subscriptionType = await window.authManager.getSubscriptionStatus();
-          if (subscriptionType === 'free') {
-              try {
-                  const limits = window.authManager.getUsageLimits('free');
-                  const monthlyResult = await window.dbManager.getUserUsageStats(window.authManager.getCurrentUser().id);
-                  const dailyResult = await window.dbManager.getUserDailyUsageStats(window.authManager.getCurrentUser().id);
+          console.log('Current subscription type:', subscriptionType);
+          
+          try {
+              const limits = window.authManager.getUsageLimits(subscriptionType);
+              
+              // For test users, show mock usage stats
+              const user = window.authManager.getCurrentUser();
+              let dailyUsed = 0;
+              let monthlyUsed = 0;
+              
+              if (!user.id.startsWith('test-')) {
+                  // Real users - get actual stats
+                  const monthlyResult = await window.dbManager.getUserUsageStats(user.id);
+                  const dailyResult = await window.dbManager.getUserDailyUsageStats(user.id);
                   
                   if (monthlyResult.success && dailyResult.success) {
-                      const dailyUsed = dailyResult.data.length;
-                      const monthlyUsed = monthlyResult.data.length;
-                      const dailyRemaining = Math.max(0, limits.storiesPerDay - dailyUsed);
-                      const monthlyRemaining = Math.max(0, limits.storiesPerMonth - monthlyUsed);
-                      
-                      // Add usage indicator to the page
-                      const usageIndicator = document.createElement('div');
-                      usageIndicator.className = 'usage-indicator';
-                      usageIndicator.innerHTML = `
-                          <div style="background: rgba(255, 255, 255, 0.9); padding: 15px; border-radius: 15px; margin: 20px 0; text-align: center; border: 2px solid #e0e7ff;">
-                              <div style="font-size: 14px; color: #4f46e5; font-weight: 600;">
-                                  📊 Free Plan Usage
-                              </div>
-                              <div style="margin: 8px 0; font-size: 13px; color: #6b7280;">
-                                  Today: ${dailyUsed}/${limits.storiesPerDay} stories • Month: ${monthlyUsed}/${limits.storiesPerMonth} stories
-                              </div>
-                              ${(dailyRemaining === 0 || monthlyRemaining === 0) ? 
-                                  '<div style="color: #dc2626; font-size: 12px; font-weight: 600;">Limit reached - Upgrade for unlimited stories!</div>' :
-                                  '<div style="color: #059669; font-size: 12px;">✨ Upgrade to Premium for unlimited stories + more features</div>'
-                              }
+                      dailyUsed = dailyResult.data.length;
+                      monthlyUsed = monthlyResult.data.length;
+                  }
+              } else {
+                  // Test users - show demo usage based on tier
+                  if (subscriptionType === 'free') {
+                      dailyUsed = 3; // Show 3 used out of 5 for free
+                      monthlyUsed = 12; // Show 12 used out of 20 for free
+                  } else {
+                      dailyUsed = 8; // Premium users have used some stories
+                      monthlyUsed = 47;
+                  }
+              }
+              
+              const dailyRemaining = Math.max(0, limits.storiesPerDay - dailyUsed);
+              const monthlyRemaining = Math.max(0, limits.storiesPerMonth - monthlyUsed);
+              
+              // Get tier display name and color
+              const tierInfo = {
+                  free: { name: 'Free Plan', color: '#6b7280' },
+                  premium: { name: 'Premium Plan', color: '#f59e0b' },
+                  family: { name: 'Family Plan', color: '#10b981' }
+              };
+              const currentTier = tierInfo[subscriptionType] || tierInfo.free;
+              
+              // Add usage indicator to the page
+              const usageIndicator = document.createElement('div');
+              usageIndicator.className = 'usage-indicator';
+              
+              if (limits.storiesPerDay >= 999) {
+                  // Unlimited plan
+                  usageIndicator.innerHTML = `
+                      <div style="background: rgba(255, 255, 255, 0.9); padding: 15px; border-radius: 15px; margin: 20px 0; text-align: center; border: 2px solid ${currentTier.color};">
+                          <div style="font-size: 14px; color: ${currentTier.color}; font-weight: 600;">
+                              ✨ ${currentTier.name}
                           </div>
-                      `;
+                          <div style="margin: 8px 0; font-size: 13px; color: #059669; font-weight: bold;">
+                              🚀 Unlimited Stories!
+                          </div>
+                          <div style="color: #6b7280; font-size: 12px;">
+                              Generate as many stories as you'd like
+                          </div>
+                      </div>
+                  `;
+              } else {
+                  // Limited plan
+                  usageIndicator.innerHTML = `
+                      <div style="background: rgba(255, 255, 255, 0.9); padding: 15px; border-radius: 15px; margin: 20px 0; text-align: center; border: 2px solid ${currentTier.color};">
+                          <div style="font-size: 14px; color: ${currentTier.color}; font-weight: 600;">
+                              📊 ${currentTier.name}
+                          </div>
+                          <div style="margin: 8px 0; font-size: 13px; color: #6b7280;">
+                              Today: ${dailyUsed}/${limits.storiesPerDay} stories • Month: ${monthlyUsed}/${limits.storiesPerMonth} stories
+                          </div>
+                          ${(dailyRemaining === 0 || monthlyRemaining === 0) ? 
+                              '<div style="color: #dc2626; font-size: 12px; font-weight: 600;">Limit reached - Upgrade for unlimited stories!</div>' :
+                              `<div style="color: #059669; font-size: 12px;">${dailyRemaining} stories remaining today</div>`
+                          }
+                      </div>
+                  `;
+              }
                       
                       const mainContent = document.querySelector('.main-content');
                       if (mainContent) {
@@ -975,16 +1023,37 @@
           }
       }
 
-      function updateLimitsDisplay(canGenerate) {
+      async function updateLimitsDisplay(canGenerate) {
           const limitsDisplay = document.getElementById('limitsDisplay');
           const generateBtn = document.getElementById('generateBtn');
           
-          if (canGenerate) {
-              limitsDisplay.innerHTML = '<p><strong>Free Plan:</strong> 1 story remaining today</p>';
-              generateBtn.disabled = false;
+          if (window.authManager && window.authManager.isUserAuthenticated()) {
+              const subscriptionType = await window.authManager.getSubscriptionStatus();
+              const tierInfo = {
+                  free: { name: 'Free Plan', color: '#6b7280' },
+                  premium: { name: 'Premium Plan', color: '#f59e0b' },
+                  family: { name: 'Family Plan', color: '#10b981' }
+              };
+              const currentTier = tierInfo[subscriptionType] || tierInfo.free;
+              
+              if (subscriptionType === 'premium' || subscriptionType === 'family') {
+                  limitsDisplay.innerHTML = `<p><strong style="color: ${currentTier.color};">${currentTier.name}:</strong> ✨ Unlimited stories!</p>`;
+                  generateBtn.disabled = false;
+              } else if (canGenerate) {
+                  limitsDisplay.innerHTML = `<p><strong style="color: ${currentTier.color};">${currentTier.name}:</strong> Stories remaining today</p>`;
+                  generateBtn.disabled = false;
+              } else {
+                  limitsDisplay.innerHTML = `<p><strong style="color: ${currentTier.color};">${currentTier.name}:</strong> Daily limit reached. <a href="#upgrade">Upgrade to Premium</a> for unlimited stories!</p>`;
+                  generateBtn.disabled = true;
+              }
           } else {
-              limitsDisplay.innerHTML = '<p><strong>Free Plan:</strong> Daily limit reached. <a href="#upgrade">Upgrade to Premium</a> for unlimited stories!</p>';
-              generateBtn.disabled = true;
+              if (canGenerate) {
+                  limitsDisplay.innerHTML = '<p><strong>Free Plan:</strong> 1 story remaining today</p>';
+                  generateBtn.disabled = false;
+              } else {
+                  limitsDisplay.innerHTML = '<p><strong>Free Plan:</strong> Daily limit reached. <a href="#upgrade">Upgrade to Premium</a> for unlimited stories!</p>';
+                  generateBtn.disabled = true;
+              }
           }
       }
 

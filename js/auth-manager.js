@@ -260,17 +260,22 @@ class AuthManager {
     getUsageLimits(subscriptionType = 'free') {
         const limits = {
             free: {
-                storiesPerDay: 3,
-                storiesPerMonth: 10,
+                storiesPerDay: 5,
+                storiesPerMonth: 20,
                 childProfiles: 1,
                 storyHistory: false,
-                storyRating: true, // Enhanced: Allow ratings for engagement
+                storyRating: true,
                 aiReadAloud: 0,
-                basicReadAloud: true, // Enhanced: Basic device TTS
+                basicReadAloud: true,
                 customPrompts: false,
                 storyExport: false,
                 storyImages: false,
-                customAIImages: false
+                customAIImages: false,
+                storyPersonalization: false,
+                bedtimeIntegration: false,
+                educationalThemes: false,
+                favoriteCharacters: false,
+                priorityGeneration: false
             },
             premium: {
                 storiesPerDay: 999, // Unlimited
@@ -278,29 +283,46 @@ class AuthManager {
                 childProfiles: 1,
                 storyHistory: true,
                 storyRating: true,
-                aiReadAloud: 3, // 3 AI read-aloud stories per month
-                basicReadAloud: true,
-                customPrompts: true,
-                storyExport: true, // PDF/print export
-                storyImages: true, // Images to accompany stories
-                customAIImages: false,
-                maxWordsPerStory: 3000
-            },
-            family: {
-                storiesPerDay: 999, // Unlimited
-                storiesPerMonth: 999, // Unlimited
-                childProfiles: 6, // Up to 6 child profiles
-                storyHistory: true,
-                storyRating: true,
-                aiReadAloud: 30, // 30 AI read-aloud stories per month
+                aiReadAloud: 10, // 10 AI read-aloud stories per month
                 basicReadAloud: true,
                 customPrompts: true,
                 storyExport: true,
                 storyImages: true,
-                customAIImages: true, // AI generated images for each story
+                customAIImages: false,
                 maxWordsPerStory: 3000,
-                storySharing: true, // Share stories between family members
-                parentalControls: true
+                storyPersonalization: true,
+                bedtimeIntegration: true,
+                educationalThemes: true,
+                favoriteCharacters: true,
+                priorityGeneration: true,
+                seasonalContent: true
+            },
+            family: {
+                storiesPerDay: 999, // Unlimited
+                storiesPerMonth: 999, // Unlimited
+                childProfiles: 6,
+                storyHistory: true,
+                storyRating: true,
+                aiReadAloud: 50, // 50 AI read-aloud stories per month
+                basicReadAloud: true,
+                customPrompts: true,
+                storyExport: true,
+                storyImages: true,
+                customAIImages: true,
+                maxWordsPerStory: 3000,
+                storySharing: true,
+                parentalControls: true,
+                storyPersonalization: true,
+                bedtimeIntegration: true,
+                educationalThemes: true,
+                favoriteCharacters: true,
+                priorityGeneration: true,
+                seasonalContent: true,
+                progressTracking: true,
+                storyCollaboration: true,
+                parentDashboard: true,
+                offlineMode: true,
+                ageFiltering: true
             }
         };
         

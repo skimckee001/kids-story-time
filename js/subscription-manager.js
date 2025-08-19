@@ -63,32 +63,48 @@ class SubscriptionManager {
                         <!-- Free Plan -->
                         <div class="bg-gray-50 rounded-xl p-4 border-2 border-gray-200">
                             <h4 class="font-bold text-gray-800 mb-2">Free (Forever) — £0</h4>
+                            <p class="text-xs text-gray-500 mb-2 italic">Perfect for bedtime basics</p>
                             <ul class="text-left space-y-1 text-gray-600 text-sm">
-                                <li>• 3 text-only stories per day (max 10 per month)</li>
+                                <li>• 5 stories per day (max 20 per month)</li>
+                                <li>• Basic text-to-speech</li>
                                 <li>• 1 child profile</li>
-                                <li style="color: #6b7280; font-style: italic;">Best for: trying it out and building a bedtime routine</li>
+                                <li>• Story rating & feedback</li>
                             </ul>
                         </div>
                         
                         <!-- Premium Plan -->
                         <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-300">
                             <h4 class="font-bold text-gray-800 mb-2">Premium (Individual) — £4.99/mo</h4>
+                            <p class="text-xs text-purple-600 mb-2 italic">Transform bedtime into magical bonding time</p>
                             <ul class="text-left space-y-1 text-gray-600 text-sm">
-                                <li>• Story history (read favourite stories again later)</li>
-                                <li>• Unlimited text stories* (up to 3000 words each)</li>
-                                <li>• Up to 3 stories read aloud using AI</li>
-                                <li>• Images to accompany the stories</li>
+                                <li>• ✨ Unlimited stories (up to 3000 words each)</li>
+                                <li>• 📚 Story history & favorites</li>
+                                <li>• 🎭 Story personalization with child's interests</li>
+                                <li>• 🖼️ Beautiful story images</li>
+                                <li>• 🎧 10 AI read-aloud stories per month</li>
+                                <li>• 🌙 Bedtime routine integration <span class="text-orange-500 text-xs">(coming soon)</span></li>
+                                <li>• 📖 Educational themes & learning goals <span class="text-orange-500 text-xs">(coming soon)</span></li>
+                                <li>• 🦸 Favorite character series <span class="text-orange-500 text-xs">(coming soon)</span></li>
+                                <li>• ⚡ Priority story generation</li>
+                                <li>• 🎄 Seasonal & holiday content <span class="text-orange-500 text-xs">(coming soon)</span></li>
                             </ul>
                         </div>
                         
                         <!-- Family Plan -->
                         <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border-2 border-blue-300">
                             <h4 class="font-bold text-gray-800 mb-2">Family — £9.99/mo</h4>
+                            <p class="text-xs text-blue-600 mb-2 italic">Create lasting memories with personalized adventures</p>
                             <ul class="text-left space-y-1 text-gray-600 text-sm">
-                                <li>• Everything in Premium</li>
-                                <li>• AI Generated Images specifically for each story / your child</li>
-                                <li>• Up to 30 stories read aloud using AI</li>
-                                <li>• Up to 6 child profiles (great for the family)</li>
+                                <li>• 🌟 Everything in Premium</li>
+                                <li>• 🎨 Custom AI-generated images for each story</li>
+                                <li>• 🎧 50 AI read-aloud stories per month</li>
+                                <li>• 👨‍👩‍👧‍👦 Up to 6 child profiles</li>
+                                <li>• 📊 Progress tracking & milestones <span class="text-orange-500 text-xs">(coming soon)</span></li>
+                                <li>• 🤝 Story collaboration between siblings <span class="text-orange-500 text-xs">(coming soon)</span></li>
+                                <li>• 👪 Parent dashboard & insights <span class="text-orange-500 text-xs">(coming soon)</span></li>
+                                <li>• 📱 Offline mode for car trips <span class="text-orange-500 text-xs">(coming soon)</span></li>
+                                <li>• 🛡️ Age-appropriate content filtering <span class="text-orange-500 text-xs">(coming soon)</span></li>
+                                <li>• 🔗 Story sharing between family members</li>
                             </ul>
                         </div>
                     </div>
