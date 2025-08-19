@@ -411,7 +411,12 @@
               <div id="limitsDisplay" class="limits-info">
                   <p><strong>Free Plan:</strong> <span id="storiesRemaining">1</span> story remaining today</p>
               </div>
-              <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+              <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                  <a href="story-library.html" id="storyLibraryBtn" class="btn btn-primary" style="display: none;">
+                      📚 My Story Library
+                  </a>
+                  <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+              </div>
           </div>
 
           <!-- Story Creation Form -->
@@ -869,6 +874,9 @@
               document.getElementById('userName').textContent = currentUser.email;
               // Child name would come from profile data
               document.getElementById('childName').textContent = 'Loading...';
+              
+              // Show story library button for premium users (for now, all logged-in users)
+              document.getElementById('storyLibraryBtn').style.display = 'inline-block';
               
               // Load user profile and update UI
               loadUserProfile();

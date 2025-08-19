@@ -344,17 +344,26 @@
                         user_id: user.id,
                         title: this.currentStory.title,
                         content: this.currentStory.content,
-                        age_group: this.storyParams.childAge,
+                        age_group: this.getReadingLevelDisplay(this.storyParams.childAge),
                         genre: this.storyParams.theme,
-                        characters: [this.storyParams.childName],
+                        characters: [this.storyParams.childName || 'the hero'],
+                        reading_level: this.storyParams.childAge,
+                        story_length: this.storyParams.storyLength,
+                        gender: this.storyParams.gender || null,
+                        custom_prompt: this.storyParams.customPrompt || null,
                         settings: {
                             storyLength: this.storyParams.storyLength,
-                            interests: this.storyParams.interests,
-                            customPrompt: this.storyParams.customPrompt
+                            customPrompt: this.storyParams.customPrompt,
+                            gender: this.storyParams.gender
                         }
                     };
                     
-                    await window.dbManager.createStory(storyData);
+                    const result = await window.dbManager.createStory(storyData);
+                    if (result.success) {
+                        // Store the story ID for rating later
+                        this.currentStoryId = result.data.id;
+                        console.log('Story saved to history:', result.data.id);
+                    }
                 } catch (error) {
                     console.error('Error saving story to database:', error);
                 }

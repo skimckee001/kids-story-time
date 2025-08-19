@@ -77,6 +77,12 @@ class DatabaseManager {
                     characters: storyData.characters || [],
                     settings: storyData.settings || {},
                     is_public: storyData.is_public || false,
+                    reading_level: storyData.reading_level,
+                    story_length: storyData.story_length,
+                    gender: storyData.gender,
+                    custom_prompt: storyData.custom_prompt,
+                    rating: null,
+                    is_favorite: false,
                     created_at: new Date().toISOString()
                 }])
                 .select();
@@ -85,6 +91,84 @@ class DatabaseManager {
             return { success: true, data: data[0] };
         } catch (error) {
             console.error('Create story error:', error);
+            return { success: false, error: error.message };
+        }
+    }
+
+    // Get user's story history (for premium users)
+    async getUserStoryHistory(userId, limit = 20, offset = 0) {
+        try {
+            const { data, error } = await this.client
+                .from('stories')
+                .select('*')
+                .eq('user_id', userId)
+                .order('created_at', { ascending: false })
+                .range(offset, offset + limit - 1);
+
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('Get story history error:', error);
+            return { success: false, error: error.message };
+        }
+    }
+
+    // Rate a story
+    async rateStory(storyId, rating, userId) {
+        try {
+            // Validate rating is between 1-5
+            if (rating < 1 || rating > 5) {
+                throw new Error('Rating must be between 1 and 5');
+            }
+
+            const { data, error } = await this.client
+                .from('stories')
+                .update({
+                    rating: rating,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', storyId)
+                .eq('user_id', userId) // Ensure user can only rate their own stories
+                .select();
+
+            if (error) throw error;
+            return { success: true, data: data[0] };
+        } catch (error) {
+            console.error('Rate story error:', error);
+            return { success: false, error: error.message };
+        }
+    }
+
+    // Toggle story as favorite
+    async toggleStoryFavorite(storyId, userId) {
+        try {
+            // First get current favorite status
+            const { data: currentStory, error: getError } = await this.client
+                .from('stories')
+                .select('is_favorite')
+                .eq('id', storyId)
+                .eq('user_id', userId)
+                .single();
+
+            if (getError) throw getError;
+
+            // Toggle the favorite status
+            const newFavoriteStatus = !currentStory.is_favorite;
+            
+            const { data, error } = await this.client
+                .from('stories')
+                .update({
+                    is_favorite: newFavoriteStatus,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', storyId)
+                .eq('user_id', userId)
+                .select();
+
+            if (error) throw error;
+            return { success: true, data: data[0], is_favorite: newFavoriteStatus };
+        } catch (error) {
+            console.error('Toggle favorite error:', error);
             return { success: false, error: error.message };
         }
     }
