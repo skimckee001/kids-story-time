@@ -81,7 +81,7 @@ class SubscriptionManager {
                                 <li>• 📚 Story history & favorites</li>
                                 <li>• 🎭 Story personalization with child's interests</li>
                                 <li>• 🖼️ Beautiful story images</li>
-                                <li>• 🎧 10 AI read-aloud stories per month</li>
+                                <li>• 🎧 10 premium AI voice narrations per month</li>
                                 <li>• 🌙 Bedtime routine integration <span class="text-orange-500 text-xs">(coming soon)</span></li>
                                 <li>• 📖 Educational themes & learning goals <span class="text-orange-500 text-xs">(coming soon)</span></li>
                                 <li>• 🦸 Favorite character series <span class="text-orange-500 text-xs">(coming soon)</span></li>
@@ -97,7 +97,7 @@ class SubscriptionManager {
                             <ul class="text-left space-y-1 text-gray-600 text-sm">
                                 <li>• 🌟 Everything in Premium</li>
                                 <li>• 🎨 Custom AI-generated images for each story</li>
-                                <li>• 🎧 50 AI read-aloud stories per month</li>
+                                <li>• 🎧 50 premium AI voice narrations per month</li>
                                 <li>• 👨‍👩‍👧‍👦 Up to 6 child profiles</li>
                                 <li>• 📊 Progress tracking & milestones <span class="text-orange-500 text-xs">(coming soon)</span></li>
                                 <li>• 🤝 Story collaboration between siblings <span class="text-orange-500 text-xs">(coming soon)</span></li>

@@ -233,6 +233,7 @@
     <script src="js/auth-manager.js"></script>
     <script src="js/database-manager.js"></script>
     <script src="js/ai-story-service.js"></script>
+    <script src="js/ai-voice-service.js"></script>
     <script src="js/subscription-manager.js"></script>
 
     <script>
@@ -481,6 +482,9 @@
                     this.readAloud();
                 });
 
+                // Update read aloud button text based on subscription
+                this.updateReadAloudButton();
+
                 // Print story
                 document.getElementById('printStoryBtn').addEventListener('click', () => {
                     this.printStory();
@@ -541,7 +545,115 @@
                 }
             }
 
-            readAloud() {
+            async readAloud() {
+                if (!this.currentStory) return;
+                
+                const btn = document.getElementById('readAloudBtn');
+                
+                // Check if user has premium AI read-aloud access
+                const hasAIReadAloud = await this.checkAIReadAloudAccess();
+                
+                if (hasAIReadAloud) {
+                    await this.useAIReadAloud(btn);
+                } else {
+                    this.useBasicReadAloud(btn);
+                }
+            }
+
+            async checkAIReadAloudAccess() {
+                try {
+                    if (window.authManager && window.authManager.isUserAuthenticated()) {
+                        const subscriptionType = await window.authManager.getSubscriptionStatus();
+                        const limits = window.authManager.getUsageLimits(subscriptionType);
+                        return limits.aiReadAloud > 0;
+                    }
+                } catch (error) {
+                    console.error('Error checking AI read-aloud access:', error);
+                }
+                return false;
+            }
+
+            async updateReadAloudButton() {
+                const btn = document.getElementById('readAloudBtn');
+                const hasAIAccess = await this.checkAIReadAloudAccess();
+                
+                if (hasAIAccess) {
+                    btn.innerHTML = '<span>🎧</span><span>AI Read Aloud</span>';
+                    btn.title = 'Premium AI voice narration with natural-sounding speech';
+                } else {
+                    btn.innerHTML = '<span>🔊</span><span>Basic Read Aloud</span>';
+                    btn.title = 'Basic text-to-speech using browser voice';
+                }
+            }
+
+            async useAIReadAloud(btn) {
+                try {
+                    btn.innerHTML = '<span>🎧</span><span>Generating AI Voice...</span>';
+                    btn.disabled = true;
+
+                    const storyText = `${this.currentStory.title}. ${this.currentStory.content}`;
+                    
+                    // Use premium AI voice service
+                    const audioUrl = await this.generateAIVoice(storyText);
+                    
+                    if (audioUrl) {
+                        // Play the AI-generated audio
+                        this.playAIAudio(audioUrl, btn);
+                    } else {
+                        // Fallback to basic TTS if AI generation fails
+                        console.log('AI voice generation failed, falling back to basic TTS');
+                        this.useBasicReadAloud(btn);
+                    }
+                } catch (error) {
+                    console.error('AI read-aloud error:', error);
+                    // Fallback to basic TTS
+                    this.useBasicReadAloud(btn);
+                }
+            }
+
+            async generateAIVoice(text) {
+                try {
+                    if (!window.aiVoiceService || !window.aiVoiceService.isAvailable()) {
+                        console.log('AI Voice Service not available, falling back to basic TTS');
+                        return null;
+                    }
+                    
+                    // Use child-friendly female voice by default
+                    const voiceId = 'child-friendly-female';
+                    
+                    console.log('Generating AI voice with premium service...');
+                    const audioUrl = await window.aiVoiceService.generateVoiceAudio(text, voiceId, {
+                        speed: 0.9, // Slightly slower for children
+                        emotion: 'friendly',
+                        style: 'storytelling'
+                    });
+                    
+                    return audioUrl;
+                } catch (error) {
+                    console.error('AI voice generation error:', error);
+                    return null;
+                }
+            }
+
+            playAIAudio(audioUrl, btn) {
+                const audio = new Audio(audioUrl);
+                
+                btn.innerHTML = '<span>⏸️</span><span>Stop AI Reading</span>';
+                btn.disabled = false;
+                
+                audio.play();
+                
+                audio.onended = () => {
+                    btn.innerHTML = '<span>🎧</span><span>AI Read Aloud</span>';
+                };
+                
+                audio.onerror = () => {
+                    console.error('Audio playback error');
+                    this.useBasicReadAloud(btn);
+                };
+            }
+
+            useBasicReadAloud(btn) {
                 if ('speechSynthesis' in window && this.currentStory) {
                     const utterance = new SpeechSynthesisUtterance();
                     utterance.text = `${this.currentStory.title}. ${this.currentStory.content}`;
@@ -555,11 +667,11 @@
                     speechSynthesis.speak(utterance);
                     
                     // Update button state
-                    const btn = document.getElementById('readAloudBtn');
-                    btn.innerHTML = '<span>⏸️</span><span>Stop Reading</span>';
+                    btn.innerHTML = '<span>🔊</span><span>Stop Basic Reading</span>';
+                    btn.disabled = false;
                     
                     utterance.onend = () => {
-                        btn.innerHTML = '<span>🔊</span><span>Read Aloud</span>';
+                        btn.innerHTML = '<span>🔊</span><span>Basic Read Aloud</span>';
                     };
                 } else {
                     alert('Sorry, text-to-speech is not supported in your browser.');
