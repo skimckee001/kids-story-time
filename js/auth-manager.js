@@ -183,10 +183,134 @@ class AuthManager {
         return !!(metadata.display_name && metadata.child_age);
     }
 
-    // Get user's subscription status (placeholder for future implementation)
-    getSubscriptionStatus() {
-        // This would integrate with your subscription system
-        return 'free'; // 'free', 'premium', 'family', etc.
+    // Get user's subscription status
+    async getSubscriptionStatus() {
+        if (!this.user) return 'free';
+        
+        try {
+            // Check user profile for subscription info
+            const result = await window.dbManager.getUserProfile(this.user.id);
+            if (result.success && result.data.subscription_type) {
+                return result.data.subscription_type;
+            }
+            
+            // Check user metadata for subscription info
+            const metadata = this.user.user_metadata || {};
+            return metadata.subscription_type || 'free';
+        } catch (error) {
+            console.error('Error getting subscription status:', error);
+            return 'free';
+        }
+    }
+
+    // Check if user has premium access
+    async hasPremiumAccess() {
+        const status = await this.getSubscriptionStatus();
+        return ['premium', 'family', 'lifetime'].includes(status);
+    }
+
+    // Get usage limits based on subscription
+    getUsageLimits(subscriptionType = 'free') {
+        const limits = {
+            free: {
+                storiesPerDay: 3,
+                storiesPerMonth: 10,
+                childProfiles: 1,
+                storyHistory: false,
+                storyRating: true, // Enhanced: Allow ratings for engagement
+                aiReadAloud: 0,
+                basicReadAloud: true, // Enhanced: Basic device TTS
+                customPrompts: false,
+                storyExport: false,
+                storyImages: false,
+                customAIImages: false
+            },
+            premium: {
+                storiesPerDay: 999, // Unlimited
+                storiesPerMonth: 999, // Unlimited
+                childProfiles: 1,
+                storyHistory: true,
+                storyRating: true,
+                aiReadAloud: 3, // 3 AI read-aloud stories per month
+                basicReadAloud: true,
+                customPrompts: true,
+                storyExport: true, // PDF/print export
+                storyImages: true, // Images to accompany stories
+                customAIImages: false,
+                maxWordsPerStory: 3000
+            },
+            family: {
+                storiesPerDay: 999, // Unlimited
+                storiesPerMonth: 999, // Unlimited
+                childProfiles: 6, // Up to 6 child profiles
+                storyHistory: true,
+                storyRating: true,
+                aiReadAloud: 30, // 30 AI read-aloud stories per month
+                basicReadAloud: true,
+                customPrompts: true,
+                storyExport: true,
+                storyImages: true,
+                customAIImages: true, // AI generated images for each story
+                maxWordsPerStory: 3000,
+                storySharing: true, // Share stories between family members
+                parentalControls: true
+            }
+        };
+        
+        return limits[subscriptionType] || limits.free;
+    }
+
+    // Check if user can generate a story (based on daily/monthly limits)
+    async canGenerateStory() {
+        const subscriptionType = await this.getSubscriptionStatus();
+        const limits = this.getUsageLimits(subscriptionType);
+        
+        if (!this.user) {
+            // Anonymous users get limited free stories
+            return true;
+        }
+        
+        try {
+            // Get usage stats for current month and today
+            const monthlyResult = await window.dbManager.getUserUsageStats(this.user.id);
+            const todayResult = await window.dbManager.getUserDailyUsageStats(this.user.id);
+            
+            if (monthlyResult.success && todayResult.success) {
+                const currentMonthUsage = monthlyResult.data.length;
+                const todayUsage = todayResult.data.length;
+                
+                // Check both daily and monthly limits
+                const withinDailyLimit = todayUsage < limits.storiesPerDay;
+                const withinMonthlyLimit = currentMonthUsage < limits.storiesPerMonth;
+                
+                return withinDailyLimit && withinMonthlyLimit;
+            }
+        } catch (error) {
+            console.error('Error checking story generation limits:', error);
+        }
+        
+        // Default to allowing for premium users, restricting for free
+        return subscriptionType !== 'free';
+    }
+
+    // Get remaining stories for current month
+    async getRemainingStories() {
+        const subscriptionType = await this.getSubscriptionStatus();
+        const limits = this.getUsageLimits(subscriptionType);
+        
+        if (!this.user) return 0;
+        
+        try {
+            const result = await window.dbManager.getUserUsageStats(this.user.id);
+            if (result.success) {
+                const currentMonthUsage = result.data.length;
+                return Math.max(0, limits.storiesPerMonth - currentMonthUsage);
+            }
+        } catch (error) {
+            console.error('Error getting remaining stories:', error);
+        }
+        
+        return limits.storiesPerMonth;
     }
 }
 

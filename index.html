@@ -411,28 +411,42 @@
               <div id="limitsDisplay" class="limits-info">
                   <p><strong>Free Plan:</strong> <span id="storiesRemaining">1</span> story remaining today</p>
               </div>
-              <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+              <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                  <a href="story-library.html" id="storyLibraryBtn" class="btn btn-primary" style="display: none;">
+                      📚 My Story Library
+                  </a>
+                  <button id="logoutBtn" class="btn btn-secondary">Logout</button>
+              </div>
           </div>
 
           <!-- Story Creation Form -->
           <div class="form-section">
               <div class="form-group">
-                  <label for="childName">Child's Name</label>
-                  <input type="text" id="childNameInput" class="form-control" placeholder="Enter your child's name" required>
+                  <label for="childNameInput">Child's Name</label>
+                  <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Optional</p>
+                  <div style="display: flex; gap: 15px; align-items: center;">
+                      <input type="text" id="childNameInput" class="form-control" placeholder="Enter your child's name" style="flex: 1;">
+                      <div style="display: flex; background: #f0f0f0; border-radius: 25px; padding: 3px;">
+                          <button type="button" id="genderBoy" class="gender-btn" style="padding: 8px 16px; border: none; border-radius: 20px; background: transparent; cursor: pointer; font-size: 14px; transition: all 0.2s;">
+                              👦 Boy
+                          </button>
+                          <button type="button" id="genderGirl" class="gender-btn" style="padding: 8px 16px; border: none; border-radius: 20px; background: transparent; cursor: pointer; font-size: 14px; transition: all 0.2s;">
+                              👧 Girl
+                          </button>
+                      </div>
+                  </div>
               </div>
 
               <div class="form-group">
-                  <label for="childAge">Child's Age</label>
+                  <label for="childAge">Child's Reading Level</label>
                   <select id="childAge" class="form-control" required>
-                      <option value="">Select age</option>
-                      <option value="3">3 years old</option>
-                      <option value="4">4 years old</option>
-                      <option value="5">5 years old</option>
-                      <option value="6">6 years old</option>
-                      <option value="7">7 years old</option>
-                      <option value="8">8 years old</option>
-                      <option value="9">9 years old</option>
-                      <option value="10">10 years old</option>
+                      <option value="">Select reading level</option>
+                      <option value="pre-reader">Pre-Reader (ages 3–6)</option>
+                      <option value="early-phonics">Early Phonics Reader (ages 4–7)</option>
+                      <option value="beginning-reader">Beginning Reader (ages 5–8)</option>
+                      <option value="developing-reader">Developing Reader (ages 6–10)</option>
+                      <option value="fluent-reader">Fluent Reader (ages 8–13)</option>
+                      <option value="insightful-reader">Insightful Reader (ages 10–16+)</option>
                   </select>
               </div>
 
@@ -445,46 +459,105 @@
                       <option value="long">Long (10-15 minutes)</option>
                   </select>
               </div>
-          </div>
-
-          <!-- Story Themes -->
-          <div class="form-section">
-              <label>Choose a Story Theme</label>
-              <div class="themes-grid">
-                  <div class="theme-card" data-theme="adventure">
-                      <span class="emoji">🏰</span>
-                      <div class="title">Adventure</div>
-                  </div>
-                  <div class="theme-card" data-theme="animals">
-                      <span class="emoji">🦁</span>
-                      <div class="title">Animals</div>
-                  </div>
-                  <div class="theme-card" data-theme="space">
-                      <span class="emoji">🚀</span>
-                      <div class="title">Space</div>
-                  </div>
-                  <div class="theme-card" data-theme="fantasy">
-                      <span class="emoji">🧚</span>
-                      <div class="title">Fantasy</div>
-                  </div>
-                  <div class="theme-card" data-theme="ocean">
-                      <span class="emoji">🌊</span>
-                      <div class="title">Ocean</div>
-                  </div>
-                  <div class="theme-card" data-theme="friendship">
-                      <span class="emoji">🤝</span>
-                      <div class="title">Friendship</div>
-                  </div>
-                  <div class="theme-card" data-theme="nature">
-                      <span class="emoji">🌳</span>
-                      <div class="title">Nature</div>
-                  </div>
-                  <div class="theme-card" data-theme="superhero">
-                      <span class="emoji">🦸</span>
-                      <div class="title">Superhero</div>
+              <!-- Choose a topic for this story -->
+              <div class="form-group">
+                  <label>Choose a topic for this story</label>
+                  <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Select what your child loves to make the story extra special - Optional</p>
+                  <div class="interests-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
+                      <!-- Story Themes -->
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="adventure" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🏰</span>
+                          <span style="font-size: 14px;">Adventure</span>
+                      </label>
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="animals" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦁</span>
+                          <span style="font-size: 14px;">Animals</span>
+                      </label>
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="space" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🚀</span>
+                          <span style="font-size: 14px;">Space</span>
+                      </label>
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="fantasy" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🧚</span>
+                          <span style="font-size: 14px;">Fantasy</span>
+                      </label>
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="ocean" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🌊</span>
+                          <span style="font-size: 14px;">Ocean</span>
+                      </label>
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="friendship" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🤝</span>
+                          <span style="font-size: 14px;">Friendship</span>
+                      </label>
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="nature" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🌳</span>
+                          <span style="font-size: 14px;">Nature</span>
+                      </label>
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="superhero" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦸</span>
+                          <span style="font-size: 14px;">Superhero</span>
+                      </label>
+                      <!-- New themes -->
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="funny" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">😄</span>
+                          <span style="font-size: 14px;">Funny</span>
+                      </label>
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="unicorns" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦄</span>
+                          <span style="font-size: 14px;">Unicorns</span>
+                      </label>
+                      <!-- Interest options (now as additional themes) -->
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="dinosaurs" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦕</span>
+                          <span style="font-size: 14px;">Dinosaurs</span>
+                      </label>
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="princesses" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">👸</span>
+                          <span style="font-size: 14px;">Princesses</span>
+                      </label>
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="cars" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🚗</span>
+                          <span style="font-size: 14px;">Cars</span>
+                      </label>
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="sports" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">⚽</span>
+                          <span style="font-size: 14px;">Sports</span>
+                      </label>
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="music" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🎵</span>
+                          <span style="font-size: 14px;">Music</span>
+                      </label>
+                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                          <input type="radio" name="story-theme" value="art" style="display: none;">
+                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🎨</span>
+                          <span style="font-size: 14px;">Art</span>
+                      </label>
                   </div>
               </div>
+
+              <!-- Custom Story Ideas -->
+              <div class="form-group">
+                  <label for="customPrompt">Special requests for the story?</label>
+                  <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Add any special details you'd like in the story - Optional</p>
+                  <textarea id="customPrompt" class="form-control" rows="2" placeholder="Example: Include a pet dog named Buddy, or make it about learning to ride a bike..."></textarea>
+              </div>
           </div>
+
 
           <!-- Generate Button -->
           <div class="generate-section">
@@ -581,16 +654,65 @@
   <script src="js/supabase-config.js"></script>
   <script src="js/auth-manager.js"></script>
   <script src="js/database-manager.js"></script>
+  <script src="js/ai-story-service.js"></script>
+  <script src="js/subscription-manager.js"></script>
   
   <script>
       // Global variables
       let selectedTheme = '';
+      let selectedGender = '';
       let currentUser = null;
 
       // Utility function to get currency based on location
       function getCurrency() {
           const locale = navigator.language || 'en-US';
           return locale.startsWith('en-GB') ? '£' : '$';
+      }
+
+      // Show usage statistics for current user
+      async function showUsageStats() {
+          if (!window.authManager || !window.authManager.isUserAuthenticated()) return;
+          
+          const subscriptionType = await window.authManager.getSubscriptionStatus();
+          if (subscriptionType === 'free') {
+              try {
+                  const limits = window.authManager.getUsageLimits('free');
+                  const monthlyResult = await window.dbManager.getUserUsageStats(window.authManager.getCurrentUser().id);
+                  const dailyResult = await window.dbManager.getUserDailyUsageStats(window.authManager.getCurrentUser().id);
+                  
+                  if (monthlyResult.success && dailyResult.success) {
+                      const dailyUsed = dailyResult.data.length;
+                      const monthlyUsed = monthlyResult.data.length;
+                      const dailyRemaining = Math.max(0, limits.storiesPerDay - dailyUsed);
+                      const monthlyRemaining = Math.max(0, limits.storiesPerMonth - monthlyUsed);
+                      
+                      // Add usage indicator to the page
+                      const usageIndicator = document.createElement('div');
+                      usageIndicator.className = 'usage-indicator';
+                      usageIndicator.innerHTML = `
+                          <div style="background: rgba(255, 255, 255, 0.9); padding: 15px; border-radius: 15px; margin: 20px 0; text-align: center; border: 2px solid #e0e7ff;">
+                              <div style="font-size: 14px; color: #4f46e5; font-weight: 600;">
+                                  📊 Free Plan Usage
+                              </div>
+                              <div style="margin: 8px 0; font-size: 13px; color: #6b7280;">
+                                  Today: ${dailyUsed}/${limits.storiesPerDay} stories • Month: ${monthlyUsed}/${limits.storiesPerMonth} stories
+                              </div>
+                              ${(dailyRemaining === 0 || monthlyRemaining === 0) ? 
+                                  '<div style="color: #dc2626; font-size: 12px; font-weight: 600;">Limit reached - Upgrade for unlimited stories!</div>' :
+                                  '<div style="color: #059669; font-size: 12px;">✨ Upgrade to Premium for unlimited stories + more features</div>'
+                              }
+                          </div>
+                      `;
+                      
+                      const mainContent = document.querySelector('.main-content');
+                      if (mainContent) {
+                          mainContent.insertBefore(usageIndicator, mainContent.firstChild);
+                      }
+                  }
+              } catch (error) {
+                  console.error('Error loading usage stats:', error);
+              }
+          }
       }
 
       // Initialize the application
@@ -602,17 +724,68 @@
               // Check if user is already logged in
               currentUser = await window.authManager.getCurrentUser();
               updateUI();
+              
+              // Show usage stats for authenticated users
+              if (currentUser) {
+                  await showUsageStats();
+              }
           }
 
-          // Theme selection
-          document.querySelectorAll('.theme-card').forEach(card => {
-              card.addEventListener('click', function() {
-                  // Remove selected class from all cards
-                  document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
-                  // Add selected class to clicked card
-                  this.classList.add('selected');
-                  selectedTheme = this.dataset.theme;
+          // Theme selection (now radio buttons in the combined section)
+          document.querySelectorAll('.theme-option').forEach(item => {
+              item.addEventListener('click', function(e) {
+                  e.preventDefault();
+                  const radio = this.querySelector('input[type="radio"]');
+                  
+                  // Uncheck all other radios
+                  document.querySelectorAll('input[name="story-theme"]').forEach(r => r.checked = false);
+                  document.querySelectorAll('.theme-option').forEach(t => {
+                      t.style.borderColor = '#e0e0e0';
+                      t.style.backgroundColor = 'transparent';
+                      t.style.transform = 'scale(1)';
+                  });
+                  
+                  // Check this radio and style it
+                  radio.checked = true;
+                  selectedTheme = radio.value;
+                  this.style.borderColor = '#667eea';
+                  this.style.backgroundColor = '#f0f4ff';
+                  this.style.transform = 'scale(1.05)';
               });
+
+              // Hover effects
+              item.addEventListener('mouseenter', function() {
+                  const radio = this.querySelector('input[type="radio"]');
+                  if (!radio.checked) {
+                      this.style.borderColor = '#667eea';
+                      this.style.backgroundColor = '#f8faff';
+                  }
+              });
+
+              item.addEventListener('mouseleave', function() {
+                  const radio = this.querySelector('input[type="radio"]');
+                  if (!radio.checked) {
+                      this.style.borderColor = '#e0e0e0';
+                      this.style.backgroundColor = 'transparent';
+                  }
+              });
+          });
+
+          // Gender selection
+          document.getElementById('genderBoy').addEventListener('click', function() {
+              document.getElementById('genderGirl').style.backgroundColor = 'transparent';
+              document.getElementById('genderGirl').style.color = '#666';
+              this.style.backgroundColor = '#667eea';
+              this.style.color = 'white';
+              selectedGender = 'boy';
+          });
+
+          document.getElementById('genderGirl').addEventListener('click', function() {
+              document.getElementById('genderBoy').style.backgroundColor = 'transparent';
+              document.getElementById('genderBoy').style.color = '#666';
+              this.style.backgroundColor = '#FF6B9D';
+              this.style.color = 'white';
+              selectedGender = 'girl';
           });
 
           // Generate button click
@@ -754,6 +927,9 @@
               // Child name would come from profile data
               document.getElementById('childName').textContent = 'Loading...';
               
+              // Show story library button for premium users (for now, all logged-in users)
+              document.getElementById('storyLibraryBtn').style.display = 'inline-block';
+              
               // Load user profile and update UI
               loadUserProfile();
           } else {
@@ -794,70 +970,57 @@
 
       // Story generation function
       async function generateStory() {
-          const childName = document.getElementById('childNameInput').value;
+          const childName = document.getElementById('childNameInput').value || 'the hero';
           const childAge = document.getElementById('childAge').value;
           const storyLength = document.getElementById('storyLength').value;
 
-          if (!childName || !childAge || !storyLength || !selectedTheme) {
-              alert('Please fill in all fields and select a theme!');
+          if (!childAge || !storyLength || !selectedTheme) {
+              alert('Please select reading level, story length, and a theme!');
               return;
           }
 
-          // Check if user is logged in and has remaining stories
-          if (currentUser) {
-              const canGenerate = await window.dbManager.canGenerateStory(currentUser.id);
-              if (!canGenerate) {
-                  alert('You\'ve reached your daily limit. Please upgrade to Premium for unlimited stories!');
-                  return;
+          // Validate child name if provided (only letters and spaces)
+          if (childName !== 'the hero' && !/^[a-zA-Z\s]+$/.test(childName)) {
+              alert('Please enter a valid name (letters and spaces only).');
+              return;
+          }
+
+          // Check subscription limits before generating story
+          if (window.subscriptionManager) {
+              try {
+                  const limitCheck = await window.subscriptionManager.checkStoryGenerationLimits();
+                  if (!limitCheck.canGenerate) {
+                      return; // Modal already shown by subscription manager
+                  }
+              } catch (error) {
+                  console.error('Error checking subscription limits:', error);
+                  // Continue with generation on error for better user experience
               }
           }
 
-          // Show loading
-          document.getElementById('loading').style.display = 'block';
-          document.getElementById('storyOutput').style.display = 'none';
+          // Prepare story parameters
+          const storyParams = {
+              childName: childName.trim(),
+              childAge: childAge,
+              storyLength: storyLength,
+              theme: selectedTheme,
+              gender: selectedGender,
+              customPrompt: document.getElementById('customPrompt')?.value || ''
+          };
+
+          // Save to localStorage for the story page
+          localStorage.setItem('pendingStory', JSON.stringify(storyParams));
+
+          // Show loading state and redirect to story page
           document.getElementById('generateBtn').disabled = true;
-
-          try {
-              // Simulate story generation (replace with actual OpenAI API call)
-              const story = await generateStoryContent(childName, childAge, storyLength, selectedTheme);
-              
-              // Save story to database if user is logged in
-              if (currentUser && window.dbManager) {
-                  await window.dbManager.saveStory(currentUser.id, {
-                      title: story.title,
-                      content: story.content,
-                      theme: selectedTheme,
-                      child_name: childName,
-                      child_age: childAge,
-                      story_length: storyLength
-                  });
-                  
-                  // Track usage
-                  await window.dbManager.trackUsage(currentUser.id, 'story_generation');
-                  
-                  // Update limits display
-                  const canGenerate = await window.dbManager.canGenerateStory(currentUser.id);
-                  updateLimitsDisplay(canGenerate);
-              }
-
-              // Display story
-              document.getElementById('storyTitle').textContent = story.title;
-              document.getElementById('storyContent').textContent = story.content;
-              document.getElementById('storyOutput').style.display = 'block';
-              
-              // Show upgrade prompt for free users
-              if (!currentUser || !currentUser.subscription) {
-                  document.getElementById('upgradePrompt').style.display = 'block';
-              }
-
-          } catch (error) {
-              alert('Sorry, there was an error generating your story. Please try again!');
-              console.error('Story generation error:', error);
-          } finally {
-              document.getElementById('loading').style.display = 'none';
-              document.getElementById('generateBtn').disabled = false;
-          }
+          document.getElementById('generateBtn').innerHTML = '✨ Creating Magic...';
+          
+          // Small delay for UX, then redirect
+          setTimeout(() => {
+              window.location.href = 'story.html';
+          }, 800);
       }
+
 
       // Mock story generation (replace with OpenAI API)
       async function generateStoryContent(childName, childAge, storyLength, theme) {
