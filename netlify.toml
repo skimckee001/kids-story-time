@@ -1,0 +1,26 @@
+[build]
+  # Skip build process since we're deploying HTML directly
+  command = "echo 'No build needed for HTML files'"
+  publish = "."
+
+[build.environment]
+  # Disable automatic builds
+  NODE_VERSION = "18"
+
+[[redirects]]
+  # Handle client-side routing for story pages
+  from = "/story/*"
+  to = "/story.html"
+  status = 200
+
+[[redirects]]
+  # Handle client-side routing for story library
+  from = "/library/*"
+  to = "/story-library.html"
+  status = 200
+
+[[redirects]]
+  # Default redirect for SPA-like behavior
+  from = "/*"
+  to = "/index.html"
+  status = 200
