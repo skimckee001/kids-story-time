@@ -189,7 +189,10 @@
             async init() {
                 // Check if user is logged in
                 if (!window.authManager || !window.authManager.isUserAuthenticated()) {
-                    window.location.href = 'index.html';
+                    // For testing purposes, allow anonymous access to premium features
+                    console.log('Demo mode: Allowing access to story library for testing');
+                    this.setupEventListeners();
+                    await this.loadDemoStories();
                     return;
                 }
 
@@ -199,12 +202,21 @@
                 const limits = window.authManager.getUsageLimits(hasPremium ? 'premium' : 'free');
                 
                 if (!limits.storyHistory) {
+                    // For testing, show upgrade modal but don't redirect immediately
+                    console.log('Demo mode: Showing upgrade modal for story library');
                     if (window.subscriptionManager) {
                         window.subscriptionManager.showUpgradeModal('Story History');
+                        // Allow 3 seconds to see the modal, then continue with demo
+                        setTimeout(() => {
+                            console.log('Demo mode: Continuing with story library demo');
+                            this.setupEventListeners();
+                            this.loadDemoStories();
+                        }, 3000);
                     } else {
-                        alert('Story Library is a premium feature. Please upgrade your account.');
+                        // Fallback demo
+                        this.setupEventListeners();
+                        this.loadDemoStories();
                     }
-                    window.location.href = 'index.html';
                     return;
                 }
 
@@ -260,6 +272,62 @@
                     console.error('Error loading stories:', error);
                     this.showEmptyState();
                 }
+            }
+
+            async loadDemoStories() {
+                this.showLoadingState();
+                
+                // Demo stories for testing
+                this.stories = [
+                    {
+                        id: 'demo1',
+                        title: 'The Magic Garden Adventure',
+                        content: 'Once upon a time, in a magical garden where flowers could talk and butterflies sang beautiful songs, lived a little girl named Emma. One sunny morning, Emma discovered a hidden path behind the rose bushes that led to an enchanted world...',
+                        genre: 'fantasy',
+                        age_group: '4-6 years',
+                        story_length: 'Short (5 min)',
+                        created_at: new Date().toISOString(),
+                        rating: 5,
+                        is_favorite: true
+                    },
+                    {
+                        id: 'demo2',
+                        title: 'Captain Whiskers Space Mission',
+                        content: 'Captain Whiskers, the bravest cat astronaut in the galaxy, was preparing for his most important mission yet. The moon had run out of cheese, and all the mice were very worried! With his trusty spaceship shaped like a giant ball of yarn...',
+                        genre: 'space',
+                        age_group: '5-7 years',
+                        story_length: 'Medium (10 min)',
+                        created_at: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+                        rating: 4,
+                        is_favorite: false
+                    },
+                    {
+                        id: 'demo3',
+                        title: 'The Friendly Dragon of Rainbow Valley',
+                        content: 'In Rainbow Valley, where the most beautiful rainbows in the world were born, lived a gentle dragon named Sparkle. Unlike other dragons, Sparkle didnt breathe fire - she breathed rainbow bubbles that made everyone happy...',
+                        genre: 'adventure',
+                        age_group: '3-5 years',
+                        story_length: 'Short (5 min)',
+                        created_at: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+                        rating: null,
+                        is_favorite: true
+                    },
+                    {
+                        id: 'demo4',
+                        title: 'The Little Lighthouse That Could',
+                        content: 'On a rocky island far out at sea stood a little lighthouse named Beacon. Every night, Beacon would shine his bright light to guide ships safely to shore. But one stormy night, Beacons light began to flicker and dim...',
+                        genre: 'ocean',
+                        age_group: '4-7 years',
+                        story_length: 'Medium (10 min)',
+                        created_at: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
+                        rating: 3,
+                        is_favorite: false
+                    }
+                ];
+                
+                this.filterStories();
+                this.renderStories();
+                this.showStoriesGrid();
             }
 
             setFilter(filter) {
@@ -411,9 +479,14 @@
             readStory(storyId) {
                 const story = this.stories.find(s => s.id === storyId);
                 if (story) {
-                    // Redirect to story page with story data
-                    localStorage.setItem('readExistingStory', JSON.stringify(story));
-                    window.location.href = 'story.html?existing=true';
+                    if (storyId.startsWith('demo')) {
+                        // For demo stories, show an alert instead of redirecting
+                        alert(`📖 Demo Story: "${story.title}"\n\n${story.content}\n\nThis is a demo of the story library premium feature. In the full version, you would be able to read and manage all your saved stories.`);
+                    } else {
+                        // Redirect to story page with story data
+                        localStorage.setItem('readExistingStory', JSON.stringify(story));
+                        window.location.href = 'story.html?existing=true';
+                    }
                 }
             }
 
@@ -480,6 +553,21 @@
                 if (!this.currentRatingStoryId || this.selectedRating === 0) return;
 
                 try {
+                    if (this.currentRatingStoryId.startsWith('demo')) {
+                        // For demo stories, just update locally
+                        const story = this.stories.find(s => s.id === this.currentRatingStoryId);
+                        if (story) {
+                            story.rating = this.selectedRating;
+                        }
+                        
+                        this.hideRatingModal();
+                        this.renderStories(); // Re-render to show updated rating
+                        
+                        // Show success message
+                        alert('Demo rating saved! In the full version, your ratings would be saved to your account.');
+                        return;
+                    }
+
                     const user = window.authManager.getCurrentUser();
                     const result = await window.dbManager.rateStory(this.currentRatingStoryId, this.selectedRating, user.id);
                     
@@ -504,6 +592,17 @@
 
             async toggleFavorite(storyId) {
                 try {
+                    if (storyId.startsWith('demo')) {
+                        // For demo stories, just update locally
+                        const story = this.stories.find(s => s.id === storyId);
+                        if (story) {
+                            story.is_favorite = !story.is_favorite;
+                        }
+                        
+                        this.renderStories(); // Re-render to show updated favorite status
+                        return;
+                    }
+
                     const user = window.authManager.getCurrentUser();
                     const result = await window.dbManager.toggleStoryFavorite(storyId, user.id);
                     
