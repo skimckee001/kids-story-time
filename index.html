@@ -403,15 +403,20 @@
                   <a href="story-library.html" style="background: linear-gradient(135deg, #FF6B9D, #4ECDC4); color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
                       📖 My Stories
                   </a>
-                  <button id="upgradeBtn" style="background: linear-gradient(135deg, #FFB800, #FF8A00); color: white; padding: 12px 24px; border-radius: 25px; border: 2px solid #FFB800; font-weight: 600; cursor: pointer; transition: all 0.3s ease; position: relative;" title="Upgrade to unlock more features">
-                      ⭐ Upgrade
+                  <button id="upgradeBtn" style="background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 12px 24px; border-radius: 25px; border: 2px solid #28a745; font-weight: 600; cursor: pointer; transition: all 0.3s ease; position: relative;" title="Start your free trial">
+                      🎉 Start Free Trial
                       <div id="upgradeTooltip" style="position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 8px; background: #333; color: white; font-size: 14px; border-radius: 8px; padding: 8px 12px; opacity: 0; pointer-events: none; transition: opacity 0.2s; white-space: nowrap; z-index: 100;">
-                          Unlock unlimited stories + AI voices
+                          Free for first month! All premium features unlocked
                       </div>
                   </button>
               </div>
           </div>
           <div class="tagline" style="text-align: center; margin-top: 15px; color: #666; font-size: 18px;">Magical Personalized Stories for Your Child</div>
+          <!-- Free Beta Banner -->
+          <div style="background: linear-gradient(135deg, #28a745, #20c997); color: white; text-align: center; padding: 12px 20px; margin: 15px 0; border-radius: 12px; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">
+              <div style="font-weight: bold; font-size: 16px;">🎉 FREE BETA - All Premium Features Unlocked!</div>
+              <div style="font-size: 14px; margin-top: 4px; opacity: 0.9;">Create unlimited stories, export to PDF, and enjoy all features completely free during our launch period</div>
+          </div>
       </header>
 
       <main class="main-content">
@@ -1028,9 +1033,9 @@
               
               upgradeBtn.addEventListener('click', () => {
                   if (window.subscriptionManager) {
-                      window.subscriptionManager.showUpgradeModal('Premium Features');
+                      window.subscriptionManager.showUpgradeModal('Free Trial');
                   } else {
-                      alert('Upgrade to Premium:\n\n✅ Unlimited stories\n✅ AI voice narration\n✅ Advanced themes\n✅ Story history\n✅ Export options\n\nComing soon!');
+                      alert('🎉 FREE TRIAL ACTIVATED!\n\nYou now have access to ALL premium features:\n\n✅ Unlimited stories\n✅ AI voice narration\n✅ Advanced themes\n✅ Story history & library\n✅ Export options\n✅ All story lengths\n\n🆓 Completely FREE for your first month!\n\nNo payment required during beta period. Enjoy creating amazing stories!');
                   }
               });
           }
