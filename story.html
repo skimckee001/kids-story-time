@@ -203,6 +203,18 @@
                 </div>
             </div>
 
+            <!-- Feedback Section -->
+            <div id="feedbackSection" class="mt-8 pt-6 border-t border-gray-200">
+                <div class="text-center">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Help us improve KidsStoryTime.org!</h3>
+                    <p class="text-gray-600 mb-4">Your feedback helps us create better stories for children everywhere</p>
+                    <button id="showFeedbackBtn" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium flex items-center space-x-2 mx-auto">
+                        <span>💬</span>
+                        <span>Share Feedback</span>
+                    </button>
+                </div>
+            </div>
+
             <!-- Navigation -->
             <div class="mt-8 text-center">
                 <a href="index.html" class="inline-flex items-center space-x-2 text-primary hover:text-primary/80 font-medium text-lg transition-colors">
@@ -226,6 +238,109 @@
             </button>
         </div>
     </main>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full max-h-90vh overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">📝 Share Your Feedback</h2>
+                <button id="closeFeedbackModal" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+            </div>
+            
+            <form id="feedbackForm" class="space-y-4">
+                <!-- Overall Experience -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">How was your overall experience?</label>
+                    <div class="flex space-x-2 justify-center">
+                        <button type="button" class="experience-btn px-4 py-2 rounded-full border-2 border-gray-300 transition-colors" data-value="poor">😞 Poor</button>
+                        <button type="button" class="experience-btn px-4 py-2 rounded-full border-2 border-gray-300 transition-colors" data-value="good">😊 Good</button>
+                        <button type="button" class="experience-btn px-4 py-2 rounded-full border-2 border-gray-300 transition-colors" data-value="excellent">🤩 Excellent</button>
+                    </div>
+                </div>
+
+                <!-- Story Quality -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">How would you rate the story quality?</label>
+                    <div class="flex justify-center space-x-1" id="storyQualityRating">
+                        <span class="feedback-star text-2xl cursor-pointer" data-rating="1">⭐</span>
+                        <span class="feedback-star text-2xl cursor-pointer" data-rating="2">⭐</span>
+                        <span class="feedback-star text-2xl cursor-pointer" data-rating="3">⭐</span>
+                        <span class="feedback-star text-2xl cursor-pointer" data-rating="4">⭐</span>
+                        <span class="feedback-star text-2xl cursor-pointer" data-rating="5">⭐</span>
+                    </div>
+                </div>
+
+                <!-- App Usability -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Was the app easy to use?</label>
+                    <div class="flex space-x-2 justify-center">
+                        <button type="button" class="usability-btn px-4 py-2 rounded-full border-2 border-gray-300 transition-colors" data-value="difficult">❌ Difficult</button>
+                        <button type="button" class="usability-btn px-4 py-2 rounded-full border-2 border-gray-300 transition-colors" data-value="easy">✅ Easy</button>
+                        <button type="button" class="usability-btn px-4 py-2 rounded-full border-2 border-gray-300 transition-colors" data-value="very-easy">🎯 Very Easy</button>
+                    </div>
+                </div>
+
+                <!-- Feature Feedback -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Which features did you like most? (Select all that apply)</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="feature-checkbox" value="story-quality">
+                            <span class="text-sm">Story Quality</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="feature-checkbox" value="theme-selection">
+                            <span class="text-sm">Theme Selection</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="feature-checkbox" value="voice-recording">
+                            <span class="text-sm">Voice Recording</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="feature-checkbox" value="read-aloud">
+                            <span class="text-sm">Read Aloud</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="feature-checkbox" value="personalization">
+                            <span class="text-sm">Personalization</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" class="feature-checkbox" value="user-interface">
+                            <span class="text-sm">User Interface</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Written Feedback -->
+                <div>
+                    <label for="writtenFeedback" class="block text-sm font-medium text-gray-700 mb-2">Additional comments (optional)</label>
+                    <textarea id="writtenFeedback" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="What could we improve? What did you love? Any suggestions?"></textarea>
+                </div>
+
+                <!-- Contact Permission -->
+                <div>
+                    <label class="flex items-center space-x-2">
+                        <input type="checkbox" id="contactPermission">
+                        <span class="text-sm text-gray-600">I'm open to being contacted about my feedback or beta testing new features</span>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex space-x-3 pt-4">
+                    <button type="button" id="cancelFeedback" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
+                    <button type="submit" id="submitFeedback" class="flex-1 bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-200">Submit Feedback</button>
+                </div>
+            </form>
+
+            <!-- Thank You Message -->
+            <div id="feedbackThanks" class="hidden text-center py-8">
+                <div class="text-4xl mb-4">🎉</div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Thank you!</h3>
+                <p class="text-gray-600 mb-4">Your feedback helps us make KidsStoryTime.org even better for families everywhere.</p>
+                <button id="closeFeedbackThanks" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2 rounded-full">Close</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -856,9 +971,279 @@
             }
         }
 
+        // Feedback System Manager
+        class FeedbackManager {
+            constructor() {
+                this.selectedExperience = '';
+                this.selectedUsability = '';
+                this.storyQualityRating = 0;
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                // Show feedback modal
+                document.getElementById('showFeedbackBtn').addEventListener('click', () => {
+                    this.showFeedbackModal();
+                });
+
+                // Close feedback modal
+                document.getElementById('closeFeedbackModal').addEventListener('click', () => {
+                    this.closeFeedbackModal();
+                });
+
+                document.getElementById('cancelFeedback').addEventListener('click', () => {
+                    this.closeFeedbackModal();
+                });
+
+                // Experience rating buttons
+                document.querySelectorAll('.experience-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.selectExperience(e.target.dataset.value, e.target);
+                    });
+                });
+
+                // Usability rating buttons
+                document.querySelectorAll('.usability-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        this.selectUsability(e.target.dataset.value, e.target);
+                    });
+                });
+
+                // Story quality star rating
+                document.querySelectorAll('.feedback-star').forEach(star => {
+                    star.addEventListener('click', (e) => {
+                        this.selectStoryQuality(parseInt(e.target.dataset.rating));
+                    });
+                    star.addEventListener('mouseenter', (e) => {
+                        this.hoverStoryQuality(parseInt(e.target.dataset.rating));
+                    });
+                    star.addEventListener('mouseleave', () => {
+                        this.unhoverStoryQuality();
+                    });
+                });
+
+                // Form submission
+                document.getElementById('feedbackForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.submitFeedback();
+                });
+
+                // Close thank you message
+                document.getElementById('closeFeedbackThanks').addEventListener('click', () => {
+                    this.closeFeedbackModal();
+                });
+
+                // Close modal when clicking outside
+                document.getElementById('feedbackModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'feedbackModal') {
+                        this.closeFeedbackModal();
+                    }
+                });
+            }
+
+            showFeedbackModal() {
+                document.getElementById('feedbackModal').classList.remove('hidden');
+                this.trackEvent('feedback_modal_opened');
+            }
+
+            closeFeedbackModal() {
+                document.getElementById('feedbackModal').classList.add('hidden');
+                // Reset form
+                this.resetFeedbackForm();
+                // Hide thank you message and show form
+                document.getElementById('feedbackThanks').classList.add('hidden');
+                document.getElementById('feedbackForm').classList.remove('hidden');
+            }
+
+            selectExperience(value, button) {
+                // Remove selection from all experience buttons
+                document.querySelectorAll('.experience-btn').forEach(btn => {
+                    btn.classList.remove('bg-primary', 'text-white', 'border-primary');
+                    btn.classList.add('border-gray-300');
+                });
+                
+                // Add selection to clicked button
+                button.classList.add('bg-primary', 'text-white', 'border-primary');
+                button.classList.remove('border-gray-300');
+                
+                this.selectedExperience = value;
+            }
+
+            selectUsability(value, button) {
+                // Remove selection from all usability buttons
+                document.querySelectorAll('.usability-btn').forEach(btn => {
+                    btn.classList.remove('bg-primary', 'text-white', 'border-primary');
+                    btn.classList.add('border-gray-300');
+                });
+                
+                // Add selection to clicked button
+                button.classList.add('bg-primary', 'text-white', 'border-primary');
+                button.classList.remove('border-gray-300');
+                
+                this.selectedUsability = value;
+            }
+
+            selectStoryQuality(rating) {
+                this.storyQualityRating = rating;
+                this.updateStoryQualityDisplay();
+            }
+
+            hoverStoryQuality(rating) {
+                const stars = document.querySelectorAll('.feedback-star');
+                stars.forEach((star, index) => {
+                    if (index < rating) {
+                        star.style.color = '#FFD700';
+                        star.style.textShadow = '0 0 5px rgba(255, 215, 0, 0.3)';
+                        star.style.transform = 'scale(1.1)';
+                    } else {
+                        star.style.color = 'transparent';
+                        star.style.textShadow = '0 0 0 #ddd';
+                        star.style.transform = 'scale(1)';
+                    }
+                });
+            }
+
+            unhoverStoryQuality() {
+                this.updateStoryQualityDisplay();
+            }
+
+            updateStoryQualityDisplay() {
+                const stars = document.querySelectorAll('.feedback-star');
+                stars.forEach((star, index) => {
+                    if (index < this.storyQualityRating) {
+                        star.style.color = '#FFD700';
+                        star.style.textShadow = '0 0 10px rgba(255, 215, 0, 0.5)';
+                        star.style.transform = 'scale(1)';
+                    } else {
+                        star.style.color = 'transparent';
+                        star.style.textShadow = '0 0 0 #ddd';
+                        star.style.transform = 'scale(1)';
+                    }
+                });
+            }
+
+            async submitFeedback() {
+                // Collect form data
+                const features = Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value);
+                const writtenFeedback = document.getElementById('writtenFeedback').value;
+                const contactPermission = document.getElementById('contactPermission').checked;
+
+                const feedbackData = {
+                    timestamp: new Date().toISOString(),
+                    overall_experience: this.selectedExperience,
+                    story_quality_rating: this.storyQualityRating,
+                    app_usability: this.selectedUsability,
+                    liked_features: features,
+                    written_feedback: writtenFeedback,
+                    contact_permission: contactPermission,
+                    user_agent: navigator.userAgent,
+                    page_url: window.location.href
+                };
+
+                try {
+                    // Track analytics event
+                    this.trackEvent('feedback_submitted', feedbackData);
+
+                    // For demo mode, just show success
+                    if (!window.authManager || !window.authManager.isUserAuthenticated()) {
+                        console.log('Demo feedback submission:', feedbackData);
+                        this.showThankYou(true);
+                        return;
+                    }
+
+                    // For authenticated users, save to database
+                    const user = window.authManager.getCurrentUser();
+                    if (window.dbManager && window.dbManager.saveFeedback) {
+                        const result = await window.dbManager.saveFeedback({
+                            ...feedbackData,
+                            user_id: user.id
+                        });
+                        
+                        if (result.success) {
+                            this.showThankYou(false);
+                        } else {
+                            console.error('Error saving feedback:', result.error);
+                            this.showThankYou(true); // Show success anyway for UX
+                        }
+                    } else {
+                        // Fallback - just log and show success
+                        console.log('Feedback saved locally:', feedbackData);
+                        this.showThankYou(true);
+                    }
+                } catch (error) {
+                    console.error('Error submitting feedback:', error);
+                    this.showThankYou(true); // Show success anyway for UX
+                }
+            }
+
+            showThankYou(isDemo = false) {
+                document.getElementById('feedbackForm').classList.add('hidden');
+                document.getElementById('feedbackThanks').classList.remove('hidden');
+                
+                if (isDemo) {
+                    // Update thank you message for demo mode
+                    const thanksText = document.querySelector('#feedbackThanks p');
+                    thanksText.textContent = 'Your feedback helps us make KidsStoryTime.org even better! (Demo mode - in the full version, this would be saved to our feedback system)';
+                }
+            }
+
+            resetFeedbackForm() {
+                // Reset all selections
+                this.selectedExperience = '';
+                this.selectedUsability = '';
+                this.storyQualityRating = 0;
+
+                // Reset UI
+                document.querySelectorAll('.experience-btn, .usability-btn').forEach(btn => {
+                    btn.classList.remove('bg-primary', 'text-white', 'border-primary');
+                    btn.classList.add('border-gray-300');
+                });
+
+                document.querySelectorAll('.feature-checkbox').forEach(cb => {
+                    cb.checked = false;
+                });
+
+                document.getElementById('writtenFeedback').value = '';
+                document.getElementById('contactPermission').checked = false;
+
+                this.updateStoryQualityDisplay();
+            }
+
+            // Analytics tracking
+            trackEvent(eventName, data = {}) {
+                try {
+                    // Simple analytics tracking - could be enhanced with Google Analytics, etc.
+                    const event = {
+                        event: eventName,
+                        timestamp: new Date().toISOString(),
+                        url: window.location.href,
+                        userAgent: navigator.userAgent,
+                        ...data
+                    };
+
+                    // Log to console for now (could send to analytics service)
+                    console.log('Analytics Event:', event);
+
+                    // Store in localStorage for demo purposes
+                    const existingEvents = JSON.parse(localStorage.getItem('analytics_events') || '[]');
+                    existingEvents.push(event);
+                    
+                    // Keep only last 100 events
+                    if (existingEvents.length > 100) {
+                        existingEvents.splice(0, existingEvents.length - 100);
+                    }
+                    
+                    localStorage.setItem('analytics_events', JSON.stringify(existingEvents));
+                } catch (error) {
+                    console.error('Error tracking event:', error);
+                }
+            }
+        }
+
         // Initialize story page when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             new StoryPageManager();
+            new FeedbackManager();
         });
     </script>
 </body>
