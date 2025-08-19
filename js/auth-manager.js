@@ -6,6 +6,7 @@ class AuthManager {
         this.user = null;
         this.isAuthenticated = false;
         this.authStateCallbacks = [];
+        this.demoMode = false; // Enable demo mode for testing
         this.init();
     }
 
@@ -53,6 +54,16 @@ class AuthManager {
 
             if (error) {
                 throw error;
+            }
+
+            // For demo: If account created but needs verification, provide helpful message
+            if (data.user && !data.session) {
+                return { 
+                    success: true, 
+                    data,
+                    needsVerification: true,
+                    message: "Account created! You may need to verify your email or it might take a moment to activate. Try logging in with the same credentials."
+                };
             }
 
             return { success: true, data };
