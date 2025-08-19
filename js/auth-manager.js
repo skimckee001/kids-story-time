@@ -226,6 +226,15 @@ class AuthManager {
         if (!this.user) return 'free';
         
         try {
+            // Check if this is a test user (for development)
+            if (this.user.id && this.user.id.startsWith('test-')) {
+                const testTier = this.user.user_metadata?.subscription_type;
+                if (testTier) {
+                    console.log(`Test user detected with tier: ${testTier}`);
+                    return testTier;
+                }
+            }
+            
             // Check user profile for subscription info
             const result = await window.dbManager.getUserProfile(this.user.id);
             if (result.success && result.data.subscription_type) {
@@ -305,6 +314,12 @@ class AuthManager {
         
         if (!this.user) {
             // Anonymous users get limited free stories
+            return true;
+        }
+        
+        // For test users, always allow story generation
+        if (this.user.id && this.user.id.startsWith('test-')) {
+            console.log(`Test user - allowing story generation for ${subscriptionType} tier`);
             return true;
         }
         

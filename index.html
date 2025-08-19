@@ -647,6 +647,16 @@
                   <p><a href="#" id="switchToSignup">Don't have an account? Sign up here</a></p>
                   <p><a href="#" id="forgotPassword">Forgot your password?</a></p>
               </div>
+              
+              <!-- Quick Test Login for Development -->
+              <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                  <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 10px;">🧪 Quick Test Login (Development)</p>
+                  <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                      <button type="button" onclick="quickTestLogin('free')" style="background: #6b7280; color: white; padding: 8px 16px; border: none; border-radius: 8px; font-size: 12px; cursor: pointer;">Test Free User</button>
+                      <button type="button" onclick="quickTestLogin('premium')" style="background: #f59e0b; color: white; padding: 8px 16px; border: none; border-radius: 8px; font-size: 12px; cursor: pointer;">Test Premium</button>
+                      <button type="button" onclick="quickTestLogin('family')" style="background: #10b981; color: white; padding: 8px 16px; border: none; border-radius: 8px; font-size: 12px; cursor: pointer;">Test Family</button>
+                  </div>
+              </div>
           </div>
       </div>
   </div>
@@ -1175,6 +1185,41 @@
                   modal.remove();
               }
           });
+      }
+
+      // Quick test login function for development
+      function quickTestLogin(tier) {
+          console.log(`Quick test login for ${tier} user`);
+          
+          // Create a mock user object based on tier
+          const mockUser = {
+              id: `test-${tier}-${Date.now()}`,
+              email: `test-${tier}@example.com`,
+              user_metadata: {
+                  child_name: tier === 'family' ? 'Emma & Jake' : 'Emma',
+                  subscription_type: tier,
+                  display_name: `Test ${tier.charAt(0).toUpperCase() + tier.slice(1)} User`
+              }
+          };
+          
+          // Set the mock user in auth manager
+          if (window.authManager) {
+              window.authManager.user = mockUser;
+              window.authManager.isAuthenticated = true;
+              window.authManager.notifyAuthStateChange();
+          }
+          
+          // Set currentUser for the main page
+          currentUser = mockUser;
+          
+          // Close login modal and update UI
+          document.getElementById('loginModal').style.display = 'none';
+          showAlert('main', `Logged in as Test ${tier.charAt(0).toUpperCase() + tier.slice(1)} User! 🧪`, 'success');
+          
+          // Update the interface
+          setTimeout(() => {
+              updateUI();
+          }, 500);
       }
 
   </script>
