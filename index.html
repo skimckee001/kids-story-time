@@ -577,10 +577,10 @@
               <div class="story-content" id="storyContent"></div>
               
               <!-- Upgrade Prompt for Free Users -->
-              <div id="upgradePrompt" class="upgrade-prompt" style="display: none;">
+              <div id="upgradePrompt" class="upgrade-prompt" style="display: block;">
                   <h4>🌟 Enjoyed this story? Get unlimited access!</h4>
                   <p>Upgrade to Premium for unlimited stories, custom themes, and exclusive features!</p>
-                  <button class="btn btn-primary">Upgrade to Premium - £4.99/month</button>
+                  <button class="btn btn-primary" onclick="showUpgradeModal()">Upgrade to Premium - £4.99/month</button>
               </div>
           </div>
       </main>
@@ -1109,6 +1109,15 @@
               }
           }, 5000);
       }
+      // Show upgrade modal with pricing tiers
+      function showUpgradeModal() {
+          if (window.subscriptionManager) {
+              window.subscriptionManager.showUpgradeModal('Premium Features');
+          } else {
+              alert('Upgrade feature is loading... Please try again in a moment.');
+          }
+      }
+
   </script>
 </body>
 </html>
