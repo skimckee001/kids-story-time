@@ -703,6 +703,7 @@
   <script>
       // Global variables
       let selectedTheme = '';
+      let selectedThemes = [];
       let selectedGender = '';
       let currentUser = null;
 
@@ -821,7 +822,6 @@
           }
 
           // Theme selection (now supports multiple checkboxes)
-          let selectedThemes = [];
           document.querySelectorAll('.theme-option').forEach(item => {
               item.addEventListener('click', function(e) {
                   e.preventDefault();
