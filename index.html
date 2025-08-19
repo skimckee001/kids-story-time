@@ -435,22 +435,20 @@
                       </div>
                   </div>
                   <div style="margin-top: 10px;">
-                      <label style="display: flex; align-items: center; font-size: 14px; cursor: pointer;">
+                      <label style="display: flex; align-items: center; font-size: 14px; cursor: pointer; font-weight: normal;">
                           <input type="checkbox" id="includeNameToggle" style="margin-right: 8px;" checked>
                           <span>Include child's name as main character in story</span>
                       </label>
-                      <p style="font-size: 12px; color: #666; margin-top: 5px; margin-left: 22px;">When unchecked, the story will use a generic character name</p>
                   </div>
               </div>
 
               <!-- Story Prompt Section (moved to top) -->
               <div class="form-group">
-                  <label for="customPrompt">What would you like this story to be about? <span style="color: #007acc;">🎤</span>
+                  <label for="customPrompt">What would you like this story to be about?
                   <button type="button" id="infoBtn" style="background: none; border: none; color: #007acc; font-size: 16px; margin-left: 5px; cursor: pointer;" title="Click for examples">ℹ️</button></label>
-                  <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Tell us what adventure you'd like to hear about</p>
                   <div style="position: relative;">
-                      <textarea id="customPrompt" class="form-control" rows="3" placeholder="Example: A brave princess who loves football and goes on an adventure with her pet dragon to save the enchanted forest..."></textarea>
-                      <button type="button" id="micBtn" style="position: absolute; right: 10px; top: 10px; background: #007acc; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; font-size: 16px;" title="Voice input">🎤</button>
+                      <textarea id="customPrompt" class="form-control" rows="3" placeholder="Example: A brave princess who loves football and goes on an adventure with her pet dragon to save the enchanted forest..." style="font-size: 1rem;"></textarea>
+                      <button type="button" id="micBtn" style="position: absolute; right: 10px; top: 10px; background: #dc2626; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center;" title="Record your voice">🔴</button>
                   </div>
               </div>
 
@@ -883,8 +881,8 @@
                   recognition.lang = 'en-US';
                   
                   // Change button appearance during recording
-                  this.innerHTML = '🔴';
-                  this.style.backgroundColor = '#dc2626';
+                  this.innerHTML = '⏹️';
+                  this.style.backgroundColor = '#ef4444';
                   
                   recognition.onstart = function() {
                       console.log('Voice recognition started');
@@ -907,8 +905,8 @@
                   
                   recognition.onend = function() {
                       // Reset button appearance
-                      document.getElementById('micBtn').innerHTML = '🎤';
-                      document.getElementById('micBtn').style.backgroundColor = '#007acc';
+                      document.getElementById('micBtn').innerHTML = '🔴';
+                      document.getElementById('micBtn').style.backgroundColor = '#dc2626';
                   };
                   
                   recognition.start();
@@ -950,6 +948,8 @@
                               <li>Tales about different cultures or countries</li>
                               <li>Stories that help with bedtime fears or new experiences</li>
                           </ul>
+                          
+                          <p style="margin-top: 20px; text-align: center;"><strong>Press the microphone to let your child tell us what they would like the story to be about.</strong></p>
                       </div>
                       <button onclick="this.parentElement.parentElement.remove()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; margin-top: 20px; cursor: pointer;">Got it!</button>
                   </div>
