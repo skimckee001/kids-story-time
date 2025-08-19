@@ -89,7 +89,10 @@ class AIStoryService {
         const lengthInstructions = {
             short: 'Write a short story (200-300 words, 2-3 minutes reading time)',
             medium: 'Write a medium-length story (400-600 words, 5-7 minutes reading time)', 
-            long: 'Write a longer story (800-1200 words, 10-15 minutes reading time)'
+            long: 'Write a longer story (800-1200 words, 10-15 minutes reading time)',
+            extended: 'Write an extended story (1500-2000 words, 20 minutes reading time)',
+            'long-extended': 'Write a long extended story (2500-3000 words, 30 minutes reading time)',
+            'extra-long': 'Write an extra long story (3500-4000 words, 45 minutes reading time)'
         };
 
         const readingLevelGuidelines = {
@@ -369,7 +372,18 @@ The End.`
         };
 
         const selectedStory = stories[selectedTheme] || stories.adventure;
-        const selectedLength = selectedStory[storyLength] || selectedStory.short;
+        
+        // For demo purposes, map extended lengths to available stories
+        let effectiveLength = storyLength;
+        if (!selectedStory[storyLength]) {
+            if (storyLength === 'extended' || storyLength === 'long-extended' || storyLength === 'extra-long') {
+                effectiveLength = 'medium'; // Use medium story for longer lengths in demo
+            } else {
+                effectiveLength = 'short'; // Default fallback
+            }
+        }
+        
+        const selectedLength = selectedStory[effectiveLength] || selectedStory.short;
 
         return {
             success: true,
@@ -393,7 +407,10 @@ The End.`
         const tokenLimits = {
             short: 400,
             medium: 800,
-            long: 1500
+            long: 1500,
+            extended: 2500,
+            'long-extended': 3500,
+            'extra-long': 4500
         };
         return tokenLimits[length] || tokenLimits.medium;
     }
