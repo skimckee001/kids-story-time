@@ -192,6 +192,12 @@ Make it magical and engaging${includeNameInStory ? ` for ${characterName}` : ''}
         } else if (theme) {
             selectedTheme = theme;
         }
+        
+        // Create display theme for metadata (for multiple themes, show first one or combination)
+        let displayTheme = selectedTheme;
+        if (themes && themes.length > 1) {
+            displayTheme = themes.slice(0, 2).join(' & '); // Show first 2 themes
+        }
 
         const stories = {
             adventure: {
@@ -374,7 +380,7 @@ The End.`
                     childName,
                     childAge,
                     storyLength,
-                    theme,
+                    theme: displayTheme || selectedTheme,
                     generatedAt: new Date().toISOString(),
                     type: 'demo'
                 }
