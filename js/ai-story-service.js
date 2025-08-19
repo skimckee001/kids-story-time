@@ -15,7 +15,7 @@ class AIStoryService {
             childAge, 
             storyLength, 
             theme, 
-            interests = [],
+            gender = '',
             customPrompt = '' 
         } = params;
 
@@ -26,7 +26,7 @@ class AIStoryService {
                 return this.generateMockStory(params);
             }
 
-            const prompt = this.buildStoryPrompt(childName, childAge, storyLength, theme, interests, customPrompt);
+            const prompt = this.buildStoryPrompt(childName, childAge, storyLength, theme, gender, customPrompt);
             
             const response = await fetch(this.baseUrl, {
                 method: 'POST',
@@ -83,7 +83,7 @@ class AIStoryService {
     }
 
     // Build the AI prompt for story generation
-    buildStoryPrompt(childName, childAge, storyLength, theme, interests, customPrompt) {
+    buildStoryPrompt(childName, childAge, storyLength, theme, gender, customPrompt) {
         const lengthInstructions = {
             short: 'Write a short story (200-300 words, 2-3 minutes reading time)',
             medium: 'Write a medium-length story (400-600 words, 5-7 minutes reading time)', 
@@ -107,13 +107,12 @@ Reading Level Guidelines: ${readingLevelGuidelines[childAge] || readingLevelGuid
 
 Story Requirements:
 - Feature ${childName} as the main character
-- Include age-appropriate vocabulary and themes
+- Include age-appropriate vocabulary and themes for ${this.getReadingLevelDisplay(childAge)} level
 - Have a clear beginning, middle, and end
 - Include a positive message or lesson
 - Be engaging and imaginative
 - Safe and appropriate for children
-
-${interests.length > 0 ? `Include these interests: ${interests.join(', ')}` : ''}
+${gender ? `- Use ${gender === 'boy' ? 'he/him' : 'she/her'} pronouns for ${childName}` : ''}
 
 ${customPrompt ? `Additional requirements: ${customPrompt}` : ''}
 
@@ -219,6 +218,86 @@ A few weeks later, ${childName} received a magical letter delivered by a flying 
 "Thank you for helping me believe in myself!" wrote Pip. "${childName}, you taught me that everyone is special in their own way!"
 
 The End.`
+                },
+                funny: {
+                    short: {
+                        title: `${childName}'s Silly Day`,
+                        content: `${childName} woke up one morning and everything seemed backwards! ${childName} put on shoes before socks, tried to brush teeth with a fork, and the cat was barking while the dog was meowing!
+
+"What a silly day!" laughed ${childName}. At breakfast, the cereal was floating in the air and the milk was jumping around like popcorn.
+
+Even funnier, when ${childName} went outside, all the neighbors were walking their goldfish and riding bicycles backwards. The mail carrier was delivering letters by throwing them like paper airplanes!
+
+${childName} decided to join the silliness and spent the whole day walking on hands, talking in rhymes, and wearing a banana as a hat.
+
+By evening, everything went back to normal, but ${childName} had learned that sometimes being silly makes the world a lot more fun!
+
+The End.`
+                    },
+                    medium: {
+                        title: `${childName} and the Giggling Glasses`,
+                        content: `${childName} found a pair of sparkly glasses in Grandpa's attic that had a mysterious note: "Warning: These glasses make everything hilarious!"
+
+Curious, ${childName} put them on and immediately started giggling. The boring old lamp looked like it was doing a silly dance! The serious family portrait showed everyone making funny faces and sticking out their tongues.
+
+But the real fun started when ${childName} went downstairs wearing the glasses. Mom appeared to be juggling invisible balls while making breakfast. Dad looked like he was conducting an orchestra of dancing pancakes. Even grumpy old Mr. Peterson next door seemed to be tap-dancing while watering his flowers!
+
+${childName} couldn't stop laughing! Everything looked so wonderfully ridiculous through the giggling glasses. The school bus looked like a giant yellow banana, and the other kids appeared to be bouncing like silly rubber balls.
+
+At school, even the most serious teacher, Mrs. Thompson, looked like she was performing in a comedy show, using a ruler as a microphone and teaching math by doing the chicken dance.
+
+But when ${childName} tried to do homework, the numbers and letters kept wobbling and making funny faces back! Realizing that while fun was important, ${childName} also needed to focus sometimes.
+
+So ${childName} learned to use the giggling glasses wisely - putting them on when life felt too serious, but taking them off when it was time to work or help others.
+
+From that day on, ${childName} always remembered that laughter makes everything better, but there's a time and place for both fun and focus!
+
+The End.`
+                    }
+                },
+                unicorns: {
+                    short: {
+                        title: `${childName} and the Rainbow Unicorn`,
+                        content: `In ${childName}'s backyard, behind the old oak tree, lived a magical rainbow unicorn named Shimmer. Only ${childName} could see her because ${childName} had a pure and kind heart.
+
+Every day after school, ${childName} would bring Shimmer rainbow-colored flowers and sweet clover. In return, Shimmer would share magical stories and grant one small wish.
+
+One day, ${childName} found Shimmer looking very sad. "My rainbow colors are fading," Shimmer explained. "I need to help someone who really needs kindness to get my colors back."
+
+${childName} knew exactly what to do! At school, there was a new student who seemed lonely and had no friends. ${childName} invited them to play and shared lunch with them.
+
+That afternoon, Shimmer was more colorful than ever! Her horn sparkled like diamonds and her mane flowed like a beautiful rainbow.
+
+"Your kindness brought my colors back," Shimmer said, nuzzling ${childName}. "True magic comes from caring for others."
+
+From that day on, ${childName} and the new friend played together every day, and Shimmer's rainbow colors never faded again.
+
+The End.`
+                    },
+                    medium: {
+                        title: `${childName}'s Unicorn Academy Adventure`,
+                        content: `${childName} received a mysterious letter written in sparkly ink: "You are invited to attend the Secret Unicorn Academy. Follow the rainbow path at sunset."
+
+That evening, ${childName} discovered a shimmering rainbow path in the woods that led to a magical academy where young unicorns learned to use their powers. The headmaster, a wise old unicorn named Stardust, explained that humans were sometimes invited to learn alongside the unicorns.
+
+${childName}'s roommate was a young unicorn named Crystal who was struggling with her magic. While other unicorns could create beautiful flowers and heal small wounds, Crystal could only make sparkles that quickly disappeared.
+
+"I'm not good at anything magical," Crystal said sadly.
+
+${childName} spent every day helping Crystal practice, offering encouragement and celebrating even the smallest improvements. Together, they discovered that Crystal's sparkles weren't useless - they could make anyone who saw them feel happy and hopeful.
+
+During the academy's final exam, a terrible storm threatened to destroy the nearby village's harvest. All the unicorns worked together, using their different magical abilities. The powerful unicorns created barriers against the wind and rain, while the healing unicorns helped damaged plants.
+
+But it was Crystal's sparkles that proved most important. When the villagers saw them dancing through the storm, they felt brave enough to work together to save their crops. The sparkles gave everyone hope and strength to keep trying.
+
+${childName} learned that every type of magic - and every person - has something special to offer. Sometimes the most important magic isn't the most flashy or obvious.
+
+When it was time to leave the academy, Stardust gave ${childName} a small crystal that would always sparkle when someone nearby needed encouragement.
+
+${childName} returned home with not just magical memories, but with the knowledge that kindness and encouragement are the most powerful magic of all.
+
+The End.`
+                    }
                 }
             }
         };
