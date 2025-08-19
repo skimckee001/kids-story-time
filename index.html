@@ -407,8 +407,7 @@
 
           <!-- Logged In User Info -->
           <div id="userInfo" class="user-info" style="display: none;">
-              <h3>Welcome back, <span id="userName"></span>!</h3>
-              <p>Child: <span id="childName"></span></p>
+              <h3 id="welcomeMessage" style="text-align: center; margin-bottom: 20px;">Welcome back!</h3>
               <div id="limitsDisplay" class="limits-info">
                   <p id="planStatusText"><strong>Free Plan:</strong> <span id="storiesRemaining">1</span> story remaining today</p>
               </div>
@@ -988,10 +987,8 @@
               authSection.style.display = 'none';
               userInfo.style.display = 'block';
               
-              // Update user info
-              document.getElementById('userName').textContent = currentUser.email;
-              // Child name would come from profile data
-              document.getElementById('childName').textContent = 'Loading...';
+              // Update welcome message (will be personalized when profile loads)
+              document.getElementById('welcomeMessage').textContent = 'Welcome back!';
               
               // Show story library button for premium users (for now, all logged-in users)
               document.getElementById('storyLibraryBtn').style.display = 'inline-block';
@@ -1009,8 +1006,22 @@
           
           try {
               const profile = await window.dbManager.getUserProfile(currentUser.id);
-              if (profile) {
-                  document.getElementById('childName').textContent = profile.child_name || 'Not set';
+              
+              // Update welcome message with child's name if available
+              const welcomeMsg = document.getElementById('welcomeMessage');
+              
+              // Check profile first, then user metadata (for test users)
+              let childName = null;
+              if (profile && profile.child_name) {
+                  childName = profile.child_name;
+              } else if (currentUser.user_metadata && currentUser.user_metadata.child_name) {
+                  childName = currentUser.user_metadata.child_name;
+              }
+              
+              if (childName) {
+                  welcomeMsg.textContent = `Welcome back, ${childName}!`;
+              } else {
+                  welcomeMsg.textContent = 'Welcome back!';
               }
               
               // Check daily limits
