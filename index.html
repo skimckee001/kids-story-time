@@ -1111,11 +1111,61 @@
       }
       // Show upgrade modal with pricing tiers
       function showUpgradeModal() {
-          if (window.subscriptionManager) {
+          console.log('showUpgradeModal called');
+          console.log('window.subscriptionManager:', window.subscriptionManager);
+          
+          if (window.subscriptionManager && typeof window.subscriptionManager.showUpgradeModal === 'function') {
+              console.log('Calling subscription manager modal');
               window.subscriptionManager.showUpgradeModal('Premium Features');
           } else {
-              alert('Upgrade feature is loading... Please try again in a moment.');
+              console.log('Subscription manager not ready, showing fallback modal');
+              showFallbackUpgradeModal();
           }
+      }
+
+      // Fallback upgrade modal if subscription manager isn't loaded
+      function showFallbackUpgradeModal() {
+          const modal = document.createElement('div');
+          modal.style.cssText = `
+              position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+              background: rgba(0,0,0,0.5); z-index: 1000; display: flex; 
+              align-items: center; justify-content: center; padding: 20px;
+          `;
+          
+          modal.innerHTML = `
+              <div style="background: white; border-radius: 20px; padding: 30px; max-width: 500px; text-align: center;">
+                  <h2 style="color: #333; margin-bottom: 20px;">🌟 Choose Your Plan</h2>
+                  
+                  <div style="margin: 20px 0; padding: 15px; border: 2px solid #ddd; border-radius: 10px;">
+                      <h3 style="color: #333;">Free (Forever) — £0</h3>
+                      <p>• 3 text-only stories per day (max 10 per month)<br>• 1 child profile<br>• Perfect for trying it out!</p>
+                  </div>
+                  
+                  <div style="margin: 20px 0; padding: 15px; border: 2px solid #9f7aea; border-radius: 10px; background: #f7fafc;">
+                      <h3 style="color: #9f7aea;">Premium (Individual) — £4.99/mo</h3>
+                      <p>• Story history (read favorites again)<br>• Unlimited text stories (up to 3000 words)<br>• 3 AI read-aloud stories<br>• Images with stories</p>
+                  </div>
+                  
+                  <div style="margin: 20px 0; padding: 15px; border: 2px solid #3182ce; border-radius: 10px; background: #f7fafc;">
+                      <h3 style="color: #3182ce;">Family — £9.99/mo</h3>
+                      <p>• Everything in Premium<br>• AI generated images for each story<br>• 30 AI read-aloud stories<br>• Up to 6 child profiles</p>
+                  </div>
+                  
+                  <button onclick="this.parentElement.parentElement.remove()" 
+                          style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 10px; cursor: pointer; margin-top: 20px;">
+                      Close (Demo Mode)
+                  </button>
+              </div>
+          `;
+          
+          document.body.appendChild(modal);
+          
+          // Close on backdrop click
+          modal.addEventListener('click', (e) => {
+              if (e.target === modal) {
+                  modal.remove();
+              }
+          });
       }
 
   </script>
