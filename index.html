@@ -763,14 +763,12 @@
                   `;
               }
                       
-                      const mainContent = document.querySelector('.main-content');
-                      if (mainContent) {
-                          mainContent.insertBefore(usageIndicator, mainContent.firstChild);
-                      }
-                  }
-              } catch (error) {
-                  console.error('Error loading usage stats:', error);
+              const mainContent = document.querySelector('.main-content');
+              if (mainContent) {
+                  mainContent.insertBefore(usageIndicator, mainContent.firstChild);
               }
+          } catch (error) {
+              console.error('Error loading usage stats:', error);
           }
       }
 
