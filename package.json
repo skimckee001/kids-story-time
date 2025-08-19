@@ -1,0 +1,13 @@
+{
+  "name": "kids-story-time",
+  "version": "1.0.0",
+  "description": "Magical personalized stories for children",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "build": "echo 'No build step needed for static site'"
+  },
+  "keywords": ["children", "stories", "ai", "personalized"],
+  "author": "Your Name",
+  "license": "MIT"
+}
