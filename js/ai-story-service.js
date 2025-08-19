@@ -22,58 +22,50 @@ class AIStoryService {
         } = params;
 
         try {
-            // For demo purposes, we'll use a mock response
-            // In production, you'd want to use a backend service for API calls
-            if (!this.apiKey) {
-                return this.generateMockStory(params);
-            }
+            // Try backend API first for real AI generation
+            try {
+                const backendUrl = window.location.origin + '/api/generate-story';
+                const response = await fetch(backendUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        childName, 
+                        childAge, 
+                        storyLength, 
+                        theme, 
+                        themes,
+                        gender,
+                        customPrompt,
+                        includeNameInStory
+                    })
+                });
 
-            const prompt = this.buildStoryPrompt(childName, childAge, storyLength, theme, themes, gender, customPrompt, includeNameInStory);
-            
-            const response = await fetch(this.baseUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.apiKey}`
-                },
-                body: JSON.stringify({
-                    model: 'gpt-3.5-turbo',
-                    messages: [
-                        {
-                            role: 'system',
-                            content: 'You are a creative children\'s story writer who creates age-appropriate, engaging, and educational stories. Always include positive messages and age-appropriate content.'
-                        },
-                        {
-                            role: 'user',
-                            content: prompt
-                        }
-                    ],
-                    max_tokens: this.getMaxTokensForLength(storyLength),
-                    temperature: 0.8
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`API request failed: ${response.status}`);
-            }
-
-            const data = await response.json();
-            const storyText = data.choices[0].message.content;
-
-            return {
-                success: true,
-                story: {
-                    title: this.extractTitle(storyText),
-                    content: this.cleanStoryContent(storyText),
-                    metadata: {
-                        childName,
-                        childAge,
-                        storyLength,
-                        theme,
-                        generatedAt: new Date().toISOString()
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        // Real AI-generated story from backend
+                        return {
+                            success: true,
+                            story: data.story,
+                            type: 'ai-generated'
+                        };
                     }
                 }
-            };
+
+                // If backend fails but indicates fallback is available, continue to mock
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    console.log('Backend API unavailable, using mock stories:', errorData.error);
+                }
+            } catch (backendError) {
+                console.log('Backend not available, using mock stories:', backendError.message);
+            }
+
+            // Fallback to mock story if backend is unavailable or API key not configured
+            return this.generateMockStory(params);
+
         } catch (error) {
             console.error('Story generation error:', error);
             return {
