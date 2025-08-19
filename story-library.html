@@ -61,6 +61,19 @@
             font-size: 12px;
             font-weight: bold;
         }
+
+        .upgrade-btn:hover .upgrade-tooltip {
+            opacity: 1;
+        }
+
+        .upgrade-btn {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .upgrade-btn:hover {
+            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.3);
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-purple-100 via-blue-50 to-pink-100 min-h-screen">
@@ -73,14 +86,19 @@
                         <span class="text-white font-bold text-lg">📚</span>
                     </div>
                     <span class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                        Kids Story Time
+                        KidsStoryTime<span style="font-size: 0.6em; font-weight: normal;">.org</span>
                     </span>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <span class="premium-badge">✨ Premium</span>
+                <div class="flex items-center space-x-3">
                     <a href="index.html" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200 font-medium">
                         Create New Story
                     </a>
+                    <button id="upgradeBtn" class="upgrade-btn bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200 font-medium border-2 border-yellow-400 hover:border-yellow-300 relative" title="Upgrade to unlock more features">
+                        Upgrade
+                        <div id="upgradeTooltip" class="upgrade-tooltip absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-gray-800 text-white text-sm rounded-lg px-3 py-2 opacity-0 pointer-events-none transition-opacity duration-200 whitespace-nowrap z-50">
+                            Unlock unlimited stories + AI voices
+                        </div>
+                    </button>
                 </div>
             </div>
         </div>
@@ -398,9 +416,14 @@
                                     ${story.genre}
                                 </span>
                             </div>
-                            <button class="favorite-btn text-2xl ${story.is_favorite ? 'text-red-500' : 'text-gray-300'}" data-story-id="${story.id}">
-                                ${story.is_favorite ? '❤️' : '🤍'}
-                            </button>
+                            <div class="flex items-center gap-2">
+                                <button class="delete-story-btn text-lg text-gray-400 hover:text-red-500 transition-colors duration-200" data-story-id="${story.id}" title="Delete story">
+                                    🗑️
+                                </button>
+                                <button class="favorite-btn text-2xl ${story.is_favorite ? 'text-red-500' : 'text-gray-300'}" data-story-id="${story.id}">
+                                    ${story.is_favorite ? '❤️' : '🤍'}
+                                </button>
+                            </div>
                         </div>
                         
                         <h3 class="text-xl font-bold text-gray-800 mb-3 line-clamp-2">
@@ -476,6 +499,14 @@
                     btn.addEventListener('click', (e) => {
                         const storyId = e.target.dataset.storyId;
                         this.toggleFavorite(storyId);
+                    });
+                });
+
+                // Delete buttons
+                document.querySelectorAll('.delete-story-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const storyId = e.target.dataset.storyId;
+                        this.showDeleteConfirmation(storyId);
                     });
                 });
             }
@@ -640,6 +671,48 @@
                 document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('emptyState').classList.add('hidden');
                 document.getElementById('storiesGrid').classList.remove('hidden');
+            }
+
+            showDeleteConfirmation(storyId) {
+                const story = this.stories.find(s => s.id === storyId);
+                if (!story) return;
+                
+                const confirmation = confirm(`Are you sure you want to delete "${story.title}"?\n\nThis action cannot be undone.`);
+                
+                if (confirmation) {
+                    this.deleteStory(storyId);
+                }
+            }
+
+            async deleteStory(storyId) {
+                try {
+                    if (storyId.startsWith('demo')) {
+                        // For demo stories, just remove from local array
+                        this.stories = this.stories.filter(s => s.id !== storyId);
+                        this.filterStories();
+                        this.renderStories();
+                        
+                        alert('Demo story deleted! In the full version, stories would be permanently removed from your account.');
+                        return;
+                    }
+
+                    const user = window.authManager.getCurrentUser();
+                    const result = await window.dbManager.deleteStory(storyId, user.id);
+                    
+                    if (result.success) {
+                        // Remove the story from our local array
+                        this.stories = this.stories.filter(s => s.id !== storyId);
+                        this.filterStories();
+                        this.renderStories();
+                        
+                        alert('Story deleted successfully!');
+                    } else {
+                        alert('Error deleting story. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error deleting story:', error);
+                    alert('Error deleting story. Please try again.');
+                }
             }
         }
 
