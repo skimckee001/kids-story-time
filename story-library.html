@@ -171,6 +171,7 @@
     <script src="js/supabase-config.js"></script>
     <script src="js/auth-manager.js"></script>
     <script src="js/database-manager.js"></script>
+    <script src="js/subscription-manager.js"></script>
 
     <script>
         class StoryLibraryManager {
@@ -192,10 +193,17 @@
                     return;
                 }
 
-                // Check if user has premium access
+                // Check if user has premium access (story history)
                 const user = window.authManager.getCurrentUser();
-                if (!this.hasPremiumAccess(user)) {
-                    alert('Story Library is a premium feature. Please upgrade your account.');
+                const hasPremium = await this.hasPremiumAccess(user);
+                const limits = window.authManager.getUsageLimits(hasPremium ? 'premium' : 'free');
+                
+                if (!limits.storyHistory) {
+                    if (window.subscriptionManager) {
+                        window.subscriptionManager.showUpgradeModal('Story History');
+                    } else {
+                        alert('Story Library is a premium feature. Please upgrade your account.');
+                    }
                     window.location.href = 'index.html';
                     return;
                 }
@@ -204,10 +212,11 @@
                 await this.loadStories();
             }
 
-            hasPremiumAccess(user) {
-                // For now, we'll assume all logged-in users have premium access
-                // Later you can add actual subscription checking
-                return true;
+            async hasPremiumAccess(user) {
+                if (window.authManager) {
+                    return await window.authManager.hasPremiumAccess();
+                }
+                return false;
             }
 
             setupEventListeners() {

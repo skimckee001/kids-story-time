@@ -136,8 +136,26 @@
                         <!-- Story content will be inserted here -->
                     </div>
 
+                    <!-- Story Rating Section (Premium) -->
+                    <div id="storyRatingSection" class="hidden mt-8 pt-6 border-t border-gray-200">
+                        <div class="text-center bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-2xl">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">How did you enjoy this story?</h3>
+                            <div class="star-rating justify-center mb-4" id="storyStarRating">
+                                <span class="star" data-rating="1">⭐</span>
+                                <span class="star" data-rating="2">⭐</span>
+                                <span class="star" data-rating="3">⭐</span>
+                                <span class="star" data-rating="4">⭐</span>
+                                <span class="star" data-rating="5">⭐</span>
+                            </div>
+                            <p id="storyRatingText" class="text-sm text-gray-600 mb-4">Click a star to rate this story</p>
+                            <button id="submitStoryRating" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium disabled:opacity-50" disabled>
+                                Rate Story ⭐
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Story Actions -->
-                    <div class="mt-12 pt-8 border-t border-gray-200">
+                    <div class="mt-8 pt-6 border-t border-gray-200">
                         <div class="flex flex-wrap gap-4 justify-center">
                             <button id="saveStoryBtn" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium flex items-center space-x-2">
                                 <span>💖</span>
@@ -190,12 +208,15 @@
     <script src="js/auth-manager.js"></script>
     <script src="js/database-manager.js"></script>
     <script src="js/ai-story-service.js"></script>
+    <script src="js/subscription-manager.js"></script>
 
     <script>
         class StoryPageManager {
             constructor() {
                 this.currentStory = null;
                 this.storyParams = null;
+                this.currentStoryId = null;
+                this.selectedStoryRating = 0;
                 this.init();
             }
 
@@ -217,9 +238,19 @@
             }
 
             getStoryParams() {
-                // Try to get from URL parameters first
+                // Check if we're reading an existing story from the library
                 const urlParams = new URLSearchParams(window.location.search);
-                
+                if (urlParams.get('existing') === 'true') {
+                    const existingStory = localStorage.getItem('readExistingStory');
+                    if (existingStory) {
+                        localStorage.removeItem('readExistingStory');
+                        const story = JSON.parse(existingStory);
+                        this.loadExistingStory(story);
+                        return null; // Skip normal story generation
+                    }
+                }
+
+                // Try to get from URL parameters first
                 if (urlParams.has('childName')) {
                     return {
                         childName: urlParams.get('childName'),
@@ -239,6 +270,43 @@
                 }
 
                 return null;
+            }
+
+            loadExistingStory(story) {
+                // Set up the existing story
+                this.currentStory = {
+                    title: story.title,
+                    content: story.content,
+                    metadata: {
+                        childName: story.characters[0] || 'the hero',
+                        childAge: story.reading_level,
+                        storyLength: story.story_length,
+                        theme: story.genre
+                    }
+                };
+                this.currentStoryId = story.id;
+                this.storyParams = {
+                    childName: story.characters[0] || 'the hero',
+                    childAge: story.reading_level,
+                    storyLength: story.story_length,
+                    theme: story.genre,
+                    gender: story.gender,
+                    customPrompt: story.custom_prompt
+                };
+
+                // Display the story
+                this.displayStory();
+                
+                // Check if story is already rated - if so, don't show rating section
+                if (story.rating) {
+                    this.selectedStoryRating = story.rating;
+                    // Don't show rating section for already-rated stories
+                } else if (window.authManager && window.authManager.isUserAuthenticated()) {
+                    // Show rating section for authenticated users (async call handled by showRatingSectionIfEligible)
+                    this.showRatingSectionIfEligible();
+                }
+
+                this.setupEventListeners();
             }
 
             async generateStory() {
@@ -302,6 +370,9 @@
                 
                 // Show story display
                 this.showStoryState();
+                
+                // Show rating section if user is logged in and has premium access
+                this.showRatingSectionIfEligible();
             }
 
             getReadingTimeText(length) {
@@ -393,6 +464,18 @@
                 // Retry button
                 document.getElementById('retryBtn').addEventListener('click', () => {
                     this.generateStory();
+                });
+
+                // Story rating listeners
+                document.getElementById('submitStoryRating').addEventListener('click', () => {
+                    this.submitStoryRating();
+                });
+
+                // Star rating listeners
+                document.querySelectorAll('#storyStarRating .star').forEach(star => {
+                    star.addEventListener('click', (e) => this.selectStoryRating(parseInt(e.target.dataset.rating)));
+                    star.addEventListener('mouseenter', (e) => this.hoverStoryRating(parseInt(e.target.dataset.rating)));
+                    star.addEventListener('mouseleave', () => this.unhoverStoryRating());
                 });
             }
 
@@ -502,6 +585,110 @@
                 document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('storyDisplay').classList.add('hidden');
                 document.getElementById('errorState').classList.remove('hidden');
+            }
+
+            // Rating functionality
+            async showRatingSectionIfEligible() {
+                if (window.authManager && window.authManager.isUserAuthenticated() && this.currentStoryId) {
+                    const user = window.authManager.getCurrentUser();
+                    const hasPremium = await this.hasPremiumAccess(user);
+                    if (hasPremium) {
+                        document.getElementById('storyRatingSection').classList.remove('hidden');
+                    } else {
+                        // For free users, only allow rating (not history/library access)
+                        const limits = window.authManager.getUsageLimits('free');
+                        if (limits.storyRating) {
+                            document.getElementById('storyRatingSection').classList.remove('hidden');
+                        }
+                    }
+                }
+            }
+
+            async hasPremiumAccess(user) {
+                if (window.authManager) {
+                    return await window.authManager.hasPremiumAccess();
+                }
+                return false;
+            }
+
+            selectStoryRating(rating) {
+                this.selectedStoryRating = rating;
+                this.updateStoryRatingDisplay();
+                document.getElementById('submitStoryRating').disabled = false;
+            }
+
+            hoverStoryRating(rating) {
+                const stars = document.querySelectorAll('#storyStarRating .star');
+                stars.forEach((star, index) => {
+                    if (index < rating) {
+                        star.classList.add('hover');
+                    } else {
+                        star.classList.remove('hover');
+                    }
+                });
+            }
+
+            unhoverStoryRating() {
+                document.querySelectorAll('#storyStarRating .star').forEach(star => {
+                    star.classList.remove('hover');
+                });
+            }
+
+            updateStoryRatingDisplay() {
+                const stars = document.querySelectorAll('#storyStarRating .star');
+                const ratingText = document.getElementById('storyRatingText');
+                
+                stars.forEach((star, index) => {
+                    if (index < this.selectedStoryRating) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+
+                const ratingTexts = {
+                    1: 'Poor - Didn\'t enjoy it',
+                    2: 'Fair - It was okay',
+                    3: 'Good - We liked it',
+                    4: 'Great - We loved it!',
+                    5: 'Excellent - Amazing story!'
+                };
+
+                ratingText.textContent = this.selectedStoryRating > 0 ? ratingTexts[this.selectedStoryRating] : 'Click a star to rate this story';
+            }
+
+            async submitStoryRating() {
+                if (!this.currentStoryId || this.selectedStoryRating === 0) return;
+
+                try {
+                    const user = window.authManager.getCurrentUser();
+                    const result = await window.dbManager.rateStory(this.currentStoryId, this.selectedStoryRating, user.id);
+                    
+                    if (result.success) {
+                        // Hide rating section and show success message
+                        document.getElementById('storyRatingSection').classList.add('hidden');
+                        
+                        // Show success message
+                        const successMessage = document.createElement('div');
+                        successMessage.className = 'mt-8 pt-6 border-t border-gray-200 text-center';
+                        successMessage.innerHTML = `
+                            <div class="bg-green-50 border border-green-200 rounded-2xl p-6">
+                                <div class="text-green-600 text-4xl mb-2">✨</div>
+                                <h3 class="text-lg font-bold text-green-800 mb-2">Thank you for rating!</h3>
+                                <p class="text-green-600">Your ${this.selectedStoryRating}-star rating helps us create better stories for you!</p>
+                            </div>
+                        `;
+                        
+                        // Insert success message where rating section was
+                        const storyContent = document.getElementById('storyContent');
+                        storyContent.parentNode.insertBefore(successMessage, document.getElementById('storyRatingSection'));
+                        
+                        console.log('Story rated successfully:', this.selectedStoryRating);
+                    }
+                } catch (error) {
+                    console.error('Error rating story:', error);
+                    alert('Error rating story. Please try again.');
+                }
             }
         }
 

@@ -16,6 +16,7 @@ class DatabaseManager {
                     display_name: userData.display_name,
                     child_age: userData.child_age,
                     preferences: userData.preferences || {},
+                    subscription_type: userData.subscription_type || 'free',
                     created_at: new Date().toISOString()
                 }])
                 .select();
@@ -378,6 +379,26 @@ class DatabaseManager {
             return { success: true, data };
         } catch (error) {
             console.error('Get user usage stats error:', error);
+            return { success: false, error: error.message };
+        }
+    }
+
+    async getUserDailyUsageStats(userId) {
+        try {
+            const today = new Date();
+            const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate()).toISOString();
+            
+            const { data, error } = await this.client
+                .from('usage_analytics')
+                .select('*')
+                .eq('user_id', userId)
+                .eq('action', 'story_generated')
+                .gte('created_at', startOfDay);
+
+            if (error) throw error;
+            return { success: true, data };
+        } catch (error) {
+            console.error('Get user daily usage stats error:', error);
             return { success: false, error: error.message };
         }
     }

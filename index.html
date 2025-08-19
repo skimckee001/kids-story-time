@@ -655,6 +655,7 @@
   <script src="js/auth-manager.js"></script>
   <script src="js/database-manager.js"></script>
   <script src="js/ai-story-service.js"></script>
+  <script src="js/subscription-manager.js"></script>
   
   <script>
       // Global variables
@@ -668,6 +669,52 @@
           return locale.startsWith('en-GB') ? '£' : '$';
       }
 
+      // Show usage statistics for current user
+      async function showUsageStats() {
+          if (!window.authManager || !window.authManager.isUserAuthenticated()) return;
+          
+          const subscriptionType = await window.authManager.getSubscriptionStatus();
+          if (subscriptionType === 'free') {
+              try {
+                  const limits = window.authManager.getUsageLimits('free');
+                  const monthlyResult = await window.dbManager.getUserUsageStats(window.authManager.getCurrentUser().id);
+                  const dailyResult = await window.dbManager.getUserDailyUsageStats(window.authManager.getCurrentUser().id);
+                  
+                  if (monthlyResult.success && dailyResult.success) {
+                      const dailyUsed = dailyResult.data.length;
+                      const monthlyUsed = monthlyResult.data.length;
+                      const dailyRemaining = Math.max(0, limits.storiesPerDay - dailyUsed);
+                      const monthlyRemaining = Math.max(0, limits.storiesPerMonth - monthlyUsed);
+                      
+                      // Add usage indicator to the page
+                      const usageIndicator = document.createElement('div');
+                      usageIndicator.className = 'usage-indicator';
+                      usageIndicator.innerHTML = `
+                          <div style="background: rgba(255, 255, 255, 0.9); padding: 15px; border-radius: 15px; margin: 20px 0; text-align: center; border: 2px solid #e0e7ff;">
+                              <div style="font-size: 14px; color: #4f46e5; font-weight: 600;">
+                                  📊 Free Plan Usage
+                              </div>
+                              <div style="margin: 8px 0; font-size: 13px; color: #6b7280;">
+                                  Today: ${dailyUsed}/${limits.storiesPerDay} stories • Month: ${monthlyUsed}/${limits.storiesPerMonth} stories
+                              </div>
+                              ${(dailyRemaining === 0 || monthlyRemaining === 0) ? 
+                                  '<div style="color: #dc2626; font-size: 12px; font-weight: 600;">Limit reached - Upgrade for unlimited stories!</div>' :
+                                  '<div style="color: #059669; font-size: 12px;">✨ Upgrade to Premium for unlimited stories + more features</div>'
+                              }
+                          </div>
+                      `;
+                      
+                      const mainContent = document.querySelector('.main-content');
+                      if (mainContent) {
+                          mainContent.insertBefore(usageIndicator, mainContent.firstChild);
+                      }
+                  }
+              } catch (error) {
+                  console.error('Error loading usage stats:', error);
+              }
+          }
+      }
+
       // Initialize the application
       document.addEventListener('DOMContentLoaded', async function() {
           console.log('Kids Story Time app initializing...');
@@ -677,6 +724,11 @@
               // Check if user is already logged in
               currentUser = await window.authManager.getCurrentUser();
               updateUI();
+              
+              // Show usage stats for authenticated users
+              if (currentUser) {
+                  await showUsageStats();
+              }
           }
 
           // Theme selection (now radio buttons in the combined section)
@@ -933,16 +985,16 @@
               return;
           }
 
-          // Check if user is logged in and has remaining stories
-          if (currentUser && window.dbManager) {
+          // Check subscription limits before generating story
+          if (window.subscriptionManager) {
               try {
-                  const stats = await window.dbManager.getUserUsageStats(currentUser.id);
-                  if (stats.success && stats.data.length >= 3) { // Free limit: 3 stories per month
-                      alert('You\'ve reached your monthly limit. Please upgrade to Premium for unlimited stories!');
-                      return;
+                  const limitCheck = await window.subscriptionManager.checkStoryGenerationLimits();
+                  if (!limitCheck.canGenerate) {
+                      return; // Modal already shown by subscription manager
                   }
               } catch (error) {
-                  console.error('Error checking usage stats:', error);
+                  console.error('Error checking subscription limits:', error);
+                  // Continue with generation on error for better user experience
               }
           }
 
