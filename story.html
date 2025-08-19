@@ -67,6 +67,27 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .star-rating {
+            display: flex;
+            gap: 2px;
+        }
+
+        .star {
+            font-size: 32px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star.active {
+            color: #FFD700;
+        }
+
+        .star:hover,
+        .star.hover {
+            color: #FFD700;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-purple-100 via-blue-50 to-pink-100 min-h-screen">
@@ -589,6 +610,11 @@
 
             // Rating functionality
             async showRatingSectionIfEligible() {
+                // For testing purposes, always show the rating section
+                console.log('Demo mode: Showing story rating section for testing');
+                document.getElementById('storyRatingSection').classList.remove('hidden');
+                
+                // Original logic for production use
                 if (window.authManager && window.authManager.isUserAuthenticated() && this.currentStoryId) {
                     const user = window.authManager.getCurrentUser();
                     const hasPremium = await this.hasPremiumAccess(user);
@@ -601,6 +627,9 @@
                             document.getElementById('storyRatingSection').classList.remove('hidden');
                         }
                     }
+                } else {
+                    // Demo mode - allow rating even without authentication for testing
+                    document.getElementById('storyRatingSection').classList.remove('hidden');
                 }
             }
 
@@ -658,37 +687,48 @@
             }
 
             async submitStoryRating() {
-                if (!this.currentStoryId || this.selectedStoryRating === 0) return;
+                if (this.selectedStoryRating === 0) return;
 
                 try {
+                    // Demo mode handling
+                    if (!this.currentStoryId || !window.authManager || !window.authManager.isUserAuthenticated()) {
+                        // Demo rating
+                        this.showRatingSuccessMessage(true);
+                        return;
+                    }
+
                     const user = window.authManager.getCurrentUser();
                     const result = await window.dbManager.rateStory(this.currentStoryId, this.selectedStoryRating, user.id);
                     
                     if (result.success) {
-                        // Hide rating section and show success message
-                        document.getElementById('storyRatingSection').classList.add('hidden');
-                        
-                        // Show success message
-                        const successMessage = document.createElement('div');
-                        successMessage.className = 'mt-8 pt-6 border-t border-gray-200 text-center';
-                        successMessage.innerHTML = `
-                            <div class="bg-green-50 border border-green-200 rounded-2xl p-6">
-                                <div class="text-green-600 text-4xl mb-2">✨</div>
-                                <h3 class="text-lg font-bold text-green-800 mb-2">Thank you for rating!</h3>
-                                <p class="text-green-600">Your ${this.selectedStoryRating}-star rating helps us create better stories for you!</p>
-                            </div>
-                        `;
-                        
-                        // Insert success message where rating section was
-                        const storyContent = document.getElementById('storyContent');
-                        storyContent.parentNode.insertBefore(successMessage, document.getElementById('storyRatingSection'));
-                        
+                        this.showRatingSuccessMessage(false);
                         console.log('Story rated successfully:', this.selectedStoryRating);
                     }
                 } catch (error) {
                     console.error('Error rating story:', error);
                     alert('Error rating story. Please try again.');
                 }
+            }
+
+            showRatingSuccessMessage(isDemo = false) {
+                // Hide rating section and show success message
+                document.getElementById('storyRatingSection').classList.add('hidden');
+                
+                // Show success message
+                const successMessage = document.createElement('div');
+                successMessage.className = 'mt-8 pt-6 border-t border-gray-200 text-center';
+                const demoText = isDemo ? ' (Demo rating - in the full version, this would be saved to your account!)' : '';
+                successMessage.innerHTML = `
+                    <div class="bg-green-50 border border-green-200 rounded-2xl p-6">
+                        <div class="text-green-600 text-4xl mb-2">✨</div>
+                        <h3 class="text-lg font-bold text-green-800 mb-2">Thank you for rating!</h3>
+                        <p class="text-green-600">Your ${this.selectedStoryRating}-star rating helps us create better stories for you!${demoText}</p>
+                    </div>
+                `;
+                
+                // Insert success message where rating section was
+                const storyContent = document.getElementById('storyContent');
+                storyContent.parentNode.insertBefore(successMessage, document.getElementById('storyRatingSection'));
             }
         }
 
