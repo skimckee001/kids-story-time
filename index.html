@@ -612,7 +612,7 @@
           <div id="upgradePrompt" class="upgrade-prompt" style="display: block; margin-top: 30px;">
               <h4>🌟 Want unlimited magical stories? Get Premium access!</h4>
               <p>Upgrade to Premium for unlimited stories, custom themes, and exclusive features!</p>
-              <button class="btn btn-primary" onclick="showUpgradeModal()">View Pricing Plans</button>
+              <button class="btn btn-primary" onclick="showTierSelectionModal()">View Pricing Plans</button>
           </div>
 
           <!-- Story Output -->
@@ -694,6 +694,92 @@
                       <button type="button" onclick="quickTestLogin('family')" style="background: #10b981; color: white; padding: 8px 16px; border: none; border-radius: 8px; font-size: 12px; cursor: pointer;">Test Family</button>
                   </div>
               </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Tier Selection Modal -->
+  <div id="tierSelectionModal" class="modal">
+      <div class="modal-content" style="max-width: 600px;">
+          <span class="close" id="closeTierModal">&times;</span>
+          <div style="text-align: center; margin-bottom: 30px;">
+              <h2 style="color: #333; margin-bottom: 10px;">🎉 Choose Your Plan</h2>
+              <div style="background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 12px 20px; border-radius: 12px; margin: 15px 0; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">
+                  <div style="font-weight: bold; font-size: 16px;">✨ ALL FEATURES FREE DURING BETA!</div>
+                  <div style="font-size: 14px; margin-top: 4px; opacity: 0.9;">Select your plan preference - no payment required</div>
+              </div>
+          </div>
+          
+          <div style="display: grid; gap: 20px; margin-bottom: 30px;">
+              <!-- Free Tier -->
+              <div class="tier-card" data-tier="free" style="border: 2px solid #e2e8f0; border-radius: 15px; padding: 20px; cursor: pointer; transition: all 0.3s ease; background: #f8fafc;">
+                  <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 15px;">
+                      <h3 style="color: #64748b; margin: 0; font-size: 18px;">Free Forever</h3>
+                      <div style="background: #64748b; color: white; padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: 600;">£0/month</div>
+                  </div>
+                  <ul style="margin: 15px 0; padding-left: 20px; color: #475569; line-height: 1.6;">
+                      <li>5 stories per month</li>
+                      <li>Basic themes and stories</li>
+                      <li>Standard story lengths</li>
+                      <li>Banner ads displayed</li>
+                      <li>1 child profile</li>
+                  </ul>
+                  <div style="background: #f1f5f9; padding: 10px; border-radius: 8px; font-size: 12px; color: #64748b; text-align: center; margin-top: 15px;">
+                      Perfect for trying out the app!
+                  </div>
+              </div>
+
+              <!-- Premium Tier -->
+              <div class="tier-card" data-tier="premium" style="border: 2px solid #3b82f6; border-radius: 15px; padding: 20px; cursor: pointer; transition: all 0.3s ease; background: linear-gradient(135deg, #dbeafe, #eff6ff); position: relative;">
+                  <div style="position: absolute; top: -10px; right: 20px; background: #3b82f6; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">POPULAR</div>
+                  <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 15px;">
+                      <h3 style="color: #3b82f6; margin: 0; font-size: 18px;">Premium</h3>
+                      <div style="background: #3b82f6; color: white; padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: 600;">£9.99/month</div>
+                  </div>
+                  <ul style="margin: 15px 0; padding-left: 20px; color: #1e40af; line-height: 1.6;">
+                      <li><strong>Unlimited stories</strong></li>
+                      <li>AI voice narration</li>
+                      <li>Story history and library</li>
+                      <li>Advanced themes and customization</li>
+                      <li>Export stories (PDF, audio)</li>
+                      <li>All story lengths</li>
+                      <li><strong>Ad-free experience</strong></li>
+                      <li>Priority support</li>
+                  </ul>
+                  <div style="background: #dbeafe; padding: 10px; border-radius: 8px; font-size: 12px; color: #1e40af; text-align: center; margin-top: 15px;">
+                      <strong>Best for families who love stories!</strong>
+                  </div>
+              </div>
+
+              <!-- Family Tier -->
+              <div class="tier-card" data-tier="family" style="border: 2px solid #10b981; border-radius: 15px; padding: 20px; cursor: pointer; transition: all 0.3s ease; background: linear-gradient(135deg, #d1fae5, #ecfdf5);">
+                  <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 15px;">
+                      <h3 style="color: #10b981; margin: 0; font-size: 18px;">Family</h3>
+                      <div style="background: #10b981; color: white; padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: 600;">£19.99/month</div>
+                  </div>
+                  <ul style="margin: 15px 0; padding-left: 20px; color: #047857; line-height: 1.6;">
+                      <li><strong>Everything in Premium</strong></li>
+                      <li>Up to 6 child profiles</li>
+                      <li>AI-generated illustrations</li>
+                      <li>Enhanced voice narration</li>
+                      <li>Family sharing features</li>
+                      <li>Parental controls</li>
+                      <li>Educational progress tracking</li>
+                  </ul>
+                  <div style="background: #d1fae5; padding: 10px; border-radius: 8px; font-size: 12px; color: #047857; text-align: center; margin-top: 15px;">
+                      <strong>Perfect for large families!</strong>
+                  </div>
+              </div>
+          </div>
+
+          <div style="text-align: center;">
+              <button id="selectTierBtn" class="btn btn-primary" style="padding: 15px 40px; font-size: 16px; font-weight: 600;" disabled>
+                  🎉 Start Free Trial
+              </button>
+              <p style="margin-top: 15px; font-size: 14px; color: #666;">
+                  <strong>No payment required during beta!</strong><br>
+                  All features unlocked for everyone during launch period
+              </p>
           </div>
       </div>
   </div>
@@ -1032,13 +1118,12 @@
               });
               
               upgradeBtn.addEventListener('click', () => {
-                  if (window.subscriptionManager) {
-                      window.subscriptionManager.showUpgradeModal('Free Trial');
-                  } else {
-                      alert('🎉 FREE TRIAL ACTIVATED!\n\nYou now have access to ALL premium features:\n\n✅ Unlimited stories\n✅ AI voice narration\n✅ Advanced themes\n✅ Story history & library\n✅ Export options\n✅ All story lengths\n\n🆓 Completely FREE for your first month!\n\nNo payment required during beta period. Enjoy creating amazing stories!');
-                  }
+                  showTierSelectionModal();
               });
           }
+
+          // Tier selection modal functionality
+          setupTierSelectionModal();
 
           // Form submissions
           document.getElementById('signupForm').addEventListener('submit', handleSignup);
@@ -1587,6 +1672,70 @@
           setTimeout(() => {
               updateUI();
           }, 500);
+      }
+
+      // Tier selection modal functions
+      function showTierSelectionModal() {
+          document.getElementById('tierSelectionModal').style.display = 'block';
+      }
+
+      function setupTierSelectionModal() {
+          let selectedTier = null;
+
+          // Close modal button
+          document.getElementById('closeTierModal').addEventListener('click', () => {
+              document.getElementById('tierSelectionModal').style.display = 'none';
+          });
+
+          // Tier card selection
+          document.querySelectorAll('.tier-card').forEach(card => {
+              card.addEventListener('click', function() {
+                  // Remove selection from all cards
+                  document.querySelectorAll('.tier-card').forEach(c => {
+                      c.style.transform = 'scale(1)';
+                      c.style.boxShadow = '';
+                  });
+
+                  // Add selection to clicked card
+                  this.style.transform = 'scale(1.02)';
+                  this.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
+
+                  selectedTier = this.dataset.tier;
+                  document.getElementById('selectTierBtn').disabled = false;
+              });
+          });
+
+          // Select tier button
+          document.getElementById('selectTierBtn').addEventListener('click', () => {
+              if (selectedTier) {
+                  // Save user's tier preference
+                  localStorage.setItem('preferredTier', selectedTier);
+                  
+                  // Close modal
+                  document.getElementById('tierSelectionModal').style.display = 'none';
+                  
+                  // Show success message
+                  const tierNames = {
+                      free: 'Free',
+                      premium: 'Premium', 
+                      family: 'Family'
+                  };
+                  
+                  showAlert('main', `🎉 ${tierNames[selectedTier]} tier selected! All features are now unlocked during our free beta period. Enjoy creating unlimited magical stories!`, 'success');
+                  
+                  // Update UI if needed
+                  if (currentUser) {
+                      updateUI();
+                  }
+              }
+          });
+
+          // Close modal when clicking outside
+          document.getElementById('tierSelectionModal').addEventListener('click', function(event) {
+              if (event.target === this) {
+                  this.style.display = 'none';
+              }
+          });
       }
 
   </script>
