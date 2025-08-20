@@ -606,7 +606,7 @@
                                 <!-- Mobile: full width, Desktop: float right with text wrap -->
                                 <div class="lg:float-right lg:ml-6 lg:mb-4 lg:w-1/2">
                                     <div class="relative">
-                                        <img id="storyMainImage" src="https://via.placeholder.com/400x400/E8D5FF/667eea?text=Story+Image" 
+                                        <img id="storyMainImage" src="https://picsum.photos/400/400?random=1" 
                                              alt="Story illustration" 
                                              class="rounded-lg shadow-lg w-full lg:max-w-sm mx-auto lg:mx-0">
                                         <button onclick="window.storyPageManager.showImageUpgradePrompt()" 
@@ -879,10 +879,13 @@
                     this.shareStory();
                 });
 
-                // Read aloud
-                document.getElementById('readAloudBtn').addEventListener('click', () => {
-                    this.readAloud();
-                });
+                // Read aloud - using the actual button ID
+                const playNarrationBtn = document.getElementById('playNarration');
+                if (playNarrationBtn) {
+                    playNarrationBtn.addEventListener('click', () => {
+                        this.readAloud();
+                    });
+                }
 
                 // Update read aloud button text based on subscription
                 this.updateReadAloudButton();
@@ -1077,7 +1080,7 @@
             async readAloud() {
                 if (!this.currentStory) return;
                 
-                const btn = document.getElementById('readAloudBtn');
+                const btn = document.getElementById('playNarration');
                 
                 // Award stars for using Read Aloud (5 stars, once per day)
                 if (window.starPointsService) {
@@ -1108,7 +1111,7 @@
             }
 
             async updateReadAloudButton() {
-                const btn = document.getElementById('readAloudBtn');
+                const btn = document.getElementById('playNarration');
                 const hasAIAccess = await this.checkAIReadAloudAccess();
                 
                 if (hasAIAccess) {
@@ -1812,7 +1815,7 @@
                 });
 
                 // Also handle the Read Aloud button in story actions
-                const readAloudBtn = document.getElementById('readAloudBtn');
+                const readAloudBtn = document.getElementById('playNarration');
                 if (readAloudBtn) {
                     readAloudBtn.addEventListener('click', (e) => {
                         e.preventDefault();
