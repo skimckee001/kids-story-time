@@ -107,13 +107,23 @@
                     <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
                         <span class="text-white font-bold text-lg">📚</span>
                     </div>
-                    <span class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                        KidsStoryTime<span class="text-sm font-normal text-gray-500">.org</span>
+                    <span style="font-size: 28px; font-weight: bold; background: linear-gradient(135deg, #FF6B9D, #4ECDC4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                        KidsStoryTime<span style="font-size: 0.6em; font-weight: normal; color: #666;">.org</span>
                     </span>
                 </div>
-                <a href="index.html" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200 font-medium">
-                    ← Create New Story
-                </a>
+                <div class="flex items-center space-x-4">
+                    <div class="relative group">
+                        <button onclick="window.location.href='library.html'" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition-all duration-200 font-medium text-sm">
+                            📚 My Library
+                        </button>
+                        <div class="absolute top-full mt-2 right-0 bg-gray-800 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                            Register free to access your stories
+                        </div>
+                    </div>
+                    <a href="index.html" class="bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-full hover:shadow-lg transition-all duration-200 font-medium text-sm">
+                        ← New Story
+                    </a>
+                </div>
             </div>
         </div>
     </header>
@@ -210,14 +220,7 @@
 
                 <!-- Story Content with Images -->
                 <div class="p-8 md:p-12">
-                    <!-- Image Gallery -->
-                    <div id="storyImages" class="mb-8 hidden">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <!-- Images will be inserted here -->
-                        </div>
-                    </div>
-                    
-                    <!-- Story Text -->
+                    <!-- Story Text with inline image -->
                     <div id="storyContent" class="story-text text-lg md:text-xl text-gray-700 space-y-6 leading-relaxed">
                         <!-- Story content will be inserted here -->
                     </div>
@@ -260,8 +263,6 @@
             <!-- Feedback Section -->
             <div id="feedbackSection" class="mt-8 pt-6 border-t border-gray-200">
                 <div class="text-center">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">Help us improve KidsStoryTime.org!</h3>
-                    <p class="text-gray-600 mb-4">Your feedback helps us create better stories for children everywhere</p>
                     <button id="showFeedbackBtn" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium flex items-center space-x-2 mx-auto">
                         <span>💬</span>
                         <span>Share Feedback</span>
@@ -566,12 +567,29 @@
                 const contentElement = document.getElementById('storyContent');
                 const paragraphs = content.split('\n').filter(p => p.trim());
                 
-                // Insert ad in the middle of the story for non-premium users
+                // Insert image after first paragraph and ad in the middle
                 let storyHTML = '';
                 const midpoint = Math.floor(paragraphs.length / 2);
                 
                 for (let i = 0; i < paragraphs.length; i++) {
                     storyHTML += `<p>${this.escapeHtml(paragraphs[i].trim())}</p>`;
+                    
+                    // Insert image after first paragraph
+                    if (i === 0) {
+                        storyHTML += `
+                            <div id="storyImageContainer" class="my-6 flex justify-center">
+                                <div class="relative max-w-md">
+                                    <img id="storyMainImage" src="https://via.placeholder.com/400x400/E8D5FF/667eea?text=Story+Image" 
+                                         alt="Story illustration" 
+                                         class="rounded-lg shadow-lg w-full">
+                                    <button onclick="window.storyPageManager.showImageUpgradePrompt()" 
+                                            class="absolute top-2 right-2 bg-white/90 hover:bg-white text-xs px-3 py-1.5 rounded-lg shadow-md transition flex items-center gap-1">
+                                        ✨ Generate AI Image
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
                     
                     // Insert ad at midpoint (only for non-premium users)
                     if (i === midpoint - 1) {
@@ -625,52 +643,36 @@
                 }
 
                 try {
-                    const imagesContainer = document.getElementById('storyImages');
-                    const imagesGrid = imagesContainer.querySelector('.grid');
+                    const mainImage = document.getElementById('storyMainImage');
+                    if (!mainImage) {
+                        console.log('Story image element not found');
+                        return;
+                    }
                     
-                    // Show loading state
-                    imagesContainer.classList.remove('hidden');
-                    imagesGrid.innerHTML = `
-                        <div class="col-span-full text-center py-8">
-                            <div class="inline-flex items-center gap-2 text-purple-600">
-                                <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                <span>Creating magical illustrations...</span>
-                            </div>
-                        </div>
-                    `;
+                    // Show loading state on the image
+                    mainImage.style.opacity = '0.5';
                     
-                    // Generate images based on story content
+                    // Generate a single image based on story content
                     const images = await window.imageGenerationService.generateStoryImages(
                         this.currentStory,
-                        3 // Generate 3 images
+                        1 // Generate 1 image
                     );
                     
-                    // Display the generated images
+                    // Update the main image
                     if (images && images.length > 0) {
-                        imagesGrid.innerHTML = images.map((img, index) => `
-                            <div class="relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                                <img src="${img.url}" alt="${img.alt}" class="w-full h-64 object-cover" loading="lazy">
-                                <button onclick="window.storyPageManager.showImageUpgradePrompt()" class="absolute top-2 right-2 bg-white/90 hover:bg-white text-xs px-2 py-1 rounded-lg shadow-md transition">
-                                    ✨ Generate AI Image
-                                </button>
-                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-                                    <p class="text-white text-sm">Scene ${index + 1}</p>
-                                </div>
-                            </div>
-                        `).join('');
+                        mainImage.src = images[0].url;
+                        mainImage.alt = images[0].alt;
+                        mainImage.style.opacity = '1';
                         
-                        // Cache the images
-                        images.forEach(img => window.imageGenerationService.cacheImage(img));
-                    } else {
-                        // Hide if no images generated
-                        imagesContainer.classList.add('hidden');
+                        // Cache the image
+                        window.imageGenerationService.cacheImage(images[0]);
                     }
                 } catch (error) {
-                    console.error('Error generating story images:', error);
-                    document.getElementById('storyImages').classList.add('hidden');
+                    console.error('Error generating story image:', error);
+                    const mainImage = document.getElementById('storyMainImage');
+                    if (mainImage) {
+                        mainImage.style.opacity = '1';
+                    }
                 }
             }
 

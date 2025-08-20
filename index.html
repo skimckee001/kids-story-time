@@ -877,7 +877,12 @@
                   <button type="button" id="infoBtn" style="background: none; border: none; color: #007acc; font-size: 16px; margin-left: 5px; cursor: pointer;" title="Click for examples">ℹ️</button></label>
                   <div style="position: relative;">
                       <textarea id="customPrompt" class="form-control" rows="3" placeholder="Example: A brave princess who loves football and goes on an adventure with her pet dragon to save the enchanted forest..." style="font-size: 1rem;"></textarea>
-                      <button type="button" id="micBtn" style="position: absolute; right: 10px; top: 10px; background: #dc2626; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center;" title="Record your voice">🔴</button>
+                      <button type="button" id="micBtn" style="position: absolute; right: 10px; top: 10px; background: #dc2626; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center;" title="Record your voice">
+                          <span style="position: relative;">
+                              🎤
+                              <span style="position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%); font-size: 8px; letter-spacing: -0.5px;">REC</span>
+                          </span>
+                      </button>
                   </div>
               </div>
 
@@ -1475,6 +1480,7 @@
                       button.innerHTML = '⏹️';
                       button.style.backgroundColor = '#ef4444';
                       button.title = 'Recording... Click to stop';
+                      button.style.fontSize = '20px';
                       
                       recognition.onstart = function() {
                           console.log('Speech recognition started');
@@ -1514,9 +1520,15 @@
                           alert(errorMessage);
                           
                           // Reset button
-                          button.innerHTML = '🔴';
+                          button.innerHTML = `
+                              <span style="position: relative;">
+                                  🎤
+                                  <span style="position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%); font-size: 8px; letter-spacing: -0.5px;">REC</span>
+                              </span>
+                          `;
                           button.style.backgroundColor = '#dc2626';
                           button.title = 'Record your voice';
+                          button.style.fontSize = '11px';
                       };
                       
                       recognition.onend = function() {
@@ -1534,9 +1546,15 @@
                           console.error('Failed to start speech recognition:', error);
                           alert('Failed to start speech recognition. Please check your microphone permissions.');
                           // Reset button
-                          button.innerHTML = '🔴';
+                          button.innerHTML = `
+                              <span style="position: relative;">
+                                  🎤
+                                  <span style="position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%); font-size: 8px; letter-spacing: -0.5px;">REC</span>
+                              </span>
+                          `;
                           button.style.backgroundColor = '#dc2626';
                           button.title = 'Record your voice';
+                          button.style.fontSize = '11px';
                       }
                   } else {
                       alert('Speech recognition is not supported in your browser. Please use Chrome, Edge, or Safari.');
