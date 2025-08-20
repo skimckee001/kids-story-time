@@ -53,6 +53,42 @@
             transform: scale(1.1);
         }
 
+        /* Search and Filter Styles */
+        #searchInput:focus {
+            box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        #advancedFilters {
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .story-card.filtered-out {
+            display: none;
+        }
+
+        .highlight {
+            background-color: #FFE66D;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
         .premium-badge {
             background: linear-gradient(45deg, #FFD700, #FFA500);
             color: white;
@@ -121,19 +157,136 @@
             <p class="text-xl text-gray-600 mb-6">
                 All your magical stories in one place
             </p>
-            <div class="flex flex-wrap justify-center gap-4 mb-6">
-                <button id="filterAll" class="filter-btn px-6 py-2 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-200 active">
-                    All Stories
+
+            <!-- Search Bar -->
+            <div class="max-w-2xl mx-auto mb-6">
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search stories by title, character name, or theme..." 
+                        class="w-full px-6 py-3 pl-12 pr-4 text-lg border-2 border-gray-300 rounded-full focus:border-primary focus:outline-none transition-all duration-200"
+                    >
+                    <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <button id="clearSearch" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Options -->
+            <div class="mb-6">
+                <!-- Quick Filters -->
+                <div class="flex flex-wrap justify-center gap-4 mb-4">
+                    <button id="filterAll" class="filter-btn px-6 py-2 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-200 active">
+                        All Stories
+                    </button>
+                    <button id="filterFavorites" class="filter-btn px-6 py-2 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-200">
+                        ❤️ Favorites
+                    </button>
+                    <button id="filterRated" class="filter-btn px-6 py-2 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-200">
+                        ⭐ Rated
+                    </button>
+                    <button id="filterRecent" class="filter-btn px-6 py-2 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-200">
+                        🕒 Recent
+                    </button>
+                </div>
+
+                <!-- Advanced Filters Toggle -->
+                <button id="toggleAdvancedFilters" class="text-primary hover:text-secondary transition-colors duration-200">
+                    <span class="inline-flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                        </svg>
+                        Advanced Filters
+                        <svg id="filterToggleIcon" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </span>
                 </button>
-                <button id="filterFavorites" class="filter-btn px-6 py-2 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-200">
-                    ❤️ Favorites
-                </button>
-                <button id="filterRated" class="filter-btn px-6 py-2 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-200">
-                    ⭐ Rated
-                </button>
-                <button id="filterRecent" class="filter-btn px-6 py-2 rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-200">
-                    🕒 Recent
-                </button>
+
+                <!-- Advanced Filters Panel -->
+                <div id="advancedFilters" class="hidden mt-4 p-6 bg-gray-50 rounded-2xl">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Theme Filter -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Theme</label>
+                            <select id="themeFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none">
+                                <option value="">All Themes</option>
+                                <option value="adventure">🏔️ Adventure</option>
+                                <option value="friendship">🤝 Friendship</option>
+                                <option value="fantasy">🦄 Fantasy</option>
+                                <option value="animals">🐾 Animals</option>
+                                <option value="science">🔬 Science</option>
+                                <option value="space">🚀 Space</option>
+                                <option value="ocean">🌊 Ocean</option>
+                                <option value="dinosaurs">🦕 Dinosaurs</option>
+                                <option value="funny">😄 Funny</option>
+                                <option value="bedtime">🌙 Bedtime</option>
+                                <option value="educational">📚 Educational</option>
+                                <option value="superhero">🦸 Superhero</option>
+                            </select>
+                        </div>
+
+                        <!-- Reading Level Filter -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Reading Level</label>
+                            <select id="readingLevelFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none">
+                                <option value="">All Levels</option>
+                                <option value="pre-reader">Pre-Reader (3-5)</option>
+                                <option value="early-phonics">Early Phonics (4-6)</option>
+                                <option value="beginning-reader">Beginning Reader (5-7)</option>
+                                <option value="developing-reader">Developing Reader (6-9)</option>
+                                <option value="fluent-reader">Fluent Reader (8-12)</option>
+                                <option value="insightful-reader">Insightful Reader (10+)</option>
+                            </select>
+                        </div>
+
+                        <!-- Sort By -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+                            <select id="sortBy" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="title-asc">Title (A-Z)</option>
+                                <option value="title-desc">Title (Z-A)</option>
+                                <option value="rating-high">Highest Rated</option>
+                                <option value="rating-low">Lowest Rated</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Date Range Filter -->
+                    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                            <input type="date" id="dateFrom" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                            <input type="date" id="dateTo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Filter Actions -->
+                    <div class="mt-4 flex justify-end gap-3">
+                        <button id="clearFilters" class="px-6 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                            Clear All
+                        </button>
+                        <button id="applyFilters" class="px-6 py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-full hover:shadow-lg transition-all duration-200">
+                            Apply Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Counter -->
+            <div id="resultsCounter" class="text-gray-600 text-sm">
+                <!-- Will be updated by JavaScript -->
             </div>
         </div>
 
@@ -209,6 +362,7 @@
                 this.stories = [];
                 this.filteredStories = [];
                 this.currentFilter = 'all';
+                this.searchQuery = '';
                 this.offset = 0;
                 this.limit = 12;
                 this.currentRatingStoryId = null;
@@ -267,6 +421,50 @@
                 document.getElementById('filterFavorites').addEventListener('click', () => this.setFilter('favorites'));
                 document.getElementById('filterRated').addEventListener('click', () => this.setFilter('rated'));
                 document.getElementById('filterRecent').addEventListener('click', () => this.setFilter('recent'));
+
+                // Search functionality
+                const searchInput = document.getElementById('searchInput');
+                const clearSearchBtn = document.getElementById('clearSearch');
+                
+                searchInput.addEventListener('input', (e) => {
+                    this.searchQuery = e.target.value.toLowerCase();
+                    clearSearchBtn.classList.toggle('hidden', !this.searchQuery);
+                    this.applyAllFilters();
+                });
+
+                clearSearchBtn.addEventListener('click', () => {
+                    searchInput.value = '';
+                    this.searchQuery = '';
+                    clearSearchBtn.classList.add('hidden');
+                    this.applyAllFilters();
+                });
+
+                // Advanced Filters
+                const toggleBtn = document.getElementById('toggleAdvancedFilters');
+                const advancedPanel = document.getElementById('advancedFilters');
+                const toggleIcon = document.getElementById('filterToggleIcon');
+                
+                toggleBtn.addEventListener('click', () => {
+                    advancedPanel.classList.toggle('hidden');
+                    toggleIcon.classList.toggle('rotate-180');
+                });
+
+                // Filter controls
+                document.getElementById('themeFilter').addEventListener('change', () => this.applyAllFilters());
+                document.getElementById('readingLevelFilter').addEventListener('change', () => this.applyAllFilters());
+                document.getElementById('sortBy').addEventListener('change', () => this.applyAllFilters());
+                document.getElementById('dateFrom').addEventListener('change', () => this.applyAllFilters());
+                document.getElementById('dateTo').addEventListener('change', () => this.applyAllFilters());
+                
+                document.getElementById('applyFilters').addEventListener('click', () => this.applyAllFilters());
+                document.getElementById('clearFilters').addEventListener('click', () => {
+                    document.getElementById('themeFilter').value = '';
+                    document.getElementById('readingLevelFilter').value = '';
+                    document.getElementById('sortBy').value = 'newest';
+                    document.getElementById('dateFrom').value = '';
+                    document.getElementById('dateTo').value = '';
+                    this.applyAllFilters();
+                });
 
                 // Load more button
                 document.getElementById('loadMoreBtn').addEventListener('click', () => this.loadMoreStories());
@@ -380,19 +578,121 @@
             }
 
             filterStories() {
+                // Start with all stories
+                let filtered = [...this.stories];
+
+                // Apply quick filter
                 switch (this.currentFilter) {
                     case 'favorites':
-                        this.filteredStories = this.stories.filter(story => story.is_favorite);
+                        filtered = filtered.filter(story => story.is_favorite);
                         break;
                     case 'rated':
-                        this.filteredStories = this.stories.filter(story => story.rating !== null);
+                        filtered = filtered.filter(story => story.rating !== null);
                         break;
                     case 'recent':
-                        this.filteredStories = this.stories.slice(0, 6); // Last 6 stories
+                        const oneWeekAgo = new Date();
+                        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                        filtered = filtered.filter(story => new Date(story.created_at) >= oneWeekAgo);
                         break;
-                    default:
-                        this.filteredStories = [...this.stories];
                 }
+
+                // Apply search query
+                if (this.searchQuery) {
+                    filtered = filtered.filter(story => {
+                        const searchIn = [
+                            story.title || '',
+                            story.content || '',
+                            story.genre || '',
+                            story.theme || '',
+                            story.childName || ''
+                        ].join(' ').toLowerCase();
+                        return searchIn.includes(this.searchQuery);
+                    });
+                }
+
+                // Apply theme filter
+                const themeFilter = document.getElementById('themeFilter').value;
+                if (themeFilter) {
+                    filtered = filtered.filter(story => 
+                        (story.genre && story.genre.toLowerCase() === themeFilter) ||
+                        (story.theme && story.theme.toLowerCase().includes(themeFilter))
+                    );
+                }
+
+                // Apply reading level filter
+                const readingLevelFilter = document.getElementById('readingLevelFilter').value;
+                if (readingLevelFilter) {
+                    filtered = filtered.filter(story => 
+                        story.age_group && story.age_group.toLowerCase().includes(readingLevelFilter)
+                    );
+                }
+
+                // Apply date range filter
+                const dateFrom = document.getElementById('dateFrom').value;
+                const dateTo = document.getElementById('dateTo').value;
+                if (dateFrom) {
+                    filtered = filtered.filter(story => 
+                        new Date(story.created_at) >= new Date(dateFrom)
+                    );
+                }
+                if (dateTo) {
+                    const endDate = new Date(dateTo);
+                    endDate.setHours(23, 59, 59, 999);
+                    filtered = filtered.filter(story => 
+                        new Date(story.created_at) <= endDate
+                    );
+                }
+
+                // Apply sorting
+                const sortBy = document.getElementById('sortBy').value;
+                filtered = this.sortStories(filtered, sortBy);
+
+                this.filteredStories = filtered;
+                this.updateResultsCounter();
+            }
+
+            sortStories(stories, sortBy) {
+                const sorted = [...stories];
+                switch (sortBy) {
+                    case 'oldest':
+                        return sorted.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                    case 'title-asc':
+                        return sorted.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+                    case 'title-desc':
+                        return sorted.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
+                    case 'rating-high':
+                        return sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+                    case 'rating-low':
+                        return sorted.sort((a, b) => (a.rating || 0) - (b.rating || 0));
+                    case 'newest':
+                    default:
+                        return sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                }
+            }
+
+            applyAllFilters() {
+                this.filterStories();
+                this.renderStories();
+            }
+
+            updateResultsCounter() {
+                const counter = document.getElementById('resultsCounter');
+                const total = this.stories.length;
+                const filtered = this.filteredStories.length;
+                
+                if (this.searchQuery || this.currentFilter !== 'all' || this.hasAdvancedFilters()) {
+                    counter.textContent = `Showing ${filtered} of ${total} stories`;
+                } else {
+                    counter.textContent = `${total} ${total === 1 ? 'story' : 'stories'}`;
+                }
+            }
+
+            hasAdvancedFilters() {
+                return document.getElementById('themeFilter').value ||
+                       document.getElementById('readingLevelFilter').value ||
+                       document.getElementById('dateFrom').value ||
+                       document.getElementById('dateTo').value ||
+                       document.getElementById('sortBy').value !== 'newest';
             }
 
             renderStories() {
