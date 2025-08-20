@@ -247,6 +247,7 @@
             border: 2px solid #e1e5e9;
             border-radius: 10px;
             font-size: 1rem;
+            font-family: Arial, sans-serif;
             transition: border-color 0.3s ease;
         }
 
@@ -804,7 +805,7 @@
               </div>
               <div style="display: flex; align-items: center; gap: 12px;">
                   <a href="story-library.html" style="background: linear-gradient(135deg, #FF6B9D, #4ECDC4); color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;">
-                      📖 My Stories
+                      📖 My Library
                   </a>
                   <button id="upgradeBtn" style="background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 12px 24px; border-radius: 25px; border: 2px solid #28a745; font-weight: 600; cursor: pointer; transition: all 0.3s ease; position: relative;" title="Start your free trial">
                       🎉 Start Free Trial
@@ -855,10 +856,10 @@
                       <input type="text" id="childNameInput" class="form-control" placeholder="Enter your child's name" style="flex: 1;">
                       <div style="display: flex; background: #f0f0f0; border-radius: 25px; padding: 3px;">
                           <button type="button" id="genderBoy" class="gender-btn" style="padding: 8px 16px; border: none; border-radius: 20px; background: transparent; cursor: pointer; font-size: 14px; transition: all 0.2s;">
-                              👦 Boy
+                              🧑 Boy
                           </button>
                           <button type="button" id="genderGirl" class="gender-btn" style="padding: 8px 16px; border: none; border-radius: 20px; background: transparent; cursor: pointer; font-size: 14px; transition: all 0.2s;">
-                              👧 Girl
+                              👩 Girl
                           </button>
                       </div>
                   </div>
@@ -973,7 +974,7 @@
 
               <!-- Reading Level and Story Length (moved to bottom) -->
               <div class="form-group">
-                  <label for="childAge">Child's Reading Level <span style="color: red;">*</span></label>
+                  <label for="childAge">Approximate Reading Level <span style="color: red;">*</span></label>
                   <select id="childAge" class="form-control" required>
                       <option value="">Select reading level</option>
                       <option value="pre-reader">Pre-Reader (ages 3–6)</option>
@@ -1011,12 +1012,6 @@
               <p>Creating your magical story...</p>
           </div>
 
-          <!-- Upgrade Prompt for Free Users - Moved to main area for visibility -->
-          <div id="upgradePrompt" class="upgrade-prompt" style="display: block; margin-top: 30px;">
-              <h4>🌟 Want unlimited magical stories? Get Premium access!</h4>
-              <p>Upgrade to Premium for unlimited stories, custom themes, and exclusive features!</p>
-              <button class="btn btn-primary" onclick="showTierSelectionModal()">View Pricing Plans</button>
-          </div>
 
           <!-- Story Output -->
           <div id="storyOutput" class="story-output">
@@ -1456,50 +1451,98 @@
           });
 
           // Microphone button functionality
-          document.getElementById('micBtn').addEventListener('click', function() {
-              AnalyticsTracker.trackUserInteraction('microphone_used');
-              if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                  const recognition = new SpeechRecognition();
+          const micBtn = document.getElementById('micBtn');
+          if (micBtn) {
+              micBtn.addEventListener('click', function() {
+                  console.log('Microphone button clicked');
+                  AnalyticsTracker.trackUserInteraction('microphone_used');
                   
-                  recognition.continuous = false;
-                  recognition.interimResults = false;
-                  recognition.lang = 'en-US';
-                  
-                  // Change button appearance during recording
-                  this.innerHTML = '⏹️';
-                  this.style.backgroundColor = '#ef4444';
-                  
-                  recognition.onstart = function() {
-                      console.log('Voice recognition started');
-                  };
-                  
-                  recognition.onresult = function(event) {
-                      const transcript = event.results[0][0].transcript;
-                      const textarea = document.getElementById('customPrompt');
-                      if (textarea.value) {
-                          textarea.value += ' ' + transcript;
-                      } else {
-                          textarea.value = transcript;
+                  // Check for speech recognition support
+                  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                      const recognition = new SpeechRecognition();
+                      
+                      recognition.continuous = false;
+                      recognition.interimResults = false;
+                      recognition.lang = 'en-US';
+                      
+                      // Store button reference for use in callbacks
+                      const button = this;
+                      
+                      // Change button appearance during recording
+                      button.innerHTML = '⏹️';
+                      button.style.backgroundColor = '#ef4444';
+                      button.title = 'Recording... Click to stop';
+                      
+                      recognition.onstart = function() {
+                          console.log('Speech recognition started');
+                      };
+                      
+                      recognition.onresult = function(event) {
+                          console.log('Speech recognition result:', event);
+                          const transcript = event.results[0][0].transcript;
+                          const textarea = document.getElementById('customPrompt');
+                          
+                          // Check if we should append or replace
+                          if (textarea.value) {
+                              textarea.value += ' ' + transcript;
+                          } else {
+                              textarea.value = transcript;
+                          }
+                          console.log('Transcript added:', transcript);
+                      };
+                      
+                      recognition.onerror = function(event) {
+                          console.error('Speech recognition error:', event.error);
+                          // Provide more specific error messages
+                          let errorMessage = 'Speech recognition failed. ';
+                          switch(event.error) {
+                              case 'not-allowed':
+                                  errorMessage += 'Please allow microphone access and try again.';
+                                  break;
+                              case 'no-speech':
+                                  errorMessage += 'No speech was detected. Please try again.';
+                                  break;
+                              case 'network':
+                                  errorMessage += 'Network error. Please check your connection.';
+                                  break;
+                              default:
+                                  errorMessage += 'Please try typing instead.';
+                          }
+                          alert(errorMessage);
+                          
+                          // Reset button
+                          button.innerHTML = '🔴';
+                          button.style.backgroundColor = '#dc2626';
+                          button.title = 'Record your voice';
+                      };
+                      
+                      recognition.onend = function() {
+                          console.log('Speech recognition ended');
+                          // Reset button appearance
+                          button.innerHTML = '🔴';
+                          button.style.backgroundColor = '#dc2626';
+                          button.title = 'Record your voice';
+                      };
+                      
+                      try {
+                          recognition.start();
+                          console.log('Speech recognition started successfully');
+                      } catch (error) {
+                          console.error('Failed to start speech recognition:', error);
+                          alert('Failed to start speech recognition. Please check your microphone permissions.');
+                          // Reset button
+                          button.innerHTML = '🔴';
+                          button.style.backgroundColor = '#dc2626';
+                          button.title = 'Record your voice';
                       }
-                  };
-                  
-                  recognition.onerror = function(event) {
-                      console.error('Speech recognition error:', event.error);
-                      alert('Sorry, speech recognition failed. Please try typing instead.');
-                  };
-                  
-                  recognition.onend = function() {
-                      // Reset button appearance
-                      document.getElementById('micBtn').innerHTML = '🔴';
-                      document.getElementById('micBtn').style.backgroundColor = '#dc2626';
-                  };
-                  
-                  recognition.start();
-              } else {
-                  alert('Speech recognition is not supported in your browser. Please use Chrome or Safari.');
-              }
-          });
+                  } else {
+                      alert('Speech recognition is not supported in your browser. Please use Chrome, Edge, or Safari.');
+                  }
+              });
+          } else {
+              console.error('Microphone button not found');
+          }
 
           // Info button functionality
           document.getElementById('infoBtn').addEventListener('click', function() {

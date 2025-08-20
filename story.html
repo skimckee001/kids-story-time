@@ -19,8 +19,12 @@
         }
     </script>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
         .story-text {
-            font-family: 'Georgia', 'Times New Roman', serif;
+            font-family: Arial, sans-serif;
             line-height: 1.8;
         }
         
@@ -104,7 +108,7 @@
                         <span class="text-white font-bold text-lg">📚</span>
                     </div>
                     <span class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                        Kids Story Time
+                        KidsStoryTime<span class="text-sm font-normal text-gray-500">.org</span>
                     </span>
                 </div>
                 <a href="index.html" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200 font-medium">
@@ -219,20 +223,17 @@
                     </div>
 
                     <!-- Story Rating Section (Premium) -->
-                    <div id="storyRatingSection" class="hidden mt-8 pt-6 border-t border-gray-200">
-                        <div class="text-center bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-2xl">
-                            <h3 class="text-xl font-bold text-gray-800 mb-4">How did you enjoy this story?</h3>
-                            <div class="star-rating justify-center mb-4" id="storyStarRating">
+                    <div id="storyRatingSection" class="hidden mt-6 pt-4 border-t border-gray-200">
+                        <div class="text-center bg-gradient-to-r from-yellow-50 to-orange-50 p-4 rounded-xl">
+                            <p class="text-sm font-semibold text-gray-700 mb-2">Rate this story:</p>
+                            <div class="star-rating justify-center" id="storyStarRating">
                                 <span class="star" data-rating="1">⭐</span>
                                 <span class="star" data-rating="2">⭐</span>
                                 <span class="star" data-rating="3">⭐</span>
                                 <span class="star" data-rating="4">⭐</span>
                                 <span class="star" data-rating="5">⭐</span>
                             </div>
-                            <p id="storyRatingText" class="text-sm text-gray-600 mb-4">Click a star to rate this story</p>
-                            <button id="submitStoryRating" class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium disabled:opacity-50" disabled>
-                                Rate Story ⭐
-                            </button>
+                            <p id="storyRatingText" class="text-xs text-gray-500 mt-1"></p>
                         </div>
                     </div>
 
@@ -241,15 +242,11 @@
                         <div class="flex flex-wrap gap-4 justify-center">
                             <button id="saveStoryBtn" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium flex items-center space-x-2">
                                 <span>💖</span>
-                                <span>Save to Favorites</span>
+                                <span>Save as Favourite</span>
                             </button>
                             <button id="shareStoryBtn" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium flex items-center space-x-2">
                                 <span>📤</span>
                                 <span>Share Story</span>
-                            </button>
-                            <button id="readAloudBtn" class="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium flex items-center space-x-2">
-                                <span>🔊</span>
-                                <span>Read Aloud</span>
                             </button>
                             <button id="printStoryBtn" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all duration-200 font-medium flex items-center space-x-2">
                                 <span>🖨️</span>
@@ -566,9 +563,35 @@
                 // Update content with proper paragraph formatting
                 const contentElement = document.getElementById('storyContent');
                 const paragraphs = content.split('\n').filter(p => p.trim());
-                contentElement.innerHTML = paragraphs
-                    .map(paragraph => `<p>${this.escapeHtml(paragraph.trim())}</p>`)
-                    .join('');
+                
+                // Insert ad in the middle of the story for non-premium users
+                let storyHTML = '';
+                const midpoint = Math.floor(paragraphs.length / 2);
+                
+                for (let i = 0; i < paragraphs.length; i++) {
+                    storyHTML += `<p>${this.escapeHtml(paragraphs[i].trim())}</p>`;
+                    
+                    // Insert ad at midpoint (only for non-premium users)
+                    if (i === midpoint - 1) {
+                        storyHTML += `
+                            <div id="story-middle-ad" class="ad-container my-6 p-4 bg-gray-50 rounded-lg text-center">
+                                <div class="text-xs text-gray-500 mb-2">Advertisement</div>
+                                <div id="ad-story-middle">
+                                    <!-- Ad will be inserted here by ad service -->
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                contentElement.innerHTML = storyHTML;
+                
+                // Initialize ad if ad service is available and user is not premium
+                if (window.adService && !window.adService.isPremiumUser) {
+                    setTimeout(() => {
+                        window.adService.createStoryMiddleAd();
+                    }, 100);
+                }
                 
                 // Show story display
                 this.showStoryState();
@@ -623,6 +646,9 @@
                         imagesGrid.innerHTML = images.map((img, index) => `
                             <div class="relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-shadow">
                                 <img src="${img.url}" alt="${img.alt}" class="w-full h-64 object-cover" loading="lazy">
+                                <button onclick="window.storyPageManager.showImageUpgradePrompt()" class="absolute top-2 right-2 bg-white/90 hover:bg-white text-xs px-2 py-1 rounded-lg shadow-md transition">
+                                    ✨ Generate AI Image
+                                </button>
                                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
                                     <p class="text-white text-sm">Scene ${index + 1}</p>
                                 </div>
@@ -656,6 +682,46 @@
                     console.error('Error checking image access:', error);
                     return false;
                 }
+            }
+
+            showImageUpgradePrompt() {
+                // Create modal for upgrade prompt
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-3xl p-6 max-w-md w-full">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">✨ AI-Generated Images</h2>
+                        <div class="mb-4">
+                            <img src="https://source.unsplash.com/400x300/?fantasy,illustration,colorful" class="w-full rounded-lg mb-3" alt="AI Generated Example">
+                            <p class="text-gray-600 mb-4">Upgrade to Pro tier for custom AI-generated images that perfectly match your story!</p>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-green-500">✓</span>
+                                    <span>Premium: Stock images from our library</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-purple-500">✨</span>
+                                    <span><strong>Pro: AI-generated custom images</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="this.closest('.fixed').remove()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                Maybe Later
+                            </button>
+                            <button onclick="window.location.href='index.html#pricing'" class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:shadow-lg">
+                                Upgrade to Pro
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.remove();
+                    }
+                });
             }
 
             getReadingTimeText(length) {
@@ -758,11 +824,6 @@
                     this.generateStory();
                 });
 
-                // Story rating listeners
-                document.getElementById('submitStoryRating').addEventListener('click', () => {
-                    this.submitStoryRating();
-                });
-
                 // Star rating listeners
                 document.querySelectorAll('#storyStarRating .star').forEach(star => {
                     star.addEventListener('click', (e) => this.selectStoryRating(parseInt(e.target.dataset.rating)));
@@ -772,6 +833,13 @@
             }
 
             saveToFavorites() {
+                // Check if user is logged in
+                if (!window.authManager || !window.authManager.isUserAuthenticated()) {
+                    // Show login prompt
+                    alert('Please create a free account to save stories to your favorites and access your story history.\n\nClick "Start Free Trial" to get started!');
+                    return;
+                }
+                
                 // Add visual feedback
                 const btn = document.getElementById('saveStoryBtn');
                 const originalText = btn.innerHTML;
@@ -1239,7 +1307,8 @@
             selectStoryRating(rating) {
                 this.selectedStoryRating = rating;
                 this.updateStoryRatingDisplay();
-                document.getElementById('submitStoryRating').disabled = false;
+                // Auto-save the rating
+                this.submitStoryRating();
             }
 
             hoverStoryRating(rating) {
@@ -1944,6 +2013,7 @@
         // Initialize story page when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
             const storyPageManager = new StoryPageManager();
+            window.storyPageManager = storyPageManager; // Make available globally for onclick handlers
             const feedbackManager = new FeedbackManager();
             const voiceController = new VoiceNarrationController(storyPageManager);
         });

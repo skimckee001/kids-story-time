@@ -21,15 +21,22 @@ class ImageGenerationService {
      * @param {string} params.prompt - The image description prompt
      * @param {string} params.style - Art style (cartoon, watercolor, digital, etc.)
      * @param {string} params.mood - Mood of the image (happy, adventurous, calm, etc.)
+     * @param {string} params.tier - User tier (free, premium, pro)
      * @returns {Promise<Object>} - Image URL and metadata
      */
     async generateImage(params) {
-        const { prompt, style = 'cartoon', mood = 'cheerful' } = params;
+        const { prompt, style = 'cartoon', mood = 'cheerful', tier = 'free' } = params;
 
         try {
-            // For demo/MVP, use a placeholder service
-            // In production, this would call DALL-E, Stable Diffusion, or Midjourney API
-            if (this.isDemoMode) {
+            // Tier-based image generation
+            if (tier === 'pro') {
+                // Pro tier: AI-generated custom images
+                return await this.generateAIImage(prompt, style, mood);
+            } else if (tier === 'premium') {
+                // Premium tier: High-quality stock images
+                return await this.generateStockImage(prompt, style, mood);
+            } else {
+                // Free tier: Basic placeholder images
                 return await this.generatePlaceholderImage(prompt, style, mood);
             }
 
@@ -69,6 +76,68 @@ class ImageGenerationService {
     }
 
     /**
+     * Generate AI images for Pro tier users
+     */
+    async generateAIImage(prompt, style, mood) {
+        try {
+            // Enhanced prompt for AI generation
+            const enhancedPrompt = this.enhancePrompt(prompt, style, mood);
+            
+            // In production, this would call your AI image generation API
+            // For demo, return a high-quality placeholder with AI indicator
+            const imageUrl = `https://via.placeholder.com/1024x1024/4A90E2/FFFFFF?text=AI+Generated+Image`;
+            
+            // Simulate AI processing time
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            return {
+                url: imageUrl,
+                alt: prompt,
+                style,
+                mood,
+                isAI: true,
+                quality: 'pro',
+                timestamp: new Date().toISOString()
+            };
+        } catch (error) {
+            console.error('AI image generation failed:', error);
+            // Fallback to stock image
+            return await this.generateStockImage(prompt, style, mood);
+        }
+    }
+
+    /**
+     * Generate stock images for Premium tier users
+     */
+    async generateStockImage(prompt, style, mood) {
+        try {
+            const keywords = this.extractKeywords(prompt);
+            const query = keywords.slice(0, 3).join(',');
+            
+            // Use high-quality stock image service
+            // In production, this would use a paid stock photo API
+            const imageUrl = `https://source.unsplash.com/1024x1024/?${encodeURIComponent(query)},professional,children,high-quality`;
+            
+            // Simulate processing delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            return {
+                url: imageUrl,
+                alt: prompt,
+                style,
+                mood,
+                isStock: true,
+                quality: 'premium',
+                timestamp: new Date().toISOString()
+            };
+        } catch (error) {
+            console.error('Stock image generation failed:', error);
+            // Fallback to placeholder
+            return await this.generatePlaceholderImage(prompt, style, mood);
+        }
+    }
+
+    /**
      * Generate placeholder images for demo/testing
      */
     async generatePlaceholderImage(prompt, style, mood) {
@@ -96,6 +165,7 @@ class ImageGenerationService {
             style,
             mood,
             isPlaceholder: true,
+            quality: 'free',
             timestamp: new Date().toISOString()
         };
     }

@@ -75,11 +75,12 @@ class AdService {
     setupAdPlacements() {
         // Define ad placements
         const placements = [
+            // Removed header banner from index page per user request
             {
                 id: 'header-banner',
                 type: 'banner',
                 size: 'responsive',
-                pages: ['index', 'library'],
+                pages: ['library'],  // Only show on library page, not index
                 position: 'header'
             },
             {
@@ -353,6 +354,51 @@ class AdService {
         
         // Could show a polite message about supporting the site
         // but don't be aggressive about it since this is a kids' site
+    }
+
+    /**
+     * Create ad specifically for the middle of story content
+     */
+    createStoryMiddleAd() {
+        // Skip if premium user
+        if (this.isPremiumUser) {
+            const container = document.getElementById('story-middle-ad');
+            if (container) {
+                container.style.display = 'none';
+            }
+            return;
+        }
+
+        const adContainer = document.getElementById('ad-story-middle');
+        if (!adContainer) return;
+
+        // Create native ad unit for story content
+        const adHtml = `
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                data-ad-slot="5678901234"
+                data-ad-format="auto"
+                data-full-width-responsive="true"
+                data-ad-channel="kids-content"
+                data-tag-for-child-directed-treatment="1"
+                data-tag-for-under-age-of-consent="1">
+            </ins>
+        `;
+
+        adContainer.innerHTML = adHtml;
+
+        try {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+            console.log('Story middle ad created');
+            
+            // Track ad impression
+            if (window.analyticsService) {
+                window.analyticsService.trackEvent('Ads', 'story_middle_ad_shown');
+            }
+        } catch (error) {
+            console.error('Error creating story middle ad:', error);
+        }
     }
 
     /**
