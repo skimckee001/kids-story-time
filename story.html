@@ -186,8 +186,12 @@
                             <!-- Speed Control -->
                             <div class="flex items-center gap-2">
                                 <label class="text-sm text-gray-600">Speed:</label>
-                                <input type="range" id="speedControl" min="0.5" max="1.5" step="0.1" value="0.9" class="w-20">
-                                <span id="speedValue" class="text-sm text-gray-600">0.9x</span>
+                                <div class="flex gap-1">
+                                    <button class="speed-preset px-2 py-1 text-xs border rounded hover:bg-purple-100" data-speed="0.7">0.7x</button>
+                                    <button class="speed-preset px-2 py-1 text-xs border rounded hover:bg-purple-100 bg-purple-100 border-purple-400" data-speed="0.9">0.9x</button>
+                                    <button class="speed-preset px-2 py-1 text-xs border rounded hover:bg-purple-100" data-speed="1.0">1.0x</button>
+                                    <button class="speed-preset px-2 py-1 text-xs border rounded hover:bg-purple-100" data-speed="1.2">1.2x</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1300,8 +1304,9 @@
                 const playBtn = document.getElementById('playNarration');
                 const stopBtn = document.getElementById('stopNarration');
                 const voiceSelect = document.getElementById('voiceSelect');
-                const speedControl = document.getElementById('speedControl');
-                const speedValue = document.getElementById('speedValue');
+                
+                // Store current speed
+                this.currentSpeed = 0.9;
 
                 // Load available voices
                 this.loadAvailableVoices();
@@ -1337,19 +1342,13 @@
                     }
                 });
 
-                // Speed control
-                speedControl.addEventListener('input', (e) => {
-                    const speed = parseFloat(e.target.value);
-                    speedValue.textContent = speed.toFixed(1) + 'x';
-                    if (window.aiVoiceService) {
-                        window.aiVoiceService.setRate(speed);
-                        
-                        // Note: Speed change will take effect on next play
-                        // Don't restart to avoid interruption
-                        if (this.isNarrating && !this.isPaused) {
-                            console.log('Speed changed to:', speed, '(will take effect on restart)');
-                        }
-                    }
+                // Speed preset buttons
+                const speedButtons = document.querySelectorAll('.speed-preset');
+                speedButtons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const speed = parseFloat(e.target.dataset.speed);
+                        this.setSpeed(speed);
+                    });
                 });
 
                 // Also handle the Read Aloud button in story actions
@@ -1431,6 +1430,32 @@
                 }
             }
 
+            setSpeed(speed) {
+                this.currentSpeed = speed;
+                
+                // Update UI
+                const speedButtons = document.querySelectorAll('.speed-preset');
+                speedButtons.forEach(btn => {
+                    if (parseFloat(btn.dataset.speed) === speed) {
+                        btn.classList.add('bg-purple-100', 'border-purple-400');
+                    } else {
+                        btn.classList.remove('bg-purple-100', 'border-purple-400');
+                    }
+                });
+                
+                // Update voice service
+                if (window.aiVoiceService) {
+                    window.aiVoiceService.setRate(speed);
+                }
+                
+                // If currently narrating, restart with new speed
+                if (this.isNarrating && !this.isPaused) {
+                    console.log('Restarting with new speed:', speed);
+                    this.stopNarration();
+                    setTimeout(() => this.startNarration(), 200);
+                }
+            }
+
             async startNarration() {
                 if (!this.storyPageManager.currentStory) {
                     console.error('No story available to narrate');
@@ -1471,11 +1496,10 @@
                     this.isNarrating = true;
                     this.isPaused = false;
 
-                    // Get selected voice and speed
+                    // Get selected voice and use current speed
                     const voiceSelect = document.getElementById('voiceSelect');
-                    const speedControl = document.getElementById('speedControl');
                     const selectedVoice = voiceSelect.value;
-                    const speed = parseFloat(speedControl.value);
+                    const speed = this.currentSpeed;
 
                     // Start narration with word highlighting
                     await window.aiVoiceService.speakText(storyText, {
