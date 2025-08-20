@@ -24,7 +24,7 @@ class AIStoryService {
         try {
             // Try backend API first for real AI generation
             try {
-                const backendUrl = window.location.origin + '/api/generate-story';
+                const backendUrl = window.location.origin + '/.netlify/functions/generate-story';
                 const response = await fetch(backendUrl, {
                     method: 'POST',
                     headers: {
