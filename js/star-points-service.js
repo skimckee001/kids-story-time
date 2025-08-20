@@ -189,8 +189,21 @@ class StarPointsService {
      * Create star display element
      */
     createStarDisplay() {
-        const headerRight = document.querySelector('header .text-right') || document.querySelector('header');
-        if (!headerRight) return;
+        // Try to find a suitable location for the star display
+        let targetElement = document.querySelector('header .text-right') || 
+                           document.querySelector('header .flex') ||
+                           document.querySelector('header');
+        
+        if (!targetElement) {
+            console.log('Header not found, will retry star display creation');
+            setTimeout(() => this.createStarDisplay(), 500);
+            return;
+        }
+
+        // Check if star display already exists
+        if (document.getElementById('starPointsDisplay')) {
+            return;
+        }
 
         const starDisplay = document.createElement('div');
         starDisplay.id = 'starPointsDisplay';
@@ -206,6 +219,10 @@ class StarPointsService {
             margin-right: 10px;
             cursor: pointer;
             transition: transform 0.2s;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
         `;
         starDisplay.innerHTML = `
             <span style="font-size: 20px; margin-right: 5px;">⭐</span>
@@ -225,13 +242,8 @@ class StarPointsService {
             this.showStarInfoModal();
         });
         
-        // Insert before other header buttons
-        const firstButton = headerRight.querySelector('button');
-        if (firstButton) {
-            headerRight.insertBefore(starDisplay, firstButton);
-        } else {
-            headerRight.appendChild(starDisplay);
-        }
+        // Append to body to avoid insertion errors
+        document.body.appendChild(starDisplay);
     }
 
     /**

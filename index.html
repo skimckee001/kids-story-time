@@ -890,7 +890,7 @@
               <div class="form-group">
                   <label>Would you like to add a theme for this story?</label>
                   <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Pick one or more themes to make it extra special - Optional</p>
-                  <div class="interests-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
+                  <div id="dynamicThemeContainer" class="interests-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
                       <!-- Story Themes -->
                       <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
                           <input type="checkbox" class="story-theme" value="adventure" style="display: none;">
@@ -1206,6 +1206,7 @@
   <script src="js/ad-service.js"></script>
   <script src="js/star-points-service.js"></script>
   <script src="js/social-sharing-service.js"></script>
+  <script src="js/dynamic-themes-config.js"></script>
   
   <script>
       // Global variables
@@ -1447,7 +1448,10 @@
           });
 
           // Save preferences when reading level or story length changes
-          document.getElementById('childAge').addEventListener('change', saveUserPreferences);
+          document.getElementById('childAge').addEventListener('change', function() {
+              saveUserPreferences();
+              updateThemesBasedOnAge(); // Update themes when age changes
+          });
           document.getElementById('storyLength').addEventListener('change', saveUserPreferences);
           document.getElementById('includeNameToggle').addEventListener('change', saveUserPreferences);
 
@@ -2423,9 +2427,113 @@
           }
       }
 
+      // Function to update themes based on selected age
+      function updateThemesBasedOnAge() {
+          const ageSelect = document.getElementById('childAge');
+          const selectedLevel = ageSelect.value;
+          const container = document.getElementById('dynamicThemeContainer');
+          
+          if (!window.DynamicThemes) {
+              console.log('Dynamic themes not loaded yet');
+              setTimeout(updateThemesBasedOnAge, 100); // Retry after a short delay
+              return;
+          }
+          
+          // Map reading levels to ages
+          let ageGroup;
+          switch(selectedLevel) {
+              case 'pre-reader':
+                  ageGroup = 4; // 3-6 years
+                  break;
+              case 'early-phonics':
+                  ageGroup = 5; // 4-7 years
+                  break;
+              case 'beginning-reader':
+                  ageGroup = 7; // 5-8 years
+                  break;
+              case 'developing-reader':
+                  ageGroup = 8; // 6-10 years
+                  break;
+              case 'fluent-reader':
+                  ageGroup = 11; // 8-13 years
+                  break;
+              default:
+                  ageGroup = 7; // Default to middle range
+          }
+          
+          // Get appropriate themes for this age
+          const themeConfig = window.DynamicThemes.getThemesForAge(ageGroup);
+          
+          // Clear existing themes
+          container.innerHTML = '';
+          
+          // Add dynamic themes
+          if (themeConfig && themeConfig.themes) {
+              themeConfig.themes.forEach(theme => {
+                  const themeElement = document.createElement('label');
+                  themeElement.className = 'interest-item theme-option';
+                  themeElement.style.cssText = 'display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;';
+                  
+                  themeElement.innerHTML = `
+                      <input type="checkbox" class="story-theme" value="${theme.id}" style="display: none;">
+                      <span class="checkmark" style="margin-right: 8px; font-size: 18px;">${theme.label.split(' ')[0]}</span>
+                      <span style="font-size: 14px;">${theme.label.substring(theme.label.indexOf(' ') + 1)}</span>
+                  `;
+                  
+                  // Add hover effect for description
+                  themeElement.title = theme.description;
+                  
+                  // Add click handler
+                  themeElement.addEventListener('click', function(e) {
+                      e.preventDefault();
+                      const checkbox = this.querySelector('input[type="checkbox"]');
+                      checkbox.checked = !checkbox.checked;
+                      
+                      if (checkbox.checked) {
+                          // Add to selected themes
+                          if (!selectedThemes.includes(checkbox.value)) {
+                              selectedThemes.push(checkbox.value);
+                          }
+                          this.style.borderColor = '#667eea';
+                          this.style.backgroundColor = '#f0f4ff';
+                          this.style.transform = 'scale(1.05)';
+                      } else {
+                          // Remove from selected themes
+                          selectedThemes = selectedThemes.filter(theme => theme !== checkbox.value);
+                          this.style.borderColor = '#e0e0e0';
+                          this.style.backgroundColor = 'transparent';
+                          this.style.transform = 'scale(1)';
+                      }
+                  });
+                  
+                  // Hover effects
+                  themeElement.addEventListener('mouseenter', function() {
+                      if (!this.querySelector('input[type="checkbox"]').checked) {
+                          this.style.borderColor = '#9ca3af';
+                      }
+                  });
+                  
+                  themeElement.addEventListener('mouseleave', function() {
+                      if (!this.querySelector('input[type="checkbox"]').checked) {
+                          this.style.borderColor = '#e0e0e0';
+                      }
+                  });
+                  
+                  container.appendChild(themeElement);
+              });
+          }
+          
+          // Add a note about age-appropriate themes
+          const noteElement = document.createElement('p');
+          noteElement.style.cssText = 'grid-column: 1 / -1; font-size: 12px; color: #888; text-align: center; margin-top: 10px;';
+          noteElement.textContent = `✨ Themes selected for ${selectedLevel.replace(/-/g, ' ')} level`;
+          container.appendChild(noteElement);
+      }
+
       // Show onboarding on page load for new users
       window.addEventListener('DOMContentLoaded', () => {
           setTimeout(showOnboarding, 500); // Small delay for better UX
+          updateThemesBasedOnAge(); // Load initial themes based on default selection
       });
 
   </script>
