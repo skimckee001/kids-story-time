@@ -609,9 +609,9 @@
                                         <img id="storyMainImage" src="https://picsum.photos/400/400?random=1" 
                                              alt="Story illustration" 
                                              class="rounded-lg shadow-lg w-full lg:max-w-sm mx-auto lg:mx-0">
-                                        <button onclick="window.storyPageManager.showImageUpgradePrompt()" 
-                                                class="absolute top-2 right-2 bg-white/90 hover:bg-white text-xs px-3 py-1.5 rounded-lg shadow-md transition flex items-center gap-1">
-                                            ✨ Generate AI Image
+                                        <button id="imageStatusBtn" onclick="window.storyPageManager.showImageInfo()" 
+                                                class="absolute top-2 right-2 bg-white/90 hover:bg-white text-xs px-3 py-1.5 rounded-lg shadow-md transition flex items-center gap-1 hidden">
+                                            <span id="imageStatusText">🖼️ Image Info</span>
                                         </button>
                                     </div>
                                 </div>
@@ -684,9 +684,16 @@
                     let tier = 'free';
                     if (window.authManager && window.authManager.isUserAuthenticated()) {
                         const subscriptionType = await window.authManager.getSubscriptionStatus();
-                        if (subscriptionType === 'premium') tier = 'premium';
-                        else if (subscriptionType === 'pro') tier = 'pro';
+                        console.log('User subscription type:', subscriptionType);
+                        
+                        // Map subscription types to image tiers
+                        if (subscriptionType === 'family' || subscriptionType === 'pro') {
+                            tier = 'pro';  // Family plan gets pro features including AI images
+                        } else if (subscriptionType === 'premium') {
+                            tier = 'premium';  // Premium gets stock photos
+                        }
                     }
+                    console.log('Image generation tier:', tier);
                     
                     // Extract meaningful scene description from story
                     const storyContent = this.currentStory.content;
@@ -716,13 +723,20 @@
                         mainImage.style.opacity = '1';
                         
                         // Update button text based on tier
-                        const genButton = document.querySelector('[onclick*="showImageUpgradePrompt"]');
-                        if (genButton) {
+                        const imageStatusBtn = document.getElementById('imageStatusBtn');
+                        const imageStatusText = document.getElementById('imageStatusText');
+                        if (imageStatusBtn && imageStatusText) {
+                            imageStatusBtn.classList.remove('hidden');
                             if (tier === 'pro') {
-                                genButton.innerHTML = '✨ AI Generated';
-                                genButton.disabled = true;
+                                imageStatusText.textContent = '✨ AI Generated';
+                                imageStatusBtn.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                                imageStatusBtn.style.color = 'white';
                             } else if (tier === 'premium') {
-                                genButton.innerHTML = '📸 Stock Image';
+                                imageStatusText.textContent = '📸 Premium Stock Photo';
+                                imageStatusBtn.style.background = 'linear-gradient(135deg, #f59e0b, #f97316)';
+                                imageStatusBtn.style.color = 'white';
+                            } else {
+                                imageStatusText.textContent = '🖼️ Placeholder Image';
                             }
                         }
                         
@@ -742,19 +756,64 @@
 
             async checkImageGenerationAccess() {
                 try {
-                    // For demo/testing, allow image generation
+                    // Check if user has any tier (even free gets basic images)
+                    // All tiers get some form of image generation
+                    if (window.authManager && window.authManager.isUserAuthenticated()) {
+                        // Authenticated users always get images (tier determines quality)
+                        return true;
+                    }
+                    // Non-authenticated users also get basic placeholder images
                     return true;
-                    
-                    // Production logic:
-                    // if (window.authManager && window.authManager.isUserAuthenticated()) {
-                    //     const subscriptionType = await window.authManager.getSubscriptionStatus();
-                    //     return subscriptionType === 'premium' || subscriptionType === 'trial';
-                    // }
-                    // return false;
                 } catch (error) {
                     console.error('Error checking image access:', error);
                     return false;
                 }
+            }
+
+            showImageInfo() {
+                // Show info about the current image tier
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-3xl p-6 max-w-md w-full">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">📸 Image Generation Info</h2>
+                        <div class="mb-4">
+                            <p class="text-gray-600 mb-4">Images are automatically generated based on your subscription tier:</p>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex items-start gap-2">
+                                    <span class="text-gray-500">•</span>
+                                    <div>
+                                        <strong>Free:</strong> Basic placeholder images
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-amber-500">•</span>
+                                    <div>
+                                        <strong>Premium:</strong> High-quality stock photos from Pexels
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-purple-500">•</span>
+                                    <div>
+                                        <strong>Family/Pro:</strong> AI-generated custom images with Replicate/DALL-E
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" 
+                                class="w-full bg-gradient-to-r from-primary to-secondary text-white py-3 rounded-full font-semibold hover:shadow-lg transition">
+                            Got it!
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                
+                // Close on backdrop click
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        document.body.removeChild(modal);
+                    }
+                });
             }
 
             showImageUpgradePrompt() {
