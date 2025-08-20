@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Features Test - KidsStoryTime</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-100 to-pink-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-center mb-8 text-purple-800">
+            🌟 Campaign Features Test 🌟
+        </h1>
+        
+        <!-- Star Points Display -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Star Points System</h2>
+            <div id="starDisplay" class="text-3xl font-bold text-yellow-500 mb-4">
+                Loading stars...
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="testStoryCreation()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    📖 Create Story (+1 star)
+                </button>
+                <button onclick="testReadAloud()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    🔊 Use Read Aloud (+5 stars)
+                </button>
+                <button onclick="testShare()" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                    📱 Share Story (+10 stars/day)
+                </button>
+                <button onclick="testReferral()" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+                    👥 Simulate Referral (+50 stars)
+                </button>
+            </div>
+        </div>
+        
+        <!-- Social Sharing Test -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Social Sharing</h2>
+            <button onclick="testSocialShare()" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-full hover:shadow-lg">
+                🚀 Test #StoryStarMoments Share
+            </button>
+            <p class="mt-4 text-gray-600">
+                Click to test the share functionality with auto-generated story image
+            </p>
+        </div>
+        
+        <!-- Test Story Data -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Test Story</h2>
+            <div id="testStory" class="bg-gray-50 p-4 rounded">
+                <h3 class="font-bold text-lg mb-2">Emma's Magical Garden Adventure</h3>
+                <p class="text-gray-700">
+                    Once upon a time, Emma discovered a secret door in her grandmother's garden. 
+                    Behind it was a world where flowers could talk and butterflies painted rainbows in the sky...
+                </p>
+            </div>
+        </div>
+        
+        <!-- Activity Log -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Activity Log</h2>
+            <div id="activityLog" class="space-y-2 max-h-64 overflow-y-auto">
+                <div class="text-gray-600">Waiting for actions...</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load services -->
+    <script src="js/star-points-service.js"></script>
+    <script src="js/social-sharing-service.js"></script>
+    
+    <script>
+        // Test story data
+        const testStory = {
+            title: "Emma's Magical Garden Adventure",
+            content: "Once upon a time, Emma discovered a secret door in her grandmother's garden. Behind it was a world where flowers could talk and butterflies painted rainbows in the sky. Emma met a wise old sunflower named Sunny who told her about a lost treasure hidden deep in the garden. Together with her new friends - a giggling daisy and a brave little bee - Emma set off on an exciting adventure. They solved riddles from the talking roses, crossed the stream on lily pad stepping stones, and finally found the treasure: a magical seed that could grow into any plant she wished for. Emma planted it in her grandmother's garden, and it grew into a beautiful tree that sparkled with all the colors of the rainbow.",
+            metadata: {
+                childName: "Emma",
+                childAge: 6,
+                theme: "magical garden",
+                storyLength: "medium"
+            }
+        };
+        
+        // Update star display
+        function updateStarDisplay() {
+            if (window.starPointsService) {
+                document.getElementById('starDisplay').innerHTML = 
+                    `⭐ ${window.starPointsService.userStars} Stars`;
+            }
+        }
+        
+        // Log activity
+        function logActivity(message) {
+            const log = document.getElementById('activityLog');
+            const entry = document.createElement('div');
+            entry.className = 'p-2 bg-gray-50 rounded text-sm';
+            const time = new Date().toLocaleTimeString();
+            entry.innerHTML = `<span class="text-gray-500">[${time}]</span> ${message}`;
+            log.insertBefore(entry, log.firstChild);
+        }
+        
+        // Test functions
+        async function testStoryCreation() {
+            logActivity('📖 Testing story creation...');
+            if (window.starPointsService) {
+                await window.starPointsService.awardStoryCreationStars();
+                updateStarDisplay();
+                logActivity('✅ Story created! +1 star awarded');
+            }
+        }
+        
+        async function testReadAloud() {
+            logActivity('🔊 Testing Read Aloud...');
+            if (window.starPointsService) {
+                await window.starPointsService.awardReadAloudStars();
+                updateStarDisplay();
+                logActivity('✅ Read Aloud used! +5 stars awarded (once daily)');
+            }
+        }
+        
+        async function testShare() {
+            logActivity('📱 Testing story share...');
+            if (window.starPointsService) {
+                const awarded = await window.starPointsService.awardShareStars();
+                updateStarDisplay();
+                if (awarded) {
+                    logActivity('✅ Story shared! +10 stars awarded');
+                } else {
+                    logActivity('⚠️ Daily share limit reached');
+                }
+            }
+        }
+        
+        async function testReferral() {
+            logActivity('👥 Testing referral...');
+            if (window.starPointsService) {
+                await window.starPointsService.awardReferralStars('test_user_123');
+                updateStarDisplay();
+                logActivity('✅ Referral successful! +50 stars awarded');
+            }
+        }
+        
+        async function testSocialShare() {
+            logActivity('🚀 Testing social share with #StoryStarMoments...');
+            if (window.socialSharingService) {
+                const success = await window.socialSharingService.shareStory(testStory);
+                if (success) {
+                    logActivity('✅ Social share initiated successfully!');
+                } else {
+                    logActivity('❌ Social share cancelled or failed');
+                }
+            }
+        }
+        
+        // Initialize on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                updateStarDisplay();
+                logActivity('🎉 Campaign features loaded and ready!');
+                logActivity('💡 Try the buttons above to test each feature');
+            }, 1000);
+        });
+        
+        // Update display periodically
+        setInterval(updateStarDisplay, 1000);
+    </script>
+</body>
+</html>

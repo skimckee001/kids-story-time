@@ -406,6 +406,8 @@
     <script src="js/image-generation-service.js"></script>
     <script src="js/story-export-service.js"></script>
     <script src="js/subscription-manager.js"></script>
+    <script src="js/star-points-service.js"></script>
+    <script src="js/social-sharing-service.js"></script>
 
     <script>
         class StoryPageManager {
@@ -595,6 +597,11 @@
                 
                 // Show story display
                 this.showStoryState();
+                
+                // Award stars for creating a story (1 star)
+                if (window.starPointsService) {
+                    await window.starPointsService.awardStoryCreationStars();
+                }
                 
                 // Generate images for the story (async)
                 this.generateStoryImages();
@@ -860,9 +867,14 @@
                 localStorage.setItem('favoriteStories', JSON.stringify(favorites));
             }
 
-            shareStory() {
-                // Show share modal with multiple options
-                this.showShareModal();
+            async shareStory() {
+                // Use the new social sharing service with #StoryStarMoments
+                if (window.socialSharingService) {
+                    await window.socialSharingService.shareStory(this.currentStory);
+                } else {
+                    // Fallback to old modal
+                    this.showShareModal();
+                }
             }
 
             showShareModal() {
@@ -1000,6 +1012,11 @@
                 if (!this.currentStory) return;
                 
                 const btn = document.getElementById('readAloudBtn');
+                
+                // Award stars for using Read Aloud (5 stars, once per day)
+                if (window.starPointsService) {
+                    await window.starPointsService.awardReadAloudStars();
+                }
                 
                 // Check if user has premium AI read-aloud access
                 const hasAIReadAloud = await this.checkAIReadAloudAccess();
