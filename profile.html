@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Kids Story Time</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#667eea',
+                        secondary: '#764ba2',
+                        accent: '#f093fb'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .profile-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .setting-toggle {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .setting-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .child-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .child-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .profile-section {
+                padding: 20px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                        ✨ Kids Story Time
+                    </a>
+                </div>
+                <nav class="flex items-center gap-4">
+                    <a href="index.html" class="text-gray-600 hover:text-primary transition">Home</a>
+                    <a href="story-library.html" class="text-gray-600 hover:text-primary transition">Library</a>
+                    <button class="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2 rounded-full hover:shadow-lg transition">
+                        Save Changes
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-white text-center mb-8">User Profile Settings</h1>
+
+        <!-- Account Information -->
+        <div class="profile-section">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Account Information</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Parent's Name</label>
+                    <input type="text" id="parentName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none" placeholder="Enter your name">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none" placeholder="your@email.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number (Optional)</label>
+                    <input type="tel" id="phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none" placeholder="+1 (555) 000-0000">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Time Zone</label>
+                    <select id="timezone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none">
+                        <option value="EST">Eastern Time (EST)</option>
+                        <option value="CST">Central Time (CST)</option>
+                        <option value="MST">Mountain Time (MST)</option>
+                        <option value="PST">Pacific Time (PST)</option>
+                        <option value="GMT">GMT</option>
+                        <option value="CET">Central European Time</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Children Profiles -->
+        <div class="profile-section">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Children Profiles</h2>
+                <button onclick="addChildProfile()" class="bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-full text-sm hover:shadow-lg transition">
+                    + Add Child
+                </button>
+            </div>
+            <div id="childrenProfiles">
+                <!-- Child profiles will be added here -->
+                <div class="child-card">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Child's Name</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none" placeholder="Enter child's name">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Age/Reading Level</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none">
+                                <option>Pre-Reader (3-5)</option>
+                                <option>Early Reader (5-7)</option>
+                                <option>Beginning Reader (6-8)</option>
+                                <option>Developing Reader (8-10)</option>
+                                <option>Fluent Reader (10-12)</option>
+                                <option>Advanced Reader (12+)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Gender (Optional)</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none">
+                                <option>Not specified</option>
+                                <option>Boy</option>
+                                <option>Girl</option>
+                                <option>Non-binary</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Favorite Themes</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none" placeholder="Adventure, Animals, Space...">
+                        </div>
+                    </div>
+                    <button class="mt-4 text-red-500 text-sm hover:text-red-700 transition">Remove Child</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Story Preferences -->
+        <div class="profile-section">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Story Preferences</h2>
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Default Story Length</label>
+                    <select id="defaultLength" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none">
+                        <option>Short (2-3 minutes)</option>
+                        <option selected>Medium (5-7 minutes)</option>
+                        <option>Long (10-15 minutes)</option>
+                        <option>Extended (20+ minutes)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Story Time</label>
+                    <select id="storyTime" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none">
+                        <option>Morning</option>
+                        <option>Afternoon</option>
+                        <option selected>Bedtime</option>
+                        <option>Any time</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Content Filters</label>
+                    <div class="space-y-3">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 rounded" checked>
+                            <span>Educational content preferred</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 rounded" checked>
+                            <span>Include moral lessons</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 rounded">
+                            <span>Avoid scary content</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 rounded">
+                            <span>Include diversity & inclusion themes</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="profile-section">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Notification Settings</h2>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">Daily Story Reminders</p>
+                        <p class="text-sm text-gray-500">Get reminded to read a story</p>
+                    </div>
+                    <label class="setting-toggle">
+                        <input type="checkbox" id="dailyReminders" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">New Features & Updates</p>
+                        <p class="text-sm text-gray-500">Learn about new story themes and features</p>
+                    </div>
+                    <label class="setting-toggle">
+                        <input type="checkbox" id="featureUpdates">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">Weekly Story Report</p>
+                        <p class="text-sm text-gray-500">Summary of stories read this week</p>
+                    </div>
+                    <label class="setting-toggle">
+                        <input type="checkbox" id="weeklyReport" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy & Security -->
+        <div class="profile-section">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Privacy & Security</h2>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">Save Story History</p>
+                        <p class="text-sm text-gray-500">Keep a record of all generated stories</p>
+                    </div>
+                    <label class="setting-toggle">
+                        <input type="checkbox" id="saveHistory" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="font-medium">Analytics & Improvements</p>
+                        <p class="text-sm text-gray-500">Help us improve by sharing usage data</p>
+                    </div>
+                    <label class="setting-toggle">
+                        <input type="checkbox" id="analytics" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="mt-6">
+                    <button class="text-primary hover:text-secondary transition">Change Password</button>
+                    <span class="mx-4 text-gray-400">|</span>
+                    <button class="text-primary hover:text-secondary transition">Two-Factor Authentication</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="profile-section border-2 border-red-200">
+            <h2 class="text-2xl font-bold mb-6 text-red-600">Danger Zone</h2>
+            <div class="space-y-4">
+                <button class="px-6 py-2 border-2 border-red-500 text-red-500 rounded-lg hover:bg-red-50 transition">
+                    Export All Data
+                </button>
+                <button class="px-6 py-2 border-2 border-red-500 text-red-500 rounded-lg hover:bg-red-50 transition">
+                    Delete Account
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Profile Management
+        class ProfileManager {
+            constructor() {
+                this.loadProfile();
+                this.setupEventListeners();
+            }
+
+            loadProfile() {
+                // Load saved profile from localStorage
+                const profile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                
+                // Populate fields
+                if (profile.parentName) document.getElementById('parentName').value = profile.parentName;
+                if (profile.email) document.getElementById('email').value = profile.email;
+                if (profile.phone) document.getElementById('phone').value = profile.phone;
+                if (profile.timezone) document.getElementById('timezone').value = profile.timezone;
+                if (profile.defaultLength) document.getElementById('defaultLength').value = profile.defaultLength;
+                if (profile.storyTime) document.getElementById('storyTime').value = profile.storyTime;
+                
+                // Load toggle settings
+                if (profile.dailyReminders !== undefined) document.getElementById('dailyReminders').checked = profile.dailyReminders;
+                if (profile.featureUpdates !== undefined) document.getElementById('featureUpdates').checked = profile.featureUpdates;
+                if (profile.weeklyReport !== undefined) document.getElementById('weeklyReport').checked = profile.weeklyReport;
+                if (profile.saveHistory !== undefined) document.getElementById('saveHistory').checked = profile.saveHistory;
+                if (profile.analytics !== undefined) document.getElementById('analytics').checked = profile.analytics;
+            }
+
+            saveProfile() {
+                const profile = {
+                    parentName: document.getElementById('parentName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    timezone: document.getElementById('timezone').value,
+                    defaultLength: document.getElementById('defaultLength').value,
+                    storyTime: document.getElementById('storyTime').value,
+                    dailyReminders: document.getElementById('dailyReminders').checked,
+                    featureUpdates: document.getElementById('featureUpdates').checked,
+                    weeklyReport: document.getElementById('weeklyReport').checked,
+                    saveHistory: document.getElementById('saveHistory').checked,
+                    analytics: document.getElementById('analytics').checked,
+                    lastUpdated: new Date().toISOString()
+                };
+
+                localStorage.setItem('userProfile', JSON.stringify(profile));
+                this.showSaveConfirmation();
+            }
+
+            showSaveConfirmation() {
+                // Create a temporary success message
+                const message = document.createElement('div');
+                message.className = 'fixed top-20 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                message.textContent = '✓ Profile saved successfully!';
+                document.body.appendChild(message);
+
+                setTimeout(() => {
+                    message.remove();
+                }, 3000);
+            }
+
+            setupEventListeners() {
+                // Save button
+                document.querySelector('button[class*="Save Changes"]').addEventListener('click', () => {
+                    this.saveProfile();
+                });
+
+                // Auto-save on changes
+                const inputs = document.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    input.addEventListener('change', () => {
+                        this.saveProfile();
+                    });
+                });
+            }
+        }
+
+        function addChildProfile() {
+            const container = document.getElementById('childrenProfiles');
+            const childCard = document.createElement('div');
+            childCard.className = 'child-card';
+            childCard.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Child's Name</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none" placeholder="Enter child's name">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Age/Reading Level</label>
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none">
+                            <option>Pre-Reader (3-5)</option>
+                            <option>Early Reader (5-7)</option>
+                            <option>Beginning Reader (6-8)</option>
+                            <option>Developing Reader (8-10)</option>
+                            <option>Fluent Reader (10-12)</option>
+                            <option>Advanced Reader (12+)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Gender (Optional)</label>
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none">
+                            <option>Not specified</option>
+                            <option>Boy</option>
+                            <option>Girl</option>
+                            <option>Non-binary</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Favorite Themes</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none" placeholder="Adventure, Animals, Space...">
+                    </div>
+                </div>
+                <button onclick="this.parentElement.remove()" class="mt-4 text-red-500 text-sm hover:text-red-700 transition">Remove Child</button>
+            `;
+            container.appendChild(childCard);
+        }
+
+        // Initialize profile manager
+        document.addEventListener('DOMContentLoaded', () => {
+            new ProfileManager();
+        });
+    </script>
+</body>
+</html>

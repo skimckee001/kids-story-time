@@ -4,48 +4,220 @@
 class AIVoiceService {
     constructor() {
         this.isInitialized = false;
-        this.supportedVoices = [
-            { id: 'child-friendly-female', name: 'Emma (Child-Friendly)', gender: 'female' },
-            { id: 'child-friendly-male', name: 'Noah (Child-Friendly)', gender: 'male' },
-            { id: 'storyteller-female', name: 'Sarah (Storyteller)', gender: 'female' },
-            { id: 'storyteller-male', name: 'Oliver (Storyteller)', gender: 'male' }
-        ];
+        this.isSpeaking = false;
+        this.isPaused = false;
+        this.currentUtterance = null;
+        this.speechSynthesis = window.speechSynthesis;
+        this.supportedVoices = [];
+        this.selectedVoice = null;
+        this.speechRate = 0.9; // Slightly slower for children
+        this.speechPitch = 1.1; // Slightly higher pitch for friendliness
         this.init();
     }
 
     async init() {
         try {
-            // In production, initialize your chosen AI voice service here
-            // Examples:
-            // - ElevenLabs API
-            // - Azure Cognitive Services Speech
-            // - Google Cloud Text-to-Speech
-            // - Amazon Polly
-            
-            console.log('AI Voice Service initialized (Demo Mode)');
-            this.isInitialized = true;
+            // Check if Web Speech API is available
+            if ('speechSynthesis' in window) {
+                // Load available voices
+                this.loadVoices();
+                
+                // Some browsers need a user interaction first
+                if (this.speechSynthesis.getVoices().length === 0) {
+                    // Wait for voices to load
+                    this.speechSynthesis.addEventListener('voiceschanged', () => {
+                        this.loadVoices();
+                    });
+                }
+                
+                console.log('AI Voice Service initialized with Web Speech API');
+                this.isInitialized = true;
+            } else {
+                console.warn('Web Speech API not available');
+                this.isInitialized = false;
+            }
         } catch (error) {
             console.error('Failed to initialize AI Voice Service:', error);
             this.isInitialized = false;
         }
     }
 
+    loadVoices() {
+        const voices = this.speechSynthesis.getVoices();
+        
+        // Filter for child-friendly voices
+        this.supportedVoices = voices.filter(voice => {
+            // Prefer female voices for storytelling (generally more soothing for children)
+            // Include English voices
+            return voice.lang.startsWith('en') && 
+                   (voice.name.includes('Female') || 
+                    voice.name.includes('Samantha') || 
+                    voice.name.includes('Victoria') ||
+                    voice.name.includes('Karen') ||
+                    voice.name.includes('Google US English') ||
+                    voice.name.includes('Microsoft'));
+        });
+
+        // Add all voices as fallback if no filtered voices found
+        if (this.supportedVoices.length === 0) {
+            this.supportedVoices = voices.filter(voice => voice.lang.startsWith('en'));
+        }
+
+        // Select default voice
+        if (this.supportedVoices.length > 0) {
+            this.selectedVoice = this.supportedVoices[0];
+        }
+    }
+
     isAvailable() {
-        return this.isInitialized;
+        return this.isInitialized && this.supportedVoices.length > 0;
     }
 
     getAvailableVoices() {
-        return this.supportedVoices;
+        return this.supportedVoices.map(voice => ({
+            id: voice.voiceURI,
+            name: voice.name,
+            lang: voice.lang,
+            local: voice.localService
+        }));
     }
 
-    async generateVoiceAudio(text, voiceId = 'child-friendly-female', options = {}) {
+    async speakText(text, options = {}) {
         if (!this.isAvailable()) {
-            throw new Error('AI Voice Service not available');
+            throw new Error('Voice narration not available');
         }
 
-        try {
-            console.log(`Generating AI voice audio with voice: ${voiceId}`);
-            console.log(`Text length: ${text.length} characters`);
+        // Stop any current speech
+        this.stop();
+
+        return new Promise((resolve, reject) => {
+            try {
+                // Create utterance
+                this.currentUtterance = new SpeechSynthesisUtterance(text);
+                
+                // Set voice
+                if (options.voiceId) {
+                    const voice = this.supportedVoices.find(v => v.voiceURI === options.voiceId);
+                    if (voice) {
+                        this.currentUtterance.voice = voice;
+                    }
+                } else if (this.selectedVoice) {
+                    this.currentUtterance.voice = this.selectedVoice;
+                }
+                
+                // Set speech parameters
+                this.currentUtterance.rate = options.rate || this.speechRate;
+                this.currentUtterance.pitch = options.pitch || this.speechPitch;
+                this.currentUtterance.volume = options.volume || 1.0;
+                
+                // Event handlers
+                this.currentUtterance.onstart = () => {
+                    this.isSpeaking = true;
+                    this.isPaused = false;
+                    if (options.onStart) options.onStart();
+                };
+                
+                this.currentUtterance.onend = () => {
+                    this.isSpeaking = false;
+                    this.isPaused = false;
+                    if (options.onEnd) options.onEnd();
+                    resolve();
+                };
+                
+                this.currentUtterance.onerror = (event) => {
+                    this.isSpeaking = false;
+                    this.isPaused = false;
+                    console.error('Speech synthesis error:', event);
+                    if (options.onError) options.onError(event);
+                    reject(event);
+                };
+                
+                this.currentUtterance.onpause = () => {
+                    this.isPaused = true;
+                    if (options.onPause) options.onPause();
+                };
+                
+                this.currentUtterance.onresume = () => {
+                    this.isPaused = false;
+                    if (options.onResume) options.onResume();
+                };
+                
+                // Highlight words as they're spoken (if callback provided)
+                if (options.onWord) {
+                    this.currentUtterance.onboundary = (event) => {
+                        if (event.name === 'word') {
+                            options.onWord(event.charIndex, event.charLength);
+                        }
+                    };
+                }
+                
+                // Start speaking
+                this.speechSynthesis.speak(this.currentUtterance);
+                
+            } catch (error) {
+                console.error('Error starting speech:', error);
+                reject(error);
+            }
+        });
+    }
+
+    pause() {
+        if (this.isSpeaking && !this.isPaused && this.speechSynthesis) {
+            this.speechSynthesis.pause();
+            this.isPaused = true;
+        }
+    }
+
+    resume() {
+        if (this.isSpeaking && this.isPaused && this.speechSynthesis) {
+            this.speechSynthesis.resume();
+            this.isPaused = false;
+        }
+    }
+
+    stop() {
+        if (this.speechSynthesis) {
+            this.speechSynthesis.cancel();
+            this.isSpeaking = false;
+            this.isPaused = false;
+            this.currentUtterance = null;
+        }
+    }
+
+    setVoice(voiceId) {
+        const voice = this.supportedVoices.find(v => v.voiceURI === voiceId);
+        if (voice) {
+            this.selectedVoice = voice;
+            return true;
+        }
+        return false;
+    }
+
+    setRate(rate) {
+        // Rate should be between 0.1 and 2
+        this.speechRate = Math.max(0.1, Math.min(2, rate));
+    }
+
+    setPitch(pitch) {
+        // Pitch should be between 0 and 2
+        this.speechPitch = Math.max(0, Math.min(2, pitch));
+    }
+
+    getStatus() {
+        return {
+            isAvailable: this.isAvailable(),
+            isSpeaking: this.isSpeaking,
+            isPaused: this.isPaused,
+            currentVoice: this.selectedVoice ? this.selectedVoice.name : null,
+            rate: this.speechRate,
+            pitch: this.speechPitch
+        };
+    }
+
+    // Fallback for older generateVoiceAudio method
+    async generateVoiceAudio(text, voiceId = 'child-friendly-female', options = {}) {
+        console.log(`Generating voice audio with voice: ${voiceId}`);
+        console.log(`Text length: ${text.length} characters`);
 
             // Demo implementation - in production, replace with actual API calls
             const result = await this.simulateAIVoiceGeneration(text, voiceId, options);

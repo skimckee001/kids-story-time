@@ -18,6 +18,8 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
+            -webkit-text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
@@ -49,6 +51,134 @@
             padding: 40px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                margin-bottom: 20px;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+            }
+
+            .tagline {
+                font-size: 1rem;
+            }
+
+            .main-content {
+                padding: 20px;
+                border-radius: 15px;
+            }
+
+            h2 {
+                font-size: 1.5rem !important;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            input[type="text"],
+            input[type="number"],
+            select,
+            textarea {
+                font-size: 16px !important; /* Prevents zoom on iOS */
+                padding: 12px !important;
+            }
+
+            .theme-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+
+            .theme-option {
+                padding: 12px !important;
+                font-size: 0.9rem !important;
+            }
+
+            .length-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .length-option {
+                width: 100%;
+            }
+
+            .generate-btn {
+                width: 100%;
+                padding: 15px !important;
+                font-size: 1.1rem !important;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-buttons button {
+                width: 100%;
+            }
+
+            /* Modal adjustments for mobile */
+            .onboarding-modal {
+                width: 95% !important;
+                padding: 20px !important;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Tier cards on mobile */
+            .tier-container {
+                flex-direction: column;
+            }
+
+            .tier-card {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .tagline {
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+
+            .theme-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .beta-banner {
+                font-size: 0.9rem !important;
+                padding: 10px !important;
+            }
+        }
+
+        /* Touch-friendly adjustments */
+        @media (hover: none) and (pointer: coarse) {
+            button, .theme-option, .length-option {
+                min-height: 44px; /* Apple's recommended touch target size */
+            }
+
+            .theme-option:active {
+                transform: scale(0.98);
+            }
         }
 
         .account-section {
