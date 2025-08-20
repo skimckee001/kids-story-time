@@ -1344,11 +1344,10 @@
                     if (window.aiVoiceService) {
                         window.aiVoiceService.setRate(speed);
                         
-                        // If currently narrating, restart with new speed
+                        // Note: Speed change will take effect on next play
+                        // Don't restart to avoid interruption
                         if (this.isNarrating && !this.isPaused) {
-                            console.log('Restarting narration with new speed:', speed);
-                            this.stopNarration();
-                            setTimeout(() => this.startNarration(), 100);
+                            console.log('Speed changed to:', speed, '(will take effect on restart)');
                         }
                     }
                 });
@@ -1491,9 +1490,12 @@
                             this.stopNarration();
                         },
                         onError: (error) => {
-                            console.error('Narration error:', error);
-                            alert('An error occurred during narration. Please try again.');
-                            this.stopNarration();
+                            // Only show alert for real errors, not interruptions
+                            if (error.error !== 'interrupted') {
+                                console.error('Narration error:', error);
+                                alert('An error occurred during narration. Please try again.');
+                                this.stopNarration();
+                            }
                         },
                         onWord: (charIndex, charLength) => {
                             // Update progress based on character position

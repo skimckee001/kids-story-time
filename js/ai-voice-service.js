@@ -157,6 +157,14 @@ class AIVoiceService {
                 this.currentUtterance.onerror = (event) => {
                     this.isSpeaking = false;
                     this.isPaused = false;
+                    
+                    // Don't treat interruption as an error (happens when we stop/change speed)
+                    if (event.error === 'interrupted') {
+                        console.log('Speech interrupted (this is normal when stopping/changing speed)');
+                        resolve(); // Resolve instead of rejecting for interruptions
+                        return;
+                    }
+                    
                     console.error('Speech synthesis error:', event);
                     if (options.onError) options.onError(event);
                     reject(event);
