@@ -204,8 +204,16 @@
                     </div>
                 </div>
 
-                <!-- Story Content -->
+                <!-- Story Content with Images -->
                 <div class="p-8 md:p-12">
+                    <!-- Image Gallery -->
+                    <div id="storyImages" class="mb-8 hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Images will be inserted here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Story Text -->
                     <div id="storyContent" class="story-text text-lg md:text-xl text-gray-700 space-y-6 leading-relaxed">
                         <!-- Story content will be inserted here -->
                     </div>
@@ -398,6 +406,8 @@
     <script src="js/database-manager.js"></script>
     <script src="js/ai-story-service.js"></script>
     <script src="js/ai-voice-service.js"></script>
+    <script src="js/image-generation-service.js"></script>
+    <script src="js/story-export-service.js"></script>
     <script src="js/subscription-manager.js"></script>
 
     <script>
@@ -563,8 +573,89 @@
                 // Show story display
                 this.showStoryState();
                 
+                // Generate images for the story (async)
+                this.generateStoryImages();
+                
                 // Show rating section if user is logged in and has premium access
                 this.showRatingSectionIfEligible();
+            }
+
+            async generateStoryImages() {
+                // Check if user has access to image generation (premium feature)
+                const hasImageAccess = await this.checkImageGenerationAccess();
+                
+                if (!hasImageAccess) {
+                    console.log('Image generation not available for free tier');
+                    return;
+                }
+
+                if (!window.imageGenerationService) {
+                    console.log('Image generation service not available');
+                    return;
+                }
+
+                try {
+                    const imagesContainer = document.getElementById('storyImages');
+                    const imagesGrid = imagesContainer.querySelector('.grid');
+                    
+                    // Show loading state
+                    imagesContainer.classList.remove('hidden');
+                    imagesGrid.innerHTML = `
+                        <div class="col-span-full text-center py-8">
+                            <div class="inline-flex items-center gap-2 text-purple-600">
+                                <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span>Creating magical illustrations...</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Generate images based on story content
+                    const images = await window.imageGenerationService.generateStoryImages(
+                        this.currentStory,
+                        3 // Generate 3 images
+                    );
+                    
+                    // Display the generated images
+                    if (images && images.length > 0) {
+                        imagesGrid.innerHTML = images.map((img, index) => `
+                            <div class="relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-shadow">
+                                <img src="${img.url}" alt="${img.alt}" class="w-full h-64 object-cover" loading="lazy">
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                                    <p class="text-white text-sm">Scene ${index + 1}</p>
+                                </div>
+                            </div>
+                        `).join('');
+                        
+                        // Cache the images
+                        images.forEach(img => window.imageGenerationService.cacheImage(img));
+                    } else {
+                        // Hide if no images generated
+                        imagesContainer.classList.add('hidden');
+                    }
+                } catch (error) {
+                    console.error('Error generating story images:', error);
+                    document.getElementById('storyImages').classList.add('hidden');
+                }
+            }
+
+            async checkImageGenerationAccess() {
+                try {
+                    // For demo/testing, allow image generation
+                    return true;
+                    
+                    // Production logic:
+                    // if (window.authManager && window.authManager.isUserAuthenticated()) {
+                    //     const subscriptionType = await window.authManager.getSubscriptionStatus();
+                    //     return subscriptionType === 'premium' || subscriptionType === 'trial';
+                    // }
+                    // return false;
+                } catch (error) {
+                    console.error('Error checking image access:', error);
+                    return false;
+                }
             }
 
             getReadingTimeText(length) {
@@ -702,19 +793,139 @@
             }
 
             shareStory() {
-                if (navigator.share && this.currentStory) {
-                    navigator.share({
-                        title: this.currentStory.title,
-                        text: `Check out this magical story: ${this.currentStory.title}`,
-                        url: window.location.href
+                // Show share modal with multiple options
+                this.showShareModal();
+            }
+
+            showShareModal() {
+                if (!this.currentStory) return;
+
+                // Create share modal if it doesn't exist
+                let modal = document.getElementById('shareModal');
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.id = 'shareModal';
+                    modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4';
+                    modal.innerHTML = `
+                        <div class="bg-white rounded-3xl p-6 max-w-md w-full">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-2xl font-bold text-gray-800">Share This Story</h2>
+                                <button id="closeShareModal" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <!-- Share buttons -->
+                                <div class="grid grid-cols-2 gap-3">
+                                    <button id="shareFacebook" class="flex items-center justify-center gap-2 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                                        Facebook
+                                    </button>
+                                    <button id="shareTwitter" class="flex items-center justify-center gap-2 p-3 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+                                        Twitter
+                                    </button>
+                                    <button id="shareWhatsApp" class="flex items-center justify-center gap-2 p-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.149-.67.149-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 16.772c-.25.7-.997 1.299-1.615 1.47-.415.116-1.016.206-2.95-.63-2.483-.98-4.08-3.549-4.204-3.711-.124-.161-1.015-1.35-1.015-2.576 0-1.226.643-1.829.871-2.078.228-.248.497-.31.663-.31l.474.003c.152.002.355-.057.556.425.206.493.7 1.703.763 1.826.062.124.104.269.021.434-.083.166-.124.269-.248.414-.124.145-.262.324-.373.435-.124.124-.253.26-.108.509.145.248.643 1.061 1.38 1.719.949.845 1.75 1.107 1.998 1.232.248.124.393.103.538-.062.145-.166.621-.724.786-.973.166-.248.331-.207.556-.124.228.083 1.44.68 1.687.805.248.124.414.186.476.29.062.103.062.601-.187 1.302z"/></svg>
+                                        WhatsApp
+                                    </button>
+                                    <button id="shareEmail" class="flex items-center justify-center gap-2 p-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                        Email
+                                    </button>
+                                </div>
+                                
+                                <!-- Copy link -->
+                                <div class="border-t pt-3">
+                                    <p class="text-sm text-gray-600 mb-2">Or copy link:</p>
+                                    <div class="flex gap-2">
+                                        <input id="shareLink" type="text" readonly class="flex-1 px-3 py-2 border rounded-lg text-sm bg-gray-50" value="${window.location.href}">
+                                        <button id="copyShareLink" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                                            Copy
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Native share (mobile) -->
+                                ${navigator.share ? `
+                                    <button id="nativeShare" class="w-full p-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition">
+                                        Share via Apps
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+
+                    // Set up event listeners
+                    document.getElementById('closeShareModal').addEventListener('click', () => {
+                        modal.classList.add('hidden');
                     });
-                } else {
-                    // Fallback: copy to clipboard
-                    const shareText = `${this.currentStory.title}\n\n${this.currentStory.content}`;
-                    navigator.clipboard.writeText(shareText).then(() => {
-                        alert('Story copied to clipboard! You can now share it anywhere.');
+
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            modal.classList.add('hidden');
+                        }
                     });
+
+                    // Share button handlers
+                    this.setupShareHandlers();
                 }
+
+                // Show modal
+                modal.classList.remove('hidden');
+            }
+
+            setupShareHandlers() {
+                const story = this.currentStory;
+                const storyUrl = window.location.href;
+                const shareText = `Check out this magical story: "${story.title}" - Created with Kids Story Time`;
+
+                // Facebook
+                document.getElementById('shareFacebook')?.addEventListener('click', () => {
+                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(storyUrl)}`, '_blank');
+                });
+
+                // Twitter
+                document.getElementById('shareTwitter')?.addEventListener('click', () => {
+                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(storyUrl)}`, '_blank');
+                });
+
+                // WhatsApp
+                document.getElementById('shareWhatsApp')?.addEventListener('click', () => {
+                    window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + storyUrl)}`, '_blank');
+                });
+
+                // Email
+                document.getElementById('shareEmail')?.addEventListener('click', () => {
+                    const subject = `Magical Story: ${story.title}`;
+                    const body = `I thought you might enjoy this story!\n\n${story.title}\n\n${story.content.substring(0, 500)}...\n\nRead the full story here: ${storyUrl}`;
+                    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                });
+
+                // Copy link
+                document.getElementById('copyShareLink')?.addEventListener('click', () => {
+                    const input = document.getElementById('shareLink');
+                    input.select();
+                    document.execCommand('copy');
+                    
+                    const btn = document.getElementById('copyShareLink');
+                    const originalText = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                    }, 2000);
+                });
+
+                // Native share
+                document.getElementById('nativeShare')?.addEventListener('click', () => {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: story.title,
+                            text: shareText,
+                            url: storyUrl
+                        }).catch(err => console.log('Share canceled'));
+                    }
+                });
             }
 
             async readAloud() {
@@ -851,31 +1062,128 @@
             }
 
             printStory() {
-                const printWindow = window.open('', '_blank');
-                printWindow.document.write(`
-                    <html>
-                        <head>
-                            <title>${this.currentStory.title}</title>
-                            <style>
-                                body { font-family: Georgia, serif; line-height: 1.6; margin: 40px; }
-                                h1 { color: #FF6B9D; text-align: center; margin-bottom: 30px; }
-                                .meta { text-align: center; color: #666; margin-bottom: 30px; }
-                                p { margin-bottom: 15px; }
-                            </style>
-                        </head>
-                        <body>
-                            <h1>${this.currentStory.title}</h1>
-                            <div class="meta">
-                                A magical story for ${this.storyParams.childName} (${this.getReadingLevelDisplay(this.storyParams.childAge)})
+                // Show export options modal
+                this.showExportModal();
+            }
+
+            showExportModal() {
+                if (!this.currentStory) return;
+
+                // Create export modal if it doesn't exist
+                let modal = document.getElementById('exportModal');
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.id = 'exportModal';
+                    modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4';
+                    modal.innerHTML = `
+                        <div class="bg-white rounded-3xl p-6 max-w-md w-full">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-2xl font-bold text-gray-800">Export Story</h2>
+                                <button id="closeExportModal" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
                             </div>
-                            <div>
-                                ${this.currentStory.content.split('\n').map(p => p.trim() ? `<p>${p}</p>` : '').join('')}
+                            
+                            <div class="space-y-3">
+                                <button id="exportPDF" class="w-full flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl hover:border-purple-400 hover:bg-purple-50 transition">
+                                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 text-left">
+                                        <div class="font-semibold">PDF Document</div>
+                                        <div class="text-sm text-gray-500">Print or save as PDF with images</div>
+                                    </div>
+                                </button>
+                                
+                                <button id="exportWord" class="w-full flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl hover:border-purple-400 hover:bg-purple-50 transition">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 text-left">
+                                        <div class="font-semibold">Word Document</div>
+                                        <div class="text-sm text-gray-500">Edit in Microsoft Word</div>
+                                    </div>
+                                </button>
+                                
+                                <button id="exportText" class="w-full flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl hover:border-purple-400 hover:bg-purple-50 transition">
+                                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 text-left">
+                                        <div class="font-semibold">Plain Text</div>
+                                        <div class="text-sm text-gray-500">Simple text file</div>
+                                    </div>
+                                </button>
+                                
+                                <button id="exportAudio" class="w-full flex items-center gap-3 p-4 border-2 border-gray-200 rounded-xl hover:border-purple-400 hover:bg-purple-50 transition">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 text-left">
+                                        <div class="font-semibold">Audio File</div>
+                                        <div class="text-sm text-gray-500">Listen offline (Premium)</div>
+                                    </div>
+                                </button>
                             </div>
-                        </body>
-                    </html>
-                `);
-                printWindow.document.close();
-                printWindow.print();
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+
+                    // Set up event listeners
+                    document.getElementById('closeExportModal').addEventListener('click', () => {
+                        modal.classList.add('hidden');
+                    });
+
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            modal.classList.add('hidden');
+                        }
+                    });
+
+                    // Export handlers
+                    this.setupExportHandlers();
+                }
+
+                // Show modal
+                modal.classList.remove('hidden');
+            }
+
+            setupExportHandlers() {
+                if (!window.storyExportService) {
+                    console.error('Export service not available');
+                    return;
+                }
+
+                // PDF Export
+                document.getElementById('exportPDF')?.addEventListener('click', async () => {
+                    const images = window.imageGenerationService?.getCachedImages() || [];
+                    await window.storyExportService.exportAsPDF(this.currentStory, images);
+                    document.getElementById('exportModal').classList.add('hidden');
+                });
+
+                // Word Export
+                document.getElementById('exportWord')?.addEventListener('click', () => {
+                    window.storyExportService.exportAsWord(this.currentStory);
+                    document.getElementById('exportModal').classList.add('hidden');
+                });
+
+                // Text Export
+                document.getElementById('exportText')?.addEventListener('click', () => {
+                    window.storyExportService.exportAsText(this.currentStory);
+                    document.getElementById('exportModal').classList.add('hidden');
+                });
+
+                // Audio Export
+                document.getElementById('exportAudio')?.addEventListener('click', async () => {
+                    await window.storyExportService.exportAsAudio(this.currentStory);
+                    document.getElementById('exportModal').classList.add('hidden');
+                });
             }
 
             showLoadingState() {
