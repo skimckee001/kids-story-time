@@ -52,13 +52,20 @@ exports.handler = async (event, context) => {
 
         // Check for OpenAI API key
         const apiKey = process.env.OPENAI_API_KEY;
+        console.log('API Key check:', apiKey ? 'Key found' : 'Key not found');
+        console.log('Environment variables available:', Object.keys(process.env).filter(key => key.includes('OPENAI')));
+        
         if (!apiKey) {
             return {
                 statusCode: 500,
                 headers,
                 body: JSON.stringify({ 
                     error: 'OpenAI API key not configured',
-                    fallbackAvailable: true
+                    fallbackAvailable: true,
+                    debug: {
+                        hasKey: !!apiKey,
+                        envVars: Object.keys(process.env).length
+                    }
                 })
             };
         }
