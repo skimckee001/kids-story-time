@@ -420,9 +420,9 @@
                 this.init();
             }
 
-            init() {
+            async init() {
                 // Get story parameters from URL or localStorage
-                this.storyParams = this.getStoryParams();
+                this.storyParams = await this.getStoryParams();
                 
                 if (!this.storyParams) {
                     // No story parameters, redirect to home
@@ -437,7 +437,7 @@
                 this.setupEventListeners();
             }
 
-            getStoryParams() {
+            async getStoryParams() {
                 // Check if we're reading an existing story from the library
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.get('existing') === 'true') {
@@ -445,7 +445,7 @@
                     if (existingStory) {
                         localStorage.removeItem('readExistingStory');
                         const story = JSON.parse(existingStory);
-                        this.loadExistingStory(story);
+                        await this.loadExistingStory(story);
                         return null; // Skip normal story generation
                     }
                 }
@@ -473,7 +473,7 @@
                 return null;
             }
 
-            loadExistingStory(story) {
+            async loadExistingStory(story) {
                 // Set up the existing story
                 this.currentStory = {
                     title: story.title,
@@ -497,7 +497,7 @@
                 };
 
                 // Display the story
-                this.displayStory();
+                await this.displayStory();
                 
                 // Check if story is already rated - if so, don't show rating section
                 if (story.rating) {
@@ -520,7 +520,7 @@
                     
                     if (result.success) {
                         this.currentStory = result.story;
-                        this.displayStory();
+                        await this.displayStory();
                         
                         // Save to database if user is logged in
                         if (window.authManager && window.authManager.isUserAuthenticated()) {
@@ -530,7 +530,7 @@
                         console.error('Story generation failed:', result.error);
                         if (result.fallback) {
                             this.currentStory = result.fallback.story;
-                            this.displayStory();
+                            await this.displayStory();
                         } else {
                             this.showErrorState();
                         }
@@ -541,7 +541,7 @@
                 }
             }
 
-            displayStory() {
+            async displayStory() {
                 const { title, content, metadata } = this.currentStory;
                 
                 // Update title
