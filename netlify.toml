@@ -19,8 +19,5 @@
   to = "/story-library.html"
   status = 200
 
-[[redirects]]
-  # Default redirect for SPA-like behavior
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Removed the catch-all redirect to allow direct access to HTML files
+# Each HTML file will be served directly
