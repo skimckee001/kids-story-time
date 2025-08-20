@@ -1685,16 +1685,28 @@
       }
 
       async function loadUserProfile() {
-          if (!window.dbManager || !currentUser) return;
+          if (!currentUser) return;
+          
+          // Skip database operations for test users
+          const isTestUser = currentUser.id && currentUser.id.startsWith('test-');
           
           try {
-              const profile = await window.dbManager.getUserProfile(currentUser.id);
+              let profile = null;
+              let childName = null;
+              
+              if (!isTestUser && window.dbManager) {
+                  // Real users - try to get profile from database
+                  try {
+                      profile = await window.dbManager.getUserProfile(currentUser.id);
+                  } catch (dbError) {
+                      console.log('Database profile not available:', dbError.message);
+                  }
+              }
               
               // Update welcome message with child's name if available
               const welcomeMsg = document.getElementById('welcomeMessage');
               
               // Check profile first, then user metadata (for test users)
-              let childName = null;
               if (profile && profile.child_name) {
                   childName = profile.child_name;
               } else if (currentUser.user_metadata && currentUser.user_metadata.child_name) {
@@ -1710,8 +1722,11 @@
               // Load user preferences
               await loadUserPreferences(profile);
               
-              // Check daily limits
-              const canGenerate = await window.dbManager.canGenerateStory(currentUser.id);
+              // Check daily limits (skip for test users)
+              let canGenerate = true;
+              if (!isTestUser && window.dbManager && typeof window.dbManager.canGenerateStory === 'function') {
+                  canGenerate = await window.dbManager.canGenerateStory(currentUser.id);
+              }
               updateLimitsDisplay(canGenerate);
           } catch (error) {
               console.error('Error loading profile:', error);
