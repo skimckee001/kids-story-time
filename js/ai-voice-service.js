@@ -237,6 +237,7 @@ class AIVoiceService {
         console.log(`Generating voice audio with voice: ${voiceId}`);
         console.log(`Text length: ${text.length} characters`);
 
+        try {
             // Demo implementation - in production, replace with actual API calls
             const result = await this.simulateAIVoiceGeneration(text, voiceId, options);
             
