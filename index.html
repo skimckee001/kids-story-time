@@ -1295,7 +1295,7 @@
           // Wait for auth manager to be ready
           if (typeof window.authManager !== 'undefined') {
               // Check if user is already logged in
-              currentUser = await window.authManager.getCurrentUser();
+              currentUser = window.authManager.getCurrentUser();
               updateUI();
               
               // Show usage stats for authenticated users
