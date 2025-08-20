@@ -189,19 +189,30 @@ class StarPointsService {
      * Create star display element
      */
     createStarDisplay() {
-        // Try to find a suitable location for the star display
-        let targetElement = document.querySelector('header .text-right') || 
-                           document.querySelector('header .flex') ||
-                           document.querySelector('header');
-        
-        if (!targetElement) {
-            console.log('Header not found, will retry star display creation');
-            setTimeout(() => this.createStarDisplay(), 500);
+        // Check if star display already exists
+        if (document.getElementById('starPointsDisplay')) {
             return;
         }
 
-        // Check if star display already exists
-        if (document.getElementById('starPointsDisplay')) {
+        // Try to find the header container for star display
+        let targetContainer = document.getElementById('headerStarContainer');
+        
+        // If not found, try to find a header element to insert into
+        if (!targetContainer) {
+            // Look for the header buttons area
+            const headerButtons = document.querySelector('header .flex.items-center.space-x-3');
+            if (headerButtons) {
+                // Create container if it doesn't exist
+                targetContainer = document.createElement('div');
+                targetContainer.id = 'headerStarContainer';
+                headerButtons.insertBefore(targetContainer, headerButtons.firstChild);
+            }
+        }
+        
+        // If still no target, create a fixed position element as fallback
+        if (!targetContainer) {
+            console.log('Header container not found, will retry star display creation');
+            setTimeout(() => this.createStarDisplay(), 500);
             return;
         }
 
@@ -219,12 +230,9 @@ class StarPointsService {
             font-size: 14px;
             cursor: pointer;
             transition: transform 0.2s;
-            position: fixed;
-            top: 70px;
-            right: 15px;
-            z-index: 1000;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            height: 32px;
+            height: 36px;
+            margin-right: 8px;
         `;
         starDisplay.innerHTML = `
             <span style="font-size: 16px; margin-right: 5px;">⭐</span>
@@ -244,8 +252,9 @@ class StarPointsService {
             this.showStarInfoModal();
         });
         
-        // Append to body to avoid insertion errors
-        document.body.appendChild(starDisplay);
+        // Insert into header container
+        targetContainer.appendChild(starDisplay);
+        targetContainer.classList.remove('hidden');
     }
 
     /**
