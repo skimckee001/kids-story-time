@@ -213,20 +213,22 @@ class StarPointsService {
             align-items: center;
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: white;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 20px;
             font-weight: bold;
-            margin-right: 10px;
+            font-size: 14px;
             cursor: pointer;
             transition: transform 0.2s;
             position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
+            top: 15px;
+            right: 15px;
+            z-index: 999;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            height: 32px;
         `;
         starDisplay.innerHTML = `
-            <span style="font-size: 20px; margin-right: 5px;">⭐</span>
-            <span id="starCount">${this.userStars}</span>
+            <span style="font-size: 16px; margin-right: 5px;">⭐</span>
+            <span id="starCount" style="font-size: 14px;">${this.userStars}</span>
         `;
         
         // Add hover effect

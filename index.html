@@ -891,89 +891,7 @@
                   <label>Would you like to add a theme for this story?</label>
                   <p style="font-size: 14px; color: #666; margin-bottom: 15px;">Pick one or more themes to make it extra special - Optional</p>
                   <div id="dynamicThemeContainer" class="interests-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
-                      <!-- Story Themes -->
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="adventure" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🏰</span>
-                          <span style="font-size: 14px;">Adventure</span>
-                      </label>
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="animals" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦁</span>
-                          <span style="font-size: 14px;">Animals</span>
-                      </label>
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="space" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🚀</span>
-                          <span style="font-size: 14px;">Space</span>
-                      </label>
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="fantasy" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🧚</span>
-                          <span style="font-size: 14px;">Fantasy</span>
-                      </label>
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="ocean" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🌊</span>
-                          <span style="font-size: 14px;">Ocean</span>
-                      </label>
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="friendship" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🤝</span>
-                          <span style="font-size: 14px;">Friendship</span>
-                      </label>
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="nature" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🌳</span>
-                          <span style="font-size: 14px;">Nature</span>
-                      </label>
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="superhero" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦸</span>
-                          <span style="font-size: 14px;">Superhero</span>
-                      </label>
-                      <!-- New themes -->
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="funny" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">😄</span>
-                          <span style="font-size: 14px;">Funny</span>
-                      </label>
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="unicorns" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦄</span>
-                          <span style="font-size: 14px;">Unicorns</span>
-                      </label>
-                      <!-- Interest options (now as additional themes) -->
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="dinosaurs" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🦕</span>
-                          <span style="font-size: 14px;">Dinosaurs</span>
-                      </label>
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="princesses" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">👸</span>
-                          <span style="font-size: 14px;">Princesses</span>
-                      </label>
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="cars" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🚗</span>
-                          <span style="font-size: 14px;">Cars</span>
-                      </label>
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="sports" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">⚽</span>
-                          <span style="font-size: 14px;">Sports</span>
-                      </label>
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="music" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🎵</span>
-                          <span style="font-size: 14px;">Music</span>
-                      </label>
-                      <label class="interest-item theme-option" style="display: flex; align-items: center; padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s;">
-                          <input type="checkbox" class="story-theme" value="art" style="display: none;">
-                          <span class="checkmark" style="margin-right: 8px; font-size: 18px;">🎨</span>
-                          <span style="font-size: 14px;">Art</span>
-                      </label>
+                      <!-- Themes will be dynamically loaded here based on age -->
                   </div>
               </div>
 
@@ -1386,47 +1304,8 @@
               }
           }
 
-          // Theme selection (now supports multiple checkboxes)
-          document.querySelectorAll('.theme-option').forEach(item => {
-              item.addEventListener('click', function(e) {
-                  e.preventDefault();
-                  const checkbox = this.querySelector('input[type="checkbox"]');
-                  
-                  // Toggle the checkbox
-                  checkbox.checked = !checkbox.checked;
-                  
-                  if (checkbox.checked) {
-                      // Add to selected themes
-                      selectedThemes.push(checkbox.value);
-                      this.style.borderColor = '#667eea';
-                      this.style.backgroundColor = '#f0f4ff';
-                      this.style.transform = 'scale(1.05)';
-                  } else {
-                      // Remove from selected themes
-                      selectedThemes = selectedThemes.filter(theme => theme !== checkbox.value);
-                      this.style.borderColor = '#e0e0e0';
-                      this.style.backgroundColor = 'transparent';
-                      this.style.transform = 'scale(1)';
-                  }
-              });
-
-              // Hover effects
-              item.addEventListener('mouseenter', function() {
-                  const checkbox = this.querySelector('input[type="checkbox"]');
-                  if (!checkbox.checked) {
-                      this.style.borderColor = '#667eea';
-                      this.style.backgroundColor = '#f8faff';
-                  }
-              });
-
-              item.addEventListener('mouseleave', function() {
-                  const checkbox = this.querySelector('input[type="checkbox"]');
-                  if (!checkbox.checked) {
-                      this.style.borderColor = '#e0e0e0';
-                      this.style.backgroundColor = 'transparent';
-                  }
-              });
-          });
+          // Theme selection is now handled dynamically in updateThemesBasedOnAge()
+          // Old static theme handlers removed - see updateThemesBasedOnAge function
 
           // Gender selection
           document.getElementById('genderBoy').addEventListener('click', function() {
@@ -2464,8 +2343,9 @@
           // Get appropriate themes for this age
           const themeConfig = window.DynamicThemes.getThemesForAge(ageGroup);
           
-          // Clear existing themes
+          // Clear existing themes and reset selectedThemes array
           container.innerHTML = '';
+          selectedThemes = []; // Reset the selected themes when age changes
           
           // Add dynamic themes
           if (themeConfig && themeConfig.themes) {

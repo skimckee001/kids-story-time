@@ -184,6 +184,82 @@ Make it magical and engaging${includeNameInStory ? ` for ${characterName}` : ''}
         if (themes && themes.length > 0) {
             // For mock stories, pick the first theme or a random one
             selectedTheme = themes[0];
+            
+            // Map new dynamic theme IDs to existing story templates
+            const themeMapping = {
+                // Toddler themes
+                'animals': 'animals',
+                'vehicles': 'adventure',
+                'bedtime': 'friendship',
+                'colors-shapes': 'nature',
+                'family': 'friendship',
+                'playground': 'adventure',
+                'silly': 'funny',
+                'helpers': 'superhero',
+                
+                // Elementary themes
+                'dinosaurs': 'adventure',
+                'fairy-tales': 'fantasy',
+                'school': 'friendship',
+                'superheroes': 'superhero',
+                'nature': 'nature',
+                'pets': 'animals',
+                'pirates': 'adventure',
+                'space': 'space',
+                'bugs': 'nature',
+                'princesses-knights': 'fantasy',
+                
+                // Older elementary
+                'mystery': 'adventure',
+                'dragons': 'fantasy',
+                'sports': 'sports',
+                'ocean': 'ocean',
+                'inventions': 'space',
+                'time-travel': 'adventure',
+                'friendship': 'friendship',
+                'gross-funny': 'funny',
+                'ninjas': 'superhero',
+                'magic-school': 'fantasy',
+                
+                // Tween themes
+                'adventure-quest': 'adventure',
+                'mythology': 'fantasy',
+                'survival': 'adventure',
+                'secret-agent': 'adventure',
+                'science-fiction': 'space',
+                'magical-creatures': 'fantasy',
+                'environmental': 'nature',
+                'gaming': 'adventure',
+                'paranormal': 'fantasy',
+                'stem': 'space',
+                
+                // Teen themes
+                'dystopian': 'adventure',
+                'romance-adventure': 'friendship',
+                'horror-lite': 'adventure',
+                'social-media': 'friendship',
+                'fantasy-epic': 'fantasy',
+                'real-life': 'friendship',
+                'conspiracy': 'adventure',
+                'superpowers': 'superhero',
+                'time-loop': 'adventure',
+                'alternate-reality': 'fantasy',
+                'dystopian-rebellion': 'adventure',
+                'romance': 'friendship',
+                'thriller': 'adventure',
+                'urban-fantasy': 'fantasy',
+                'coming-of-age': 'friendship',
+                'social-issues': 'friendship',
+                'dark-academia': 'adventure',
+                'apocalyptic': 'adventure',
+                'mental-health': 'friendship',
+                'lgbtq': 'friendship'
+            };
+            
+            // Map the selected theme to an existing story template
+            if (themeMapping[selectedTheme]) {
+                selectedTheme = themeMapping[selectedTheme];
+            }
         } else if (theme) {
             selectedTheme = theme;
         }
