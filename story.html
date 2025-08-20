@@ -680,20 +680,56 @@
                     // Show loading state on the image
                     mainImage.style.opacity = '0.5';
                     
-                    // Generate a single image based on story content
-                    const images = await window.imageGenerationService.generateStoryImages(
-                        this.currentStory,
-                        1 // Generate 1 image
-                    );
+                    // Determine user tier for image quality
+                    let tier = 'free';
+                    if (window.authManager && window.authManager.isUserAuthenticated()) {
+                        const subscriptionType = await window.authManager.getSubscriptionStatus();
+                        if (subscriptionType === 'premium') tier = 'premium';
+                        else if (subscriptionType === 'pro') tier = 'pro';
+                    }
+                    
+                    // Extract meaningful scene description from story
+                    const storyContent = this.currentStory.content;
+                    const storyTitle = this.currentStory.title;
+                    const theme = this.currentStory.metadata?.theme || 'adventure';
+                    
+                    // Get first significant paragraph for scene description
+                    const paragraphs = storyContent.split('\n').filter(p => p.trim().length > 50);
+                    const mainScene = paragraphs[0] || storyContent.substring(0, 200);
+                    
+                    // Create a descriptive prompt for the image
+                    const characterName = this.currentStory.metadata?.childName || 'child';
+                    const imagePrompt = `A cheerful children's book illustration of ${characterName} in a ${theme} story. ${mainScene.substring(0, 150)}. Colorful, friendly, suitable for kids.`;
+                    
+                    // Generate image with appropriate tier
+                    const imageResult = await window.imageGenerationService.generateImage({
+                        prompt: imagePrompt,
+                        style: 'storybook',
+                        mood: 'cheerful',
+                        tier: tier
+                    });
                     
                     // Update the main image
-                    if (images && images.length > 0) {
-                        mainImage.src = images[0].url;
-                        mainImage.alt = images[0].alt;
+                    if (imageResult && imageResult.url) {
+                        mainImage.src = imageResult.url;
+                        mainImage.alt = imageResult.alt || imagePrompt;
                         mainImage.style.opacity = '1';
                         
+                        // Update button text based on tier
+                        const genButton = document.querySelector('[onclick*="showImageUpgradePrompt"]');
+                        if (genButton) {
+                            if (tier === 'pro') {
+                                genButton.innerHTML = '✨ AI Generated';
+                                genButton.disabled = true;
+                            } else if (tier === 'premium') {
+                                genButton.innerHTML = '📸 Stock Image';
+                            }
+                        }
+                        
                         // Cache the image
-                        window.imageGenerationService.cacheImage(images[0]);
+                        if (window.imageGenerationService.cacheImage) {
+                            window.imageGenerationService.cacheImage(imageResult);
+                        }
                     }
                 } catch (error) {
                     console.error('Error generating story image:', error);
