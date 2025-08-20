@@ -96,6 +96,27 @@
             text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
             transform: scale(1.1);
         }
+        
+        /* Responsive image styling */
+        @media (min-width: 1024px) {
+            #storyImageContainer + p,
+            #storyImageContainer + p + p,
+            #storyImageContainer + p + p + p {
+                overflow: hidden; /* Ensure text wraps around floated image */
+            }
+            
+            #storyMainImage {
+                max-height: 400px;
+                object-fit: cover;
+            }
+        }
+        
+        /* Clear float after story content */
+        #storyContent::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-purple-100 via-blue-50 to-pink-100 min-h-screen">
@@ -111,7 +132,8 @@
                         KidsStoryTime<span style="font-size: 0.6em; font-weight: normal; color: #666;">.org</span>
                     </span>
                 </div>
-                <div class="flex items-center space-x-4">
+                <!-- Account for star display on right side -->
+                <div class="flex items-center space-x-3 mr-20">
                     <div class="relative group">
                         <button onclick="window.location.href='library.html'" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg transition-all duration-200 font-medium text-sm">
                             📚 My Library
@@ -577,15 +599,18 @@
                     // Insert image after first paragraph
                     if (i === 0) {
                         storyHTML += `
-                            <div id="storyImageContainer" class="my-6 flex justify-center">
-                                <div class="relative max-w-md">
-                                    <img id="storyMainImage" src="https://via.placeholder.com/400x400/E8D5FF/667eea?text=Story+Image" 
-                                         alt="Story illustration" 
-                                         class="rounded-lg shadow-lg w-full">
-                                    <button onclick="window.storyPageManager.showImageUpgradePrompt()" 
-                                            class="absolute top-2 right-2 bg-white/90 hover:bg-white text-xs px-3 py-1.5 rounded-lg shadow-md transition flex items-center gap-1">
-                                        ✨ Generate AI Image
-                                    </button>
+                            <div id="storyImageContainer" class="my-6">
+                                <!-- Mobile: full width, Desktop: float right with text wrap -->
+                                <div class="lg:float-right lg:ml-6 lg:mb-4 lg:w-1/2">
+                                    <div class="relative">
+                                        <img id="storyMainImage" src="https://via.placeholder.com/400x400/E8D5FF/667eea?text=Story+Image" 
+                                             alt="Story illustration" 
+                                             class="rounded-lg shadow-lg w-full lg:max-w-sm mx-auto lg:mx-0">
+                                        <button onclick="window.storyPageManager.showImageUpgradePrompt()" 
+                                                class="absolute top-2 right-2 bg-white/90 hover:bg-white text-xs px-3 py-1.5 rounded-lg shadow-md transition flex items-center gap-1">
+                                            ✨ Generate AI Image
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         `;

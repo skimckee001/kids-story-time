@@ -220,9 +220,9 @@ class StarPointsService {
             cursor: pointer;
             transition: transform 0.2s;
             position: fixed;
-            top: 15px;
+            top: 70px;
             right: 15px;
-            z-index: 999;
+            z-index: 1000;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             height: 32px;
         `;
