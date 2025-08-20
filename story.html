@@ -1356,10 +1356,27 @@
             async loadAvailableVoices() {
                 const voiceSelect = document.getElementById('voiceSelect');
                 
-                // Wait for AI Voice Service to initialize
-                setTimeout(() => {
-                    if (window.aiVoiceService && window.aiVoiceService.isAvailable()) {
+                // Try loading voices multiple times as they may load async
+                const tryLoadVoices = () => {
+                    console.log('Trying to load voices...');
+                    
+                    if (window.aiVoiceService) {
+                        console.log('AIVoiceService exists, checking availability...');
+                        console.log('Is available:', window.aiVoiceService.isAvailable());
+                        
+                        // Force a voice check
+                        if ('speechSynthesis' in window) {
+                            const browserVoices = window.speechSynthesis.getVoices();
+                            console.log('Browser voices found:', browserVoices.length);
+                            
+                            // If browser has voices but our service doesn't, reload them
+                            if (browserVoices.length > 0) {
+                                window.aiVoiceService.loadVoices();
+                            }
+                        }
+                        
                         const voices = window.aiVoiceService.getAvailableVoices();
+                        console.log('Available voices:', voices.length);
                         
                         if (voices.length > 0) {
                             voiceSelect.innerHTML = '';
@@ -1370,13 +1387,26 @@
                                 if (index === 0) option.selected = true;
                                 voiceSelect.appendChild(option);
                             });
+                            return true; // Success
                         } else {
-                            voiceSelect.innerHTML = '<option>No voices available</option>';
+                            voiceSelect.innerHTML = '<option>Default Voice</option>';
+                            // Still return true as we can use default
+                            return true;
                         }
                     } else {
-                        voiceSelect.innerHTML = '<option>Voice not available</option>';
+                        console.log('AIVoiceService not found');
+                        voiceSelect.innerHTML = '<option>Voice service loading...</option>';
+                        return false;
                     }
-                }, 1000);
+                };
+                
+                // Try immediately
+                if (!tryLoadVoices()) {
+                    // Try again after delays
+                    setTimeout(tryLoadVoices, 500);
+                    setTimeout(tryLoadVoices, 1500);
+                    setTimeout(tryLoadVoices, 3000);
+                }
             }
 
             async startNarration() {
@@ -1385,9 +1415,17 @@
                     return;
                 }
 
-                if (!window.aiVoiceService || !window.aiVoiceService.isAvailable()) {
-                    alert('Voice narration is not available. Please check your browser settings.');
+                // More lenient check - just need speechSynthesis
+                if (!('speechSynthesis' in window)) {
+                    alert('Voice narration is not supported in your browser. Please try Chrome, Safari, or Edge.');
                     return;
+                }
+                
+                // If service isn't ready, try to initialize it
+                if (!window.aiVoiceService) {
+                    console.log('Initializing voice service...');
+                    window.aiVoiceService = new AIVoiceService();
+                    await new Promise(resolve => setTimeout(resolve, 500));
                 }
 
                 const playBtn = document.getElementById('playNarration');

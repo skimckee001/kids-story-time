@@ -19,19 +19,32 @@ class AIVoiceService {
         try {
             // Check if Web Speech API is available
             if ('speechSynthesis' in window) {
-                // Load available voices
+                // Initialize immediately
+                this.isInitialized = true;
+                
+                // Try to load voices immediately
                 this.loadVoices();
                 
-                // Some browsers need a user interaction first
+                // Also set up listener for when voices change/load
+                this.speechSynthesis.addEventListener('voiceschanged', () => {
+                    this.loadVoices();
+                });
+                
+                // Force voices to load on some browsers
                 if (this.speechSynthesis.getVoices().length === 0) {
-                    // Wait for voices to load
-                    this.speechSynthesis.addEventListener('voiceschanged', () => {
+                    // Trigger voice loading
+                    const utterance = new SpeechSynthesisUtterance('');
+                    utterance.volume = 0;
+                    this.speechSynthesis.speak(utterance);
+                    this.speechSynthesis.cancel();
+                    
+                    // Try loading voices again after a delay
+                    setTimeout(() => {
                         this.loadVoices();
-                    });
+                    }, 100);
                 }
                 
                 console.log('AI Voice Service initialized with Web Speech API');
-                this.isInitialized = true;
             } else {
                 console.warn('Web Speech API not available');
                 this.isInitialized = false;
@@ -70,7 +83,9 @@ class AIVoiceService {
     }
 
     isAvailable() {
-        return this.isInitialized && this.supportedVoices.length > 0;
+        // More lenient check - just need the API to be available
+        // Voices might load later
+        return this.isInitialized && 'speechSynthesis' in window;
     }
 
     getAvailableVoices() {
@@ -95,15 +110,18 @@ class AIVoiceService {
                 // Create utterance
                 this.currentUtterance = new SpeechSynthesisUtterance(text);
                 
-                // Set voice
-                if (options.voiceId) {
-                    const voice = this.supportedVoices.find(v => v.voiceURI === options.voiceId);
-                    if (voice) {
-                        this.currentUtterance.voice = voice;
+                // Set voice (only if voices are loaded)
+                if (this.supportedVoices.length > 0) {
+                    if (options.voiceId) {
+                        const voice = this.supportedVoices.find(v => v.voiceURI === options.voiceId);
+                        if (voice) {
+                            this.currentUtterance.voice = voice;
+                        }
+                    } else if (this.selectedVoice) {
+                        this.currentUtterance.voice = this.selectedVoice;
                     }
-                } else if (this.selectedVoice) {
-                    this.currentUtterance.voice = this.selectedVoice;
                 }
+                // If no voices loaded yet, browser will use default voice
                 
                 // Set speech parameters
                 this.currentUtterance.rate = options.rate || this.speechRate;
