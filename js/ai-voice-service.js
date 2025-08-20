@@ -57,6 +57,12 @@ class AIVoiceService {
 
     loadVoices() {
         const voices = this.speechSynthesis.getVoices();
+        console.log('Loading voices, found:', voices.length);
+        
+        if (voices.length === 0) {
+            // No voices yet, they might load later
+            return;
+        }
         
         // Filter for child-friendly voices
         this.supportedVoices = voices.filter(voice => {
@@ -67,18 +73,24 @@ class AIVoiceService {
                     voice.name.includes('Samantha') || 
                     voice.name.includes('Victoria') ||
                     voice.name.includes('Karen') ||
-                    voice.name.includes('Google US English') ||
+                    voice.name.includes('Google') ||
                     voice.name.includes('Microsoft'));
         });
 
-        // Add all voices as fallback if no filtered voices found
+        // Add all English voices as fallback if no filtered voices found
         if (this.supportedVoices.length === 0) {
             this.supportedVoices = voices.filter(voice => voice.lang.startsWith('en'));
+        }
+        
+        // If still no English voices, use all available voices
+        if (this.supportedVoices.length === 0 && voices.length > 0) {
+            this.supportedVoices = voices;
         }
 
         // Select default voice
         if (this.supportedVoices.length > 0) {
             this.selectedVoice = this.supportedVoices[0];
+            console.log('Selected default voice:', this.selectedVoice.name);
         }
     }
 

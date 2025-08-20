@@ -1305,6 +1305,14 @@
 
                 // Load available voices
                 this.loadAvailableVoices();
+                
+                // Listen for voice changes (Chrome loads voices async)
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.addEventListener('voiceschanged', () => {
+                        console.log('Voices changed event fired');
+                        this.loadAvailableVoices();
+                    });
+                }
 
                 // Play/Pause narration
                 playBtn.addEventListener('click', () => {
@@ -1332,9 +1340,16 @@
                 // Speed control
                 speedControl.addEventListener('input', (e) => {
                     const speed = parseFloat(e.target.value);
-                    speedValue.textContent = speed + 'x';
+                    speedValue.textContent = speed.toFixed(1) + 'x';
                     if (window.aiVoiceService) {
                         window.aiVoiceService.setRate(speed);
+                        
+                        // If currently narrating, restart with new speed
+                        if (this.isNarrating && !this.isPaused) {
+                            console.log('Restarting narration with new speed:', speed);
+                            this.stopNarration();
+                            setTimeout(() => this.startNarration(), 100);
+                        }
                     }
                 });
 
@@ -1366,6 +1381,14 @@
                         
                         // Force a voice check
                         if ('speechSynthesis' in window) {
+                            // Force Chrome to load voices with a silent utterance
+                            if (window.speechSynthesis.getVoices().length === 0) {
+                                const silentUtterance = new SpeechSynthesisUtterance('');
+                                silentUtterance.volume = 0;
+                                window.speechSynthesis.speak(silentUtterance);
+                                window.speechSynthesis.cancel();
+                            }
+                            
                             const browserVoices = window.speechSynthesis.getVoices();
                             console.log('Browser voices found:', browserVoices.length);
                             
