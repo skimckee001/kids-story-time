@@ -5,7 +5,7 @@ import AdSense from './AdSense';
 import './StoryDisplay.css';
 import '../App.original.css';
 
-function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscriptionTier, starPoints }) {
+function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, subscriptionTier, starPoints }) {
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [rating, setRating] = useState(0);
@@ -310,7 +310,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
           subscriptionTier={subscriptionTier}
           starPoints={starPoints}
           onShowLibrary={onBack}
-          onShowAuth={() => {}}
+          onShowAuth={onShowAuth}
         />
         
         <div className="story-display-container">
@@ -472,30 +472,37 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
                           </div>
                         ) : (
                           <div className="upgrade-image-container">
-                            <button className="generate-image-btn">
-                              🎨 Register (free forever) to add an image
-                              <div className="upgrade-tooltip">
-                                <div className="tooltip-content">
-                                  <h4>Create Your Free Account</h4>
-                                  <p>Register for free to unlock images and save your stories!</p>
-                                  <div className="tier-info">
-                                    <div className="tier-option">
-                                      <strong>Free Account</strong>
-                                      <span>Forever Free</span>
+                            {!user ? (
+                              // For non-logged-in users, show register button
+                              <button 
+                                className="generate-image-btn"
+                                onClick={() => onShowAuth && onShowAuth()}
+                              >
+                                🎨 Register (free forever) to add an image
+                              </button>
+                            ) : (
+                              // For logged-in free users, show upgrade button with tooltip
+                              <button className="generate-image-btn">
+                                🎨 Upgrade to add AI images
+                                <div className="upgrade-tooltip tooltip-left">
+                                  <div className="tooltip-content">
+                                    <h4>Upgrade to Premium</h4>
+                                    <p>Get beautiful AI-generated illustrations for every story!</p>
+                                    <div className="tier-info">
+                                      <div className="tier-option">
+                                        <strong>Premium</strong>
+                                        <span>$9.99/month</span>
+                                      </div>
+                                      <div className="tier-option">
+                                        <strong>Family</strong>
+                                        <span>$19.99/month</span>
+                                      </div>
                                     </div>
-                                    <div className="tier-option">
-                                      <strong>Premium</strong>
-                                      <span>$9.99/month</span>
-                                    </div>
-                                    <div className="tier-option">
-                                      <strong>Family</strong>
-                                      <span>$19.99/month</span>
-                                    </div>
+                                    <a href="#" className="upgrade-link">Start Free Trial →</a>
                                   </div>
-                                  <a href="#" className="upgrade-link">Create Free Account →</a>
                                 </div>
-                              </div>
-                            </button>
+                              </button>
+                            )}
                           </div>
                         )}
                       </div>

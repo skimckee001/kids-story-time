@@ -410,6 +410,9 @@ function App() {
           setShowStory(false);
           setShowLibrary(true);
         }}
+        onShowAuth={() => {
+          setShowAuth(true);
+        }}
         onSave={() => {
           console.log('Story saved');
           // Award extra star for saving

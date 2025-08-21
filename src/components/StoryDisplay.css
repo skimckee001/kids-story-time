@@ -542,6 +542,30 @@
   margin-top: 10px;
 }
 
+/* Position tooltip to the left to prevent cutoff */
+.upgrade-tooltip.tooltip-left {
+  left: auto;
+  right: 0;
+  transform: translateX(0) translateY(0);
+}
+
+/* On mobile, center the tooltip */
+@media (max-width: 768px) {
+  .upgrade-tooltip {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%) translateY(0);
+    width: 90%;
+    max-width: 300px;
+  }
+  
+  .upgrade-tooltip.tooltip-left {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
 .tooltip-content h4 {
   margin: 0 0 10px 0;
   color: #667eea;
