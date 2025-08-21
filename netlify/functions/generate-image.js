@@ -1,9 +1,6 @@
 // Netlify Function for AI Image Generation
 // Handles image generation requests with various API providers
 
-// Ensure fetch is available (Node 18+ has it globally, but add fallback)
-const fetch = globalThis.fetch || require('node-fetch');
-
 exports.handler = async (event, context) => {
     // Only allow POST requests
     if (event.httpMethod !== 'POST') {
