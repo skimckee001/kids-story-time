@@ -7,6 +7,10 @@
 [build.environment]
   NODE_VERSION = "18"
 
+# Netlify Functions
+[functions]
+  directory = "netlify/functions"
+
 # Headers for proper MIME types
 [[headers]]
   for = "/*.js"
