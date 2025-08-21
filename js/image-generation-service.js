@@ -28,19 +28,9 @@ class ImageGenerationService {
         const { prompt, style = 'cartoon', mood = 'cheerful', tier = 'free' } = params;
 
         try {
-            // Tier-based image generation
-            if (tier === 'pro') {
-                // Pro tier: AI-generated custom images
-                return await this.generateAIImage(prompt, style, mood);
-            } else if (tier === 'premium') {
-                // Premium tier: High-quality stock images
-                return await this.generateStockImage(prompt, style, mood);
-            } else {
-                // Free tier: Basic placeholder images
-                return await this.generatePlaceholderImage(prompt, style, mood);
-            }
-
-            // Production API call (when backend is ready)
+            console.log('Generating image with tier:', tier, 'prompt:', prompt?.substring(0, 50));
+            
+            // Call the Netlify function for all tiers
             const response = await fetch(this.apiEndpoint, {
                 method: 'POST',
                 headers: {
@@ -50,27 +40,32 @@ class ImageGenerationService {
                     prompt: this.enhancePrompt(prompt, style, mood),
                     style,
                     mood,
+                    tier,
                     size: '1024x1024',
                     quality: 'standard'
                 })
             });
 
             if (!response.ok) {
+                console.error('API response not OK:', response.status, response.statusText);
                 throw new Error('Image generation failed');
             }
 
             const data = await response.json();
+            console.log('Image generation response:', data);
+            
             return {
-                url: data.url,
+                url: data.url || data.success?.url,
                 alt: prompt,
                 style,
                 mood,
+                tier,
                 timestamp: new Date().toISOString()
             };
 
         } catch (error) {
             console.error('Image generation error:', error);
-            // Fallback to placeholder
+            // Fallback to local placeholder generation
             return await this.generatePlaceholderImage(prompt, style, mood);
         }
     }

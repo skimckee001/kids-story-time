@@ -1,6 +1,9 @@
 // Netlify Function for AI Image Generation
 // Handles image generation requests with various API providers
 
+// Ensure fetch is available (Node 18+ has it globally, but add fallback)
+const fetch = globalThis.fetch || require('node-fetch');
+
 exports.handler = async (event, context) => {
     // Only allow POST requests
     if (event.httpMethod !== 'POST') {
@@ -41,8 +44,15 @@ exports.handler = async (event, context) => {
         };
 
         // Handle different tiers
-        if (tier === 'pro' && process.env.AI_IMAGE_API_KEY) {
-            // Pro tier: Use AI image generation
+        console.log('Processing tier:', tier);
+        console.log('Environment vars available:', {
+            hasReplicate: !!process.env.REPLICATE_API_TOKEN,
+            hasOpenAI: !!process.env.OPENAI_API_KEY,
+            hasPexels: !!process.env.PEXELS_API_KEY
+        });
+        
+        if (tier === 'pro') {
+            // Pro tier: Use AI image generation (Replicate or OpenAI)
             imageUrl = await generateAIImage(prompt, style, mood);
             imageData.isAI = true;
         } else if (tier === 'premium') {
@@ -83,10 +93,13 @@ exports.handler = async (event, context) => {
 // AI Image Generation (using Replicate or Hugging Face)
 async function generateAIImage(prompt, style, mood) {
     const enhancedPrompt = enhancePrompt(prompt, style, mood);
+    console.log('Generating AI image with prompt:', enhancedPrompt.substring(0, 100));
     
     // Option 1: Replicate API (Stable Diffusion)
     if (process.env.REPLICATE_API_TOKEN) {
+        console.log('Using Replicate API for AI generation');
         try {
+            // Use the latest SDXL model for better quality
             const response = await fetch('https://api.replicate.com/v1/predictions', {
                 method: 'POST',
                 headers: {
@@ -94,31 +107,41 @@ async function generateAIImage(prompt, style, mood) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    version: 'stability-ai/stable-diffusion:27b93a2413e',
+                    version: 'stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b',
                     input: {
                         prompt: enhancedPrompt,
-                        negative_prompt: 'nsfw, adult, violence, scary, dark, horror',
+                        negative_prompt: 'nsfw, adult, violence, scary, dark, horror, gore, blood',
                         width: 1024,
                         height: 1024,
                         num_outputs: 1,
                         guidance_scale: 7.5,
-                        num_inference_steps: 30
+                        num_inference_steps: 25,
+                        scheduler: 'K_EULER'
                     }
                 })
             });
 
+            console.log('Replicate API response status:', response.status);
+            
             if (response.ok) {
                 const prediction = await response.json();
+                console.log('Prediction created, ID:', prediction.id);
                 
                 // Poll for completion
                 let result = await pollPrediction(prediction.id);
                 if (result && result.output && result.output[0]) {
+                    console.log('AI image generated successfully');
                     return result.output[0];
                 }
+            } else {
+                const errorText = await response.text();
+                console.error('Replicate API error response:', errorText);
             }
         } catch (error) {
-            console.error('Replicate API error:', error);
+            console.error('Replicate API error:', error.message);
         }
+    } else {
+        console.log('Replicate API token not configured');
     }
 
     // Option 2: OpenAI DALL-E API
@@ -186,11 +209,15 @@ async function pollPrediction(id) {
 // Generate high-quality stock images
 async function generateStockImage(prompt, style, mood) {
     const keywords = extractKeywords(prompt);
+    console.log('Generating stock image with keywords:', keywords);
     
     // Pexels API (free tier available)
     if (process.env.PEXELS_API_KEY) {
+        console.log('Using Pexels API for stock photos');
         try {
             const query = [...keywords, 'children', 'illustration', mood].join(' ');
+            console.log('Pexels search query:', query);
+            
             const response = await fetch(
                 `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=10&orientation=square`,
                 {
@@ -200,17 +227,27 @@ async function generateStockImage(prompt, style, mood) {
                 }
             );
 
+            console.log('Pexels API response status:', response.status);
+            
             if (response.ok) {
                 const data = await response.json();
+                console.log('Pexels returned', data.photos?.length || 0, 'photos');
+                
                 if (data.photos && data.photos.length > 0) {
                     // Return a random photo from the results
                     const photo = data.photos[Math.floor(Math.random() * Math.min(5, data.photos.length))];
+                    console.log('Selected photo from Pexels');
                     return photo.src.large2x || photo.src.large;
                 }
+            } else {
+                const errorText = await response.text();
+                console.error('Pexels API error response:', errorText);
             }
         } catch (error) {
-            console.error('Pexels API error:', error);
+            console.error('Pexels API error:', error.message);
         }
+    } else {
+        console.log('Pexels API key not configured');
     }
 
     // Unsplash API (requires access key)
