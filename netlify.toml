@@ -1,23 +1,30 @@
 [build]
-  # Skip build process entirely - deploy static HTML files
-  command = ""
-  publish = "."
+  # Build command for React app
+  command = "npm run build"
+  publish = "dist"
   
-# Disable all build detection
-[build.processing]
-  skip_processing = true
+# Node version for build
+[build.environment]
+  NODE_VERSION = "18"
 
+# Headers for proper MIME types
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Content-Type = "application/javascript; charset=utf-8"
+
+[[headers]]
+  for = "/*.mjs"
+  [headers.values]
+    Content-Type = "application/javascript; charset=utf-8"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Content-Type = "text/css; charset=utf-8"
+
+# Handle client-side routing for React SPA
 [[redirects]]
-  # Handle client-side routing for story pages
-  from = "/story/*"
-  to = "/story.html"
+  from = "/*"
+  to = "/index.html"
   status = 200
-
-[[redirects]]
-  # Handle client-side routing for story library
-  from = "/library/*"
-  to = "/story-library.html"
-  status = 200
-
-# Removed the catch-all redirect to allow direct access to HTML files
-# Each HTML file will be served directly
