@@ -16,6 +16,8 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
   const [readingSpeed, setReadingSpeed] = useState(0.9);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [availableVoices, setAvailableVoices] = useState([]);
+  const [showReadAloudPanel, setShowReadAloudPanel] = useState(false);
+  const [voiceLoadError, setVoiceLoadError] = useState(false);
 
   useEffect(() => {
     // Check if story is already saved (or auto-saved)
@@ -27,18 +29,36 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
     
     // Load available voices
     const loadVoices = () => {
-      const voices = window.speechSynthesis.getVoices();
-      const englishVoices = voices.filter(voice => voice.lang.startsWith('en'));
-      setAvailableVoices(englishVoices);
-      
-      // Select a child-friendly voice by default
-      const preferredVoice = englishVoices.find(voice => 
-        voice.name.includes('Female') || 
-        voice.name.includes('Samantha') || 
-        voice.name.includes('Victoria') ||
-        voice.name.includes('Karen')
-      ) || englishVoices[0];
-      setSelectedVoice(preferredVoice);
+      try {
+        const voices = window.speechSynthesis.getVoices();
+        const englishVoices = voices.filter(voice => voice.lang.startsWith('en'));
+        setAvailableVoices(englishVoices);
+        
+        // Prioritize child-friendly voices
+        const priorityVoices = [
+          'Google US English Female',
+          'Google UK English Female', 
+          'Microsoft Zira',
+          'Samantha',
+          'Victoria',
+          'Karen',
+          'Female'
+        ];
+        
+        const preferredVoice = englishVoices.find(voice => 
+          priorityVoices.some(name => voice.name.includes(name))
+        ) || englishVoices[0];
+        
+        if (preferredVoice) {
+          setSelectedVoice(preferredVoice);
+          setVoiceLoadError(false);
+        } else if (englishVoices.length === 0) {
+          setVoiceLoadError(true);
+        }
+      } catch (error) {
+        console.error('Error loading voices:', error);
+        setVoiceLoadError(true);
+      }
     };
     
     // Load voices when they become available
@@ -112,34 +132,47 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
     window.print();
   };
 
-  const handleReadAloud = () => {
+  const handleToggleReadAloud = () => {
     if (!window.speechSynthesis) {
-      alert('Text-to-speech is not supported in your browser');
+      alert('Text-to-speech is not supported in your browser. Please try a different browser like Chrome, Safari, or Edge.');
       return;
     }
-
-    if (isReading && !isPaused) {
-      // Pause reading
-      window.speechSynthesis.pause();
-      setIsPaused(true);
-    } else if (isReading && isPaused) {
-      // Resume reading
-      window.speechSynthesis.resume();
-      setIsPaused(false);
-    } else {
-      // Start reading
+    
+    if (voiceLoadError) {
+      alert('Voice synthesis is not available. Please check your browser settings or try a different browser.');
+      return;
+    }
+    
+    setShowReadAloudPanel(!showReadAloudPanel);
+    
+    // If turning off the panel while reading, stop
+    if (showReadAloudPanel && isReading) {
+      handleStopReading();
+    }
+  };
+  
+  const handleStartReading = () => {
+    try {
+      // Cancel any existing speech
+      window.speechSynthesis.cancel();
+      
       const textToRead = `${story.title}. ${story.content}`;
       const utterance = new SpeechSynthesisUtterance(textToRead);
       
       // Configure voice settings
       utterance.rate = readingSpeed;
-      utterance.pitch = 1.1; // Slightly higher pitch for child-friendly
+      utterance.pitch = 1.1;
       utterance.volume = 1;
       
       // Set selected voice
       if (selectedVoice) {
         utterance.voice = selectedVoice;
       }
+      
+      utterance.onstart = () => {
+        setIsReading(true);
+        setIsPaused(false);
+      };
       
       utterance.onend = () => {
         setIsReading(false);
@@ -150,7 +183,12 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
         if (event.error !== 'interrupted') {
           setIsReading(false);
           setIsPaused(false);
-          alert('Error reading the story. Please try again.');
+          console.error('Speech error:', event);
+          // Fallback: try with default voice
+          if (selectedVoice && event.error === 'voice-unavailable') {
+            setSelectedVoice(null);
+            handleStartReading();
+          }
         }
       };
       
@@ -163,8 +201,20 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
       };
       
       window.speechSynthesis.speak(utterance);
-      setIsReading(true);
       setSpeechUtterance(utterance);
+    } catch (error) {
+      console.error('Error starting speech:', error);
+      alert('Unable to start reading. Please try again.');
+    }
+  };
+  
+  const handlePauseResume = () => {
+    if (isPaused) {
+      window.speechSynthesis.resume();
+      setIsPaused(false);
+    } else {
+      window.speechSynthesis.pause();
+      setIsPaused(true);
     }
   };
   
@@ -172,32 +222,26 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
     window.speechSynthesis.cancel();
     setIsReading(false);
     setIsPaused(false);
+    setSpeechUtterance(null);
+  };
+  
+  const handleVoiceChange = (voiceIndex) => {
+    const newVoice = availableVoices[voiceIndex];
+    setSelectedVoice(newVoice);
+    
+    // If currently reading, restart with new voice
+    if (isReading) {
+      handleStopReading();
+      setTimeout(() => handleStartReading(), 100);
+    }
   };
   
   const handleSpeedChange = (newSpeed) => {
     setReadingSpeed(newSpeed);
     // If currently reading, restart with new speed
     if (isReading) {
-      const currentText = speechUtterance?.text;
-      window.speechSynthesis.cancel();
-      setIsReading(false);
-      setIsPaused(false);
-      // Restart with new speed after a brief delay
-      setTimeout(() => {
-        if (currentText) {
-          const utterance = new SpeechSynthesisUtterance(currentText);
-          utterance.rate = newSpeed;
-          utterance.pitch = 1.1;
-          utterance.voice = selectedVoice;
-          utterance.onend = () => {
-            setIsReading(false);
-            setIsPaused(false);
-          };
-          window.speechSynthesis.speak(utterance);
-          setIsReading(true);
-          setSpeechUtterance(utterance);
-        }
-      }, 100);
+      handleStopReading();
+      setTimeout(() => handleStartReading(), 100);
     }
   };
 
@@ -277,63 +321,116 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
             ← New Story
           </button>
           <div className="story-actions">
-          <div className="read-aloud-controls">
             <button 
-              onClick={handleReadAloud} 
-              className={`read-aloud-btn ${isReading ? 'reading' : ''}`}
+              onClick={handleToggleReadAloud} 
+              className={`read-aloud-btn ${showReadAloudPanel ? 'active' : ''}`}
+              title="Read story aloud"
             >
-              {isReading ? (isPaused ? '▶️ Resume' : '⏸️ Pause') : '🔊 Read Aloud'}
+              🔊 Read Aloud
             </button>
-            {isReading && (
-              <>
-                <button onClick={handleStopReading} className="stop-btn">
-                  ⏹️ Stop
-                </button>
-                <div className="speed-controls">
-                  <label>Speed:</label>
+            <button onClick={handlePrint} className="print-btn">
+              🖨️ Print
+            </button>
+            <div className="share-dropdown">
+              <button 
+                onClick={() => setShowShareMenu(!showShareMenu)} 
+                className="share-btn"
+              >
+                📤 Share
+              </button>
+              {showShareMenu && (
+                <div className="share-menu">
+                  <button onClick={() => handleShare('facebook')}>Facebook</button>
+                  <button onClick={() => handleShare('twitter')}>Twitter</button>
+                  <button onClick={() => handleShare('whatsapp')}>WhatsApp</button>
+                  <button onClick={() => handleShare('email')}>Email</button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Read Aloud Control Panel */}
+        {showReadAloudPanel && (
+          <div className="read-aloud-panel">
+            <div className="read-panel-content">
+              {/* Voice Selection */}
+              <div className="voice-control-group">
+                <label>Voice:</label>
+                <select 
+                  value={availableVoices.indexOf(selectedVoice)}
+                  onChange={(e) => handleVoiceChange(parseInt(e.target.value))}
+                  className="voice-select"
+                  disabled={isReading}
+                >
+                  {availableVoices.length > 0 ? (
+                    availableVoices.map((voice, index) => (
+                      <option key={index} value={index}>
+                        {voice.name.replace(/Microsoft|Google|Apple|/, '').trim()}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="">Loading voices...</option>
+                  )}
+                </select>
+              </div>
+
+              {/* Speed Controls */}
+              <div className="speed-control-group">
+                <label>Speed:</label>
+                <div className="speed-buttons">
                   <button 
                     onClick={() => handleSpeedChange(0.7)} 
-                    className={readingSpeed === 0.7 ? 'active' : ''}
+                    className={`speed-btn ${readingSpeed === 0.7 ? 'active' : ''}`}
+                    disabled={isReading}
                   >
                     Slow
                   </button>
                   <button 
                     onClick={() => handleSpeedChange(0.9)} 
-                    className={readingSpeed === 0.9 ? 'active' : ''}
+                    className={`speed-btn ${readingSpeed === 0.9 ? 'active' : ''}`}
+                    disabled={isReading}
                   >
                     Normal
                   </button>
                   <button 
                     onClick={() => handleSpeedChange(1.2)} 
-                    className={readingSpeed === 1.2 ? 'active' : ''}
+                    className={`speed-btn ${readingSpeed === 1.2 ? 'active' : ''}`}
+                    disabled={isReading}
                   >
                     Fast
                   </button>
                 </div>
-              </>
-            )}
-          </div>
-          <button onClick={handlePrint} className="print-btn">
-            🖨️ Print
-          </button>
-          <div className="share-dropdown">
-            <button 
-              onClick={() => setShowShareMenu(!showShareMenu)} 
-              className="share-btn"
-            >
-              📤 Share
-            </button>
-            {showShareMenu && (
-              <div className="share-menu">
-                <button onClick={() => handleShare('facebook')}>Facebook</button>
-                <button onClick={() => handleShare('twitter')}>Twitter</button>
-                <button onClick={() => handleShare('whatsapp')}>WhatsApp</button>
-                <button onClick={() => handleShare('email')}>Email</button>
               </div>
-            )}
+
+              {/* Playback Controls */}
+              <div className="playback-controls">
+                {!isReading ? (
+                  <button onClick={handleStartReading} className="play-btn">
+                    ▶️ Play
+                  </button>
+                ) : (
+                  <>
+                    <button onClick={handlePauseResume} className="pause-btn">
+                      {isPaused ? '▶️ Resume' : '⏸️ Pause'}
+                    </button>
+                    <button onClick={handleStopReading} className="stop-btn">
+                      ⏹️ Stop
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Status Indicator */}
+              {isReading && (
+                <div className="reading-status">
+                  <span className="status-dot"></span>
+                  {isPaused ? 'Paused' : 'Reading...'}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-        </div>
+        )}
 
         {/* Story Content */}
         <div className="story-content-wrapper">
@@ -407,7 +504,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
                           adClient="ca-pub-XXXXXXXXXXXXXXXX"
                           adSlot="XXXXXXXXXX"
                           adFormat="auto"
-                          style={{ minHeight: '250px' }}
+                          style={{ minHeight: '90px', maxHeight: '250px' }}
                         />
                       </div>
                     )}
