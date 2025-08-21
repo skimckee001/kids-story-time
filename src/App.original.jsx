@@ -80,8 +80,12 @@ function App() {
     setIsGenerating(true);
 
     try {
-      // Call the story generation API
-      const response = await fetch('/.netlify/functions/generate-story', {
+      // Call the story generation API (use port 9000 for local dev)
+      const apiUrl = window.location.hostname === 'localhost' 
+        ? 'http://localhost:9000/.netlify/functions/generate-story'
+        : '/.netlify/functions/generate-story';
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
