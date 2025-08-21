@@ -2,10 +2,27 @@
 // Handles image generation requests with various API providers
 
 exports.handler = async (event, context) => {
+    // CORS headers
+    const headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+    };
+
+    // Handle OPTIONS request for CORS
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers,
+            body: ''
+        };
+    }
+
     // Only allow POST requests
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
+            headers,
             body: JSON.stringify({ error: 'Method not allowed' })
         };
     }
@@ -17,6 +34,7 @@ exports.handler = async (event, context) => {
         if (!prompt) {
             return {
                 statusCode: 400,
+                headers,
                 body: JSON.stringify({ error: 'Prompt is required' })
             };
         }
@@ -27,6 +45,7 @@ exports.handler = async (event, context) => {
         if (safetyKeywords.some(keyword => promptLower.includes(keyword))) {
             return {
                 statusCode: 400,
+                headers,
                 body: JSON.stringify({ error: 'Prompt contains inappropriate content for children' })
             };
         }
@@ -64,10 +83,7 @@ exports.handler = async (event, context) => {
 
         return {
             statusCode: 200,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
+            headers,
             body: JSON.stringify({
                 success: true,
                 url: imageUrl,
@@ -79,6 +95,7 @@ exports.handler = async (event, context) => {
         console.error('Image generation error:', error);
         return {
             statusCode: 500,
+            headers,
             body: JSON.stringify({ 
                 error: 'Image generation failed',
                 fallback: true 
