@@ -719,8 +719,18 @@
                 const rating = story.rating;
                 const ratingStars = rating ? '⭐'.repeat(rating) : 'Not rated';
                 
+                // Add image section if image_url exists
+                const imageSection = story.image_url ? `
+                    <div class="mb-4 rounded-xl overflow-hidden">
+                        <img src="${story.image_url}" alt="${story.title}" 
+                             class="w-full h-48 object-cover"
+                             onerror="this.style.display='none'">
+                    </div>
+                ` : '';
+                
                 return `
                     <div class="story-card bg-white/90 backdrop-blur-sm rounded-3xl p-6 shadow-lg" data-story-id="${story.id}">
+                        ${imageSection}
                         <div class="flex justify-between items-start mb-4">
                             <div class="flex items-center gap-2">
                                 <span class="text-2xl">${this.getThemeEmoji(story.genre)}</span>

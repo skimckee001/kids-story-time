@@ -73,7 +73,7 @@ class DatabaseManager {
                     user_id: storyData.user_id,
                     title: storyData.title,
                     content: storyData.content,
-                    age_group: storyData.age_group,
+                    // age_group: storyData.age_group, // Commented out - column doesn't exist in database
                     genre: storyData.genre,
                     characters: storyData.characters || [],
                     settings: storyData.settings || {},
@@ -82,6 +82,7 @@ class DatabaseManager {
                     story_length: storyData.story_length,
                     gender: storyData.gender,
                     custom_prompt: storyData.custom_prompt,
+                    image_url: storyData.image_url || null, // Add image URL field
                     rating: null,
                     is_favorite: false,
                     created_at: new Date().toISOString()
@@ -416,9 +417,10 @@ class DatabaseManager {
                 `)
                 .eq('is_public', true);
 
-            if (filters.age_group) {
-                query = query.eq('age_group', filters.age_group);
-            }
+            // Commented out - age_group column doesn't exist
+            // if (filters.age_group) {
+            //     query = query.eq('age_group', filters.age_group);
+            // }
 
             if (filters.genre) {
                 query = query.eq('genre', filters.genre);

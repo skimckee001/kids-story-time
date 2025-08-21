@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Story Time - Magical AI Stories for Children</title>
+    <meta name="description" content="Create personalized, magical stories for your children with AI. Educational, fun, and safe storytelling tailored to your child's age and interests.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Kids Story Time - Magical AI Stories">
+    <meta property="og:description" content="Create personalized stories for your children with AI">
+    <meta property="og:image" content="/og-image.png">
+    <meta property="og:url" content="https://kidsstorytime.org">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles will be injected by Vite -->
+</head>
+<body>
+    <div id="root"></div>
+    
+    <!-- React app entry point -->
+    <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Notification sound for when user action is needed -->
+    <audio id="notification-sound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZURE" type="audio/wav">
+    </audio>
+    
+    <script>
+        // Helper function to play notification sound
+        window.playNotificationSound = function() {
+            const audio = document.getElementById('notification-sound');
+            if (audio) {
+                audio.play().catch(e => console.log('Could not play notification sound:', e));
+            }
+        };
+        
+        // Play sound when certain events occur
+        window.addEventListener('user-action-required', () => {
+            window.playNotificationSound();
+        });
+    </script>
+</body>
+</html>

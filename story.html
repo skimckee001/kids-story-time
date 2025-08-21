@@ -524,6 +524,16 @@
                 // Display the story
                 await this.displayStory();
                 
+                // If the story has a saved image, display it
+                if (story.image_url) {
+                    const mainImage = document.getElementById('storyMainImage');
+                    if (mainImage) {
+                        mainImage.src = story.image_url;
+                        mainImage.style.opacity = '1';
+                        console.log('Loaded saved image for story:', story.image_url);
+                    }
+                }
+                
                 // Check if story is already rated - if so, don't show rating section
                 if (story.rating) {
                     this.selectedStoryRating = story.rating;
@@ -896,10 +906,16 @@
                 
                 try {
                     const user = window.authManager.getCurrentUser();
+                    
+                    // Get the current image URL if available
+                    const storyImage = document.getElementById('storyMainImage');
+                    const imageUrl = storyImage ? storyImage.src : null;
+                    
                     const storyData = {
                         user_id: user.id,
                         title: this.currentStory.title,
                         content: this.currentStory.content,
+                        image_url: imageUrl, // Save the generated image URL
                         age_group: this.getReadingLevelDisplay(this.storyParams.childAge),
                         genre: this.storyParams.theme,
                         characters: [this.storyParams.childName || 'the hero'],

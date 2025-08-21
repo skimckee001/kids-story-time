@@ -1,9 +1,9 @@
 // Supabase Configuration for Kids Story Time
 // File: js/supabase-config.js
 
-// Replace these with your actual Supabase credentials
-const SUPABASE_URL = 'https://uewfbzzrgiacgplyoccv.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVld2ZienpyZ2lhY2dwbHlvY2N2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxODUwNDUsImV4cCI6MjA3MDc2MTA0NX0.4ktNHJ7RnlzfUygqgU5423t91n19Ugb1F328lUlSK5s';
+// Get credentials from meta tags or environment
+const SUPABASE_URL = document.querySelector('meta[name="supabase-url"]')?.content || '';
+const SUPABASE_ANON_KEY = document.querySelector('meta[name="supabase-anon-key"]')?.content || '';
 
 // Initialize Supabase client
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);

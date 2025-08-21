@@ -1,35 +1,33 @@
-// API client for communicating with the Flask backend
+// API client - now using the bridge to connect with existing infrastructure
+// This maintains compatibility while connecting to Supabase and Netlify functions
 
-const API_BASE_URL = '/api';
+import { apiClient as bridgedClient } from './api-bridge';
 
+// Re-export the bridged client for backward compatibility
+export { apiClient } from './api-bridge';
+
+// Legacy API client class for any components still using it
 class ApiClient {
   async request(endpoint, options = {}) {
-    const url = `${API_BASE_URL}${endpoint}`;
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    };
-
-    if (config.body && typeof config.body === 'object') {
-      config.body = JSON.stringify(config.body);
+    // Route to appropriate bridge method based on endpoint
+    console.warn('Legacy API client used, routing through bridge:', endpoint);
+    
+    // Map old endpoints to new bridge methods
+    if (endpoint.includes('/children') && options.method === 'POST') {
+      return bridgedClient.createChild(options.body);
     }
-
-    try {
-      const response = await fetch(url, config);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || `HTTP error! status: ${response.status}`);
-      }
-
-      return data;
-    } catch (error) {
-      console.error('API request failed:', error);
-      throw error;
+    if (endpoint.includes('/children/') && options.method === 'GET') {
+      return bridgedClient.getChildren();
     }
+    if (endpoint.includes('/stories/generate')) {
+      return bridgedClient.generateStory(options.body);
+    }
+    if (endpoint.includes('/themes')) {
+      return bridgedClient.getThemes();
+    }
+    
+    // Default fallback
+    throw new Error(`Unmapped legacy endpoint: ${endpoint}`);
   }
 
   // Child management
