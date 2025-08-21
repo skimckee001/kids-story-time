@@ -51,7 +51,7 @@
   align-items: center;
 }
 
-.save-btn, .print-btn, .share-btn, .read-aloud-btn {
+.save-btn, .print-btn, .share-btn, .read-aloud-btn, .stop-btn {
   padding: 10px 20px;
   background: white;
   color: #667eea;
@@ -62,7 +62,7 @@
   transition: all 0.3s ease;
 }
 
-.save-btn:hover, .print-btn:hover, .share-btn:hover, .read-aloud-btn:hover {
+.save-btn:hover, .print-btn:hover, .share-btn:hover, .read-aloud-btn:hover, .stop-btn:hover {
   background: #667eea;
   color: white;
   transform: translateY(-2px);
@@ -70,15 +70,68 @@
 }
 
 .read-aloud-btn.reading {
-  background: #ef4444;
+  background: #10b981;
   color: white;
-  border-color: #ef4444;
-  animation: pulse 2s infinite;
+  border-color: #10b981;
 }
 
 .read-aloud-btn.reading:hover {
+  background: #059669;
+  border-color: #059669;
+}
+
+.stop-btn {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+
+.stop-btn:hover {
   background: #dc2626;
   border-color: #dc2626;
+  color: white;
+}
+
+.read-aloud-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.speed-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  background: #f5f5f5;
+  border-radius: 20px;
+}
+
+.speed-controls label {
+  font-size: 0.9rem;
+  color: #666;
+  margin-right: 5px;
+}
+
+.speed-controls button {
+  padding: 5px 12px;
+  border: none;
+  background: transparent;
+  color: #666;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.speed-controls button:hover {
+  background: #e0e0e0;
+}
+
+.speed-controls button.active {
+  background: #667eea;
+  color: white;
 }
 
 .save-btn:disabled {
@@ -223,22 +276,6 @@
   text-align: justify;
 }
 
-.story-end {
-  text-align: center;
-  margin: 50px 0 30px;
-}
-
-.the-end {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #667eea;
-  font-style: italic;
-}
-
-.end-decoration {
-  font-size: 1.5rem;
-  margin-top: 10px;
-}
 
 /* Rating */
 .story-rating {
@@ -438,6 +475,14 @@
   border-radius: 12px;
   text-align: center;
   clear: both;
+}
+
+.story-inline-ad {
+  margin: 30px auto;
+  max-width: 728px;
+  background: linear-gradient(to bottom, #fff, #f9f9f9);
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .ad-label {

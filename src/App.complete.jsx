@@ -473,7 +473,7 @@ function App() {
               )}
             </div>
           </div>
-          <div className="tagline">Magical Personalized Stories for Your Child</div>
+          <div className="tagline">Personalized stories and illustrations for your child</div>
           
           {/* Beta Banner */}
           <div className="beta-banner">
@@ -583,7 +583,7 @@ function App() {
                   checked={includeNameInStory}
                   onChange={(e) => setIncludeNameInStory(e.target.checked)}
                 />
-                <span>Include child's name as main character in story</span>
+                <span style={{fontWeight: 'normal'}}>Include child's name as main character in story</span>
               </label>
             </div>
 
@@ -599,7 +599,7 @@ function App() {
                   value={customPrompt}
                   onChange={(e) => setCustomPrompt(e.target.value)}
                   rows="3"
-                  placeholder="Example: A brave princess who loves football and goes on an adventure with her pet dragon to save the enchanted forest..."
+                  placeholder="The more elaborate the better..."
                   className="prompt-textarea"
                 />
                 <button

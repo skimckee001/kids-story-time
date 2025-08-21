@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import Header from './Header';
+import AdSense from './AdSense';
 import './StoryDisplay.css';
 import '../App.original.css';
 
@@ -10,7 +11,11 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
   const [rating, setRating] = useState(0);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [isReading, setIsReading] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [speechUtterance, setSpeechUtterance] = useState(null);
+  const [readingSpeed, setReadingSpeed] = useState(0.9);
+  const [selectedVoice, setSelectedVoice] = useState(null);
+  const [availableVoices, setAvailableVoices] = useState([]);
 
   useEffect(() => {
     // Check if story is already saved (or auto-saved)
@@ -19,6 +24,35 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
     } else {
       checkIfSaved();
     }
+    
+    // Load available voices
+    const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoices = voices.filter(voice => voice.lang.startsWith('en'));
+      setAvailableVoices(englishVoices);
+      
+      // Select a child-friendly voice by default
+      const preferredVoice = englishVoices.find(voice => 
+        voice.name.includes('Female') || 
+        voice.name.includes('Samantha') || 
+        voice.name.includes('Victoria') ||
+        voice.name.includes('Karen')
+      ) || englishVoices[0];
+      setSelectedVoice(preferredVoice);
+    };
+    
+    // Load voices when they become available
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+    loadVoices();
+    
+    // Cleanup on unmount
+    return () => {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      }
+    };
   }, [story]);
 
   const checkIfSaved = async () => {
@@ -84,43 +118,86 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
       return;
     }
 
-    if (isReading) {
-      // Stop reading
-      window.speechSynthesis.cancel();
-      setIsReading(false);
+    if (isReading && !isPaused) {
+      // Pause reading
+      window.speechSynthesis.pause();
+      setIsPaused(true);
+    } else if (isReading && isPaused) {
+      // Resume reading
+      window.speechSynthesis.resume();
+      setIsPaused(false);
     } else {
       // Start reading
       const textToRead = `${story.title}. ${story.content}`;
       const utterance = new SpeechSynthesisUtterance(textToRead);
       
       // Configure voice settings
-      utterance.rate = 0.9; // Slightly slower for children
-      utterance.pitch = 1.1; // Slightly higher pitch
+      utterance.rate = readingSpeed;
+      utterance.pitch = 1.1; // Slightly higher pitch for child-friendly
       utterance.volume = 1;
       
-      // Select a child-friendly voice if available
-      const voices = window.speechSynthesis.getVoices();
-      const preferredVoice = voices.find(voice => 
-        voice.name.includes('Female') || 
-        voice.name.includes('Samantha') || 
-        voice.name.includes('Victoria')
-      );
-      if (preferredVoice) {
-        utterance.voice = preferredVoice;
+      // Set selected voice
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
       }
       
       utterance.onend = () => {
         setIsReading(false);
+        setIsPaused(false);
       };
       
-      utterance.onerror = () => {
-        setIsReading(false);
-        alert('Error reading the story. Please try again.');
+      utterance.onerror = (event) => {
+        if (event.error !== 'interrupted') {
+          setIsReading(false);
+          setIsPaused(false);
+          alert('Error reading the story. Please try again.');
+        }
+      };
+      
+      utterance.onpause = () => {
+        setIsPaused(true);
+      };
+      
+      utterance.onresume = () => {
+        setIsPaused(false);
       };
       
       window.speechSynthesis.speak(utterance);
       setIsReading(true);
       setSpeechUtterance(utterance);
+    }
+  };
+  
+  const handleStopReading = () => {
+    window.speechSynthesis.cancel();
+    setIsReading(false);
+    setIsPaused(false);
+  };
+  
+  const handleSpeedChange = (newSpeed) => {
+    setReadingSpeed(newSpeed);
+    // If currently reading, restart with new speed
+    if (isReading) {
+      const currentText = speechUtterance?.text;
+      window.speechSynthesis.cancel();
+      setIsReading(false);
+      setIsPaused(false);
+      // Restart with new speed after a brief delay
+      setTimeout(() => {
+        if (currentText) {
+          const utterance = new SpeechSynthesisUtterance(currentText);
+          utterance.rate = newSpeed;
+          utterance.pitch = 1.1;
+          utterance.voice = selectedVoice;
+          utterance.onend = () => {
+            setIsReading(false);
+            setIsPaused(false);
+          };
+          window.speechSynthesis.speak(utterance);
+          setIsReading(true);
+          setSpeechUtterance(utterance);
+        }
+      }, 100);
     }
   };
 
@@ -200,12 +277,42 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
             ← New Story
           </button>
           <div className="story-actions">
-          <button 
-            onClick={handleReadAloud} 
-            className={`read-aloud-btn ${isReading ? 'reading' : ''}`}
-          >
-            {isReading ? '⏸️ Stop Reading' : '🔊 Read Aloud'}
-          </button>
+          <div className="read-aloud-controls">
+            <button 
+              onClick={handleReadAloud} 
+              className={`read-aloud-btn ${isReading ? 'reading' : ''}`}
+            >
+              {isReading ? (isPaused ? '▶️ Resume' : '⏸️ Pause') : '🔊 Read Aloud'}
+            </button>
+            {isReading && (
+              <>
+                <button onClick={handleStopReading} className="stop-btn">
+                  ⏹️ Stop
+                </button>
+                <div className="speed-controls">
+                  <label>Speed:</label>
+                  <button 
+                    onClick={() => handleSpeedChange(0.7)} 
+                    className={readingSpeed === 0.7 ? 'active' : ''}
+                  >
+                    Slow
+                  </button>
+                  <button 
+                    onClick={() => handleSpeedChange(0.9)} 
+                    className={readingSpeed === 0.9 ? 'active' : ''}
+                  >
+                    Normal
+                  </button>
+                  <button 
+                    onClick={() => handleSpeedChange(1.2)} 
+                    className={readingSpeed === 1.2 ? 'active' : ''}
+                  >
+                    Fast
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
           <button onClick={handlePrint} className="print-btn">
             🖨️ Print
           </button>
@@ -294,16 +401,14 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
                     )}
                     {/* Show ad at midpoint (only for non-premium users) */}
                     {index === midpoint - 1 && subscriptionTier === 'free' && (
-                      <div className="ad-container">
+                      <div className="ad-container story-inline-ad">
                         <div className="ad-label">Advertisement</div>
-                        <div className="ad-placeholder">
-                          <ins className="adsbygoogle"
-                               style={{ display: 'block' }}
-                               data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                               data-ad-slot="XXXXXXXXXX"
-                               data-ad-format="auto"
-                               data-full-width-responsive="true"></ins>
-                        </div>
+                        <AdSense 
+                          adClient="ca-pub-XXXXXXXXXXXXXXXX"
+                          adSlot="XXXXXXXXXX"
+                          adFormat="auto"
+                          style={{ minHeight: '250px' }}
+                        />
                       </div>
                     )}
                   </div>
@@ -311,11 +416,6 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
               })}
             </div>
 
-          {/* The End */}
-          <div className="story-end">
-            <span className="the-end">The End</span>
-            <div className="end-decoration">✨ 🌟 ✨</div>
-          </div>
 
           {/* Rating */}
           <div className="story-rating">
