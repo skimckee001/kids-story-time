@@ -473,12 +473,16 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
                         ) : (
                           <div className="upgrade-image-container">
                             <button className="generate-image-btn">
-                              🎨 Generate AI Image
+                              🎨 Register (free forever) to add an image
                               <div className="upgrade-tooltip">
                                 <div className="tooltip-content">
-                                  <h4>Upgrade to Premium</h4>
-                                  <p>Get beautiful AI-generated illustrations for every story!</p>
+                                  <h4>Create Your Free Account</h4>
+                                  <p>Register for free to unlock images and save your stories!</p>
                                   <div className="tier-info">
+                                    <div className="tier-option">
+                                      <strong>Free Account</strong>
+                                      <span>Forever Free</span>
+                                    </div>
                                     <div className="tier-option">
                                       <strong>Premium</strong>
                                       <span>$9.99/month</span>
@@ -488,7 +492,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscription
                                       <span>$19.99/month</span>
                                     </div>
                                   </div>
-                                  <a href="#" className="upgrade-link">Start Free Trial →</a>
+                                  <a href="#" className="upgrade-link">Create Free Account →</a>
                                 </div>
                               </div>
                             </button>
