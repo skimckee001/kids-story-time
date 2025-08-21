@@ -18,6 +18,12 @@ body {
   padding: 20px;
 }
 
+@media (max-width: 768px) {
+  .app {
+    padding: 10px;
+  }
+}
+
 .container {
   max-width: 900px;
   margin: 0 auto;
@@ -46,6 +52,7 @@ body {
 }
 
 .logo-icon {
+  min-width: 40px;
   width: 40px;
   height: 40px;
   background: linear-gradient(135deg, #FF6B9D, #4ECDC4);
@@ -53,6 +60,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .logo-icon span {
@@ -419,7 +427,42 @@ body {
 }
 
 .voice-btn.recording {
-  animation: pulse 1s infinite;
+  background: #ef4444;
+}
+
+.voice-btn.recording:hover {
+  background: #dc2626;
+}
+
+.voice-wave {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 20px;
+}
+
+.voice-wave span {
+  display: block;
+  width: 3px;
+  background: white;
+  border-radius: 3px;
+  animation: wave 1s ease-in-out infinite;
+}
+
+.voice-wave span:nth-child(1) { height: 10px; animation-delay: 0s; }
+.voice-wave span:nth-child(2) { height: 20px; animation-delay: 0.1s; }
+.voice-wave span:nth-child(3) { height: 15px; animation-delay: 0.2s; }
+.voice-wave span:nth-child(4) { height: 20px; animation-delay: 0.3s; }
+.voice-wave span:nth-child(5) { height: 10px; animation-delay: 0.4s; }
+
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.5); }
+  50% { transform: scaleY(1); }
+}
+
+.mic-icon {
+  font-size: 18px;
 }
 
 .rec-label {
@@ -429,6 +472,7 @@ body {
   transform: translateX(-50%);
   font-size: 8px;
   letter-spacing: -0.5px;
+  color: white;
 }
 
 .info-btn {
@@ -930,7 +974,7 @@ body {
 @media (max-width: 768px) {
   .container {
     max-width: 100%;
-    padding: 0 15px;
+    padding: 0;
   }
 
   .header-container {
@@ -959,7 +1003,8 @@ body {
   }
 
   .main-content {
-    padding: 25px 20px;
+    padding: 20px 15px;
+    border-radius: 15px;
   }
 
   .theme-grid {

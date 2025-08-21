@@ -4,11 +4,13 @@ import Header from './Header';
 import './StoryDisplay.css';
 import '../App.original.css';
 
-function StoryDisplay({ story, onBack, onSave, user, subscriptionTier, starPoints }) {
+function StoryDisplay({ story, onBack, onSave, onShowLibrary, user, subscriptionTier, starPoints }) {
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [rating, setRating] = useState(0);
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const [isReading, setIsReading] = useState(false);
+  const [speechUtterance, setSpeechUtterance] = useState(null);
 
   useEffect(() => {
     // Check if story is already saved (or auto-saved)
@@ -74,6 +76,52 @@ function StoryDisplay({ story, onBack, onSave, user, subscriptionTier, starPoint
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleReadAloud = () => {
+    if (!window.speechSynthesis) {
+      alert('Text-to-speech is not supported in your browser');
+      return;
+    }
+
+    if (isReading) {
+      // Stop reading
+      window.speechSynthesis.cancel();
+      setIsReading(false);
+    } else {
+      // Start reading
+      const textToRead = `${story.title}. ${story.content}`;
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      
+      // Configure voice settings
+      utterance.rate = 0.9; // Slightly slower for children
+      utterance.pitch = 1.1; // Slightly higher pitch
+      utterance.volume = 1;
+      
+      // Select a child-friendly voice if available
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice = voices.find(voice => 
+        voice.name.includes('Female') || 
+        voice.name.includes('Samantha') || 
+        voice.name.includes('Victoria')
+      );
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
+      }
+      
+      utterance.onend = () => {
+        setIsReading(false);
+      };
+      
+      utterance.onerror = () => {
+        setIsReading(false);
+        alert('Error reading the story. Please try again.');
+      };
+      
+      window.speechSynthesis.speak(utterance);
+      setIsReading(true);
+      setSpeechUtterance(utterance);
+    }
   };
 
   const handleShare = (platform) => {
@@ -152,17 +200,12 @@ function StoryDisplay({ story, onBack, onSave, user, subscriptionTier, starPoint
             ← New Story
           </button>
           <div className="story-actions">
-          {!isSaved ? (
-            <button 
-              onClick={handleSaveStory} 
-              className="save-btn"
-              disabled={isSaving}
-            >
-              {isSaving ? 'Saving...' : '💾 Save Story'}
-            </button>
-          ) : (
-            <span className="saved-badge">✓ Saved</span>
-          )}
+          <button 
+            onClick={handleReadAloud} 
+            className={`read-aloud-btn ${isReading ? 'reading' : ''}`}
+          >
+            {isReading ? '⏸️ Stop Reading' : '🔊 Read Aloud'}
+          </button>
           <button onClick={handlePrint} className="print-btn">
             🖨️ Print
           </button>
@@ -200,28 +243,53 @@ function StoryDisplay({ story, onBack, onSave, user, subscriptionTier, starPoint
                     <p className="story-paragraph">
                       {paragraph}
                     </p>
-                    {/* Show image placeholder after first paragraph */}
-                    {index === 0 && (subscriptionTier === 'premium' || subscriptionTier === 'family') && (
+                    {/* Show image or upgrade button after first paragraph */}
+                    {index === 0 && (
                       <div className="story-image-float">
-                        <div className="story-image-wrapper">
-                          {story.imageUrl ? (
-                            <img 
-                              src={story.imageUrl} 
-                              alt={story.title}
-                              className="story-main-image"
-                              onError={(e) => {
-                                e.target.parentElement.style.display = 'none';
-                              }}
-                            />
-                          ) : (
-                            <div className="story-image-placeholder">
-                              <div className="image-loading">
-                                <div className="loading-spinner"></div>
-                                <p>Generating illustration...</p>
+                        {(subscriptionTier === 'premium' || subscriptionTier === 'family') ? (
+                          <div className="story-image-wrapper">
+                            {story.imageUrl ? (
+                              <img 
+                                src={story.imageUrl} 
+                                alt={story.title}
+                                className="story-main-image"
+                                onError={(e) => {
+                                  e.target.parentElement.style.display = 'none';
+                                }}
+                              />
+                            ) : (
+                              <div className="story-image-placeholder">
+                                <div className="image-loading">
+                                  <div className="loading-spinner"></div>
+                                  <p>Generating illustration...</p>
+                                </div>
                               </div>
-                            </div>
-                          )}
-                        </div>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="upgrade-image-container">
+                            <button className="generate-image-btn">
+                              🎨 Generate AI Image
+                              <div className="upgrade-tooltip">
+                                <div className="tooltip-content">
+                                  <h4>Upgrade to Premium</h4>
+                                  <p>Get beautiful AI-generated illustrations for every story!</p>
+                                  <div className="tier-info">
+                                    <div className="tier-option">
+                                      <strong>Premium</strong>
+                                      <span>$9.99/month</span>
+                                    </div>
+                                    <div className="tier-option">
+                                      <strong>Family</strong>
+                                      <span>$19.99/month</span>
+                                    </div>
+                                  </div>
+                                  <a href="#" className="upgrade-link">Start Free Trial →</a>
+                                </div>
+                              </div>
+                            </button>
+                          </div>
+                        )}
                       </div>
                     )}
                     {/* Show ad at midpoint (only for non-premium users) */}
@@ -271,7 +339,7 @@ function StoryDisplay({ story, onBack, onSave, user, subscriptionTier, starPoint
               ✨ Create Another Story
             </button>
             <button 
-              onClick={() => window.location.href = '/story-library.html'} 
+              onClick={onShowLibrary || onBack} 
               className="library-btn"
             >
               📚 My Library

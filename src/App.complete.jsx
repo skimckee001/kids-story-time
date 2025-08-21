@@ -278,16 +278,49 @@ function App() {
     }
   };
 
-  const handleVoiceRecord = () => {
+  const handleVoiceRecord = async () => {
     if (!isRecording) {
-      // Start recording
-      setIsRecording(true);
-      // TODO: Implement actual voice recording
-      console.log('Starting voice recording...');
+      try {
+        // Request microphone permission
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        // Create MediaRecorder
+        const mediaRecorder = new MediaRecorder(stream);
+        const audioChunks = [];
+        
+        mediaRecorder.ondataavailable = (event) => {
+          audioChunks.push(event.data);
+        };
+        
+        mediaRecorder.onstop = async () => {
+          // Stop all tracks
+          stream.getTracks().forEach(track => track.stop());
+          
+          // Create audio blob
+          const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+          
+          // Convert to text (you would normally send this to a speech-to-text API)
+          // For now, just alert the user
+          console.log('Recording complete', audioBlob);
+          alert('Voice recording complete. Speech-to-text integration coming soon!');
+        };
+        
+        // Start recording
+        mediaRecorder.start();
+        setIsRecording(true);
+        
+        // Store recorder reference
+        window.currentRecorder = mediaRecorder;
+      } catch (error) {
+        console.error('Error accessing microphone:', error);
+        alert('Please allow microphone access to use voice recording');
+      }
     } else {
       // Stop recording
-      setIsRecording(false);
-      console.log('Stopping voice recording...');
+      if (window.currentRecorder && window.currentRecorder.state === 'recording') {
+        window.currentRecorder.stop();
+        setIsRecording(false);
+      }
     }
   };
 
@@ -372,6 +405,10 @@ function App() {
           setSelectedThemes([]);
           setCustomPrompt('');
           setStoryContext('');
+        }}
+        onShowLibrary={() => {
+          setShowStory(false);
+          setShowLibrary(true);
         }}
         onSave={() => {
           console.log('Story saved');
@@ -569,10 +606,22 @@ function App() {
                   type="button"
                   className={`voice-btn ${isRecording ? 'recording' : ''}`}
                   onClick={handleVoiceRecord}
-                  title="Record your voice"
+                  title={isRecording ? 'Stop recording' : 'Start voice recording'}
                 >
-                  🎤
-                  {isRecording && <span className="rec-label">REC</span>}
+                  {isRecording ? (
+                    <>
+                      <div className="voice-wave">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                      <span className="rec-label">REC</span>
+                    </>
+                  ) : (
+                    <span className="mic-icon">🎤</span>
+                  )}
                 </button>
               </div>
             </div>
@@ -642,12 +691,6 @@ function App() {
             </button>
           </form>
 
-          {/* Quick Feedback Section */}
-          <div className="feedback-section">
-            <h3>Help us improve!</h3>
-            <p>Share your thoughts on the beta version</p>
-            <button className="feedback-btn">💬 Quick Feedback</button>
-          </div>
         </div>
 
         {/* Footer */}
