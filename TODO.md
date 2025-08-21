@@ -1,300 +1,273 @@
-# Kids Story Time - Comprehensive TODO List
+# Kids Story Time - Master TODO List
 
-## 🚨 CRITICAL - Payment Integration (Not Implemented)
-- [ ] **Implement Stripe payment processing** - Currently placeholder only!
-- [ ] Set up Stripe webhook endpoints
-- [ ] Create subscription plans in Stripe dashboard
-- [ ] Implement payment form with Stripe Elements
-- [ ] Add subscription management dashboard
-- [ ] Create billing and invoice system
-- [ ] Add payment failure handling
-- [ ] Implement free trial logic
-- [ ] Add subscription upgrade/downgrade flow
-- [ ] Create customer portal integration
+## 🔴 IMMEDIATE NEXT STEPS (This Week)
 
-## 🚀 High Priority - Core Features & Fixes
+### React Migration Completion
+- [ ] **Stop dev server and fix React app entry point** - Main.jsx not loading properly
+- [ ] Create proper React router setup for navigation
+- [ ] Fix component imports and dependencies
+- [ ] Test React app loads with all components
+- [ ] Verify Supabase connection works
+- [ ] Test story generation through React app
 
-### Database & Backend Issues
-- [ ] Fix age_group database column issue (create migration or update schema)
-- [ ] Add proper error handling for all database operations
-- [ ] Implement database backup strategy
-- [ ] Add data validation for all inputs
+### Stripe Setup (Today/Tomorrow)
+- [ ] Log into Stripe Dashboard
+- [ ] Create products in Stripe:
+  - [ ] Premium Monthly ($9.99) - Get price ID
+  - [ ] Family Monthly ($19.99) - Get price ID
+- [ ] Update price IDs in `src/lib/stripe.js`
+- [ ] Set up webhook endpoint in Stripe dashboard
+- [ ] Get webhook secret and add to `.env.local`
+- [ ] Test checkout flow with test card
 
-### Authentication & User Management
-- [ ] Add email verification for new accounts
-- [ ] Implement password reset functionality
-- [ ] Add OAuth integration (Google, Facebook)
-- [ ] Create proper session management
-- [ ] Add account deletion functionality
+### Deployment (This Week)
+- [ ] Fix React build issues
+- [ ] Deploy React app to Netlify staging
+- [ ] Add all environment variables to Netlify
+- [ ] Test full user flow on staging
+- [ ] Fix any deployment issues
+- [ ] Deploy to production when ready
 
-### Story Generation
-- [ ] Test and fix story generation for all age groups
-- [ ] Add story generation rate limiting
-- [ ] Implement story generation queue for high load
-- [ ] Add fallback story generation if AI fails
-- [ ] Optimize API calls to reduce costs
+## ✅ COMPLETED - React Migration Phase 1 & 2
 
-### Core Features (from PRD)
-- [ ] Implement multiple child profiles per account
-- [ ] Add character description for consistent AI illustrations
-- [ ] Create story series management
-- [ ] Add branching storylines with choice points
-- [ ] Implement plot keywords/synopsis input
-- [ ] Add dynamic story length adjustment
+### Security & Infrastructure (DONE)
+- [x] Removed hardcoded credentials from source (2025-08-21)
+- [x] Set up environment variables (2025-08-21)
+- [x] Created secure config loader (2025-08-21)
+- [x] Added .env.local with all API keys (2025-08-21)
 
-## 📝 Medium Priority - User Experience
+### React Setup (DONE)
+- [x] Created Vite configuration (2025-08-21)
+- [x] Installed all React dependencies (2025-08-21)
+- [x] Set up Tailwind CSS (2025-08-21)
+- [x] Created build pipeline (2025-08-21)
 
-### Content & Discovery
-- [ ] Add story categories/collections (Bedtime, Adventure, Educational)
-- [ ] Implement story search with filters
-- [ ] Add story bookmarking feature
-- [ ] Create reading progress tracker
-- [ ] Add story playlists/series
-- [ ] Implement story templates for guided creation
-- [ ] Add seasonal/holiday themed content
-- [ ] Create educational content tags (math, science, history)
+### Integration Layer (DONE)
+- [x] Built Supabase integration for React (2025-08-21)
+- [x] Created API bridge to Netlify functions (2025-08-21)
+- [x] Implemented Stripe components (2025-08-21)
+- [x] Created Stripe webhook handlers (2025-08-21)
 
-### Personalization
-- [ ] Add character customization (appearance, traits)
-- [ ] Implement recurring story elements
-- [ ] Add favorite items integration
-- [ ] Create character consistency across stories
-- [ ] Add multiple language support (Spanish, French, German)
-
-### Audio & Narration
-- [ ] Integrate high-quality text-to-speech
-- [ ] Add male/female voice selection
-- [ ] Implement adjustable reading speed
-- [ ] Add background music options
-- [ ] Implement sound effects
-- [ ] Allow parent voice recordings
-- [ ] Add offline audio caching
-
-### Visual Features
-- [ ] Implement multiple art style selection
-- [ ] Add character consistency in illustrations
-- [ ] Allow illustration regeneration
-- [ ] Add image style preferences per child
-- [ ] Implement lazy loading for images
-
-### Parental Controls & Dashboard
-- [ ] Create comprehensive parent dashboard
-- [ ] Add usage statistics and analytics
-- [ ] Implement content filtering by age/theme
-- [ ] Add time limits and usage restrictions
-- [ ] Create reading progress reports
-- [ ] Add vocabulary growth tracking
-- [ ] Implement screen time controls
-
-## 🚀 Viral Marketing & Growth Features
-
-### Referral & Social (Partially Implemented)
-- [ ] Enhance referral program with unique codes
-- [ ] Add referral tracking dashboard
-- [ ] Implement referral rewards tiers
-- [ ] Create social sharing with custom graphics
-- [ ] Add story snippet sharing for social media
-- [ ] Implement viral loops (share to unlock features)
-- [ ] Create parent testimonial system
-- [ ] Add social proof widgets
-
-### Community & Engagement
-- [ ] Create parent community forum
-- [ ] Add story ratings and reviews
-- [ ] Implement story recommendations engine
-- [ ] Create monthly story challenges
-- [ ] Add achievement badges for kids
-- [ ] Implement reading streaks
-- [ ] Create leaderboards (optional)
-- [ ] Add friend system for families
-
-### Content Marketing
-- [ ] Create blog with parenting tips
-- [ ] Add SEO optimization for all pages
-- [ ] Create landing pages for different audiences
-- [ ] Implement email marketing automation
-- [ ] Add newsletter signup
-- [ ] Create educational content for parents
-- [ ] Add success story showcases
-
-## 💰 Monetization & Ads
-
-### Ad Integration (Placeholder Exists)
-- [ ] Replace placeholder Google AdSense ID
-- [ ] Implement proper ad loading
-- [ ] Add family-friendly ad filtering
-- [ ] Create ad performance tracking
-- [ ] Implement ad-free premium benefit
-- [ ] Add native ad placements
-- [ ] Create sponsored content system
-
-### Subscription Features
-- [ ] Implement tier restrictions properly
-- [ ] Add subscription reminder emails
-- [ ] Create win-back campaigns
-- [ ] Add gift subscriptions
-- [ ] Implement corporate/school plans
-- [ ] Add annual payment discount
-
-## 🎨 Nice to Have Features
-
-### Export & Physical Products
-- [ ] Add story export to ePub format
-- [ ] Implement PDF generation with illustrations
-- [ ] Create print-ready story formatting
-- [ ] Add print-on-demand integration
-- [ ] Create physical book ordering
-- [ ] Add story backup/restore
-
-### Advanced AI Features
-- [ ] Implement more AI models for variety
-- [ ] Add AI-powered story suggestions
-- [ ] Create AI character voice matching
-- [ ] Add emotion detection in narration
-- [ ] Implement story mood adaptation
-
-### Platform Expansion
-- [ ] Create Progressive Web App (PWA)
-- [ ] Add iOS/Android native apps
-- [ ] Implement smart speaker integration
-- [ ] Add Apple Watch companion app
-- [ ] Create TV app for family viewing
-
-## 🔧 Technical Improvements
-
-### Performance
-- [ ] Implement service worker for offline mode
-- [ ] Add CDN for static assets
-- [ ] Optimize bundle sizes
-- [ ] Implement code splitting
-- [ ] Add performance monitoring
-- [ ] Create caching strategies
-
-### Security
-- [ ] Add rate limiting to all API endpoints
-- [ ] Implement CAPTCHA for forms
-- [ ] Add content moderation for custom prompts
-- [ ] Implement proper CORS policies
-- [ ] Add API key rotation
-- [ ] Implement audit logging
-- [ ] Add GDPR compliance features
-
-### Testing & Quality
-- [ ] Add unit tests for core functions
-- [ ] Implement E2E testing with Cypress
-- [ ] Add integration tests for APIs
-- [ ] Create load testing suite
-- [ ] Add error tracking (Sentry)
-- [ ] Implement A/B testing framework
-
-### Documentation
-- [ ] Create comprehensive API documentation
-- [ ] Add inline code documentation
-- [ ] Create user guide/help center
-- [ ] Write developer setup guide
-- [ ] Add contribution guidelines
-- [ ] Create design system documentation
-
-### Analytics & Monitoring
-- [ ] Replace placeholder Google Analytics ID
-- [ ] Implement custom event tracking
-- [ ] Add conversion funnel tracking
-- [ ] Create business intelligence dashboard
-- [ ] Add real-time monitoring
-- [ ] Implement user behavior analytics
-
-## ✅ Recently Completed
-
+### Previous Completions
 - [x] Add image URL saving to database (2024-08-21)
 - [x] Display saved images in story library (2024-08-21)
 - [x] Fix test user persistence across pages (2024-08-21)
 - [x] Implement multi-tier image generation (2024-08-21)
 - [x] Create CLAUDE.md for project context (2024-08-21)
-- [x] Basic social sharing implementation
-- [x] Star points reward system
-- [x] Basic referral system (+50 stars)
-- [x] Test campaign page
 
-## 📊 Success Metrics to Track
+## 🚨 CRITICAL - Must Complete Before Launch
 
-### Phase 1 (Current)
-- [ ] 100+ active beta users
-- [ ] 80%+ story completion rate
-- [ ] 4+ star average rating
-- [ ] <3 second story generation
+### Payment Integration (Partially Done)
+- [x] Create Stripe integration components
+- [x] Set up Netlify functions for Stripe
+- [ ] **Create products in Stripe dashboard**
+- [ ] **Configure webhook endpoint**
+- [ ] Test full payment flow end-to-end
+- [ ] Add subscription management UI
+- [ ] Implement free trial logic
+- [ ] Add payment failure handling
+- [ ] Create customer portal integration
+- [ ] Test upgrade/downgrade flow
 
-### Phase 2 (After Payment Integration)
-- [ ] 500+ active users
-- [ ] 20+ stories per user average
-- [ ] 60%+ 7-day retention
-- [ ] 20%+ free to paid conversion
+### React App Fixes
+- [ ] Fix main.jsx entry point issue
+- [ ] Ensure all routes work properly
+- [ ] Test authentication flow
+- [ ] Verify story generation works
+- [ ] Test image generation per tier
+- [ ] Fix any console errors
+- [ ] Optimize bundle size
 
-### Phase 3 (Growth)
-- [ ] 1000+ users
-- [ ] $1000+ MRR
-- [ ] 30%+ monthly growth
-- [ ] <2% churn rate
+### Database & Backend
+- [ ] Fix age_group database column issue
+- [ ] Test all database operations through React
+- [ ] Verify subscription tier updates work
+- [ ] Ensure story saving works properly
+
+## 🚀 High Priority - Core Features
+
+### Story Generation
+- [ ] Test story generation for all age groups
+- [ ] Add story generation rate limiting
+- [ ] Implement fallback if AI fails
+- [ ] Optimize API calls to reduce costs
+
+### User Management
+- [ ] Test email verification flow
+- [ ] Implement password reset
+- [ ] Add OAuth integration (Google)
+- [ ] Test session management
+
+### Core Features (from PRD)
+- [ ] Multiple child profiles per account
+- [ ] Character descriptions for AI illustrations
+- [ ] Story series management
+- [ ] Branching storylines
+- [ ] Dynamic story length adjustment
+
+## 📝 Medium Priority - User Experience
+
+### Parental Dashboard
+- [ ] Create comprehensive parent dashboard
+- [ ] Add usage statistics
+- [ ] Content filtering by age/theme
+- [ ] Time limits and restrictions
+- [ ] Reading progress reports
+
+### Audio & Narration
+- [ ] Integrate text-to-speech properly
+- [ ] Voice selection options
+- [ ] Adjustable reading speed
+- [ ] Background music
+- [ ] Offline audio caching
+
+### Visual Features
+- [ ] Multiple art style selection
+- [ ] Character consistency in illustrations
+- [ ] Allow illustration regeneration
+- [ ] Image style preferences per child
+
+## 🚀 Growth & Marketing
+
+### Viral Features
+- [ ] Enhance referral program
+- [ ] Referral tracking dashboard
+- [ ] Social sharing with custom graphics
+- [ ] Story snippet sharing
+- [ ] Parent testimonials
+- [ ] Achievement badges for kids
+- [ ] Reading streaks
+
+### Analytics & Monitoring
+- [ ] Replace placeholder Google Analytics ID
+- [ ] Implement event tracking
+- [ ] Conversion funnel tracking
+- [ ] Real-time monitoring
+- [ ] Error tracking (Sentry)
+
+### SEO & Content
+- [ ] Create landing pages
+- [ ] Blog with parenting tips
+- [ ] SEO optimization
+- [ ] Email marketing automation
+- [ ] Newsletter system
+
+## 💰 Monetization
+
+### Ad Integration
+- [ ] Replace placeholder AdSense ID
+- [ ] Implement proper ad loading
+- [ ] Family-friendly ad filtering
+- [ ] Ad-free premium benefit
+
+### Subscription Features
+- [ ] Tier restrictions enforcement
+- [ ] Reminder emails
+- [ ] Win-back campaigns
+- [ ] Gift subscriptions
+- [ ] Annual payment discount
+
+## 🔧 Technical Improvements
+
+### Performance
+- [ ] Service worker for offline mode
+- [ ] CDN for static assets
+- [ ] Code splitting
+- [ ] Performance monitoring
+- [ ] Caching strategies
+
+### Security
+- [ ] Rate limiting on APIs
+- [ ] CAPTCHA for forms
+- [ ] Content moderation
+- [ ] API key rotation
+- [ ] GDPR compliance
+
+### Testing
+- [ ] Unit tests for core functions
+- [ ] E2E testing with Cypress
+- [ ] Integration tests
+- [ ] Load testing
+- [ ] A/B testing framework
 
 ## 🐛 Known Issues
 
-1. **Database**: age_group column doesn't exist in production
-2. **Analytics**: Using placeholder Google Analytics ID (G-XXXXXXXXXX)
-3. **Ads**: Using placeholder AdSense ID (ca-pub-XXXXXXXXXXXXXXXX)
-4. **Payments**: Entire payment system is placeholder only
-5. **Console Errors**: Some from browser extensions (not app-related)
+1. **React App**: Main.jsx not loading - needs router setup
+2. **Database**: age_group column doesn't exist
+3. **Analytics**: Using placeholder GA ID (G-XXXXXXXXXX)
+4. **Ads**: Using placeholder AdSense ID
+5. **Stripe**: Need to create products and get price IDs
 
-## 📋 Implementation Priority Order
+## 📊 Success Metrics
 
-1. **Week 1-2**: Fix critical bugs, implement Stripe
-2. **Week 3-4**: Add core features from PRD
-3. **Week 5-6**: Enhance viral marketing features
-4. **Week 7-8**: Polish UX and add parental controls
-5. **Week 9-10**: Launch marketing campaign
-6. **Week 11+**: Scale and iterate based on feedback
+### Immediate (This Week)
+- [ ] React app running in production
+- [ ] 1 successful test payment
+- [ ] All existing features working
 
-## 🔗 Resources & Dependencies
+### Phase 1 (Next Month)
+- [ ] 100+ active users
+- [ ] 80%+ story completion rate
+- [ ] <3 second story generation
+- [ ] 5+ successful payments
 
-### Required API Keys
-- [ ] Stripe API keys (test & production)
-- [ ] Google Analytics ID
-- [ ] Google AdSense publisher ID
-- [ ] Email service API (SendGrid/Mailgun)
-- [ ] Error tracking service (Sentry)
+### Phase 2 (3 Months)
+- [ ] 500+ active users
+- [ ] 20%+ free to paid conversion
+- [ ] $500+ MRR
+- [ ] 60%+ 7-day retention
 
-### Team Needs
-- [ ] UI/UX Designer for app redesign
-- [ ] Content writer for story templates
-- [ ] Voice actors for custom narration
-- [ ] Marketing specialist for growth
-- [ ] Customer support person
+### Phase 3 (6 Months)
+- [ ] 1000+ users
+- [ ] $2000+ MRR
+- [ ] 30%+ monthly growth
+- [ ] <2% churn rate
 
-### Documentation Links
-- [Stripe Integration Guide](https://stripe.com/docs)
-- [Google AdSense Setup](https://www.google.com/adsense)
-- [OpenAI API Docs](https://platform.openai.com/docs)
+## 📋 This Week's Priority Order
+
+1. **Today**: Fix React app loading issue
+2. **Today**: Create Stripe products and get IDs
+3. **Tomorrow**: Deploy to staging and test
+4. **Day 3**: Fix any issues found in testing
+5. **Day 4**: Deploy to production
+6. **Day 5-7**: Monitor and fix any production issues
+
+## 🔗 Quick Links & Resources
+
+### Dashboards
+- [Stripe Dashboard](https://dashboard.stripe.com)
+- [Supabase Dashboard](https://app.supabase.com/project/uewfbzzrgiacgplyoccv)
+- [Netlify Dashboard](https://app.netlify.com)
+- [GitHub Repo](https://github.com/skimckee001/kids-story-time)
+
+### Documentation
+- [Stripe Docs](https://stripe.com/docs)
 - [Supabase Docs](https://supabase.com/docs)
+- [React Router Docs](https://reactrouter.com)
+- [Vite Docs](https://vitejs.dev)
+
+### Environment Variables Needed in Netlify
+```
+SUPABASE_URL=https://uewfbzzrgiacgplyoccv.supabase.co
+SUPABASE_ANON_KEY=[from .env.local]
+SUPABASE_SERVICE_KEY=[from .env.local]
+OPENAI_API_KEY=[from .env.local]
+STRIPE_PUBLIC_KEY=[from .env.local]
+STRIPE_SECRET_KEY=[from .env.local]
+STRIPE_WEBHOOK_SECRET=[get from Stripe dashboard]
+VITE_SUPABASE_URL=[same as SUPABASE_URL]
+VITE_SUPABASE_ANON_KEY=[same as SUPABASE_ANON_KEY]
+VITE_STRIPE_PUBLIC_KEY=[same as STRIPE_PUBLIC_KEY]
+```
 
 ---
 
 ## How to Use This TODO List
 
-1. **Priority Levels**:
-   - 🚨 CRITICAL = Blocking launch/revenue
-   - 🚀 High = Essential for MVP
-   - 📝 Medium = Important but not blocking
-   - 🎨 Low = Nice to have features
+1. **Daily**: Check "IMMEDIATE NEXT STEPS" section
+2. **Weekly**: Review priorities and update progress
+3. **When Stuck**: Check "Known Issues" for solutions
+4. **For Deploy**: Follow "Deployment" checklist
 
-2. **Adding Tasks**: Add with checkbox `[ ]` under appropriate section
-
-3. **Completing Tasks**: 
-   - Mark with `[x]`
-   - Move to "Recently Completed" with date
-   - Update metrics if applicable
-
-4. **Review Schedule**:
-   - Daily: Check critical items
-   - Weekly: Review priorities
-   - Monthly: Update metrics and goals
-
-Last Updated: 2024-08-21
-Next Review: Weekly standup
+**Last Updated**: 2025-08-21
+**Next Review**: Tomorrow (after React app fix)
