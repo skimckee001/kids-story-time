@@ -2190,6 +2190,9 @@
               }
           };
           
+          // Store test user in sessionStorage for persistence across pages
+          sessionStorage.setItem('testUser', JSON.stringify(mockUser));
+          
           // Set the mock user in auth manager
           if (window.authManager) {
               window.authManager.user = mockUser;

@@ -12,6 +12,16 @@ class AuthManager {
 
     async init() {
         try {
+            // Check for test user in sessionStorage first
+            const testUser = sessionStorage.getItem('testUser');
+            if (testUser) {
+                this.user = JSON.parse(testUser);
+                this.isAuthenticated = true;
+                console.log('Test user restored from session:', this.user.user_metadata?.subscription_type);
+                this.notifyAuthStateChange();
+                return; // Skip Supabase auth for test users
+            }
+            
             // Check for existing session
             const { data: { session } } = await window.supabaseClient.auth.getSession();
             
@@ -122,6 +132,17 @@ class AuthManager {
     // Sign out
     async signOut() {
         try {
+            // Clear test user if present
+            sessionStorage.removeItem('testUser');
+            
+            // Check if this is a test user (skip Supabase signout)
+            if (this.user && this.user.id && this.user.id.startsWith('test-')) {
+                this.user = null;
+                this.isAuthenticated = false;
+                this.notifyAuthStateChange();
+                return { success: true };
+            }
+            
             const { error } = await window.supabaseClient.auth.signOut();
             
             if (error) {
