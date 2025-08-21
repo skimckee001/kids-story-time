@@ -1,7 +1,7 @@
 {
   "name": "kids-story-time-react",
   "version": "2.0.0",
-  "description": "Kids Story Time - React Migration",
+  "description": "AI-powered personalized story generation app for children with illustrations and voice narration",
   "type": "module",
   "scripts": {
     "dev": "vite",
