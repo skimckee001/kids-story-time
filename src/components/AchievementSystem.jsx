@@ -209,12 +209,6 @@ function AchievementSystem({ childProfile, onClose }) {
         {/* Category Filter */}
         <div className="achievement-filters">
           <button 
-            className={selectedCategory === 'all' ? 'active' : ''}
-            onClick={() => setSelectedCategory('all')}
-          >
-            All
-          </button>
-          <button 
             className={selectedCategory === 'completed' ? 'active' : ''}
             onClick={() => setSelectedCategory('completed')}
           >
@@ -243,6 +237,12 @@ function AchievementSystem({ childProfile, onClose }) {
             onClick={() => setSelectedCategory('special')}
           >
             Special
+          </button>
+          <button 
+            className={selectedCategory === 'all' ? 'active' : ''}
+            onClick={() => setSelectedCategory('all')}
+          >
+            All
           </button>
         </div>
 

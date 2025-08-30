@@ -3,7 +3,7 @@
 .reading-goals-container {
   background: white;
   border-radius: 20px;
-  padding: 25px;
+  padding: 20px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
 }
@@ -12,15 +12,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
-  padding-bottom: 15px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
   border-bottom: 2px solid #f0f0f0;
 }
 
 .goals-header h3 {
   color: #333;
-  font-size: 20px;
+  font-size: 1.1rem;
   margin: 0;
+  font-weight: 600;
 }
 
 .add-goal-btn {
@@ -179,15 +180,17 @@
 /* No Goals */
 .no-goals {
   text-align: center;
-  padding: 40px;
+  padding: 20px;
   color: #999;
   font-style: italic;
+  font-size: 14px;
 }
 
 .no-profile {
   text-align: center;
-  padding: 30px;
+  padding: 20px;
   color: #666;
+  font-size: 14px;
 }
 
 /* Completed Goals */

@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import StoryDisplay from './StoryDisplay';
+import AchievementSystem from './AchievementSystem';
+import ReadingStreak from './ReadingStreak';
+import StarRewardsSystem from './StarRewardsSystem';
 import './StoryLibrary.css';
 
 function StoryLibrary({ onBack }) {
@@ -11,9 +14,14 @@ function StoryLibrary({ onBack }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [children, setChildren] = useState([]);
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [showRewards, setShowRewards] = useState(false);
+  const [starPoints, setStarPoints] = useState(0);
+  const [currentChildProfile, setCurrentChildProfile] = useState(null);
 
   useEffect(() => {
     loadStories();
+    loadStarsAndProfile();
   }, []);
 
   useEffect(() => {
@@ -25,6 +33,10 @@ function StoryLibrary({ onBack }) {
         if (localProfiles) {
           const profiles = JSON.parse(localProfiles);
           setChildren(profiles);
+          // Set the first profile as current if none selected
+          if (profiles.length > 0 && !currentChildProfile) {
+            setCurrentChildProfile(profiles[0]);
+          }
         }
         
         // Also try to load from Supabase if user is logged in
@@ -55,6 +67,20 @@ function StoryLibrary({ onBack }) {
     
     loadChildren();
   }, []);
+
+  const loadStarsAndProfile = () => {
+    // Load current child profile
+    const profiles = localStorage.getItem('childProfiles');
+    if (profiles) {
+      const parsedProfiles = JSON.parse(profiles);
+      if (parsedProfiles.length > 0) {
+        setCurrentChildProfile(parsedProfiles[0]);
+        // Load stars for the profile
+        const stars = localStorage.getItem(`stars_${parsedProfiles[0].id}`) || 0;
+        setStarPoints(parseInt(stars));
+      }
+    }
+  };
 
   const loadStories = async () => {
     setLoading(true);
@@ -162,12 +188,38 @@ function StoryLibrary({ onBack }) {
 
   return (
     <div className="library-container">
-      {/* Header */}
-      <div className="library-header">
-        <button onClick={onBack} className="back-btn">
-          ← Back
-        </button>
-        <h1>My Story Library</h1>
+      {/* Header with Gamification Elements */}
+      <div className="library-header-enhanced">
+        <div className="library-top-bar">
+          <button onClick={onBack} className="back-btn">
+            ← Back
+          </button>
+          <h1>My Story Library</h1>
+          <div className="library-gamification">
+            {/* Star Display */}
+            <button 
+              className="star-display clickable"
+              onClick={() => setShowRewards(true)}
+              title="Click to open rewards shop"
+            >
+              <span className="star-icon">⭐</span>
+              <span className="star-count">{starPoints}</span>
+            </button>
+            
+            {/* Achievements Button */}
+            <button 
+              className="header-btn achievement-btn"
+              onClick={() => setShowAchievements(true)}
+            >
+              🏆 Achievements
+            </button>
+            
+            {/* Reading Streak */}
+            {currentChildProfile && (
+              <ReadingStreak childProfile={currentChildProfile} compact={true} />
+            )}
+          </div>
+        </div>
         <div className="header-stats">
           <span>{stories.length} {stories.length === 1 ? 'Story' : 'Stories'}</span>
           <span>{children.length} {children.length === 1 ? 'Child' : 'Children'}</span>
@@ -249,6 +301,28 @@ function StoryLibrary({ onBack }) {
           </div>
         )}
       </div>
+
+      {/* Achievement System Modal */}
+      {showAchievements && (
+        <div className="modal-overlay">
+          <AchievementSystem 
+            childProfile={currentChildProfile}
+            onClose={() => setShowAchievements(false)}
+          />
+        </div>
+      )}
+
+      {/* Star Rewards Modal */}
+      {showRewards && (
+        <div className="modal-overlay">
+          <StarRewardsSystem
+            childProfile={currentChildProfile}
+            stars={starPoints}
+            setStars={setStarPoints}
+            onClose={() => setShowRewards(false)}
+          />
+        </div>
+      )}
     </div>
   );
 }

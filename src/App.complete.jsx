@@ -10,6 +10,7 @@ import ParentDashboard from './components/ParentDashboard';
 import BedtimeMode from './components/BedtimeMode';
 import ReadingGoals from './components/ReadingGoals';
 import CelebrationAnimation, { useCelebration } from './components/CelebrationAnimation';
+import { getTierLimits, canGenerateStory, canUseAIIllustration, getUpgradeMessage } from './utils/subscriptionTiers';
 import './App.original.css';
 
 // Story length options matching the current HTML
@@ -89,12 +90,15 @@ function App() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [user, setUser] = useState(null);
-  const [subscriptionTier, setSubscriptionTier] = useState('free');
+  const [subscriptionTier, setSubscriptionTier] = useState('try-now'); // Updated tier system
   const [showLibrary, setShowLibrary] = useState(false);
   const [showProfileManager, setShowProfileManager] = useState(false);
   const [currentStory, setCurrentStory] = useState(null);
   const [showStory, setShowStory] = useState(false);
   const [storiesRemaining, setStoriesRemaining] = useState(1);
+  const [monthlyStoriesUsed, setMonthlyStoriesUsed] = useState(0);
+  const [aiIllustrationsUsed, setAiIllustrationsUsed] = useState(0);
+  const [narrationsUsed, setNarrationsUsed] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [starPoints, setStarPoints] = useState(0);
   const [selectedChildProfile, setSelectedChildProfile] = useState(null);
@@ -102,8 +106,23 @@ function App() {
   const [showRewards, setShowRewards] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
   const [bedtimeModeActive, setBedtimeModeActive] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
   const { triggerCelebration, CelebrationComponent } = useCelebration();
 
+  useEffect(() => {
+    // Click outside handler for dropdown menu
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.more-menu-container')) {
+        setShowMoreMenu(false);
+      }
+    };
+    
+    if (showMoreMenu) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [showMoreMenu]);
+  
   useEffect(() => {
     checkUser();
     // Load saved profile if exists
@@ -139,10 +158,10 @@ function App() {
       if (mockUser) {
         const userData = JSON.parse(mockUser);
         setUser(userData);
-        setSubscriptionTier(userData.tier || 'free');
-        const limit = userData.tier === 'free' ? 1 : 
-                     userData.tier === 'premium' ? 10 : 1000;
-        setStoriesRemaining(limit);
+        const tier = userData.tier || 'reader';
+        setSubscriptionTier(tier);
+        const limits = getTierLimits(tier, userData);
+        setStoriesRemaining(limits.dailyStories);
         return;
       }
 
@@ -157,11 +176,20 @@ function App() {
           .single();
         
         if (profile) {
-          setSubscriptionTier(profile.subscription_tier || 'free');
-          const limit = profile.subscription_tier === 'free' ? 1 : 
-                       profile.subscription_tier === 'premium' ? 10 : 1000;
-          setStoriesRemaining(limit - (profile.daily_stories_count || 0));
+          const tier = profile.subscription_tier || 'reader';
+          setSubscriptionTier(tier);
+          const limits = getTierLimits(tier, user);
+          setStoriesRemaining(limits.dailyStories - (profile.daily_stories_count || 0));
+        } else {
+          // Default to reader tier for logged-in users
+          setSubscriptionTier('reader');
+          const limits = getTierLimits('reader', user);
+          setStoriesRemaining(limits.dailyStories);
         }
+      } else {
+        // Non-logged-in users get try-now tier
+        setSubscriptionTier('try-now');
+        setStoriesRemaining(1);
       }
     } catch (error) {
       console.error('Error checking user:', error);
@@ -188,8 +216,10 @@ function App() {
       return;
     }
 
-    if (storiesRemaining <= 0 && subscriptionTier === 'free') {
-      alert('You\'ve reached your daily limit. Upgrade to Premium for more stories!');
+    // Check story generation limits
+    const tierLimits = getTierLimits(subscriptionTier, user);
+    if (!canGenerateStory(subscriptionTier, tierLimits.dailyStories - storiesRemaining, monthlyStoriesUsed, user)) {
+      alert(getUpgradeMessage(user ? subscriptionTier : 'try-now', 'stories'));
       return;
     }
 
@@ -292,9 +322,11 @@ function App() {
           }
         }
         
-        // Generate image asynchronously for premium and family tiers
-        if (subscriptionTier === 'premium' || subscriptionTier === 'family') {
-          console.log('Generating image for tier:', subscriptionTier);
+        // Generate image based on tier limits
+        const canGenerateAI = canUseAIIllustration(subscriptionTier, aiIllustrationsUsed, user);
+        if (canGenerateAI) {
+          console.log('Generating AI illustration for tier:', subscriptionTier);
+          setAiIllustrationsUsed(prev => prev + 1);
           
           const imageApiUrl = window.location.hostname === 'localhost'
             ? 'http://localhost:9000/.netlify/functions/generate-image'
@@ -319,7 +351,7 @@ function App() {
               prompt: imagePrompt,
               style: 'illustration',
               mood: 'cheerful',
-              tier: subscriptionTier === 'family' ? 'pro' : 'premium'
+              tier: subscriptionTier === 'plus' ? 'pro' : 'standard'
             })
           })
           .then(response => {
@@ -351,10 +383,9 @@ function App() {
           });
         }
         
-        // Update stories remaining
-        if (subscriptionTier === 'free') {
-          setStoriesRemaining(prev => Math.max(0, prev - 1));
-        }
+        // Update usage counters
+        setStoriesRemaining(prev => Math.max(0, prev - 1));
+        setMonthlyStoriesUsed(prev => prev + 1);
         
         // Award star points
         setStarPoints(prev => prev + 1);
@@ -529,73 +560,115 @@ function App() {
             <div className="header-right">
               {user ? (
                 <>
-                  <BedtimeMode 
-                    isActive={bedtimeModeActive}
-                    onToggle={setBedtimeModeActive}
-                    onTimeout={() => {
-                      setBedtimeModeActive(false);
-                      alert('Bedtime! The app will now close. Sweet dreams! 🌙');
-                    }}
-                  />
-                  <div className="star-display">
+                  {/* Star Display - Always visible for motivation */}
+                  <button 
+                    className="star-display clickable"
+                    onClick={() => setShowRewards(true)}
+                    title="Click to open rewards shop"
+                  >
                     <span className="star-icon">⭐</span>
                     <span className="star-count">{starPoints}</span>
-                  </div>
-                  <button 
-                    className="header-btn"
-                    onClick={() => setShowProfileManager(true)}
-                    title="Manage child profiles"
-                  >
-                    👤 Profiles
                   </button>
+                  
+                  {/* Primary Gamification Actions */}
                   <button 
-                    className="header-btn"
+                    className="header-btn achievement-btn"
                     onClick={() => setShowAchievements(true)}
                     title="View achievements"
                   >
                     🏆 Achievements
                   </button>
+                  
                   <button 
-                    className="header-btn"
-                    onClick={() => setShowRewards(true)}
-                    title="Star rewards shop"
-                  >
-                    ⭐ Rewards
-                  </button>
-                  <button 
-                    className="header-btn library-btn"
+                    className="header-btn primary-btn"
                     onClick={() => setShowLibrary(true)}
                   >
-                    📖 My Library
+                    📚 Library
                   </button>
-                  <button 
-                    className="header-btn"
-                    onClick={() => setShowDashboard(true)}
-                    title="Parent dashboard"
-                  >
-                    📊 Dashboard
-                  </button>
-                  {subscriptionTier === 'free' && (
-                    <button className="header-btn trial-btn">
-                      🎉 Start Free Trial
+                  
+                  {/* More Menu Dropdown */}
+                  <div className="more-menu-container">
+                    <button 
+                      className="header-btn more-btn"
+                      onClick={() => setShowMoreMenu(!showMoreMenu)}
+                    >
+                      ⋯ More
+                    </button>
+                    {showMoreMenu && (
+                      <div className="dropdown-menu">
+                        <button onClick={() => { setShowProfileManager(true); setShowMoreMenu(false); }}>
+                          👤 Manage Profiles
+                        </button>
+                        <button onClick={() => { setShowDashboard(true); setShowMoreMenu(false); }}>
+                          📈 Parent Dashboard
+                        </button>
+                        <div className="dropdown-divider"></div>
+                        <BedtimeMode 
+                          isActive={bedtimeModeActive}
+                          onToggle={(active) => {
+                            setBedtimeModeActive(active);
+                            setShowMoreMenu(false);
+                          }}
+                          onTimeout={() => {
+                            setBedtimeModeActive(false);
+                            alert('Bedtime! Sweet dreams! 🌙');
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  {(subscriptionTier === 'reader' || subscriptionTier === 'basic') && storiesRemaining <= 1 && (
+                    <button 
+                      className="header-btn trial-btn"
+                      onClick={() => setShowAuth(true)}
+                    >
+                      ⭐ Upgrade to Premium
                       <div className="trial-tooltip">
-                        Free for first month! All premium features unlocked
+                        Unlimited stories! First month free
                       </div>
                     </button>
                   )}
                 </>
               ) : (
                 <>
+                  {/* Show gamification elements for non-logged-in users (at 0) */}
+                  <div 
+                    className="star-display"
+                    title="Create an account to start earning stars!"
+                    style={{ cursor: 'help' }}
+                  >
+                    <span className="star-icon">⭐</span>
+                    <span className="star-count">0</span>
+                  </div>
+                  
+                  <button 
+                    className="header-btn achievement-btn"
+                    onClick={() => setShowAuth(true)}
+                    title="Sign up to unlock achievements"
+                  >
+                    🏆 Achievements
+                  </button>
+                  
                   <button 
                     className="header-btn library-btn"
                     onClick={() => setShowAuth(true)}
                   >
-                    📖 My Library
+                    📚 Library
                   </button>
-                  <button className="header-btn trial-btn" onClick={() => setShowAuth(true)}>
-                    🎉 Start Free Trial
+                  
+                  <button 
+                    className="header-btn trial-btn" 
+                    onClick={() => {
+                      // Scroll to the story generation form
+                      const formElement = document.querySelector('.main-content');
+                      if (formElement) {
+                        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }}
+                  >
+                    ✨ Create Your First Story
                     <div className="trial-tooltip">
-                      Free for first month! All premium features unlocked
+                      Try it free! No signup required
                     </div>
                   </button>
                 </>
@@ -606,13 +679,13 @@ function App() {
           
           {/* Beta Banner */}
           <div className="beta-banner">
-            <div className="beta-title">🎉 FREE BETA - All Premium Features Unlocked!</div>
-            <div className="beta-subtitle">Create unlimited stories, export to PDF, and enjoy all features completely free during our launch period</div>
+            <div className="beta-title">🎉 LAUNCH SPECIAL - First Month FREE on All Plans!</div>
+            <div className="beta-subtitle">Try our Story Maker or Family plans risk-free for 30 days</div>
           </div>
         </header>
 
-        {/* Account Section for non-logged in users */}
-        {!user && (
+        {/* Account Section - Hidden during beta period */}
+        {!user && false && ( // Disabled - Beta banner serves this purpose
           <div className="account-section">
             <h2>Create Your Free Account</h2>
             <p>Join thousands of parents creating magical stories for their children!</p>
@@ -640,14 +713,16 @@ function App() {
             <>
               <ReadingStreak childProfile={selectedChildProfile} />
               
-              {/* Reading Goals */}
-              <ReadingGoals 
-                childProfile={selectedChildProfile}
-                onGoalComplete={(goal, stars) => {
-                  console.log(`Goal completed: ${goal.title}, earned ${stars} stars!`);
-                  triggerCelebration('achievement', `Goal Complete: ${goal.title}`);
-                }}
-              />
+              {/* Reading Goals - Only show for logged-in users */}
+              {user && (
+                <ReadingGoals 
+                  childProfile={selectedChildProfile}
+                  onGoalComplete={(goal, stars) => {
+                    console.log(`Goal completed: ${goal.title}, earned ${stars} stars!`);
+                    triggerCelebration('achievement', `Goal Complete: ${goal.title}`);
+                  }}
+                />
+              )}
             </>
           )}
           
@@ -836,7 +911,8 @@ function App() {
               className={`generate-btn ${isGenerating ? 'generating' : ''}`}
               disabled={isGenerating || (!user && storiesRemaining <= 0)}
             >
-              {isGenerating ? 'Creating your magical story...' : 'Generate My Story! ✨'}
+              {isGenerating ? 'Creating your magical story...' : 
+               !user ? 'Create Your First Story! ✨' : 'Generate My Story! ✨'}
             </button>
             
             {/* Plan Status */}
@@ -847,11 +923,15 @@ function App() {
                 fontSize: '14px',
                 color: '#666'
               }}>
-                {subscriptionTier === 'free' ? 
-                  <>Free Plan: {storiesRemaining} story remaining today</> :
-                 subscriptionTier === 'premium' ? 
-                  <>Premium Plan: {storiesRemaining} stories remaining today</> :
-                  <>Family Plan: Unlimited stories</>
+                {subscriptionTier === 'try-now' ? 
+                  <>Try Now: {storiesRemaining} story remaining today</> :
+                 subscriptionTier === 'reader' ? 
+                  <>Reader Plan: {storiesRemaining} stories remaining today</> :
+                 subscriptionTier === 'basic' ?
+                  <>Story Maker: {storiesRemaining} stories remaining today</> :
+                 subscriptionTier === 'plus' ?
+                  <>Family Plan: {storiesRemaining} stories remaining today</> :
+                  <>Premium Plan: Unlimited stories</>
                 }
               </div>
             )}
@@ -886,12 +966,12 @@ function App() {
                   onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
                 >
                   {!user ? (
-                    <>🎉 Start Free - Create Your Account</>
-                  ) : subscriptionTier === 'free' ? (
-                    <>⭐ Upgrade to Premium - 30 Day Free Trial</>
-                  ) : (
+                    <>🎉 Save Your Story - Create Free Account</>
+                  ) : (subscriptionTier === 'reader' || subscriptionTier === 'basic') && storiesRemaining <= 1 ? (
+                    <>⭐ Upgrade to {subscriptionTier === 'reader' ? 'Story Maker' : 'Family'} - First Month Free</>
+                  ) : subscriptionTier === 'basic' || subscriptionTier === 'plus' ? (
                     <>👨‍👩‍👧‍👦 Upgrade to Family Plan - Unlimited Everything</>
-                  )}
+                  ) : null}
                 </button>
 
                 <div style={{ fontSize: '14px', color: '#666' }}>
