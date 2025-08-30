@@ -950,7 +950,7 @@ function App() {
               }}>
                 <button
                   type="button"
-                  onClick={() => !user ? setShowAuth(true) : window.location.href = '/pricing'}
+                  onClick={() => !user ? setShowAuth(true) : window.location.href = '/pricing-new.html'}
                   style={{
                     width: '100%',
                     padding: '14px 20px',
