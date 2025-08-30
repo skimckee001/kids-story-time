@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KidsStoryTime.org - Choose Your Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+
+        .billing-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        .billing-toggle-wrapper {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 5px;
+            display: inline-flex;
+            backdrop-filter: blur(10px);
+        }
+
+        .billing-toggle button {
+            padding: 10px 30px;
+            border: none;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .billing-toggle button.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .save-info {
+            color: white;
+            font-size: 14px;
+            background: rgba(40, 167, 69, 0.3);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .trust-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .tier-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .tier-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .tier-card.popular {
+            transform: scale(1.03);
+            border: 3px solid #8b5cf6;
+        }
+
+        .tier-card.popular:hover {
+            transform: scale(1.03) translateY(-5px);
+        }
+
+        .tier-card.coming-soon {
+            opacity: 0.7;
+            position: relative;
+        }
+
+        .tier-card.coming-soon::after {
+            content: 'COMING SOON';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 30px;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            font-weight: 700;
+            color: #667eea;
+            font-size: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: white;
+        }
+
+        .badge.popular {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+        }
+
+        .tier-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .tier-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 24px;
+        }
+
+        .tier-try .tier-icon {
+            background: linear-gradient(135deg, #94a3b8, #cbd5e1);
+        }
+
+        .tier-free .tier-icon {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+
+        .tier-basic .tier-icon {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+
+        .tier-plus .tier-icon {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        }
+
+        .tier-premium-new .tier-icon {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        }
+
+        .tier-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .tier-subtitle {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .tier-try .tier-name { color: #64748b; }
+        .tier-free .tier-name { color: #10b981; }
+        .tier-basic .tier-name { color: #3b82f6; }
+        .tier-plus .tier-name { color: #8b5cf6; }
+        .tier-premium-new .tier-name { color: #f59e0b; }
+
+        .tier-price {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .tier-billing {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .tier-yearly-price {
+            color: #10b981;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: start;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .feature-icon {
+            color: #10b981;
+            margin-right: 8px;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .feature-item.disabled {
+            opacity: 0.5;
+        }
+
+        .feature-item.disabled .feature-icon {
+            color: #ef4444;
+        }
+
+        .feature-item.highlight {
+            background: #fef3c7;
+            padding: 3px 5px;
+            border-radius: 5px;
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tier-try .cta-button {
+            background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+            color: white;
+        }
+
+        .tier-free .cta-button {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+        }
+
+        .tier-basic .cta-button {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            color: white;
+        }
+
+        .tier-plus .cta-button {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            color: white;
+        }
+
+        .tier-premium-new .cta-button {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            color: white;
+        }
+
+        .cta-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .cta-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .limits-info {
+            background: #f3f4f6;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .limits-info strong {
+            color: #333;
+        }
+
+        .footer-trust {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            margin-top: 50px;
+        }
+
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .security-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .note {
+            font-size: 11px;
+            color: #666;
+            font-style: italic;
+            margin-top: 10px;
+            padding: 8px;
+            background: #f9fafb;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 1200px) {
+            .pricing-grid {
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .tier-card.popular { transform: scale(1); }
+            .trust-indicators { gap: 10px; }
+            .billing-toggle { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Choose Your Story Adventure</h1>
+            <p>Join thousands of families creating magical bedtime moments</p>
+        </div>
+
+        <div class="billing-toggle">
+            <div class="billing-toggle-wrapper">
+                <button class="active" onclick="setBilling('monthly')">Monthly</button>
+                <button onclick="setBilling('yearly')">Yearly</button>
+            </div>
+            <div class="save-info" id="save-info" style="display: none;">
+                Save up to 45% with yearly billing!
+            </div>
+        </div>
+
+        <div class="trust-indicators">
+            <div class="trust-item">
+                <span>🛡️</span>
+                <span>100% Kid-Safe Content</span>
+            </div>
+            <div class="trust-item">
+                <span>🚫</span>
+                <span>No Ads for Paid Plans</span>
+            </div>
+            <div class="trust-item">
+                <span>⭐</span>
+                <span>4.9/5 Parent Rating</span>
+            </div>
+            <div class="trust-item">
+                <span>✅</span>
+                <span>Cancel Anytime</span>
+            </div>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Try Now Tier -->
+            <div class="tier-card tier-try">
+                <div class="tier-header">
+                    <div class="tier-icon">👀</div>
+                    <div class="tier-name">Try Now</div>
+                    <div class="tier-subtitle">No signup required</div>
+                    <div class="tier-price">FREE</div>
+                    <div class="tier-billing">No account needed</div>
+                </div>
+                <div class="limits-info">
+                    <strong>Daily Limits:</strong> 1 story per 24 hours
+                </div>
+                <ul class="features-list">
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>1 story per day</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Basic themes available</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Instant story generation</span>
+                    </li>
+                    <li class="feature-item disabled">
+                        <span class="feature-icon">✗</span>
+                        <span>No story saving</span>
+                    </li>
+                    <li class="feature-item disabled">
+                        <span class="feature-icon">✗</span>
+                        <span>No PDF export</span>
+                    </li>
+                    <li class="feature-item disabled">
+                        <span class="feature-icon">✗</span>
+                        <span>No library access</span>
+                    </li>
+                </ul>
+                <button class="cta-button" onclick="window.location.href='/'">Try Now - No Signup</button>
+            </div>
+
+            <!-- Free (Reader) Tier -->
+            <div class="tier-card tier-free">
+                <div class="tier-header">
+                    <div class="tier-icon">📚</div>
+                    <div class="tier-name">Reader</div>
+                    <div class="tier-subtitle">Free with account</div>
+                    <div class="tier-price">FREE</div>
+                    <div class="tier-billing">Forever free</div>
+                </div>
+                <div class="limits-info">
+                    <strong>Limits:</strong> 3 stories/day • 10/month<br>
+                    <strong>Includes:</strong> 1 AI image & narration/month
+                </div>
+                <ul class="features-list">
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span><strong>3 stories per day</strong></span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Access last 2 stories (in library)</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Stock illustrations</span>
+                    </li>
+                    <li class="feature-item highlight">
+                        <span class="feature-icon">✓</span>
+                        <span>1 AI illustration/month</span>
+                    </li>
+                    <li class="feature-item highlight">
+                        <span class="feature-icon">✓</span>
+                        <span>1 narration/month</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Watermarked PDF export</span>
+                    </li>
+                    <li class="feature-item disabled">
+                        <span class="feature-icon">⚠️</span>
+                        <span>Light, kid-safe ads</span>
+                    </li>
+                </ul>
+                <button class="cta-button">Get Started Free</button>
+                <div class="note">2nd story gets free AI illustration!</div>
+            </div>
+
+            <!-- Basic (Story Maker) Tier -->
+            <div class="tier-card tier-basic">
+                <div class="tier-header">
+                    <div class="tier-icon">✨</div>
+                    <div class="tier-name">Story Maker</div>
+                    <div class="tier-subtitle">Basic Plan</div>
+                    <div class="tier-price monthly-price">$4.99</div>
+                    <div class="tier-price yearly-price" style="display: none;">$3.25</div>
+                    <div class="tier-billing monthly-billing">per month</div>
+                    <div class="tier-billing yearly-billing" style="display: none;">per month (billed $39/year)</div>
+                    <div class="tier-yearly-price yearly-savings" style="display: none;">Save $20.88 (35%)</div>
+                </div>
+                <div class="limits-info">
+                    <strong>Limits:</strong> 10 stories/day • 50/month<br>
+                    <strong>AI Features:</strong> 30 images & narrations/month
+                </div>
+                <ul class="features-list">
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span><strong>10 stories per day</strong></span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Full library access</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>30 AI illustrations/month</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>30 narrations/month</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>2 child profiles</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span><strong>Ad-free experience</strong></span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Non-watermarked PDFs</span>
+                    </li>
+                </ul>
+                <button class="cta-button">Choose Story Maker</button>
+            </div>
+
+            <!-- Plus (Family) Tier -->
+            <div class="tier-card tier-plus popular">
+                <span class="badge popular">Most Popular</span>
+                <div class="tier-header">
+                    <div class="tier-icon">👨‍👩‍👧‍👦</div>
+                    <div class="tier-name">Family</div>
+                    <div class="tier-subtitle">Plus Plan</div>
+                    <div class="tier-price monthly-price">$7.99</div>
+                    <div class="tier-price yearly-price" style="display: none;">$4.92</div>
+                    <div class="tier-billing monthly-billing">per month</div>
+                    <div class="tier-billing yearly-billing" style="display: none;">per month (billed $59/year)</div>
+                    <div class="tier-yearly-price yearly-savings" style="display: none;">Save $36.88 (38%)</div>
+                </div>
+                <div class="limits-info">
+                    <strong>Limits:</strong> 20 stories/day • 120/month<br>
+                    <strong>AI Features:</strong> Fair-use unmetered
+                </div>
+                <ul class="features-list">
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span><strong>20 stories per day</strong></span>
+                    </li>
+                    <li class="feature-item highlight">
+                        <span class="feature-icon">✓</span>
+                        <span><strong>Unlimited AI illustrations</strong>*</span>
+                    </li>
+                    <li class="feature-item highlight">
+                        <span class="feature-icon">✓</span>
+                        <span><strong>Unlimited narrations</strong>*</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>5 child profiles</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Bedtime reminders & streaks</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Audio downloads</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>English + 1 language</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Non-watermarked PDFs</span>
+                    </li>
+                </ul>
+                <button class="cta-button">Choose Family Plan</button>
+                <div class="note">*Fair use: up to 5 per story, 5 narrations/day</div>
+            </div>
+
+            <!-- Premium (Movie Director) Tier -->
+            <div class="tier-card tier-premium-new coming-soon">
+                <div class="tier-header">
+                    <div class="tier-icon">🎬</div>
+                    <div class="tier-name">Movie Director</div>
+                    <div class="tier-subtitle">Premium Plan</div>
+                    <div class="tier-price monthly-price">$14.99</div>
+                    <div class="tier-price yearly-price" style="display: none;">$8.25</div>
+                    <div class="tier-billing monthly-billing">per month</div>
+                    <div class="tier-billing yearly-billing" style="display: none;">per month (billed $99/year)</div>
+                    <div class="tier-yearly-price yearly-savings" style="display: none;">Save $80.88 (45%)</div>
+                </div>
+                <ul class="features-list">
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Everything in Family, plus:</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Animated story videos</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Custom character creation</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Multiple art styles</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Voice cloning</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>All languages</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Priority support</span>
+                    </li>
+                </ul>
+                <button class="cta-button" disabled>Coming Soon</button>
+            </div>
+        </div>
+
+        <div class="footer-trust">
+            <div class="security-badges">
+                <div class="security-badge">🔒 SSL Secured</div>
+                <div class="security-badge">💳 Secure Payment</div>
+                <div class="security-badge">✅ 30-Day Guarantee</div>
+                <div class="security-badge">🚫 Cancel Anytime</div>
+            </div>
+            <p>Questions? Email support@kidsstorytime.org</p>
+            <p style="margin-top: 15px; opacity: 0.8; font-size: 12px;">
+                All plans include our commitment to child safety and age-appropriate content<br>
+                Payment processing secured by Stripe • Your data is never sold
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function setBilling(type) {
+            const buttons = document.querySelectorAll('.billing-toggle button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const monthlyPrices = document.querySelectorAll('.monthly-price');
+            const yearlyPrices = document.querySelectorAll('.yearly-price');
+            const monthlyBilling = document.querySelectorAll('.monthly-billing');
+            const yearlyBilling = document.querySelectorAll('.yearly-billing');
+            const yearlySavings = document.querySelectorAll('.yearly-savings');
+            const saveInfo = document.getElementById('save-info');
+            
+            if (type === 'yearly') {
+                monthlyPrices.forEach(el => el.style.display = 'none');
+                yearlyPrices.forEach(el => el.style.display = 'block');
+                monthlyBilling.forEach(el => el.style.display = 'none');
+                yearlyBilling.forEach(el => el.style.display = 'block');
+                yearlySavings.forEach(el => el.style.display = 'block');
+                saveInfo.style.display = 'block';
+            } else {
+                monthlyPrices.forEach(el => el.style.display = 'block');
+                yearlyPrices.forEach(el => el.style.display = 'none');
+                monthlyBilling.forEach(el => el.style.display = 'block');
+                yearlyBilling.forEach(el => el.style.display = 'none');
+                yearlySavings.forEach(el => el.style.display = 'none');
+                saveInfo.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

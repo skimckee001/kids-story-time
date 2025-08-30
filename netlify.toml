@@ -38,7 +38,32 @@
   [headers.values]
     Content-Type = "text/css; charset=utf-8"
 
-# Handle client-side routing for React SPA
+# Serve static HTML pages directly (not through React)
+[[redirects]]
+  from = "/pricing-new.html"
+  to = "/pricing-new.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/pricing-preview.html"
+  to = "/pricing-preview.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/terms.html"
+  to = "/terms.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/privacy.html"
+  to = "/privacy.html"
+  status = 200
+  force = true
+
+# Handle client-side routing for React SPA (catch-all, must be last)
 [[redirects]]
   from = "/*"
   to = "/index.html"
