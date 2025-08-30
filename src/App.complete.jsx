@@ -364,18 +364,22 @@ function App() {
             console.log('Image generation response:', imageData);
             if (imageData.url || (imageData.success && imageData.url)) {
               const imageUrl = imageData.url;
+              console.log('Setting image URL:', imageUrl);
               // Update the story with the image URL
               setCurrentStory(prev => {
                 const updatedStory = {
                   ...prev,
                   imageUrl: imageUrl
                 };
+                console.log('Updated story with image:', updatedStory);
                 // Update saved story with image URL
                 if (user && prev.savedId) {
                   updateSavedStoryImage(prev.savedId, imageUrl);
                 }
                 return updatedStory;
               });
+            } else {
+              console.warn('No URL in image response:', imageData);
             }
           })
           .catch(error => {

@@ -6,6 +6,7 @@ import './StoryDisplay.css';
 import '../App.original.css';
 
 function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, subscriptionTier, starPoints, childProfile }) {
+  console.log('StoryDisplay received:', { story, subscriptionTier, hasImageUrl: !!story?.imageUrl });
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [rating, setRating] = useState(0);
@@ -760,7 +761,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                     {/* Show image or upgrade button after first paragraph */}
                     {index === 0 && (
                       <div className="story-image-float">
-                        {(subscriptionTier === 'plus' || subscriptionTier === 'premium' || subscriptionTier === 'family') ? (
+                        {(subscriptionTier === 'plus' || subscriptionTier === 'premium' || subscriptionTier === 'family' || subscriptionTier === 'basic') ? (
                           <div className="story-image-wrapper">
                             {story.imageUrl ? (
                               <img 
