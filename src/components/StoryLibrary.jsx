@@ -415,7 +415,7 @@ function StoryCard({ story, onRead, onDelete, onToggleFavorite }) {
         
         <div className="story-card-actions">
           <button onClick={onRead} className="read-btn">
-            📖 Read Story
+            📖 Read
           </button>
           <button onClick={onDelete} className="delete-btn" title="Delete story">
             🗑️
