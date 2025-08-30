@@ -129,7 +129,244 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
   };
 
   const handlePrint = () => {
-    window.print();
+    // Gather child profile data if available
+    const childProfiles = localStorage.getItem('childProfiles');
+    let childAchievements = 0;
+    let childStars = starPoints || 0;
+    
+    if (childProfiles && story.childName) {
+      const profiles = JSON.parse(childProfiles);
+      const currentProfile = profiles.find(p => p.name === story.childName);
+      if (currentProfile) {
+        const achievements = localStorage.getItem(`achievements_${currentProfile.id}`);
+        if (achievements) {
+          childAchievements = JSON.parse(achievements).length;
+        }
+        const stars = localStorage.getItem(`stars_${currentProfile.id}`);
+        if (stars) {
+          childStars = parseInt(stars) || childStars;
+        }
+      }
+    }
+    
+    const storyData = {
+      title: story.title,
+      content: story.content,
+      metadata: {
+        childName: story.childName || 'Young Reader',
+        stars: childStars,
+        achievements: childAchievements,
+        isPremium: subscriptionTier === 'premium' || subscriptionTier === 'family',
+        date: new Date().toLocaleDateString()
+      }
+    };
+
+    const pdfContent = generateCompactPDF(storyData, story.imageUrl ? [{url: story.imageUrl}] : []);
+    
+    // Open in new window for printing
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(pdfContent);
+    printWindow.document.close();
+    
+    // Auto-trigger print dialog after a short delay
+    setTimeout(() => {
+      printWindow.print();
+    }, 500);
+  };
+
+  const generateCompactPDF = (story, images) => {
+    const { title, content, metadata } = story;
+    const date = metadata.date || new Date().toLocaleDateString();
+    const childName = metadata?.childName || 'Young Reader';
+    const stars = metadata?.stars || 0;
+    const achievements = metadata?.achievements || 0;
+    const isPremium = metadata?.isPremium || false;
+    
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${title}</title>
+        <style>
+          @page {
+            size: letter;
+            margin: 0.75in;
+          }
+          
+          body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.75;
+            color: #333;
+            max-width: 7in;
+            margin: 0 auto;
+          }
+          
+          .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #667eea;
+            margin-bottom: 20px;
+          }
+          
+          .header-left {
+            flex: 1;
+          }
+          
+          h1 {
+            color: #667eea;
+            font-size: 20pt;
+            margin: 0 0 4px 0;
+            font-weight: bold;
+          }
+          
+          .site-name {
+            font-size: 14pt;
+            font-weight: bold;
+            background: linear-gradient(135deg, #FF6B9D, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 4px 0 8px 0;
+          }
+          
+          .story-for {
+            font-size: 11pt;
+            color: #666;
+            font-style: italic;
+          }
+          
+          .header-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 10pt;
+            color: #666;
+          }
+          
+          .stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+          }
+          
+          .content {
+            font-size: 11.5pt;
+            text-align: justify;
+            margin-top: 20px;
+          }
+          
+          .content p {
+            margin-bottom: 0.9em;
+            text-indent: 0;
+            text-align: left;
+          }
+          
+          .image-container {
+            float: right;
+            margin: 0 0 1em 1em;
+            page-break-inside: avoid;
+            width: 45%;
+          }
+          
+          .image-container img {
+            width: 100%;
+            max-height: 3.5in;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+          
+          .footer {
+            margin-top: 2em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 8px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 9pt;
+            color: #999;
+          }
+          
+          .footer-left {
+            font-size: 8pt;
+          }
+          
+          .footer-upgrade {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 8pt;
+            text-decoration: none;
+          }
+          
+          @media print {
+            .no-print {
+              display: none;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="header-left">
+            <h1>${title}</h1>
+            <div class="site-name">KidsStoryTime.org</div>
+            <div class="story-for">Story for ${childName}</div>
+          </div>
+          <div class="header-stats">
+            <div class="stat">
+              <span>⭐</span>
+              <span>${stars} stars</span>
+            </div>
+            <div class="stat">
+              <span>🏆</span>
+              <span>${achievements} achievements</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="content">
+          ${(() => {
+            const paragraphs = content.split('\n').filter(p => p.trim());
+            let html = '';
+            
+            // Add first paragraph
+            if (paragraphs.length > 0) {
+              html += `<p>${paragraphs[0]}</p>`;
+            }
+            
+            // Add image after first paragraph if available
+            if (images.length > 0) {
+              html += `
+                <div class="image-container">
+                  <img src="${images[0].url}" alt="Story illustration">
+                </div>
+              `;
+            }
+            
+            // Add remaining paragraphs
+            if (paragraphs.length > 1) {
+              html += paragraphs.slice(1).map(p => `<p>${p}</p>`).join('');
+            }
+            
+            return html;
+          })()}
+        </div>
+        
+        <div class="footer">
+          <div class="footer-left">
+            KidsStoryTime.org • ${date}
+          </div>
+          ${!isPremium ? `
+            <span class="footer-upgrade">
+              📄 Upgrade for unlimited PDF exports & illustrations
+            </span>
+          ` : ''}
+        </div>
+      </body>
+      </html>
+    `;
   };
 
   const handleToggleReadAloud = () => {

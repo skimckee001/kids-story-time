@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Integration Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 4px solid #e0e0e0;
+        }
+        .test-item.success {
+            border-color: #4caf50;
+            background: #f1f8e9;
+        }
+        .test-item.pending {
+            border-color: #ff9800;
+            background: #fff3e0;
+        }
+        .test-item.error {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Profile Integration Test</h1>
+
+    <div class="test-section">
+        <h2>Test Checklist</h2>
+        <div class="test-item pending">
+            ✅ ProfileManager component loads without errors
+        </div>
+        <div class="test-item pending">
+            ✅ Profiles button appears in header
+        </div>
+        <div class="test-item pending">
+            ✅ ProfileManager modal opens when button clicked
+        </div>
+        <div class="test-item pending">
+            ✅ Can create new profile
+        </div>
+        <div class="test-item pending">
+            ✅ Profile data saves to localStorage
+        </div>
+        <div class="test-item pending">
+            ✅ Selected profile auto-populates form
+        </div>
+        <div class="test-item pending">
+            ✅ Profile indicator shows when profile selected
+        </div>
+        <div class="test-item pending">
+            ✅ Can edit existing profile
+        </div>
+        <div class="test-item pending">
+            ✅ Can delete profile
+        </div>
+        <div class="test-item pending">
+            ✅ App still works when no profiles exist
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Manual Test Steps</h2>
+        <ol>
+            <li>Open the app at <a href="http://localhost:5173" target="_blank">http://localhost:5173</a></li>
+            <li>Look for "👤 Profiles" button in the header</li>
+            <li>Click the Profiles button to open ProfileManager</li>
+            <li>Create a new profile with:
+                <ul>
+                    <li>Name: Test Child</li>
+                    <li>Age: 7</li>
+                    <li>Gender: Either</li>
+                    <li>Reading Level: Beginning Reader</li>
+                    <li>Select some favorite themes</li>
+                    <li>Add some favorite items</li>
+                </ul>
+            </li>
+            <li>Click "Create Profile"</li>
+            <li>Select the profile</li>
+            <li>Click "Apply & Continue"</li>
+            <li>Verify the main form is populated with profile data</li>
+            <li>Verify profile indicator shows above form</li>
+            <li>Generate a story to ensure everything still works</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>localStorage Inspector</h2>
+        <button onclick="checkLocalStorage()">Check localStorage</button>
+        <button onclick="clearProfiles()">Clear All Profiles</button>
+        <pre id="storage-output"></pre>
+    </div>
+
+    <script>
+        function checkLocalStorage() {
+            const profiles = localStorage.getItem('childProfiles');
+            const selected = localStorage.getItem('selectedChildProfile');
+            
+            const output = document.getElementById('storage-output');
+            output.textContent = JSON.stringify({
+                profiles: profiles ? JSON.parse(profiles) : null,
+                selectedProfile: selected ? JSON.parse(selected) : null
+            }, null, 2);
+        }
+
+        function clearProfiles() {
+            if (confirm('Are you sure you want to clear all profiles?')) {
+                localStorage.removeItem('childProfiles');
+                localStorage.removeItem('selectedChildProfile');
+                alert('All profiles cleared!');
+                checkLocalStorage();
+            }
+        }
+
+        // Auto-check on load
+        window.addEventListener('load', checkLocalStorage);
+    </script>
+</body>
+</html>

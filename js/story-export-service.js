@@ -47,6 +47,10 @@ class StoryExportService {
     generatePrintableHTML(story, images) {
         const { title, content, metadata } = story;
         const date = new Date().toLocaleDateString();
+        const childName = metadata?.childName || 'Young Reader';
+        const stars = metadata?.stars || 0;
+        const achievements = metadata?.achievements || 0;
+        const isPremium = metadata?.isPremium || false;
         
         return `
             <!DOCTYPE html>
@@ -56,108 +60,176 @@ class StoryExportService {
                 <style>
                     @page {
                         size: letter;
-                        margin: 1in;
+                        margin: 0.75in;
                     }
                     
                     body {
-                        font-family: 'Georgia', 'Times New Roman', serif;
-                        line-height: 1.8;
+                        font-family: 'Arial', 'Helvetica', sans-serif;
+                        line-height: 1.75;
                         color: #333;
-                        max-width: 6.5in;
+                        max-width: 7in;
                         margin: 0 auto;
                     }
                     
                     .header {
-                        text-align: center;
-                        margin-bottom: 2em;
-                        padding-bottom: 1em;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding-bottom: 12px;
                         border-bottom: 2px solid #667eea;
+                        margin-bottom: 20px;
+                    }
+                    
+                    .header-left {
+                        flex: 1;
                     }
                     
                     h1 {
                         color: #667eea;
-                        font-size: 28pt;
-                        margin-bottom: 0.5em;
-                    }
-                    
-                    .metadata {
-                        font-size: 10pt;
-                        color: #666;
-                        margin-bottom: 1em;
-                    }
-                    
-                    .content {
-                        font-size: 12pt;
-                        text-align: justify;
-                    }
-                    
-                    .content p {
-                        margin-bottom: 1em;
-                        text-indent: 2em;
-                    }
-                    
-                    .content p:first-of-type {
-                        text-indent: 0;
-                    }
-                    
-                    .content p:first-of-type:first-letter {
-                        font-size: 3em;
-                        line-height: 1;
-                        float: left;
-                        margin-right: 0.05em;
-                        color: #667eea;
+                        font-size: 20pt;
+                        margin: 0 0 4px 0;
                         font-weight: bold;
                     }
                     
+                    .site-name {
+                        font-size: 14pt;
+                        font-weight: bold;
+                        background: linear-gradient(135deg, #FF6B9D, #4ECDC4);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        margin: 4px 0 8px 0;
+                    }
+                    
+                    .story-for {
+                        font-size: 11pt;
+                        color: #666;
+                        font-style: italic;
+                    }
+                    
+                    .header-stats {
+                        display: flex;
+                        gap: 20px;
+                        font-size: 10pt;
+                        color: #666;
+                    }
+                    
+                    .stat {
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                    }
+                    
+                    .content {
+                        font-size: 11.5pt;
+                        text-align: justify;
+                        margin-top: 20px;
+                    }
+                    
+                    .content p {
+                        margin-bottom: 0.9em;
+                        text-indent: 0;
+                        text-align: left;
+                    }
+                    
                     .image-container {
-                        text-align: center;
-                        margin: 2em 0;
+                        float: right;
+                        margin: 0 0 1em 1em;
                         page-break-inside: avoid;
+                        width: 45%;
                     }
                     
                     .image-container img {
-                        max-width: 100%;
-                        max-height: 4in;
-                        border-radius: 8px;
-                        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                        width: 100%;
+                        max-height: 3.5in;
+                        border-radius: 6px;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                     }
                     
                     .footer {
-                        margin-top: 3em;
-                        padding-top: 1em;
+                        position: fixed;
+                        bottom: 0.5in;
+                        left: 0.75in;
+                        right: 0.75in;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding-top: 8px;
                         border-top: 1px solid #e5e7eb;
-                        text-align: center;
                         font-size: 9pt;
                         color: #999;
+                    }
+                    
+                    .footer-left {
+                        font-size: 8pt;
+                    }
+                    
+                    .footer-upgrade {
+                        background: linear-gradient(90deg, #667eea, #764ba2);
+                        color: white;
+                        padding: 3px 10px;
+                        border-radius: 4px;
+                        font-size: 8pt;
+                        text-decoration: none;
                     }
                     
                     @media print {
                         .no-print {
                             display: none;
                         }
+                        
+                        .footer {
+                            position: static;
+                            margin-top: 2em;
+                        }
                     }
                 </style>
             </head>
             <body>
                 <div class="header">
-                    <h1>${title}</h1>
-                    <div class="metadata">
-                        <div>A magical story for ${metadata?.childName || 'young readers'}</div>
-                        <div>Reading Level: ${metadata?.childAge || 'All ages'} | Theme: ${metadata?.theme || 'Adventure'}</div>
-                        <div>Created on ${date}</div>
+                    <div class="header-left">
+                        <h1>${title}</h1>
+                        <div class="site-name">KidsStoryTime.org</div>
+                        <div class="story-for">Story for ${childName}</div>
+                    </div>
+                    <div class="header-stats">
+                        <div class="stat">
+                            <span>⭐</span>
+                            <span>${stars} stars</span>
+                        </div>
+                        <div class="stat">
+                            <span>🏆</span>
+                            <span>${achievements} achievements</span>
+                        </div>
                     </div>
                 </div>
                 
-                ${images.length > 0 ? `
-                    <div class="image-container">
-                        <img src="${images[0].url}" alt="Story illustration">
-                    </div>
-                ` : ''}
-                
                 <div class="content">
-                    ${content.split('\n').filter(p => p.trim()).map(paragraph => 
-                        `<p>${paragraph}</p>`
-                    ).join('')}
+                    ${(() => {
+                        const paragraphs = content.split('\n').filter(p => p.trim());
+                        let html = '';
+                        
+                        // Add first paragraph
+                        if (paragraphs.length > 0) {
+                            html += `<p>${paragraphs[0]}</p>`;
+                        }
+                        
+                        // Add image after first paragraph if available
+                        if (images.length > 0) {
+                            html += `
+                                <div class="image-container">
+                                    <img src="${images[0].url}" alt="Story illustration">
+                                </div>
+                            `;
+                        }
+                        
+                        // Add remaining paragraphs
+                        if (paragraphs.length > 1) {
+                            html += paragraphs.slice(1).map(p => `<p>${p}</p>`).join('');
+                        }
+                        
+                        return html;
+                    })()}
                 </div>
                 
                 ${images.length > 1 ? images.slice(1).map(img => `
@@ -167,8 +239,14 @@ class StoryExportService {
                 `).join('') : ''}
                 
                 <div class="footer">
-                    <p>Created with ❤️ by Kids Story Time</p>
-                    <p>www.kidsstorytime.org</p>
+                    <div class="footer-left">
+                        KidsStoryTime.org • ${date}
+                    </div>
+                    ${!isPremium ? `
+                        <a href="https://kidsstorytime.org/upgrade" class="footer-upgrade">
+                            📄 Upgrade for unlimited PDF exports & illustrations
+                        </a>
+                    ` : ''}
                 </div>
             </body>
             </html>

@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { supabase, auth } from './lib/supabase';
 import StoryDisplay from './components/StoryDisplay';
 import StoryLibrary from './components/StoryLibrary';
+import ProfileManager from './components/ProfileManager';
+import AchievementSystem from './components/AchievementSystem';
+import ReadingStreak from './components/ReadingStreak';
 import './App.original.css';
 
 // Story length options matching the current HTML
@@ -83,14 +86,41 @@ function App() {
   const [user, setUser] = useState(null);
   const [subscriptionTier, setSubscriptionTier] = useState('free');
   const [showLibrary, setShowLibrary] = useState(false);
+  const [showProfileManager, setShowProfileManager] = useState(false);
   const [currentStory, setCurrentStory] = useState(null);
   const [showStory, setShowStory] = useState(false);
   const [storiesRemaining, setStoriesRemaining] = useState(1);
   const [isRecording, setIsRecording] = useState(false);
   const [starPoints, setStarPoints] = useState(0);
+  const [selectedChildProfile, setSelectedChildProfile] = useState(null);
+  const [showAchievements, setShowAchievements] = useState(false);
 
   useEffect(() => {
     checkUser();
+    // Load saved profile if exists
+    const savedProfile = localStorage.getItem('selectedChildProfile');
+    if (savedProfile) {
+      const profile = JSON.parse(savedProfile);
+      setSelectedChildProfile(profile);
+      // Auto-populate form with profile data
+      setChildName(profile.name || '');
+      setGender(profile.gender === 'male' ? 'boy' : profile.gender === 'female' ? 'girl' : '');
+      setIncludeNameInStory(profile.include_name_in_stories !== false);
+      setReadingLevel(profile.reading_level || 'developing-reader');
+      setSelectedThemes(profile.favorite_themes || []);
+      
+      // Add favorite items to the story prompt
+      if (profile.favorite_items && profile.favorite_items.length > 0) {
+        const favoriteItemsText = `Include these favorite things: ${profile.favorite_items.join(', ')}`;
+        setCustomPrompt(favoriteItemsText);
+      }
+      
+      // Load star points for this profile
+      const savedStars = localStorage.getItem(`stars_${profile.id}`);
+      if (savedStars) {
+        setStarPoints(parseInt(savedStars) || 0);
+      }
+    }
   }, []);
 
   const checkUser = async () => {
@@ -201,6 +231,33 @@ function App() {
         // Auto-save story for logged-in users
         if (user) {
           saveStoryToLibrary(storyData);
+        }
+        
+        // Save to localStorage for achievement tracking
+        const existingStories = JSON.parse(localStorage.getItem('stories') || '[]');
+        const newStoryEntry = {
+          id: crypto.randomUUID(),
+          title: data.story.title,
+          content: data.story.content,
+          child_name: childName,
+          theme: selectedThemes[0] || '',
+          themes: selectedThemes,
+          created_at: new Date().toISOString(),
+          reading_level: readingLevel
+        };
+        existingStories.push(newStoryEntry);
+        localStorage.setItem('stories', JSON.stringify(existingStories));
+        
+        // Update star points and save to profile
+        const newStarPoints = starPoints + 1;
+        setStarPoints(newStarPoints);
+        if (selectedChildProfile) {
+          localStorage.setItem(`stars_${selectedChildProfile.id}`, newStarPoints.toString());
+          
+          // Update reading streak
+          if (window.updateReadingStreak) {
+            window.updateReadingStreak();
+          }
         }
         
         // Generate image asynchronously for premium and family tiers
@@ -444,6 +501,20 @@ function App() {
                     <span className="star-count">{starPoints}</span>
                   </div>
                   <button 
+                    className="header-btn"
+                    onClick={() => setShowProfileManager(true)}
+                    title="Manage child profiles"
+                  >
+                    👤 Profiles
+                  </button>
+                  <button 
+                    className="header-btn"
+                    onClick={() => setShowAchievements(true)}
+                    title="View achievements"
+                  >
+                    🏆 Achievements
+                  </button>
+                  <button 
                     className="header-btn library-btn"
                     onClick={() => setShowLibrary(true)}
                   >
@@ -485,48 +556,8 @@ function App() {
           </div>
         </header>
 
-        {/* User Navigation */}
-        {user ? (
-          <div className="user-nav">
-            <div className="welcome-section">
-              <h3>Welcome back!</h3>
-              <p className="plan-status">
-                {subscriptionTier === 'free' ? (
-                  <>Free Plan: <strong>{storiesRemaining}</strong> story remaining today</>
-                ) : subscriptionTier === 'premium' ? (
-                  <>Premium Plan: <strong>{storiesRemaining}</strong> stories remaining today</>
-                ) : (
-                  <>Family Plan: Unlimited stories</>
-                )}
-              </p>
-            </div>
-            <div className="nav-buttons">
-              <button 
-                className="nav-btn library-btn"
-                onClick={() => setShowLibrary(true)}
-              >
-                📚 My Library
-              </button>
-              {subscriptionTier === 'free' && (
-                <button className="nav-btn upgrade-btn">
-                  🎉 Start Free Trial
-                </button>
-              )}
-              <button 
-                className="nav-btn logout-btn"
-                onClick={async () => {
-                  localStorage.removeItem('mockUser');
-                  await supabase.auth.signOut();
-                  setUser(null);
-                  setSubscriptionTier('free');
-                  setStoriesRemaining(1);
-                }}
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        ) : (
+        {/* Account Section for non-logged in users */}
+        {!user && (
           <div className="account-section">
             <h2>Create Your Free Account</h2>
             <p>Join thousands of parents creating magical stories for their children!</p>
@@ -549,10 +580,59 @@ function App() {
 
         {/* Main Form */}
         <div className="main-content">
+          {/* Reading Streak Display - only show if profile selected */}
+          {selectedChildProfile && (
+            <ReadingStreak childProfile={selectedChildProfile} />
+          )}
+          
+          {/* Prompt to create profile if none selected */}
+          {!selectedChildProfile && user && (
+            <div style={{
+              background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
+              border: '2px dashed #667eea',
+              borderRadius: '8px',
+              padding: '16px',
+              marginBottom: '20px',
+              textAlign: 'center'
+            }}>
+              <p style={{ margin: '0 0 10px 0', color: '#666' }}>
+                💡 Create a child profile to unlock achievements, track reading streaks, and save preferences!
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowProfileManager(true)}
+                style={{
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 20px',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+              >
+                Create Profile
+              </button>
+            </div>
+          )}
+          
           <form onSubmit={handleGenerateStory}>
             {/* Child's Name and Gender */}
             <div className="form-group">
-              <label htmlFor="childName">Child's Name</label>
+              <label htmlFor="childName">
+                Child's Name
+                {selectedChildProfile && (
+                  <span style={{ 
+                    marginLeft: '10px', 
+                    fontSize: '13px', 
+                    fontWeight: 'normal',
+                    color: '#667eea'
+                  }}>
+                    (Using profile: {selectedChildProfile.name})
+                  </span>
+                )}
+              </label>
               <div className="name-gender-row">
                 <input
                   type="text"
@@ -692,6 +772,124 @@ function App() {
             >
               {isGenerating ? 'Creating your magical story...' : 'Generate My Story! ✨'}
             </button>
+            
+            {/* Plan Status */}
+            {user && (
+              <div style={{
+                textAlign: 'center',
+                marginTop: '12px',
+                fontSize: '14px',
+                color: '#666'
+              }}>
+                {subscriptionTier === 'free' ? 
+                  <>Free Plan: {storiesRemaining} story remaining today</> :
+                 subscriptionTier === 'premium' ? 
+                  <>Premium Plan: {storiesRemaining} stories remaining today</> :
+                  <>Family Plan: Unlimited stories</>
+                }
+              </div>
+            )}
+
+            {/* Upgrade Section */}
+            {(!user || subscriptionTier !== 'family') && (
+              <div style={{
+                marginTop: '24px',
+                padding: '20px',
+                background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
+                border: '2px solid #e0e0e0',
+                borderRadius: '12px'
+              }}>
+                <button
+                  type="button"
+                  onClick={() => !user ? setShowAuth(true) : window.location.href = '/pricing'}
+                  style={{
+                    width: '100%',
+                    padding: '14px 20px',
+                    background: 'linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    marginBottom: '16px',
+                    boxShadow: '0 4px 12px rgba(255, 107, 107, 0.3)',
+                    transition: 'transform 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
+                  onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
+                >
+                  {!user ? (
+                    <>🎉 Start Free - Create Your Account</>
+                  ) : subscriptionTier === 'free' ? (
+                    <>⭐ Upgrade to Premium - 30 Day Free Trial</>
+                  ) : (
+                    <>👨‍👩‍👧‍👦 Upgrade to Family Plan - Unlimited Everything</>
+                  )}
+                </button>
+
+                <div style={{ fontSize: '14px', color: '#666' }}>
+                  {!user ? (
+                    <>
+                      <p style={{ fontWeight: '600', marginBottom: '10px', color: '#333' }}>
+                        Register for free and unlock:
+                      </p>
+                      <ul style={{ margin: '0', paddingLeft: '20px', lineHeight: '1.8' }}>
+                        <li>✅ Save all your stories in your personal library</li>
+                        <li>✅ Create multiple child profiles</li>
+                        <li>✅ Track reading streaks and achievements</li>
+                        <li>✅ 1 free story per day</li>
+                        <li>✅ Access to all story themes and lengths</li>
+                      </ul>
+                    </>
+                  ) : subscriptionTier === 'free' ? (
+                    <>
+                      <p style={{ fontWeight: '600', marginBottom: '10px', color: '#333' }}>
+                        Premium features include:
+                      </p>
+                      <ul style={{ margin: '0', paddingLeft: '20px', lineHeight: '1.8' }}>
+                        <li>🎨 Beautiful AI-generated illustrations for every story</li>
+                        <li>📚 10 stories per day (vs. 1 on free plan)</li>
+                        <li>📄 Export stories as PDF to keep forever</li>
+                        <li>🎧 Audio narration (coming soon)</li>
+                        <li>⚡ Priority story generation</li>
+                        <li>💾 Unlimited story storage</li>
+                      </ul>
+                      <p style={{ 
+                        marginTop: '10px', 
+                        fontSize: '13px', 
+                        fontStyle: 'italic',
+                        textAlign: 'center' 
+                      }}>
+                        30-day free trial • Cancel anytime • $9.99/month after trial
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p style={{ fontWeight: '600', marginBottom: '10px', color: '#333' }}>
+                        Family Plan extras:
+                      </p>
+                      <ul style={{ margin: '0', paddingLeft: '20px', lineHeight: '1.8' }}>
+                        <li>♾️ Unlimited stories every day</li>
+                        <li>👨‍👩‍👧‍👦 Up to 6 child profiles</li>
+                        <li>🎨 Premium HD illustrations</li>
+                        <li>📊 Advanced parent dashboard & analytics</li>
+                        <li>🎯 Personalized learning paths</li>
+                        <li>🌟 Early access to new features</li>
+                      </ul>
+                      <p style={{ 
+                        marginTop: '10px', 
+                        fontSize: '13px', 
+                        fontStyle: 'italic',
+                        textAlign: 'center' 
+                      }}>
+                        Best value • $19.99/month • Perfect for multiple children
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
           </form>
 
         </div>
@@ -703,6 +901,26 @@ function App() {
             <a href="/terms.html" target="_blank">Terms of Service</a> | 
             <a href="/privacy.html" target="_blank">Privacy Policy</a> | 
             <a href="mailto:support@kidsstorytime.org">Contact Us</a>
+            {user && (
+              <>
+                {' | '}
+                <a 
+                  href="#"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('mockUser');
+                    await supabase.auth.signOut();
+                    setUser(null);
+                    setSubscriptionTier('free');
+                    setStoriesRemaining(1);
+                    setSelectedChildProfile(null);
+                  }}
+                  style={{ color: '#999' }}
+                >
+                  Logout
+                </a>
+              </>
+            )}
           </p>
         </footer>
       </div>
@@ -716,6 +934,64 @@ function App() {
             setShowAuth(false);
             checkUser();
           }}
+        />
+      )}
+
+      {/* Profile Manager Modal */}
+      {showProfileManager && (
+        <ProfileManager
+          onClose={() => setShowProfileManager(false)}
+          onProfileSelect={(profile) => {
+            setSelectedChildProfile(profile);
+            // Auto-populate form with profile data
+            setChildName(profile.name || '');
+            setGender(profile.gender === 'male' ? 'boy' : profile.gender === 'female' ? 'girl' : '');
+            setIncludeNameInStory(profile.include_name_in_stories !== false);
+            setReadingLevel(profile.reading_level || 'developing-reader');
+            setSelectedThemes(profile.favorite_themes || []);
+            
+            // Add favorite items to the story prompt
+            if (profile.favorite_items && profile.favorite_items.length > 0) {
+              const favoriteItemsText = `Include these favorite things: ${profile.favorite_items.join(', ')}`;
+              // Clear any previous "favorite things" and add the new ones
+              setCustomPrompt(prevPrompt => {
+                // Remove any existing "Include these favorite things:" line
+                const cleanedPrompt = prevPrompt ? 
+                  prevPrompt.replace(/Include these favorite things:.*$/gm, '').trim() : '';
+                
+                // Add the new favorite items
+                if (cleanedPrompt) {
+                  return `${cleanedPrompt}\n\n${favoriteItemsText}`;
+                }
+                return favoriteItemsText;
+              });
+            } else {
+              // Clear favorite items from prompt if none exist
+              setCustomPrompt(prevPrompt => {
+                return prevPrompt ? 
+                  prevPrompt.replace(/Include these favorite things:.*$/gm, '').trim() : '';
+              });
+            }
+            
+            // Load star points for this profile
+            const savedStars = localStorage.getItem(`stars_${profile.id}`);
+            if (savedStars) {
+              setStarPoints(parseInt(savedStars) || 0);
+            } else {
+              setStarPoints(0);
+            }
+            
+            setShowProfileManager(false);
+          }}
+          user={user}
+        />
+      )}
+
+      {/* Achievement System Modal */}
+      {showAchievements && (
+        <AchievementSystem
+          childProfile={selectedChildProfile}
+          onClose={() => setShowAchievements(false)}
         />
       )}
     </div>

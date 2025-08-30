@@ -3,8 +3,9 @@ import { supabase } from '../lib/supabase';
 import StoryDisplay from './StoryDisplay';
 import './StoryLibrary.css';
 
-export function StoryLibrary({ stories = [], onStorySelect, onRefresh }) {
-  const [loading, setLoading] = useState(false);
+function StoryLibrary({ onBack }) {
+  const [loading, setLoading] = useState(true);
+  const [stories, setStories] = useState([]);
   const [selectedStory, setSelectedStory] = useState(null);
   const [filterChild, setFilterChild] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,19 +13,41 @@ export function StoryLibrary({ stories = [], onStorySelect, onRefresh }) {
   const [children, setChildren] = useState([]);
 
   useEffect(() => {
+    loadStories();
+  }, []);
+
+  useEffect(() => {
     // Load children profiles when component mounts
     const loadChildren = async () => {
       try {
+        // First check localStorage for profiles
+        const localProfiles = localStorage.getItem('childProfiles');
+        if (localProfiles) {
+          const profiles = JSON.parse(localProfiles);
+          setChildren(profiles);
+        }
+        
+        // Also try to load from Supabase if user is logged in
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
+        if (user) {
+          const { data, error } = await supabase
+            .from('children')
+            .select('*')
+            .eq('parent_id', user.id);
 
-        const { data, error } = await supabase
-          .from('children')
-          .select('*')
-          .eq('user_id', user.id);
-
-        if (error) throw error;
-        setChildren(data || []);
+          if (!error && data) {
+            // Merge with local profiles if they exist
+            const mergedProfiles = localProfiles ? 
+              [...JSON.parse(localProfiles), ...data].reduce((acc, profile) => {
+                if (!acc.find(p => p.id === profile.id)) {
+                  acc.push(profile);
+                }
+                return acc;
+              }, []) : data;
+            
+            setChildren(mergedProfiles);
+          }
+        }
       } catch (error) {
         console.error('Error loading children:', error);
       }
@@ -32,6 +55,35 @@ export function StoryLibrary({ stories = [], onStorySelect, onRefresh }) {
     
     loadChildren();
   }, []);
+
+  const loadStories = async () => {
+    setLoading(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        // Try to load from localStorage for testing
+        const localStories = localStorage.getItem('stories');
+        if (localStories) {
+          setStories(JSON.parse(localStories));
+        }
+        setLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('stories')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setStories(data || []);
+    } catch (error) {
+      console.error('Error loading stories:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDeleteStory = async (storyId) => {
     if (!confirm('Are you sure you want to delete this story?')) return;
@@ -45,7 +97,7 @@ export function StoryLibrary({ stories = [], onStorySelect, onRefresh }) {
       if (error) throw error;
       
       // Refresh the stories list
-      if (onRefresh) onRefresh();
+      loadStories();
     } catch (error) {
       console.error('Error deleting story:', error);
       alert('Failed to delete story');
@@ -64,7 +116,7 @@ export function StoryLibrary({ stories = [], onStorySelect, onRefresh }) {
       if (error) throw error;
       
       // Refresh the stories list
-      if (onRefresh) onRefresh();
+      loadStories();
     } catch (error) {
       console.error('Error updating favorite:', error);
     }
@@ -103,32 +155,32 @@ export function StoryLibrary({ stories = [], onStorySelect, onRefresh }) {
       <StoryDisplay
         story={selectedStory}
         onBack={() => setSelectedStory(null)}
-        onSave={() => {}}
+        onShowLibrary={() => setSelectedStory(null)}
       />
     );
   }
 
   return (
-    <div className="story-library-container">
+    <div className="library-container">
       {/* Header */}
       <div className="library-header">
-        <div className="header-content">
-          <h1 className="library-title">📚 My Story Library</h1>
-          <div className="header-stats">
-            <span className="stat-badge">{stories.length} Stories</span>
-            <span className="stat-badge">
-              {stories.filter(s => s.is_favorite).length} ⭐ Favorites
-            </span>
-          </div>
+        <button onClick={onBack} className="back-btn">
+          ← Back
+        </button>
+        <h1>My Story Library</h1>
+        <div className="header-stats">
+          <span>{stories.length} {stories.length === 1 ? 'Story' : 'Stories'}</span>
+          <span>{children.length} {children.length === 1 ? 'Child' : 'Children'}</span>
         </div>
       </div>
 
-      {/* Filters and Search */}
+      {/* Search and Filters */}
       <div className="library-controls">
-        <div className="search-bar">
+        <div className="search-container">
+          <span className="search-icon">🔍</span>
           <input
             type="text"
-            placeholder="🔍 Search stories..."
+            placeholder="Search stories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -142,8 +194,9 @@ export function StoryLibrary({ stories = [], onStorySelect, onRefresh }) {
             className="filter-select"
           >
             <option value="all">All Children</option>
-            {[...new Set(stories.map(s => s.child_name))].map(name => (
-              <option key={name} value={name}>{name}</option>
+            {/* Show all children profiles, not just those with stories */}
+            {children.map(child => (
+              <option key={child.id} value={child.name}>{child.name}</option>
             ))}
           </select>
           
@@ -174,13 +227,13 @@ export function StoryLibrary({ stories = [], onStorySelect, onRefresh }) {
             <p>
               {searchTerm 
                 ? 'No stories match your search. Try different keywords.'
-                : 'Create your first magical story to see it here!'}
+                : filterChild !== 'all' 
+                  ? `No stories for ${filterChild} yet. Create your first magical story!`
+                  : 'Create your first magical story to see it here!'}
             </p>
-            {!searchTerm && onRefresh && (
-              <button onClick={onRefresh} className="create-story-btn">
-                🔄 Refresh Library
-              </button>
-            )}
+            <button onClick={onBack} className="create-story-btn">
+              ✨ Create New Story
+            </button>
           </div>
         ) : (
           <div className="stories-grid">
@@ -188,7 +241,7 @@ export function StoryLibrary({ stories = [], onStorySelect, onRefresh }) {
               <StoryCard
                 key={story.id}
                 story={story}
-                onRead={() => onStorySelect(story)}
+                onRead={() => setSelectedStory(story)}
                 onDelete={() => handleDeleteStory(story.id)}
                 onToggleFavorite={() => handleToggleFavorite(story)}
               />
@@ -221,10 +274,11 @@ function StoryCard({ story, onRead, onDelete, onToggleFavorite }) {
       animals: '🦁',
       space: '🚀',
       underwater: '🐠',
+      ocean: '🐠',
       fantasy: '🧙‍♂️',
       mystery: '🔍'
     };
-    return themeEmojis[theme] || '📖';
+    return themeEmojis[theme?.toLowerCase()] || '📖';
   };
 
   return (
@@ -258,12 +312,14 @@ function StoryCard({ story, onRead, onDelete, onToggleFavorite }) {
         <div className="story-card-meta">
           <span className="meta-item">
             <span className="meta-icon">👤</span>
-            {story.child_name}
+            {story.child_name || 'Unknown'}
           </span>
-          <span className="meta-item">
-            <span className="meta-icon">{getThemeEmoji(story.theme)}</span>
-            {story.theme}
-          </span>
+          {story.theme && (
+            <span className="meta-item">
+              <span className="meta-icon">{getThemeEmoji(story.theme)}</span>
+              {story.theme}
+            </span>
+          )}
           <span className="meta-item">
             <span className="meta-icon">📅</span>
             {formatDate(story.created_at)}
