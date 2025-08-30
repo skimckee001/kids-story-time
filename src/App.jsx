@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge.jsx';
 import { 
   BookOpen, Users, Settings, BarChart3, Sparkles, 
   Crown, Palette, Globe, Headphones, Image as ImageIcon,
-  Menu, X, Home, Star
+  Menu, X, Home, Star, Trophy
 } from 'lucide-react';
 
 // Import all components
@@ -19,6 +19,11 @@ import { StoryIllustrations } from './components/StoryIllustrations.jsx';
 import { ParentalDashboard } from './components/ParentalDashboard.jsx';
 import { SubscriptionManager, useFeatureGate } from './components/SubscriptionManager.jsx';
 import { OfflineIndicator, OfflineStoryManager } from './components/OfflineIndicator.jsx';
+import { PricingComparison } from './components/PricingComparison.jsx';
+import { StoryDisplayWithGames } from './components/StoryDisplayWithGames.jsx';
+import { BadgeGallery } from './components/gamification/BadgeGallery.jsx';
+import { LevelProgress } from './components/gamification/LevelProgress.jsx';
+import { ParentDashboard as GamificationDashboard } from './components/gamification/ParentDashboard.jsx';
 
 // Import hooks and utilities
 import { useLocalStorage } from './hooks/useLocalStorage.js';
@@ -120,12 +125,21 @@ function App() {
     window.location.reload();
   };
 
+  const handleGamificationSettings = (settings) => {
+    console.log('Gamification settings updated:', settings);
+    // Save settings to database or localStorage
+    localStorage.setItem('gamificationSettings', JSON.stringify(settings));
+  };
+
   const navigation = [
     { id: 'home', name: 'Home', icon: Home },
     { id: 'stories', name: 'Create Stories', icon: BookOpen },
     { id: 'series', name: 'Story Series', icon: Star },
-    { id: 'dashboard', name: 'Parental Dashboard', icon: BarChart3 },
-    { id: 'subscription', name: 'Subscription', icon: Crown }
+    { id: 'badges', name: 'Badges & Rewards', icon: Trophy },
+    { id: 'gamification', name: 'Progress Dashboard', icon: BarChart3 },
+    { id: 'dashboard', name: 'Parental Dashboard', icon: Settings },
+    { id: 'subscription', name: 'Subscription', icon: Crown },
+    { id: 'pricing', name: 'Pricing Comparison', icon: Sparkles }
   ];
 
   const renderMainContent = () => {
@@ -163,6 +177,20 @@ function App() {
       
       case 'subscription':
         return <SubscriptionManager onUpgrade={handleUpgrade} />;
+      
+      case 'pricing':
+        return <PricingComparison />;
+      
+      case 'badges':
+        return (
+          <div className="space-y-6">
+            <LevelProgress showDetails={true} />
+            <BadgeGallery userId={selectedChild?.id} readingLevel={selectedChild?.readingLevel || 'beginningReader'} />
+          </div>
+        );
+      
+      case 'gamification':
+        return <GamificationDashboard children={children} onSettingsChange={handleGamificationSettings} />;
       
       default:
         return <HomeView 
@@ -287,7 +315,9 @@ function App() {
         {/* Main Content */}
         <main className="flex-1 lg:ml-0">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {children.length === 0 ? (
+            {activeTab === 'pricing' ? (
+              <PricingComparison />
+            ) : children.length === 0 ? (
               <WelcomeScreen onChildCreated={handleChildCreated} />
             ) : (
               renderMainContent()

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Comparison Demo</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .notice {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .notice h1 {
+            margin: 0 0 10px 0;
+        }
+        .notice p {
+            margin: 5px 0;
+        }
+        .notice a {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 24px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        .notice a:hover {
+            transform: translateY(-2px);
+        }
+        iframe {
+            width: 100%;
+            height: calc(100vh - 200px);
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="notice">
+        <h1>🎨 Kids Story Time - Pricing Page Comparison</h1>
+        <p>View different pricing page designs for the Kids Story Time app</p>
+        <div>
+            <a href="pricing-preview.html" target="_blank">📊 Open Enhanced HTML Version</a>
+            <a href="http://localhost:3000" target="_blank">🚀 Open React App</a>
+        </div>
+    </div>
+    <iframe src="pricing-preview.html"></iframe>
+</body>
+</html>
