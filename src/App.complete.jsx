@@ -125,6 +125,17 @@ function App() {
   
   useEffect(() => {
     checkUser();
+    
+    // Check if coming from pricing page with a plan parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const plan = urlParams.get('plan');
+    if (plan && !user) {
+      // Show auth modal if user selected a plan from pricing page
+      setShowAuth(true);
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    
     // Load saved profile if exists
     const savedProfile = localStorage.getItem('selectedChildProfile');
     if (savedProfile) {
