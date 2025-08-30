@@ -600,28 +600,37 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
         
         <div className="story-display-container">
         
-        {/* Daily Streak Section - Separate from header */}
-        {childProfile && currentStreak > 0 && (
-          <div className="daily-streak-section">
-            <div className="streak-container">
-              <span className="streak-icon">🔥</span>
-              <span className="streak-value">{currentStreak}</span>
-              <span className="streak-label">Day Streak</span>
+        {/* Gamification Stats Section - Pink section like home page */}
+        {childProfile && (
+          <div className="story-gamification-section">
+            <div className="gamification-stats">
+              <div className="stat-item">
+                <span className="stat-icon">🏆</span>
+                <span className="stat-value">{achievementCount}</span>
+                <span className="stat-label">Achievements</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-icon">🔥</span>
+                <span className="stat-value">{currentStreak}</span>
+                <span className="stat-label">Day Streak</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-icon">⭐</span>
+                <span className="stat-value">{starPoints || 0}</span>
+                <span className="stat-label">Stars</span>
+              </div>
             </div>
           </div>
         )}
         
         <div className="story-wrapper">
-          {/* Story Actions Bar */}
+          {/* Story Actions Bar - Original layout */}
           <div className="story-header">
             <button onClick={onBack} className="back-btn">
               ← New Story
             </button>
-          </div>
-          
-          {/* Read Aloud and Print Section - Separate */}
-          <div className="story-action-section">
-            <div className="action-buttons">
+            
+            <div className="story-actions">
               <button 
                 onClick={handleToggleReadAloud} 
                 className={`read-aloud-btn ${showReadAloudPanel ? 'active' : ''}`}

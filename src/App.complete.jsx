@@ -722,17 +722,6 @@ function App() {
           {selectedChildProfile && (
             <>
               <ReadingStreak childProfile={selectedChildProfile} />
-              
-              {/* Reading Goals - Only show for logged-in users */}
-              {user && (
-                <ReadingGoals 
-                  childProfile={selectedChildProfile}
-                  onGoalComplete={(goal, stars) => {
-                    console.log(`Goal completed: ${goal.title}, earned ${stars} stars!`);
-                    triggerCelebration('achievement', `Goal Complete: ${goal.title}`);
-                  }}
-                />
-              )}
             </>
           )}
           

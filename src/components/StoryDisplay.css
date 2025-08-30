@@ -21,7 +21,7 @@
 .story-header {
   margin: 0 0 20px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   background: white;
   padding: 15px 25px;
@@ -29,53 +29,44 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Daily Streak Section */
-.daily-streak-section {
+/* Gamification Stats Section - Pink like home page */
+.story-gamification-section {
+  background: linear-gradient(135deg, #ff6b9d 0%, #feca57 100%);
+  padding: 20px;
+  border-radius: 15px;
   margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(255, 107, 157, 0.2);
+}
+
+.gamification-stats {
   display: flex;
   justify-content: center;
-}
-
-.streak-container {
-  background: white;
-  padding: 15px 30px;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  display: flex;
+  gap: 40px;
   align-items: center;
-  gap: 10px;
 }
 
-.streak-icon {
+.gamification-stats .stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+.gamification-stats .stat-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.gamification-stats .stat-value {
   font-size: 28px;
-}
-
-.streak-value {
-  font-size: 24px;
   font-weight: bold;
-  color: #ff6b9d;
+  margin-bottom: 4px;
 }
 
-.streak-label {
-  font-size: 16px;
-  color: #666;
-  margin-left: 5px;
-}
-
-/* Story Action Section */
-.story-action-section {
-  background: white;
-  padding: 20px 25px;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  justify-content: center;
+.gamification-stats .stat-label {
+  font-size: 14px;
+  opacity: 0.95;
+  font-weight: 500;
 }
 
 .back-btn {

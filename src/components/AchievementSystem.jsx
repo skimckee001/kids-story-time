@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ReadingGoals from './ReadingGoals';
 import './AchievementSystem.css';
 
 // Define all achievements
@@ -32,7 +33,7 @@ const ACHIEVEMENTS = [
   { id: 'star_collector', name: 'Star Collector', description: 'Collect 100 stars', icon: '⭐', points: 50, category: 'special' },
 ];
 
-function AchievementSystem({ childProfile, onClose }) {
+function AchievementSystem({ childProfile, onClose, onGoalComplete }) {
   const [achievements, setAchievements] = useState([]);
   const [unlockedAchievements, setUnlockedAchievements] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -284,6 +285,17 @@ function AchievementSystem({ childProfile, onClose }) {
           </div>
         </div>
       )}
+      
+      {/* Reading Goals Section */}
+      <div className="reading-goals-section" style={{ marginTop: '20px' }}>
+        <h3 style={{ color: '#667eea', marginBottom: '15px', fontSize: '1.3rem' }}>Reading Goals</h3>
+        <ReadingGoals 
+          childProfile={childProfile}
+          onGoalComplete={onGoalComplete || ((goal, stars) => {
+            console.log(`Goal completed: ${goal.title}, earned ${stars} stars!`);
+          })}
+        />
+      </div>
     </div>
   );
 }
