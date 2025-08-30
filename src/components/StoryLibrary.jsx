@@ -194,8 +194,13 @@ function StoryLibrary({ onBack }) {
     return (
       <StoryDisplay
         story={selectedStory}
+        user={user}
+        subscriptionTier={subscriptionTier}
+        starPoints={starPoints}
+        childProfile={currentChildProfile}
         onBack={() => setSelectedStory(null)}
         onShowLibrary={() => setSelectedStory(null)}
+        onShowAuth={() => {}}
       />
     );
   }
@@ -214,17 +219,14 @@ function StoryLibrary({ onBack }) {
         onLogoClick={onBack}
       />
       
+      {/* Reading Streak Section - Outside container for full width */}
+      {currentChildProfile && (
+        <ReadingStreak childProfile={currentChildProfile} />
+      )}
+      
       <div className="library-container">
-        {/* Reading Streak Section - Same as other pages */}
-        {currentChildProfile && (
-          <ReadingStreak childProfile={currentChildProfile} />
-        )}
-        
         {/* Library Title Section */}
         <div className="library-title-section">
-          <button onClick={onBack} className="back-btn">
-            ← Back to Home
-          </button>
           <h1>My Story Library</h1>
           <div className="library-stats">
             <span>{stories.length} {stories.length === 1 ? 'Story' : 'Stories'}</span>

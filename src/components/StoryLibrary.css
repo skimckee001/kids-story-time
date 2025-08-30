@@ -4,10 +4,17 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.library-container {
+/* ReadingStreak should display with proper width */
+.library-page .reading-streak-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+}
+
+.library-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 20px 20px;
 }
 
 /* Library Title Section */
