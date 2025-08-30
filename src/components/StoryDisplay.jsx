@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import Header from './Header';
 import AdSense from './AdSense';
+import ReadingStreak from './ReadingStreak';
 import './StoryDisplay.css';
 import '../App.original.css';
 
@@ -601,27 +602,9 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
         
         <div className="story-display-container">
         
-        {/* Gamification Stats Section - Pink section like home page */}
+        {/* Reading Streak Display - Same as home page */}
         {childProfile && (
-          <div className="story-gamification-section">
-            <div className="gamification-stats">
-              <div className="stat-item">
-                <span className="stat-icon">🏆</span>
-                <span className="stat-value">{achievementCount}</span>
-                <span className="stat-label">Achievements</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-icon">🔥</span>
-                <span className="stat-value">{currentStreak}</span>
-                <span className="stat-label">Day Streak</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-icon">⭐</span>
-                <span className="stat-value">{starPoints || 0}</span>
-                <span className="stat-label">Stars</span>
-              </div>
-            </div>
-          </div>
+          <ReadingStreak childProfile={childProfile} />
         )}
         
         <div className="story-wrapper">

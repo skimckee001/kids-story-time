@@ -29,45 +29,7 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Gamification Stats Section - Pink like home page */
-.story-gamification-section {
-  background: linear-gradient(135deg, #ff6b9d 0%, #feca57 100%);
-  padding: 20px;
-  border-radius: 15px;
-  margin-bottom: 20px;
-  box-shadow: 0 5px 15px rgba(255, 107, 157, 0.2);
-}
-
-.gamification-stats {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  align-items: center;
-}
-
-.gamification-stats .stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-}
-
-.gamification-stats .stat-icon {
-  font-size: 32px;
-  margin-bottom: 8px;
-}
-
-.gamification-stats .stat-value {
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-.gamification-stats .stat-label {
-  font-size: 14px;
-  opacity: 0.95;
-  font-weight: 500;
-}
+/* Reading Streak section handled by ReadingStreak component */
 
 .back-btn {
   padding: 10px 20px;
