@@ -594,66 +594,62 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
           starPoints={starPoints}
           onShowLibrary={onBack}
           onShowAuth={onShowAuth}
+          onShowAchievements={null}
+          onLogoClick={onBack}
         />
         
         <div className="story-display-container">
+        
+        {/* Daily Streak Section - Separate from header */}
+        {childProfile && currentStreak > 0 && (
+          <div className="daily-streak-section">
+            <div className="streak-container">
+              <span className="streak-icon">🔥</span>
+              <span className="streak-value">{currentStreak}</span>
+              <span className="streak-label">Day Streak</span>
+            </div>
+          </div>
+        )}
+        
         <div className="story-wrapper">
           {/* Story Actions Bar */}
           <div className="story-header">
-          <button onClick={onBack} className="back-btn">
-            ← New Story
-          </button>
-          
-          {/* Achievement and Streak Display */}
-          {childProfile && (
-            <div className="story-stats">
-              <div className="stat-item">
-                <span className="stat-icon">🏆</span>
-                <span className="stat-value">{achievementCount}</span>
-                <span className="stat-label">Achievements</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-icon">🔥</span>
-                <span className="stat-value">{currentStreak}</span>
-                <span className="stat-label">Day Streak</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-icon">⭐</span>
-                <span className="stat-value">{starPoints || 0}</span>
-                <span className="stat-label">Stars</span>
-              </div>
-            </div>
-          )}
-          
-          <div className="story-actions">
-            <button 
-              onClick={handleToggleReadAloud} 
-              className={`read-aloud-btn ${showReadAloudPanel ? 'active' : ''}`}
-              title="Read story aloud"
-            >
-              🔊 Read Aloud
+            <button onClick={onBack} className="back-btn">
+              ← New Story
             </button>
-            <button onClick={handlePrint} className="print-btn">
-              🖨️ Print
-            </button>
-            <div className="share-dropdown">
+          </div>
+          
+          {/* Read Aloud and Print Section - Separate */}
+          <div className="story-action-section">
+            <div className="action-buttons">
               <button 
-                onClick={() => setShowShareMenu(!showShareMenu)} 
-                className="share-btn"
+                onClick={handleToggleReadAloud} 
+                className={`read-aloud-btn ${showReadAloudPanel ? 'active' : ''}`}
+                title="Read story aloud"
               >
-                📤 Share
+                🔊 Read Aloud
               </button>
-              {showShareMenu && (
-                <div className="share-menu">
-                  <button onClick={() => handleShare('facebook')}>Facebook</button>
-                  <button onClick={() => handleShare('twitter')}>Twitter</button>
-                  <button onClick={() => handleShare('whatsapp')}>WhatsApp</button>
-                  <button onClick={() => handleShare('email')}>Email</button>
-                </div>
-              )}
+              <button onClick={handlePrint} className="print-btn">
+                🖨️ Print
+              </button>
+              <div className="share-dropdown">
+                <button 
+                  onClick={() => setShowShareMenu(!showShareMenu)} 
+                  className="share-btn"
+                >
+                  📤 Share
+                </button>
+                {showShareMenu && (
+                  <div className="share-menu">
+                    <button onClick={() => handleShare('facebook')}>Facebook</button>
+                    <button onClick={() => handleShare('twitter')}>Twitter</button>
+                    <button onClick={() => handleShare('whatsapp')}>WhatsApp</button>
+                    <button onClick={() => handleShare('email')}>Email</button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
         {/* Read Aloud Control Panel */}
         {showReadAloudPanel && (
@@ -755,7 +751,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                     {/* Show image or upgrade button after first paragraph */}
                     {index === 0 && (
                       <div className="story-image-float">
-                        {(subscriptionTier === 'premium' || subscriptionTier === 'family') ? (
+                        {(subscriptionTier === 'plus' || subscriptionTier === 'premium' || subscriptionTier === 'family') ? (
                           <div className="story-image-wrapper">
                             {story.imageUrl ? (
                               <img 
@@ -812,8 +808,8 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                         )}
                       </div>
                     )}
-                    {/* Show ad at midpoint (only for free and non-logged-in users) */}
-                    {index === midpoint - 1 && (subscriptionTier === 'free' || !subscriptionTier) && (
+                    {/* Show ad at midpoint (only for free tier users and non-logged-in users) */}
+                    {index === midpoint - 1 && (subscriptionTier === 'try-now' || subscriptionTier === 'reader' || !user) && (
                       <div className="ad-container story-inline-ad">
                         <div className="ad-label">Advertisement</div>
                         <AdSense 

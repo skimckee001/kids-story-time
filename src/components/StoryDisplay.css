@@ -21,12 +21,61 @@
 .story-header {
   margin: 0 0 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   background: white;
   padding: 15px 25px;
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Daily Streak Section */
+.daily-streak-section {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.streak-container {
+  background: white;
+  padding: 15px 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.streak-icon {
+  font-size: 28px;
+}
+
+.streak-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ff6b9d;
+}
+
+.streak-label {
+  font-size: 16px;
+  color: #666;
+  margin-left: 5px;
+}
+
+/* Story Action Section */
+.story-action-section {
+  background: white;
+  padding: 20px 25px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
 }
 
 .back-btn {

@@ -1,10 +1,10 @@
 import { supabase } from '../lib/supabase';
 
-function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth, onLogout }) {
+function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth, onLogout, onShowAchievements, onLogoClick }) {
   return (
     <header className="header-container">
       <div className="header-content">
-        <div className="header-left">
+        <div className="header-left" onClick={onLogoClick} style={{ cursor: 'pointer' }}>
           <div className="logo-icon">
             <span>📚</span>
           </div>
@@ -20,6 +20,15 @@ function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth,
                   <span className="star-icon">⭐</span>
                   <span className="star-count">{starPoints}</span>
                 </div>
+              )}
+              {onShowAchievements && (
+                <button 
+                  className="header-btn achievement-btn"
+                  onClick={onShowAchievements}
+                  title="View achievements"
+                >
+                  🏆 Achievements
+                </button>
               )}
               <button 
                 className="header-btn library-btn"
@@ -46,6 +55,17 @@ function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth,
             </>
           ) : (
             <>
+              <div className="star-display" title="Create an account to start earning stars!" style={{ cursor: 'help' }}>
+                <span className="star-icon">⭐</span>
+                <span className="star-count">0</span>
+              </div>
+              <button 
+                className="header-btn achievement-btn"
+                onClick={onShowAuth}
+                title="Sign up to unlock achievements"
+              >
+                🏆 Achievements
+              </button>
               <button 
                 className="header-btn library-btn"
                 onClick={onShowAuth}

@@ -602,6 +602,9 @@ function App() {
                         <button onClick={() => { setShowDashboard(true); setShowMoreMenu(false); }}>
                           📈 Parent Dashboard
                         </button>
+                        <button onClick={() => { window.open('/pricing-new.html', '_blank'); setShowMoreMenu(false); }}>
+                          💰 View Pricing
+                        </button>
                         <div className="dropdown-divider"></div>
                         <BedtimeMode 
                           isActive={bedtimeModeActive}
@@ -654,6 +657,13 @@ function App() {
                     onClick={() => setShowAuth(true)}
                   >
                     📚 Library
+                  </button>
+                  
+                  <button 
+                    className="header-btn"
+                    onClick={() => window.open('/pricing-new.html', '_blank')}
+                  >
+                    💰 Pricing
                   </button>
                   
                   <button 
@@ -969,9 +979,11 @@ function App() {
                     <>🎉 Save Your Story - Create Free Account</>
                   ) : (subscriptionTier === 'reader' || subscriptionTier === 'basic') && storiesRemaining <= 1 ? (
                     <>⭐ Upgrade to {subscriptionTier === 'reader' ? 'Story Maker' : 'Family'} - First Month Free</>
-                  ) : subscriptionTier === 'basic' || subscriptionTier === 'plus' ? (
+                  ) : (subscriptionTier === 'basic' || subscriptionTier === 'plus' || subscriptionTier === 'story-maker') ? (
                     <>👨‍👩‍👧‍👦 Upgrade to Family Plan - Unlimited Everything</>
-                  ) : null}
+                  ) : (
+                    <>✨ Explore Premium Features</>
+                  )}
                 </button>
 
                 <div style={{ fontSize: '14px', color: '#666' }}>
