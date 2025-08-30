@@ -1,0 +1,357 @@
+/* Celebration Animation Styles */
+
+.celebration-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  pointer-events: none;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Celebration Message */
+.celebration-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10;
+}
+
+.message-content {
+  background: white;
+  padding: 30px 50px;
+  border-radius: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: popIn 0.5s ease;
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.celebration-icon {
+  font-size: 60px;
+  display: block;
+  margin-bottom: 15px;
+  animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.celebration-message h2 {
+  color: #333;
+  font-size: 32px;
+  margin: 0 0 10px 0;
+  font-weight: bold;
+}
+
+.celebration-message p {
+  color: #666;
+  font-size: 18px;
+  margin: 0;
+}
+
+.sparkles {
+  font-size: 24px;
+  animation: sparkle 1.5s ease infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+/* Confetti Celebration */
+.confetti-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  animation: confettiFall 3s linear infinite;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Stars Celebration */
+.stars-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.floating-star {
+  position: absolute;
+  font-size: 30px;
+  bottom: -50px;
+  animation: floatUp 3s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.star-message {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: white;
+}
+
+.star-message h2 {
+  color: white;
+}
+
+/* Achievement Celebration */
+.achievement-celebration {
+  background: radial-gradient(circle at center, rgba(255, 215, 0, 0.2), transparent);
+}
+
+.achievement-badge-large {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: badgeAppear 0.8s ease;
+}
+
+@keyframes badgeAppear {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2) rotate(10deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.badge-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.6), transparent);
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.3;
+  }
+}
+
+.badge-icon {
+  font-size: 80px;
+  z-index: 1;
+  animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Streak Celebration */
+.streak-celebration {
+  background: radial-gradient(circle at center, rgba(255, 69, 0, 0.2), transparent);
+}
+
+.streak-fire {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 10px;
+}
+
+.fire-emoji {
+  font-size: 50px;
+  animation: fireFlicker 0.5s ease infinite;
+}
+
+@keyframes fireFlicker {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+  }
+  25% {
+    transform: scale(1.1) translateY(-5px);
+  }
+  75% {
+    transform: scale(0.9) translateY(5px);
+  }
+}
+
+/* Level Up Celebration */
+.level-up-celebration {
+  background: radial-gradient(circle at center, rgba(102, 126, 234, 0.3), transparent);
+}
+
+.level-up-animation {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+}
+
+.level-circle {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 4px solid #667eea;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  animation: levelPulse 1s ease;
+}
+
+@keyframes levelPulse {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.level-text {
+  font-size: 24px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.level-rays {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  animation: rayRotate 10s linear infinite;
+}
+
+@keyframes rayRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.ray {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 100px;
+  background: linear-gradient(to bottom, transparent, #667eea, transparent);
+  transform-origin: center top;
+  opacity: 0.5;
+}
+
+/* Default Celebration */
+.default-celebration .celebration-message {
+  animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translate(-50%, -150%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .celebration-message h2 {
+    font-size: 24px;
+  }
+  
+  .celebration-message p {
+    font-size: 16px;
+  }
+  
+  .message-content {
+    padding: 20px 30px;
+  }
+  
+  .celebration-icon {
+    font-size: 40px;
+  }
+  
+  .badge-icon {
+    font-size: 60px;
+  }
+  
+  .achievement-badge-large {
+    width: 100px;
+    height: 100px;
+  }
+}

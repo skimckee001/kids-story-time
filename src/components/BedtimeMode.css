@@ -1,0 +1,348 @@
+/* Bedtime Mode Styles */
+
+/* Toggle Button */
+.bedtime-toggle-btn {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #4a5568, #2d3748);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.bedtime-toggle-btn:hover {
+  background: linear-gradient(135deg, #2d3748, #1a202c);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Settings Modal */
+.bedtime-settings-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.bedtime-settings {
+  background: linear-gradient(135deg, #1a202c, #2d3748);
+  color: white;
+  border-radius: 30px;
+  padding: 40px;
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+  animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  opacity: 1;
+  transform: rotate(90deg);
+}
+
+.bedtime-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.moon-icon {
+  font-size: 48px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.bedtime-header h2 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.bedtime-description {
+  text-align: center;
+  color: #cbd5e0;
+  margin-bottom: 25px;
+  font-size: 16px;
+}
+
+.bedtime-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.feature-icon {
+  font-size: 20px;
+}
+
+/* Timer Settings */
+.timer-settings {
+  margin-bottom: 30px;
+}
+
+.timer-settings label {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.timer-options {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.timer-options button {
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.timer-options button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.timer-options button.active {
+  background: #4a5568;
+  border-color: #718096;
+}
+
+.activate-btn {
+  width: 100%;
+  padding: 15px 30px;
+  background: linear-gradient(135deg, #5a67d8, #667eea);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.activate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(90, 103, 216, 0.4);
+}
+
+/* Active Display */
+.bedtime-active-display {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.bedtime-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, rgba(26, 32, 44, 0.95), rgba(45, 55, 72, 0.95));
+  backdrop-filter: blur(10px);
+  border-radius: 30px;
+  color: white;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.moon-animated {
+  font-size: 24px;
+  animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.status-text {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.time-remaining {
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.end-bedtime-btn {
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.end-bedtime-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Global Bedtime Mode Theme */
+body.bedtime-mode {
+  transition: all 1s ease;
+}
+
+body.bedtime-mode * {
+  transition: background-color 1s ease, color 1s ease;
+}
+
+body.bedtime-mode {
+  background: linear-gradient(135deg, #1a202c, #2d3748) !important;
+}
+
+body.bedtime-mode .main-content {
+  background: linear-gradient(135deg, #2d3748, #4a5568) !important;
+  color: #e2e8f0 !important;
+}
+
+body.bedtime-mode .header-container {
+  background: rgba(26, 32, 44, 0.95) !important;
+}
+
+body.bedtime-mode .story-card {
+  background: linear-gradient(135deg, #2d3748, #4a5568) !important;
+  color: #e2e8f0 !important;
+}
+
+body.bedtime-mode .generate-btn {
+  background: linear-gradient(135deg, #4a5568, #718096) !important;
+}
+
+body.bedtime-mode .generate-btn:hover {
+  background: linear-gradient(135deg, #718096, #a0aec0) !important;
+}
+
+body.bedtime-mode input,
+body.bedtime-mode textarea,
+body.bedtime-mode select {
+  background: rgba(45, 55, 72, 0.5) !important;
+  color: #e2e8f0 !important;
+  border-color: #4a5568 !important;
+}
+
+body.bedtime-mode .theme-option {
+  background: rgba(45, 55, 72, 0.5) !important;
+  border-color: #4a5568 !important;
+}
+
+body.bedtime-mode .theme-option.selected {
+  background: linear-gradient(135deg, #4a5568, #718096) !important;
+  border-color: #718096 !important;
+}
+
+/* Calming animations for bedtime mode */
+body.bedtime-mode .star-icon,
+body.bedtime-mode .star-icon-large {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bedtime-settings {
+    padding: 30px 20px;
+  }
+  
+  .bedtime-features {
+    grid-template-columns: 1fr;
+  }
+  
+  .timer-options {
+    flex-wrap: wrap;
+  }
+  
+  .bedtime-active-display {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+  }
+  
+  .bedtime-status {
+    justify-content: space-between;
+  }
+}

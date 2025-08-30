@@ -7,6 +7,9 @@ import AchievementSystem from './components/AchievementSystem';
 import ReadingStreak from './components/ReadingStreak';
 import StarRewardsSystem, { addStarsToChild } from './components/StarRewardsSystem';
 import ParentDashboard from './components/ParentDashboard';
+import BedtimeMode from './components/BedtimeMode';
+import ReadingGoals from './components/ReadingGoals';
+import CelebrationAnimation, { useCelebration } from './components/CelebrationAnimation';
 import './App.original.css';
 
 // Story length options matching the current HTML
@@ -98,6 +101,8 @@ function App() {
   const [showAchievements, setShowAchievements] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
+  const [bedtimeModeActive, setBedtimeModeActive] = useState(false);
+  const { triggerCelebration, CelebrationComponent } = useCelebration();
 
   useEffect(() => {
     checkUser();
@@ -236,6 +241,14 @@ function App() {
         if (selectedChildProfile?.id) {
           const newTotal = addStarsToChild(selectedChildProfile.id, 10, 'Completed a story');
           console.log(`Awarded 10 stars! New total: ${newTotal}`);
+          
+          // Trigger celebration animation
+          triggerCelebration('stars', 'You earned 10 stars!');
+          
+          // Check for milestones
+          if (newTotal >= 100 && newTotal < 110) {
+            setTimeout(() => triggerCelebration('achievement', '100 Stars Milestone!'), 3500);
+          }
         }
         
         // Auto-save story for logged-in users
@@ -516,6 +529,14 @@ function App() {
             <div className="header-right">
               {user ? (
                 <>
+                  <BedtimeMode 
+                    isActive={bedtimeModeActive}
+                    onToggle={setBedtimeModeActive}
+                    onTimeout={() => {
+                      setBedtimeModeActive(false);
+                      alert('Bedtime! The app will now close. Sweet dreams! 🌙');
+                    }}
+                  />
                   <div className="star-display">
                     <span className="star-icon">⭐</span>
                     <span className="star-count">{starPoints}</span>
@@ -616,7 +637,18 @@ function App() {
         <div className="main-content">
           {/* Reading Streak Display - only show if profile selected */}
           {selectedChildProfile && (
-            <ReadingStreak childProfile={selectedChildProfile} />
+            <>
+              <ReadingStreak childProfile={selectedChildProfile} />
+              
+              {/* Reading Goals */}
+              <ReadingGoals 
+                childProfile={selectedChildProfile}
+                onGoalComplete={(goal, stars) => {
+                  console.log(`Goal completed: ${goal.title}, earned ${stars} stars!`);
+                  triggerCelebration('achievement', `Goal Complete: ${goal.title}`);
+                }}
+              />
+            </>
           )}
           
           {/* Prompt to create profile if none selected */}
@@ -1055,6 +1087,9 @@ function App() {
           onClose={() => setShowDashboard(false)}
         />
       )}
+      
+      {/* Celebration Animations */}
+      {CelebrationComponent}
     </div>
   );
 }

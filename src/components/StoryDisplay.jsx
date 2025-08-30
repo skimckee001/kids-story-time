@@ -20,8 +20,13 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
   const [voiceLoadError, setVoiceLoadError] = useState(false);
   const [achievementCount, setAchievementCount] = useState(0);
   const [currentStreak, setCurrentStreak] = useState(0);
+  const [storyStartTime, setStoryStartTime] = useState(null);
 
   useEffect(() => {
+    // Track story start time
+    const startTime = Date.now();
+    setStoryStartTime(startTime);
+    
     // Check if story is already saved (or auto-saved)
     if (story?.savedId) {
       setIsSaved(true);
@@ -90,8 +95,31 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
       if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
       }
+      
+      // Save reading time when leaving the story
+      if (storyStartTime && childProfile?.id) {
+        const endTime = Date.now();
+        const readingDuration = Math.floor((endTime - storyStartTime) / 1000 / 60); // Convert to minutes
+        
+        if (readingDuration > 0) { // Only track if at least 1 minute
+          const timeData = JSON.parse(localStorage.getItem(`readingTime_${childProfile.id}`) || '{"total": 0, "sessions": 0, "history": []}');
+          timeData.total = (timeData.total || 0) + readingDuration;
+          timeData.sessions = (timeData.sessions || 0) + 1;
+          timeData.history = timeData.history || [];
+          timeData.history.push({
+            date: new Date().toISOString(),
+            duration: readingDuration,
+            storyTitle: story?.title
+          });
+          // Keep only last 30 sessions
+          if (timeData.history.length > 30) {
+            timeData.history = timeData.history.slice(-30);
+          }
+          localStorage.setItem(`readingTime_${childProfile.id}`, JSON.stringify(timeData));
+        }
+      }
     };
-  }, [story, childProfile]);
+  }, [story, childProfile, storyStartTime]);
 
   const checkIfSaved = async () => {
     if (!story?.id) return;
