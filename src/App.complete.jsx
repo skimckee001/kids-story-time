@@ -6,6 +6,7 @@ import ProfileManager from './components/ProfileManager';
 import AchievementSystem from './components/AchievementSystem';
 import ReadingStreak from './components/ReadingStreak';
 import StarRewardsSystem, { addStarsToChild } from './components/StarRewardsSystem';
+import ParentDashboard from './components/ParentDashboard';
 import './App.original.css';
 
 // Story length options matching the current HTML
@@ -96,6 +97,7 @@ function App() {
   const [selectedChildProfile, setSelectedChildProfile] = useState(null);
   const [showAchievements, setShowAchievements] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
+  const [showDashboard, setShowDashboard] = useState(false);
 
   useEffect(() => {
     checkUser();
@@ -251,10 +253,19 @@ function App() {
           theme: selectedThemes[0] || '',
           themes: selectedThemes,
           created_at: new Date().toISOString(),
-          reading_level: readingLevel
+          timestamp: new Date().toISOString(),
+          reading_level: readingLevel,
+          readingLevel: readingLevel
         };
         existingStories.push(newStoryEntry);
         localStorage.setItem('stories', JSON.stringify(existingStories));
+        
+        // Also save per child for dashboard tracking
+        if (selectedChildProfile?.id) {
+          const childStories = JSON.parse(localStorage.getItem(`stories_${selectedChildProfile.id}`) || '[]');
+          childStories.push(newStoryEntry);
+          localStorage.setItem(`stories_${selectedChildProfile.id}`, JSON.stringify(childStories));
+        }
         
         // Update star points and save to profile
         const newStarPoints = starPoints + 1;
@@ -461,6 +472,7 @@ function App() {
         user={user}
         subscriptionTier={subscriptionTier}
         starPoints={starPoints}
+        childProfile={selectedChildProfile}
         onBack={() => {
           setShowStory(false);
           setCurrentStory(null);
@@ -534,6 +546,13 @@ function App() {
                     onClick={() => setShowLibrary(true)}
                   >
                     📖 My Library
+                  </button>
+                  <button 
+                    className="header-btn"
+                    onClick={() => setShowDashboard(true)}
+                    title="Parent dashboard"
+                  >
+                    📊 Dashboard
                   </button>
                   {subscriptionTier === 'free' && (
                     <button className="header-btn trial-btn">
@@ -1028,6 +1047,13 @@ function App() {
             />
           </div>
         </div>
+      )}
+
+      {/* Parent Dashboard Modal */}
+      {showDashboard && (
+        <ParentDashboard
+          onClose={() => setShowDashboard(false)}
+        />
       )}
     </div>
   );

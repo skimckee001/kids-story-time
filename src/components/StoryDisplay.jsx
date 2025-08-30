@@ -5,7 +5,7 @@ import AdSense from './AdSense';
 import './StoryDisplay.css';
 import '../App.original.css';
 
-function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, subscriptionTier, starPoints }) {
+function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, subscriptionTier, starPoints, childProfile }) {
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [rating, setRating] = useState(0);
@@ -18,6 +18,8 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
   const [availableVoices, setAvailableVoices] = useState([]);
   const [showReadAloudPanel, setShowReadAloudPanel] = useState(false);
   const [voiceLoadError, setVoiceLoadError] = useState(false);
+  const [achievementCount, setAchievementCount] = useState(0);
+  const [currentStreak, setCurrentStreak] = useState(0);
 
   useEffect(() => {
     // Check if story is already saved (or auto-saved)
@@ -25,6 +27,22 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
       setIsSaved(true);
     } else {
       checkIfSaved();
+    }
+    
+    // Load achievement and streak data
+    if (childProfile?.id) {
+      // Load achievements
+      const achievements = localStorage.getItem(`achievements_${childProfile.id}`);
+      if (achievements) {
+        setAchievementCount(JSON.parse(achievements).length);
+      }
+      
+      // Load streak data
+      const streakData = localStorage.getItem(`readingStreak_${childProfile.id}`);
+      if (streakData) {
+        const streak = JSON.parse(streakData);
+        setCurrentStreak(streak.current || 0);
+      }
     }
     
     // Load available voices
@@ -73,7 +91,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
         window.speechSynthesis.cancel();
       }
     };
-  }, [story]);
+  }, [story, childProfile]);
 
   const checkIfSaved = async () => {
     if (!story?.id) return;
@@ -557,6 +575,28 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
           <button onClick={onBack} className="back-btn">
             ← New Story
           </button>
+          
+          {/* Achievement and Streak Display */}
+          {childProfile && (
+            <div className="story-stats">
+              <div className="stat-item">
+                <span className="stat-icon">🏆</span>
+                <span className="stat-value">{achievementCount}</span>
+                <span className="stat-label">Achievements</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-icon">🔥</span>
+                <span className="stat-value">{currentStreak}</span>
+                <span className="stat-label">Day Streak</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-icon">⭐</span>
+                <span className="stat-value">{starPoints || 0}</span>
+                <span className="stat-label">Stars</span>
+              </div>
+            </div>
+          )}
+          
           <div className="story-actions">
             <button 
               onClick={handleToggleReadAloud} 
