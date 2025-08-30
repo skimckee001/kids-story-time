@@ -744,8 +744,8 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                         )}
                       </div>
                     )}
-                    {/* Show ad at midpoint (only for non-premium users) */}
-                    {index === midpoint - 1 && subscriptionTier === 'free' && (
+                    {/* Show ad at midpoint (only for free and non-logged-in users) */}
+                    {index === midpoint - 1 && (subscriptionTier === 'free' || !subscriptionTier) && (
                       <div className="ad-container story-inline-ad">
                         <div className="ad-label">Advertisement</div>
                         <AdSense 

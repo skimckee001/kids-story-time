@@ -5,6 +5,7 @@ import StoryLibrary from './components/StoryLibrary';
 import ProfileManager from './components/ProfileManager';
 import AchievementSystem from './components/AchievementSystem';
 import ReadingStreak from './components/ReadingStreak';
+import StarRewardsSystem, { addStarsToChild } from './components/StarRewardsSystem';
 import './App.original.css';
 
 // Story length options matching the current HTML
@@ -94,6 +95,7 @@ function App() {
   const [starPoints, setStarPoints] = useState(0);
   const [selectedChildProfile, setSelectedChildProfile] = useState(null);
   const [showAchievements, setShowAchievements] = useState(false);
+  const [showRewards, setShowRewards] = useState(false);
 
   useEffect(() => {
     checkUser();
@@ -227,6 +229,12 @@ function App() {
         
         setCurrentStory(storyData);
         setShowStory(true);
+        
+        // Award stars for completing a story
+        if (selectedChildProfile?.id) {
+          const newTotal = addStarsToChild(selectedChildProfile.id, 10, 'Completed a story');
+          console.log(`Awarded 10 stars! New total: ${newTotal}`);
+        }
         
         // Auto-save story for logged-in users
         if (user) {
@@ -513,6 +521,13 @@ function App() {
                     title="View achievements"
                   >
                     🏆 Achievements
+                  </button>
+                  <button 
+                    className="header-btn"
+                    onClick={() => setShowRewards(true)}
+                    title="Star rewards shop"
+                  >
+                    ⭐ Rewards
                   </button>
                   <button 
                     className="header-btn library-btn"
@@ -993,6 +1008,26 @@ function App() {
           childProfile={selectedChildProfile}
           onClose={() => setShowAchievements(false)}
         />
+      )}
+
+      {/* Star Rewards System Modal */}
+      {showRewards && (
+        <div className="auth-modal">
+          <div className="auth-content" style={{ maxWidth: '900px' }}>
+            <button 
+              className="auth-close" 
+              onClick={() => setShowRewards(false)}
+            >
+              ×
+            </button>
+            <StarRewardsSystem
+              childProfile={selectedChildProfile}
+              onRewardUnlocked={(reward) => {
+                console.log('Reward unlocked:', reward);
+              }}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
