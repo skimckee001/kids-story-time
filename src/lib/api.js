@@ -157,5 +157,6 @@ class ApiClient {
   }
 }
 
-export const apiClient = new ApiClient();
+// Use the bridged client from api-bridge.js instead
+// export const apiClient = new ApiClient();
 
