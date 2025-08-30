@@ -3,9 +3,8 @@ import { supabase } from '../lib/supabase';
 import StoryDisplay from './StoryDisplay';
 import './StoryLibrary.css';
 
-function StoryLibrary({ onBack }) {
-  const [stories, setStories] = useState([]);
-  const [loading, setLoading] = useState(true);
+export function StoryLibrary({ stories = [], onStorySelect, onRefresh }) {
+  const [loading, setLoading] = useState(false);
   const [selectedStory, setSelectedStory] = useState(null);
   const [filterChild, setFilterChild] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -13,52 +12,26 @@ function StoryLibrary({ onBack }) {
   const [children, setChildren] = useState([]);
 
   useEffect(() => {
-    loadStories();
+    // Load children profiles when component mounts
+    const loadChildren = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const { data, error } = await supabase
+          .from('children')
+          .select('*')
+          .eq('user_id', user.id);
+
+        if (error) throw error;
+        setChildren(data || []);
+      } catch (error) {
+        console.error('Error loading children:', error);
+      }
+    };
+    
     loadChildren();
   }, []);
-
-  const loadStories = async () => {
-    setLoading(true);
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        setLoading(false);
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from('stories')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      
-      setStories(data || []);
-    } catch (error) {
-      console.error('Error loading stories:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadChildren = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('children')
-        .select('*')
-        .eq('user_id', user.id);
-
-      if (error) throw error;
-      setChildren(data || []);
-    } catch (error) {
-      console.error('Error loading children:', error);
-    }
-  };
 
   const handleDeleteStory = async (storyId) => {
     if (!confirm('Are you sure you want to delete this story?')) return;
@@ -71,8 +44,8 @@ function StoryLibrary({ onBack }) {
 
       if (error) throw error;
       
-      // Remove from local state
-      setStories(stories.filter(s => s.id !== storyId));
+      // Refresh the stories list
+      if (onRefresh) onRefresh();
     } catch (error) {
       console.error('Error deleting story:', error);
       alert('Failed to delete story');
@@ -90,12 +63,8 @@ function StoryLibrary({ onBack }) {
 
       if (error) throw error;
       
-      // Update local state
-      setStories(stories.map(s => 
-        s.id === story.id 
-          ? { ...s, is_favorite: newFavoriteStatus }
-          : s
-      ));
+      // Refresh the stories list
+      if (onRefresh) onRefresh();
     } catch (error) {
       console.error('Error updating favorite:', error);
     }
@@ -144,9 +113,6 @@ function StoryLibrary({ onBack }) {
       {/* Header */}
       <div className="library-header">
         <div className="header-content">
-          <button onClick={onBack} className="back-btn">
-            ← Back
-          </button>
           <h1 className="library-title">📚 My Story Library</h1>
           <div className="header-stats">
             <span className="stat-badge">{stories.length} Stories</span>
@@ -210,9 +176,9 @@ function StoryLibrary({ onBack }) {
                 ? 'No stories match your search. Try different keywords.'
                 : 'Create your first magical story to see it here!'}
             </p>
-            {!searchTerm && (
-              <button onClick={onBack} className="create-story-btn">
-                ✨ Create Your First Story
+            {!searchTerm && onRefresh && (
+              <button onClick={onRefresh} className="create-story-btn">
+                🔄 Refresh Library
               </button>
             )}
           </div>
@@ -222,7 +188,7 @@ function StoryLibrary({ onBack }) {
               <StoryCard
                 key={story.id}
                 story={story}
-                onRead={() => setSelectedStory(story)}
+                onRead={() => onStorySelect(story)}
                 onDelete={() => handleDeleteStory(story.id)}
                 onToggleFavorite={() => handleToggleFavorite(story)}
               />

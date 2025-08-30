@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button.jsx';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.jsx';
 import { Badge } from '@/components/ui/badge.jsx';
-import { Label } from '@/components/ui/label.jsx';
 import { 
   BookOpen, Users, Settings, BarChart3, Sparkles, 
   Crown, Palette, Globe, Headphones, Image as ImageIcon,
@@ -25,9 +24,8 @@ import { authEnhanced } from './lib/auth-enhanced';
 import storyAutoSave from './lib/story-autosave';
 import gamification from './lib/gamification';
 import { useLocalStorage } from './hooks/useLocalStorage.js';
-import { supabase } from './lib/supabase.js';
 
-function App() {
+function AppEnhanced() {
   // State management
   const [user, setUser] = useState(null);
   const [children, setChildren] = useLocalStorage('children', []);
@@ -361,7 +359,7 @@ function App() {
                   <Button 
                     variant="outline" 
                     className="w-full"
-                    onClick={() => handleCreateChildProfile({})}
+                    onClick={() => {/* Open create profile modal */}}
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Add Child Profile
@@ -501,5 +499,4 @@ function App() {
   );
 }
 
-export default App;
-
+export default AppEnhanced;
