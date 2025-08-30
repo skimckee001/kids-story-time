@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import Header from './Header';
 import StoryDisplay from './StoryDisplay';
 import AchievementSystem from './AchievementSystem';
 import ReadingStreak from './ReadingStreak';
@@ -18,11 +19,24 @@ function StoryLibrary({ onBack }) {
   const [showRewards, setShowRewards] = useState(false);
   const [starPoints, setStarPoints] = useState(0);
   const [currentChildProfile, setCurrentChildProfile] = useState(null);
+  const [user, setUser] = useState(null);
+  const [subscriptionTier, setSubscriptionTier] = useState('reader');
 
   useEffect(() => {
     loadStories();
     loadStarsAndProfile();
+    checkUser();
   }, []);
+  
+  const checkUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      setUser(user);
+      // Get subscription tier from localStorage or default
+      const tier = localStorage.getItem('subscriptionTier') || 'reader';
+      setSubscriptionTier(tier);
+    }
+  };
 
   useEffect(() => {
     // Load children profiles when component mounts
@@ -187,47 +201,39 @@ function StoryLibrary({ onBack }) {
   }
 
   return (
-    <div className="library-container">
-      {/* Header with Gamification Elements */}
-      <div className="library-header-enhanced">
-        <div className="library-top-bar">
+    <div className="library-page">
+      {/* Use the same Header component as other pages */}
+      <Header 
+        user={user}
+        subscriptionTier={subscriptionTier}
+        starPoints={starPoints}
+        onShowLibrary={() => {}}
+        onShowAuth={() => {}}
+        onShowAchievements={() => setShowAchievements(true)}
+        onShowRewards={() => setShowRewards(true)}
+        onLogoClick={onBack}
+      />
+      
+      <div className="library-container">
+        {/* Reading Streak Section - Same as other pages */}
+        {currentChildProfile && (
+          <ReadingStreak childProfile={currentChildProfile} />
+        )}
+        
+        {/* Library Title Section */}
+        <div className="library-title-section">
           <button onClick={onBack} className="back-btn">
-            ← Back
+            ← Back to Home
           </button>
           <h1>My Story Library</h1>
-          <div className="library-gamification">
-            {/* Star Display */}
-            <button 
-              className="star-display clickable"
-              onClick={() => setShowRewards(true)}
-              title="Click to open rewards shop"
-            >
-              <span className="star-icon">⭐</span>
-              <span className="star-count">{starPoints}</span>
-            </button>
-            
-            {/* Achievements Button */}
-            <button 
-              className="header-btn achievement-btn"
-              onClick={() => setShowAchievements(true)}
-            >
-              🏆 Achievements
-            </button>
-            
-            {/* Reading Streak */}
-            {currentChildProfile && (
-              <ReadingStreak childProfile={currentChildProfile} compact={true} />
-            )}
+          <div className="library-stats">
+            <span>{stories.length} {stories.length === 1 ? 'Story' : 'Stories'}</span>
+            <span>{children.length} {children.length === 1 ? 'Child' : 'Children'}</span>
           </div>
         </div>
-        <div className="header-stats">
-          <span>{stories.length} {stories.length === 1 ? 'Story' : 'Stories'}</span>
-          <span>{children.length} {children.length === 1 ? 'Child' : 'Children'}</span>
-        </div>
-      </div>
 
-      {/* Search and Filters */}
-      <div className="library-controls">
+        {/* Search and Filters */}
+        <div className="library-controls">
         <div className="search-container">
           <span className="search-icon">🔍</span>
           <input
@@ -300,6 +306,7 @@ function StoryLibrary({ onBack }) {
             ))}
           </div>
         )}
+        </div>
       </div>
 
       {/* Achievement System Modal */}
