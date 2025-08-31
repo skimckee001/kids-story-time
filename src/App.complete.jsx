@@ -618,7 +618,18 @@ function App() {
                 KidsStoryTime<span className="logo-domain">.ai</span>
               </div>
             </div>
-            <div className="header-right">
+          </div>
+          <div className="tagline">Join thousands of families creating magical bedtime moments</div>
+          
+          {/* Beta Banner */}
+          <div className="beta-banner">
+            <div className="beta-title">🎉 LAUNCH SPECIAL - First Month FREE on All Plans!</div>
+            <div className="beta-subtitle">Try our Story Maker or Family plans risk-free for 30 days</div>
+          </div>
+          
+          {/* Navigation Bar */}
+          <div className="header-content" style={{marginTop: '1rem'}}>
+            <div className="header-right" style={{width: '100%', justifyContent: 'center'}}>
               {user ? (
                 <>
                   {/* Star Display - Always visible for motivation */}
@@ -746,13 +757,6 @@ function App() {
               )}
             </div>
           </div>
-          <div className="tagline">Join thousands of families creating magical bedtime moments</div>
-          
-          {/* Beta Banner */}
-          <div className="beta-banner">
-            <div className="beta-title">🎉 LAUNCH SPECIAL - First Month FREE on All Plans!</div>
-            <div className="beta-subtitle">Try our Story Maker or Family plans risk-free for 30 days</div>
-          </div>
         </header>
 
         {/* Account Section - Hidden during beta period */}
@@ -868,13 +872,14 @@ function App() {
                   </button>
                 </div>
               </div>
-              <label className="include-name-label">
+              <label className="include-name-label" style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
                 <input
                   type="checkbox"
                   checked={includeNameInStory}
                   onChange={(e) => setIncludeNameInStory(e.target.checked)}
+                  style={{margin: 0}}
                 />
-                <span style={{fontWeight: 'normal'}}>Include child's name as main character in story</span>
+                <span style={{fontWeight: 'normal'}}>Include name as main character</span>
               </label>
             </div>
 
@@ -887,6 +892,7 @@ function App() {
                   className="info-btn" 
                   onClick={() => alert('Tips:\n• Be specific about the setting (e.g., "underwater kingdom", "space station")\n• Include your child\'s interests (e.g., "dinosaurs who love pizza")\n• Add a lesson or moral (e.g., "about sharing", "being brave")\n• Mention favorite characters or themes\n• The more detail, the better the story!')}
                   title="Click for story tips"
+                  style={{color: '#667eea', fontWeight: '600', cursor: 'pointer'}}
                 >
                   💡 Tips
                 </button>
