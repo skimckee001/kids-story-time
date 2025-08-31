@@ -873,17 +873,31 @@ function App() {
                   </button>
                 </div>
               </div>
-              <div style={{marginTop: '10px'}}>
-                <label className="include-name-label" style={{display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'flex-start', width: 'auto'}}>
-                  <input
-                    type="checkbox"
-                    checked={includeNameInStory}
-                    onChange={(e) => setIncludeNameInStory(e.target.checked)}
-                    style={{margin: 0}}
-                  />
-                  <span style={{fontWeight: 'normal'}}>Include name as main character</span>
-                </label>
-              </div>
+            </div>
+            
+            {/* Include Name Checkbox - Outside form-group for proper alignment */}
+            <div style={{
+              marginTop: '-15px',
+              marginBottom: '20px',
+              paddingLeft: '0px'
+            }}>
+              <label style={{
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '6px', 
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 'normal',
+                color: '#333'
+              }}>
+                <input
+                  type="checkbox"
+                  checked={includeNameInStory}
+                  onChange={(e) => setIncludeNameInStory(e.target.checked)}
+                  style={{margin: 0, cursor: 'pointer', width: 'auto'}}
+                />
+                Include name as main character
+              </label>
             </div>
 
             {/* Story Prompt */}
