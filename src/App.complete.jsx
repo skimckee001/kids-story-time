@@ -615,7 +615,7 @@ function App() {
                 <span>📚</span>
               </div>
               <div className="logo-text">
-                KidsStoryTime<span className="logo-domain">.org</span>
+                KidsStoryTime<span className="logo-domain">.ai</span>
               </div>
             </div>
             <div className="header-right">
@@ -746,13 +746,13 @@ function App() {
               )}
             </div>
           </div>
+          <div className="tagline">Join thousands of families creating magical bedtime moments</div>
+          
           {/* Beta Banner */}
           <div className="beta-banner">
             <div className="beta-title">🎉 LAUNCH SPECIAL - First Month FREE on All Plans!</div>
             <div className="beta-subtitle">Try our Story Maker or Family plans risk-free for 30 days</div>
           </div>
-          
-          <div className="tagline">Join thousands of families creating magical bedtime moments</div>
         </header>
 
         {/* Account Section - Hidden during beta period */}
