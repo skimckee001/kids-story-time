@@ -212,15 +212,15 @@ function ReadingStreak({ childProfile }) {
         <div className="streak-item current">
           <span className="streak-emoji">{getStreakEmoji(streakData.current)}</span>
           <div className="streak-details">
-            <span className="streak-value">{streakData.current}</span>
-            <span className="streak-label">Day Streak</span>
+            <span className="streak-value">{streakData.current} {streakData.current === 1 ? 'day' : 'days'}</span>
+            <span className="streak-label">Current Streak</span>
           </div>
         </div>
         
         <div className="streak-item">
           <span className="streak-icon">🏆</span>
           <div className="streak-details">
-            <span className="streak-value">{streakData.longest}</span>
+            <span className="streak-value">{streakData.longest} {streakData.longest === 1 ? 'day' : 'days'}</span>
             <span className="streak-label">Best Streak</span>
           </div>
         </div>
@@ -229,7 +229,7 @@ function ReadingStreak({ childProfile }) {
           <span className="streak-icon">📅</span>
           <div className="streak-details">
             <span className="streak-value">
-              {streakData.weeklyProgress.filter(d => d).length}/7
+              {streakData.weeklyProgress.filter(d => d).length}/7 days
             </span>
             <span className="streak-label">This Week</span>
           </div>
@@ -239,8 +239,8 @@ function ReadingStreak({ childProfile }) {
           <div className="streak-item milestone">
             <span className="streak-icon">🎯</span>
             <div className="streak-details">
-              <span className="streak-value">{daysToNextMilestone}</span>
-              <span className="streak-label">Days to {nextMilestone}-day milestone</span>
+              <span className="streak-value">{daysToNextMilestone} {daysToNextMilestone === 1 ? 'day' : 'days'} to achieve:</span>
+              <span className="streak-label">{nextMilestone}-day milestone</span>
             </div>
           </div>
         )}

@@ -359,7 +359,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
         <div class="header">
           <div class="header-left">
             <h1>${title}</h1>
-            <div class="site-name">KidsStoryTime.org</div>
+            <div class="site-name">KidsStoryTime.ai</div>
             <div class="story-for">Story for ${childName}</div>
           </div>
           <div class="header-stats">

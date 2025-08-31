@@ -664,7 +664,7 @@ function App() {
                           📈 Parent Dashboard
                         </button>
                         <button onClick={() => { window.open('/pricing-new.html', '_blank'); setShowMoreMenu(false); }}>
-                          💰 View Pricing
+                          💰 View Plans
                         </button>
                         <div className="dropdown-divider"></div>
                         <BedtimeMode 
@@ -724,7 +724,7 @@ function App() {
                     className="header-btn"
                     onClick={() => window.open('/pricing-new.html', '_blank')}
                   >
-                    💰 Pricing
+                    💰 Plans
                   </button>
                   
                   <button 
@@ -746,13 +746,13 @@ function App() {
               )}
             </div>
           </div>
-          <div className="tagline">Personalized stories and illustrations for your child</div>
-          
           {/* Beta Banner */}
           <div className="beta-banner">
             <div className="beta-title">🎉 LAUNCH SPECIAL - First Month FREE on All Plans!</div>
             <div className="beta-subtitle">Try our Story Maker or Family plans risk-free for 30 days</div>
           </div>
+          
+          <div className="tagline">Join thousands of families creating magical bedtime moments</div>
         </header>
 
         {/* Account Section - Hidden during beta period */}
@@ -848,16 +848,23 @@ function App() {
                   <button
                     type="button"
                     className={`gender-btn ${gender === 'boy' ? 'active' : ''}`}
-                    onClick={() => setGender('boy')}
+                    onClick={() => setGender(gender === 'boy' ? '' : 'boy')}
                   >
                     🧑 Boy
                   </button>
                   <button
                     type="button"
                     className={`gender-btn ${gender === 'girl' ? 'active' : ''}`}
-                    onClick={() => setGender('girl')}
+                    onClick={() => setGender(gender === 'girl' ? '' : 'girl')}
                   >
                     👩 Girl
+                  </button>
+                  <button
+                    type="button"
+                    className={`gender-btn ${gender === 'both' ? 'active' : ''}`}
+                    onClick={() => setGender('both')}
+                  >
+                    👫 Both
                   </button>
                 </div>
               </div>
@@ -875,7 +882,14 @@ function App() {
             <div className="form-group">
               <label htmlFor="customPrompt">
                 What would you like this story to be about?
-                <button type="button" className="info-btn" title="Click for examples">ℹ️</button>
+                <button 
+                  type="button" 
+                  className="info-btn" 
+                  onClick={() => alert('Tips:\n• Be specific about the setting (e.g., "underwater kingdom", "space station")\n• Include your child\'s interests (e.g., "dinosaurs who love pizza")\n• Add a lesson or moral (e.g., "about sharing", "being brave")\n• Mention favorite characters or themes\n• The more detail, the better the story!')}
+                  title="Click for story tips"
+                >
+                  💡 Tips
+                </button>
               </label>
               <div className="prompt-container">
                 <textarea
