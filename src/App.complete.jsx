@@ -629,7 +629,7 @@ function App() {
           
           {/* Navigation Bar */}
           <div className="header-content" style={{marginTop: '1rem'}}>
-            <div className="header-right" style={{width: '100%', justifyContent: 'center'}}>
+            <div className="header-right" style={{width: '100%', justifyContent: 'center', flexWrap: 'wrap', gap: '10px', minHeight: 'auto'}}>
               {user ? (
                 <>
                   {/* Star Display - Always visible for motivation */}
@@ -644,16 +644,18 @@ function App() {
                   
                   {/* Primary Gamification Actions */}
                   <button 
-                    className="header-btn achievement-btn"
+                    className="header-btn"
                     onClick={() => setShowAchievements(true)}
                     title="View achievements"
+                    style={{background: 'linear-gradient(135deg, #ffd700, #ffa500)', color: 'white', border: 'none', flex: '0 0 auto'}}
                   >
                     🏆 Achievements
                   </button>
                   
                   <button 
-                    className="header-btn primary-btn"
+                    className="header-btn"
                     onClick={() => setShowLibrary(true)}
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto'}}
                   >
                     📚 Library
                   </button>
@@ -717,16 +719,18 @@ function App() {
                   </div>
                   
                   <button 
-                    className="header-btn achievement-btn"
+                    className="header-btn"
                     onClick={() => setShowAuth(true)}
                     title="Sign up to unlock achievements"
+                    style={{background: 'linear-gradient(135deg, #ffd700, #ffa500)', color: 'white', border: 'none', flex: '0 0 auto'}}
                   >
                     🏆 Achievements
                   </button>
                   
                   <button 
-                    className="header-btn library-btn"
+                    className="header-btn"
                     onClick={() => setShowAuth(true)}
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto'}}
                   >
                     📚 Library
                   </button>
@@ -734,6 +738,7 @@ function App() {
                   <button 
                     className="header-btn"
                     onClick={() => window.open('/pricing-new.html', '_blank')}
+                    style={{flex: '0 0 auto'}}
                   >
                     💰 Plans
                   </button>
