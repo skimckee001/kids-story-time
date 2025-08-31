@@ -244,12 +244,11 @@ class AdService {
      */
     getAdSlot(placementId) {
         // Map placement IDs to AdSense slot IDs
-        // These would be real slot IDs from your AdSense account
         const slots = {
-            'header-banner': '1234567890',
-            'story-bottom': '2345678901',
-            'sidebar-ad': '3456789012',
-            'between-stories': '4567890123'
+            'header-banner': '1858398535',      // Home_Page_Bottom
+            'story-bottom': '1977532623',       // Story_Page_Middle
+            'sidebar-ad': '8351654693',         // Library_Page
+            'between-stories': '8351654693'     // Library_Page (same slot for library content)
         };
         
         return slots[placementId] || '0000000000';
@@ -377,7 +376,7 @@ class AdService {
             <ins class="adsbygoogle"
                 style="display:block"
                 data-ad-client="ca-pub-1413183979906947"
-                data-ad-slot="5678901234"
+                data-ad-slot="1977532623"
                 data-ad-format="auto"
                 data-full-width-responsive="true"
                 data-ad-channel="kids-content"

@@ -22,10 +22,10 @@ const config = {
     publisherId: process.env.VITE_ADSENSE_PUBLISHER_ID || 'ca-pub-1413183979906947',
     // Ad slots for different pages
     slots: {
-      storyPage: process.env.VITE_AD_SLOT_STORY || 'XXXXXXXXXX',
-      libraryPage: process.env.VITE_AD_SLOT_LIBRARY || 'XXXXXXXXXX',
-      homePage: process.env.VITE_AD_SLOT_HOME || 'XXXXXXXXXX',
-      rewardPage: process.env.VITE_AD_SLOT_REWARD || 'XXXXXXXXXX'
+      storyPage: process.env.VITE_AD_SLOT_STORY || '1977532623',  // Story_Page_Middle
+      libraryPage: process.env.VITE_AD_SLOT_LIBRARY || '8351654693',  // Library_Page
+      homePage: process.env.VITE_AD_SLOT_HOME || '1858398535',  // Home_Page_Bottom
+      rewardPage: process.env.VITE_AD_SLOT_REWARD || '1858398535'  // Using home slot as fallback
     },
     // Child-directed settings
     childDirected: true,

@@ -833,7 +833,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                         <div className="ad-label">Advertisement</div>
                         <AdSense 
                           adClient="ca-pub-1413183979906947"
-                          adSlot="XXXXXXXXXX"
+                          adSlot="1977532623"
                           adFormat="auto"
                           style={{ minHeight: '90px', maxHeight: '250px' }}
                         />
