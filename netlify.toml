@@ -6,6 +6,8 @@
 # Node version for build
 [build.environment]
   NODE_VERSION = "18"
+  # Disable secrets scanning for these known public keys
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_URL,VITE_SUPABASE_ANON_KEY"
 
 # Netlify Functions
 [functions]

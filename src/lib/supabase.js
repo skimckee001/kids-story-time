@@ -1,13 +1,13 @@
 // Supabase client for React app
 import { createClient } from '@supabase/supabase-js';
 
-// Get configuration from environment variables with fallback for production
-// These are public keys and safe to expose
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://uewfbzzrgiacgplyoccv.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVld2ZienpyZ2lhY2dwbHlvY2N2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxODUwNDUsImV4cCI6MjA3MDc2MTA0NX0.4ktNHJ7RnlzfUygqgU5423t91n19Ugb1F328lUlSK5s';
+// Get configuration from environment variables
+// These are public keys required for client-side use
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase configuration');
+  console.error('Missing Supabase configuration. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.');
 }
 
 // Create Supabase client
