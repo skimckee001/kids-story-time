@@ -404,7 +404,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
         
         <div class="footer">
           <div class="footer-left">
-            KidsStoryTime.org • ${date}
+            KidsStoryTime.ai • ${date}
           </div>
           ${!isPremium ? `
             <span class="footer-upgrade">
@@ -831,12 +831,30 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                     {index === midpoint - 1 && (subscriptionTier === 'try-now' || subscriptionTier === 'reader-free' || subscriptionTier === 'reader' || subscriptionTier === 'free' || !user) && (
                       <div className="ad-container story-inline-ad">
                         <div className="ad-label">Advertisement</div>
-                        <AdSense 
-                          adClient="ca-pub-1413183979906947"
-                          adSlot="1977532623"
-                          adFormat="auto"
-                          style={{ minHeight: '90px', maxHeight: '250px' }}
-                        />
+                        <div style={{ 
+                          minHeight: '90px', 
+                          maxHeight: '250px',
+                          background: '#f8f8f8',
+                          border: '1px solid #e0e0e0',
+                          borderRadius: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#999',
+                          fontSize: '14px',
+                          padding: '20px'
+                        }}>
+                          <AdSense 
+                            adClient="ca-pub-1413183979906947"
+                            adSlot="1977532623"
+                            adFormat="auto"
+                            style={{ width: '100%', height: '100%' }}
+                          />
+                          {/* Fallback text will only show if AdSense doesn't fill the space */}
+                          <div style={{ position: 'absolute', zIndex: -1 }}>
+                            Ads support our free stories
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>

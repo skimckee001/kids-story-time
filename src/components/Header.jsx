@@ -29,16 +29,18 @@ function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth,
               
               {/* Primary Gamification Actions */}
               <button 
-                className="header-btn achievement-btn"
+                className="header-btn"
                 onClick={onShowAchievements || (() => {})}
                 title="View achievements"
+                style={{background: 'linear-gradient(135deg, #ffd700, #ffa500)', color: 'white', border: 'none', flex: '0 0 auto'}}
               >
                 🏆 Achievements
               </button>
               
               <button 
-                className="header-btn primary-btn"
+                className="header-btn"
                 onClick={onShowLibrary}
+                style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto'}}
               >
                 📚 Library
               </button>
@@ -54,7 +56,7 @@ function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth,
                 {showMoreMenu && (
                   <div className="dropdown-menu">
                     <button onClick={() => { window.open('/pricing-new.html', '_blank'); setShowMoreMenu(false); }}>
-                      💰 View Pricing
+                      💰 View Plans
                     </button>
                     {onLogout && (
                       <button onClick={() => { onLogout(); setShowMoreMenu(false); }}>
@@ -82,15 +84,17 @@ function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth,
                 <span className="star-count">0</span>
               </div>
               <button 
-                className="header-btn achievement-btn"
+                className="header-btn"
                 onClick={onShowAuth}
                 title="Sign up to unlock achievements"
+                style={{background: 'linear-gradient(135deg, #ffd700, #ffa500)', color: 'white', border: 'none', flex: '0 0 auto'}}
               >
                 🏆 Achievements
               </button>
               <button 
-                className="header-btn library-btn"
+                className="header-btn"
                 onClick={onShowAuth}
+                style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto'}}
               >
                 📖 My Library
               </button>
