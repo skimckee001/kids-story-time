@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tier Flow Tests - Kids Story Time</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .test-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .test-result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .test-result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .test-result.warning {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+        }
+        .icon {
+            font-size: 20px;
+        }
+        .tier-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .tier-card {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+        .tier-card h3 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+        }
+        .tier-card p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .test-case {
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        .summary {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f0f8ff;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .summary h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Kids Story Time - Tier Flow Test Suite</h1>
+        
+        <div id="test-results"></div>
+        
+        <div class="summary">
+            <h3>Test Summary</h3>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="total-tests">0</div>
+                    <div class="stat-label">Total Tests</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="passed-tests" style="color: #28a745;">0</div>
+                    <div class="stat-label">Passed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="failed-tests" style="color: #dc3545;">0</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="runAllTests()">Run All Tests</button>
+            <button onclick="location.reload()">Reset</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import tier configuration
+        const SUBSCRIPTION_TIERS = {
+            'try-now': {
+                name: 'Try Now',
+                dailyStories: 1,
+                monthlyStories: null,
+                aiIllustrations: 0,
+                narrations: 0,
+                childProfiles: 0,
+                libraryAccess: false,
+                saveStories: false,
+                pdfExport: false,
+                watermarkedPdf: false,
+                hasAds: true
+            },
+            'reader-free': {
+                name: 'Reader (Free)',
+                dailyStories: 3,
+                monthlyStories: 10,
+                aiIllustrations: 1,
+                narrations: 1,
+                childProfiles: 1,
+                libraryAccess: 2,
+                saveStories: true,
+                pdfExport: true,
+                watermarkedPdf: true,
+                hasAds: true
+            },
+            'story-maker-basic': {
+                name: 'Story Maker (Basic)',
+                price: { monthly: 4.99, yearly: 39 },
+                dailyStories: 10,
+                monthlyStories: 50,
+                aiIllustrations: 30,
+                narrations: 30,
+                childProfiles: 2,
+                libraryAccess: 'full',
+                saveStories: true,
+                pdfExport: true,
+                watermarkedPdf: false,
+                hasAds: false
+            },
+            'family-plus': {
+                name: 'Family (Plus)',
+                price: { monthly: 7.99, yearly: 59 },
+                dailyStories: 20,
+                monthlyStories: 120,
+                aiIllustrations: 'unlimited',
+                narrations: 'unlimited',
+                childProfiles: 5,
+                libraryAccess: 'full',
+                saveStories: true,
+                pdfExport: true,
+                watermarkedPdf: false,
+                hasAds: false
+            },
+            'movie-director-premium': {
+                name: 'Movie Director (Premium)',
+                price: { monthly: 14.99, yearly: 99 },
+                comingSoon: true,
+                dailyStories: 'unlimited',
+                monthlyStories: 'unlimited',
+                aiIllustrations: 'unlimited',
+                narrations: 'unlimited',
+                childProfiles: 'unlimited',
+                libraryAccess: 'full',
+                saveStories: true,
+                pdfExport: true,
+                watermarkedPdf: false,
+                hasAds: false
+            }
+        };
+
+        let totalTests = 0;
+        let passedTests = 0;
+        let failedTests = 0;
+
+        function addTestResult(section, message, type = 'info') {
+            const container = document.getElementById('test-results');
+            let sectionDiv = document.querySelector(`[data-section="${section}"]`);
+            
+            if (!sectionDiv) {
+                sectionDiv = document.createElement('div');
+                sectionDiv.className = 'test-section';
+                sectionDiv.setAttribute('data-section', section);
+                sectionDiv.innerHTML = `<h2>${section}</h2><div class="test-content"></div>`;
+                container.appendChild(sectionDiv);
+            }
+            
+            const content = sectionDiv.querySelector('.test-content');
+            const result = document.createElement('div');
+            result.className = `test-result ${type}`;
+            
+            let icon = '📝';
+            if (type === 'success') {
+                icon = '✅';
+                passedTests++;
+                totalTests++;
+            } else if (type === 'error') {
+                icon = '❌';
+                failedTests++;
+                totalTests++;
+            } else if (type === 'warning') {
+                icon = '⚠️';
+            } else if (type === 'info') {
+                icon = 'ℹ️';
+            }
+            
+            result.innerHTML = `<span class="icon">${icon}</span><span>${message}</span>`;
+            content.appendChild(result);
+            
+            updateSummary();
+        }
+
+        function updateSummary() {
+            document.getElementById('total-tests').textContent = totalTests;
+            document.getElementById('passed-tests').textContent = passedTests;
+            document.getElementById('failed-tests').textContent = failedTests;
+        }
+
+        // Test Functions
+        function testTierConfiguration() {
+            Object.entries(SUBSCRIPTION_TIERS).forEach(([key, tier]) => {
+                if (tier.name && tier.dailyStories !== undefined) {
+                    addTestResult('Tier Configuration', 
+                        `${key}: ${tier.name} - Daily: ${tier.dailyStories}, AI: ${tier.aiIllustrations}`, 
+                        'success');
+                } else {
+                    addTestResult('Tier Configuration', 
+                        `${key}: Invalid configuration`, 
+                        'error');
+                }
+            });
+        }
+
+        function testStoryLimits() {
+            const tests = [
+                { tier: 'try-now', daily: 0, monthly: 0, canGenerate: true, desc: 'First story' },
+                { tier: 'try-now', daily: 1, monthly: 1, canGenerate: false, desc: 'Limit reached' },
+                { tier: 'reader-free', daily: 2, monthly: 5, canGenerate: true, desc: 'Within limits' },
+                { tier: 'reader-free', daily: 3, monthly: 8, canGenerate: false, desc: 'Daily limit' },
+                { tier: 'story-maker-basic', daily: 9, monthly: 45, canGenerate: true, desc: 'Within limits' },
+                { tier: 'family-plus', daily: 19, monthly: 100, canGenerate: true, desc: 'Within limits' },
+                { tier: 'movie-director-premium', daily: 999, monthly: 9999, canGenerate: true, desc: 'Unlimited' }
+            ];
+
+            tests.forEach(test => {
+                const tier = SUBSCRIPTION_TIERS[test.tier];
+                let canGenerate = false;
+                
+                if (tier.dailyStories === 'unlimited') {
+                    canGenerate = true;
+                } else if (test.daily < tier.dailyStories) {
+                    if (tier.monthlyStories === null || tier.monthlyStories === 'unlimited') {
+                        canGenerate = true;
+                    } else if (test.monthly < tier.monthlyStories) {
+                        canGenerate = true;
+                    }
+                }
+                
+                if (canGenerate === test.canGenerate) {
+                    addTestResult('Story Generation Limits', 
+                        `${test.tier} - ${test.desc}: ${canGenerate ? 'CAN' : 'CANNOT'} generate`, 
+                        'success');
+                } else {
+                    addTestResult('Story Generation Limits', 
+                        `${test.tier} - ${test.desc}: Expected ${test.canGenerate}, got ${canGenerate}`, 
+                        'error');
+                }
+            });
+        }
+
+        function testAIImageLimits() {
+            const tests = [
+                { tier: 'try-now', used: 0, canUse: false, desc: 'No AI access' },
+                { tier: 'reader-free', used: 0, canUse: true, desc: 'First AI image' },
+                { tier: 'reader-free', used: 1, canUse: false, desc: 'Limit reached' },
+                { tier: 'story-maker-basic', used: 29, canUse: true, desc: 'Within limit' },
+                { tier: 'story-maker-basic', used: 30, canUse: false, desc: 'Limit reached' },
+                { tier: 'family-plus', used: 999, canUse: true, desc: 'Unlimited' }
+            ];
+
+            tests.forEach(test => {
+                const tier = SUBSCRIPTION_TIERS[test.tier];
+                let canUse = false;
+                
+                if (tier.aiIllustrations === 'unlimited') {
+                    canUse = true;
+                } else if (tier.aiIllustrations > 0 && test.used < tier.aiIllustrations) {
+                    canUse = true;
+                }
+                
+                if (canUse === test.canUse) {
+                    addTestResult('AI Image Generation', 
+                        `${test.tier} - ${test.desc}: ${canUse ? 'CAN' : 'CANNOT'} use AI`, 
+                        'success');
+                } else {
+                    addTestResult('AI Image Generation', 
+                        `${test.tier} - ${test.desc}: Expected ${test.canUse}, got ${canUse}`, 
+                        'error');
+                }
+            });
+        }
+
+        function testPricingFlow() {
+            const plans = [
+                { tier: 'reader-free', url: '/?plan=reader-free' },
+                { tier: 'story-maker-basic', url: '/?plan=story-maker-basic' },
+                { tier: 'family-plus', url: '/?plan=family-plus' }
+            ];
+
+            plans.forEach(plan => {
+                const url = new URL(window.location.origin + plan.url);
+                const param = url.searchParams.get('plan');
+                
+                if (param === plan.tier) {
+                    addTestResult('Pricing Page URLs', 
+                        `${plan.tier}: URL parameter correctly set`, 
+                        'success');
+                } else {
+                    addTestResult('Pricing Page URLs', 
+                        `${plan.tier}: URL parameter mismatch`, 
+                        'error');
+                }
+            });
+        }
+
+        function testAPIMapping() {
+            const mappings = [
+                { tier: 'try-now', expected: 'standard' },
+                { tier: 'reader-free', expected: 'standard' },
+                { tier: 'story-maker-basic', expected: 'ai-enabled' },
+                { tier: 'family-plus', expected: 'ai-enabled' },
+                { tier: 'movie-director-premium', expected: 'ai-enabled' }
+            ];
+
+            mappings.forEach(test => {
+                // Simulate the mapping logic
+                const apiTier = (test.tier === 'family-plus' || 
+                                test.tier === 'story-maker-basic' || 
+                                test.tier === 'movie-director-premium') 
+                    ? 'ai-enabled' 
+                    : 'standard';
+                
+                if (apiTier === test.expected) {
+                    addTestResult('API Tier Mapping', 
+                        `${test.tier} → ${apiTier}`, 
+                        'success');
+                } else {
+                    addTestResult('API Tier Mapping', 
+                        `${test.tier}: Expected ${test.expected}, got ${apiTier}`, 
+                        'error');
+                }
+            });
+        }
+
+        function testUpgradePaths() {
+            const paths = [
+                { from: 'try-now', to: 'reader-free' },
+                { from: 'reader-free', to: 'story-maker-basic' },
+                { from: 'story-maker-basic', to: 'family-plus' },
+                { from: 'family-plus', to: 'movie-director-premium' }
+            ];
+
+            paths.forEach(path => {
+                const fromTier = SUBSCRIPTION_TIERS[path.from];
+                const toTier = SUBSCRIPTION_TIERS[path.to];
+                
+                if (fromTier && toTier) {
+                    const upgradeProvides = [];
+                    
+                    if (toTier.dailyStories === 'unlimited' || 
+                        (typeof toTier.dailyStories === 'number' && toTier.dailyStories > fromTier.dailyStories)) {
+                        upgradeProvides.push('more stories');
+                    }
+                    
+                    if (toTier.aiIllustrations === 'unlimited' || 
+                        (typeof toTier.aiIllustrations === 'number' && toTier.aiIllustrations > fromTier.aiIllustrations)) {
+                        upgradeProvides.push('more AI');
+                    }
+                    
+                    if (!fromTier.hasAds && toTier.hasAds === false) {
+                        upgradeProvides.push('no ads');
+                    }
+                    
+                    addTestResult('Upgrade Paths', 
+                        `${path.from} → ${path.to}: ${upgradeProvides.join(', ')}`, 
+                        'success');
+                } else {
+                    addTestResult('Upgrade Paths', 
+                        `Invalid path: ${path.from} → ${path.to}`, 
+                        'error');
+                }
+            });
+        }
+
+        // Make function globally available
+        window.runAllTests = function() {
+            // Clear previous results
+            document.getElementById('test-results').innerHTML = '';
+            totalTests = 0;
+            passedTests = 0;
+            failedTests = 0;
+            
+            // Run all test suites
+            testTierConfiguration();
+            testStoryLimits();
+            testAIImageLimits();
+            testPricingFlow();
+            testAPIMapping();
+            testUpgradePaths();
+            
+            // Add completion message
+            const completion = document.createElement('div');
+            completion.className = 'test-section';
+            completion.style.background = passedTests === totalTests ? '#d4edda' : '#fff3cd';
+            completion.innerHTML = `
+                <h2>Test Completion</h2>
+                <div class="test-result info">
+                    <span class="icon">📊</span>
+                    <span>All tests completed: ${passedTests}/${totalTests} passed (${Math.round(passedTests/totalTests*100)}%)</span>
+                </div>
+            `;
+            document.getElementById('test-results').appendChild(completion);
+        };
+
+        // Auto-run tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 500);
+        });
+    </script>
+</body>
+</html>

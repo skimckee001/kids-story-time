@@ -49,8 +49,8 @@ exports.handler = async (event) => {
         }
       ],
       mode: 'subscription',
-      success_url: `${process.env.SITE_URL || 'https://kidsstorytime.org'}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.SITE_URL || 'https://kidsstorytime.org'}/pricing`,
+      success_url: `${process.env.SITE_URL || 'https://kidsstorytime.ai'}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.SITE_URL || 'https://kidsstorytime.ai'}/pricing`,
       metadata: {
         supabase_user_id: userId,
         tier: tier

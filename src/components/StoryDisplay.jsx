@@ -744,7 +744,8 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                     {/* Show image or upgrade button after first paragraph */}
                     {index === 0 && (
                       <div className="story-image-float">
-                        {(subscriptionTier === 'plus' || subscriptionTier === 'premium' || subscriptionTier === 'family' || subscriptionTier === 'basic') ? (
+                        {(subscriptionTier === 'plus' || subscriptionTier === 'premium' || subscriptionTier === 'family' || subscriptionTier === 'basic' ||
+                          subscriptionTier === 'family-plus' || subscriptionTier === 'story-maker-basic' || subscriptionTier === 'movie-director-premium') ? (
                           <div className="story-image-wrapper">
                             {story.imageUrl ? (
                               <img 
@@ -764,49 +765,74 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                               </div>
                             )}
                           </div>
-                        ) : (
-                          <div className="upgrade-image-container">
-                            {!user ? (
-                              // For non-logged-in users, show register button
-                              <button 
-                                className="generate-image-btn"
-                                onClick={() => onShowAuth && onShowAuth()}
-                              >
-                                🎨 Register (free forever) to add an image
-                              </button>
-                            ) : (
-                              // For logged-in free users, show upgrade button with tooltip
-                              <button className="generate-image-btn">
-                                🎨 Upgrade to add AI images
-                                <div className="upgrade-tooltip tooltip-left">
-                                  <div className="tooltip-content">
-                                    <h4>Upgrade to Premium</h4>
-                                    <p>Get beautiful AI-generated illustrations for every story!</p>
-                                    <div className="tier-info">
-                                      <div className="tier-option">
-                                        <strong>Premium</strong>
-                                        <span>$9.99/month</span>
-                                      </div>
-                                      <div className="tier-option">
-                                        <strong>Family</strong>
-                                        <span>$19.99/month</span>
-                                      </div>
-                                    </div>
-                                    <a href="#" className="upgrade-link">Start Free Trial →</a>
-                                  </div>
+                        ) : subscriptionTier === 'reader-free' || subscriptionTier === 'reader' || subscriptionTier === 'free' ? (
+                          // For free tier users, show stock image with AI upgrade button
+                          <div className="story-image-wrapper">
+                            {story.imageUrl ? (
+                              <>
+                                <img 
+                                  src={story.imageUrl} 
+                                  alt={story.title}
+                                  className="story-main-image stock-image"
+                                  onError={(e) => {
+                                    // If image fails to load, try a fallback
+                                    if (!e.target.dataset.retried) {
+                                      e.target.dataset.retried = 'true';
+                                      const seed = Math.floor(Math.random() * 1000);
+                                      e.target.src = `https://picsum.photos/seed/${seed}/1024/1024`;
+                                    }
+                                  }}
+                                />
+                                <div className="ai-image-upgrade">
+                                  {localStorage.getItem('aiImageTried') ? (
+                                    <button 
+                                      className="ai-upgrade-btn"
+                                      onClick={() => window.location.href = '/pricing-new.html'}
+                                    >
+                                      ✨ Upgrade for AI Images
+                                    </button>
+                                  ) : (
+                                    <button 
+                                      className="ai-try-btn"
+                                      onClick={() => {
+                                        localStorage.setItem('aiImageTried', 'true');
+                                        // TODO: Trigger AI image generation for free trial
+                                        alert('Free AI trial coming soon! For now, enjoy this stock image.');
+                                      }}
+                                    >
+                                      ✨ Try AI Image (1 Free)
+                                    </button>
+                                  )}
                                 </div>
-                              </button>
+                              </>
+                            ) : (
+                              <div className="story-image-placeholder">
+                                <div className="image-loading">
+                                  <div className="loading-spinner"></div>
+                                  <p>Loading image...</p>
+                                </div>
+                              </div>
                             )}
+                          </div>
+                        ) : (
+                          // For non-logged-in users
+                          <div className="upgrade-image-container">
+                            <button 
+                              className="generate-image-btn"
+                              onClick={() => onShowAuth && onShowAuth()}
+                            >
+                              🎨 Sign up free to see images
+                            </button>
                           </div>
                         )}
                       </div>
                     )}
                     {/* Show ad at midpoint (only for free tier users and non-logged-in users) */}
-                    {index === midpoint - 1 && (subscriptionTier === 'try-now' || subscriptionTier === 'reader' || !user) && (
+                    {index === midpoint - 1 && (subscriptionTier === 'try-now' || subscriptionTier === 'reader-free' || subscriptionTier === 'reader' || subscriptionTier === 'free' || !user) && (
                       <div className="ad-container story-inline-ad">
                         <div className="ad-label">Advertisement</div>
                         <AdSense 
-                          adClient="ca-pub-XXXXXXXXXXXXXXXX"
+                          adClient="ca-pub-1413183979906947"
                           adSlot="XXXXXXXXXX"
                           adFormat="auto"
                           style={{ minHeight: '90px', maxHeight: '250px' }}
@@ -868,7 +894,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
           <p>
             <a href="/terms.html" target="_blank">Terms of Service</a> | 
             <a href="/privacy.html" target="_blank">Privacy Policy</a> | 
-            <a href="mailto:support@kidsstorytime.org">Contact Us</a>
+            <a href="mailto:support@kidsstorytime.ai">Contact Us</a>
           </p>
         </footer>
       </div>

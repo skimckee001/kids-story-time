@@ -240,10 +240,10 @@ class StoryExportService {
                 
                 <div class="footer">
                     <div class="footer-left">
-                        KidsStoryTime.org • ${date}
+                        KidsStoryTime.ai • ${date}
                     </div>
                     ${!isPremium ? `
-                        <a href="https://kidsstorytime.org/upgrade" class="footer-upgrade">
+                        <a href="https://kidsstorytime.ai/upgrade" class="footer-upgrade">
                             📄 Upgrade for unlimited PDF exports & illustrations
                         </a>
                     ` : ''}

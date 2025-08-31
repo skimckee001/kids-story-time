@@ -8,7 +8,9 @@
 
 ## Project Information
 - **Project Name**: Kids Story Time
-- **Live URL**: https://kidsstorytime.org (deployed via Netlify)
+- **Live URL**: https://kidsstorytime.ai (deployed via Netlify)
+- **Previous URL**: https://kidsstorytime.org (redirects to .ai)
+- **Domain Registrar**: Spaceship
 - **GitHub Repository**: https://github.com/skimckee001/kids-story-time
 - **Description**: AI-powered personalized story generation app for children
 
@@ -85,7 +87,7 @@ git commit -m "Your message"
 git push origin main
 
 # View Netlify deployment
-open https://kidsstorytime.org
+open https://kidsstorytime.ai
 ```
 
 ## Development Workflow
@@ -110,7 +112,13 @@ Test users can be accessed via "Quick Test Login" buttons on the login modal:
 - **GitHub Username**: skimckee001
 - **Primary Email**: (check Supabase/Netlify dashboards)
 
+## Domain & Hosting Information
+- **Current Domain**: kidsstorytime.ai
+- **Domain Registrar**: Spaceship
+- **Hosting Provider**: Netlify
+- **DNS Management**: See DOMAIN_MIGRATION.md for setup instructions
+
 ---
-Last Updated: 2024-08-21
+Last Updated: 2025-08-31
 If you're reading this in a new Claude session, verify you're in the correct directory:
 `pwd` should return `/Users/skimckee/Documents/GitHub/kids-story-time`

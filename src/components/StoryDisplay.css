@@ -377,6 +377,32 @@
   margin: 0 0 20px 30px;
 }
 
+.stock-image {
+  filter: brightness(1.05);
+}
+
+.ai-image-upgrade {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.ai-try-btn, .ai-upgrade-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.ai-try-btn:hover, .ai-upgrade-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
 .story-image-wrapper {
   position: relative;
   width: 100%;

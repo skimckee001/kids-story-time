@@ -57,7 +57,7 @@ class AdService {
         // Create AdSense script
         const script = document.createElement('script');
         script.async = true;
-        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX';
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1413183979906947';
         script.crossOrigin = 'anonymous';
         
         // Add to head
@@ -140,7 +140,7 @@ class AdService {
                 style="display:${config.size === 'fluid' ? 'block' : 'inline-block'};
                        ${config.size !== 'fluid' && config.size !== 'responsive' ? `width:${config.size.split('x')[0]}px;height:${config.size.split('x')[1]}px;` : ''}
                        ${config.size === 'responsive' ? 'width:100%;height:auto;' : ''}"
-                data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                data-ad-client="ca-pub-1413183979906947"
                 data-ad-slot="${this.getAdSlot(config.id)}"
                 ${config.size === 'responsive' ? 'data-ad-format="auto"' : ''}
                 ${config.size === 'fluid' ? 'data-ad-format="fluid"' : ''}
@@ -376,7 +376,7 @@ class AdService {
         const adHtml = `
             <ins class="adsbygoogle"
                 style="display:block"
-                data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                data-ad-client="ca-pub-1413183979906947"
                 data-ad-slot="5678901234"
                 data-ad-format="auto"
                 data-full-width-responsive="true"

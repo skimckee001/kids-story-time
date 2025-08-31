@@ -67,16 +67,20 @@ exports.handler = async (event, context) => {
             hasPexels: !!process.env.PEXELS_API_KEY
         });
         
-        if (tier === 'pro') {
-            // Pro tier: Use AI image generation (Replicate or OpenAI)
+        // Map new tier names to image generation methods
+        if (tier === 'ai-enabled' || tier === 'pro' || 
+            tier === 'family-plus' || tier === 'story-maker-basic' || 
+            tier === 'movie-director-premium' || tier === 'plus' || 
+            tier === 'premium' || tier === 'basic') {
+            // AI-enabled tiers: Use AI image generation (Replicate or OpenAI)
             imageUrl = await generateAIImage(prompt, style, mood);
             imageData.isAI = true;
-        } else if (tier === 'premium') {
-            // Premium tier: High-quality stock images
+        } else if (tier === 'standard' || tier === 'reader-free') {
+            // Standard tier: Stock images if available
             imageUrl = await generateStockImage(prompt, style, mood);
             imageData.isStock = true;
         } else {
-            // Free tier: Basic images
+            // Default/try-now tier: Basic placeholder images
             imageUrl = await generatePlaceholderImage(prompt, style, mood);
             imageData.isPlaceholder = true;
         }
@@ -289,16 +293,18 @@ async function generateStockImage(prompt, style, mood) {
         }
     }
 
-    // Fallback to Unsplash Source (no API key needed)
-    const query = [...keywords.slice(0, 3), 'children', 'colorful'].join(',');
-    return `https://source.unsplash.com/1024x1024/?${encodeURIComponent(query)}`;
+    // Fallback to Lorem Picsum - reliable, no CORS issues
+    // Using a seeded random based on prompt for consistency
+    const seed = prompt.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    console.log('Falling back to Lorem Picsum with seed:', seed);
+    return `https://picsum.photos/seed/${seed}/1024/1024`;
 }
 
 // Generate placeholder images for free tier
 async function generatePlaceholderImage(prompt, style, mood) {
     const keywords = extractKeywords(prompt);
     
-    // Use Lorem Picsum for consistent placeholders
+    // Use Lorem Picsum for consistent, CORS-friendly placeholders
     const seed = prompt.replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
     
     // Add some variety based on style
@@ -307,9 +313,9 @@ async function generatePlaceholderImage(prompt, style, mood) {
         return `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}&size=1024&backgroundColor=b6e3f4,c0aede,d1d4f9`;
     }
     
-    // Use Unsplash Source for photo-style images
-    const query = [...keywords.slice(0, 2), 'illustration', 'kids'].join(',');
-    return `https://source.unsplash.com/1024x1024/?${encodeURIComponent(query)}`;
+    // Use Lorem Picsum for photo-style images (no CORS issues)
+    const numericSeed = seed.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return `https://picsum.photos/seed/${numericSeed}/1024/1024`;
 }
 
 // Enhance prompt for better AI generation

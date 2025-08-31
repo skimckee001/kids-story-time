@@ -168,8 +168,27 @@ function App() {
       const mockUser = localStorage.getItem('mockUser');
       if (mockUser) {
         const userData = JSON.parse(mockUser);
+        
+        // Migrate old tier names to new ones
+        const tierMigration = {
+          'free': 'reader-free',
+          'reader': 'reader-free',
+          'basic': 'story-maker-basic',
+          'plus': 'family-plus',
+          'premium': 'story-maker-basic', // Map old premium to story-maker
+          'family': 'family-plus',
+          'pro': 'family-plus'
+        };
+        
+        // Apply migration if needed
+        if (userData.tier && tierMigration[userData.tier]) {
+          userData.tier = tierMigration[userData.tier];
+          // Update localStorage with migrated tier
+          localStorage.setItem('mockUser', JSON.stringify(userData));
+        }
+        
         setUser(userData);
-        const tier = userData.tier || 'reader';
+        const tier = userData.tier || 'reader-free';
         setSubscriptionTier(tier);
         const limits = getTierLimits(tier, userData);
         setStoriesRemaining(limits.dailyStories);
@@ -187,14 +206,30 @@ function App() {
           .single();
         
         if (profile) {
-          const tier = profile.subscription_tier || 'reader';
+          // Migrate old tier names from database
+          const tierMigration = {
+            'free': 'reader-free',
+            'reader': 'reader-free',
+            'basic': 'story-maker-basic',
+            'plus': 'family-plus',
+            'premium': 'story-maker-basic',
+            'family': 'family-plus',
+            'pro': 'family-plus'
+          };
+          
+          let tier = profile.subscription_tier || 'reader-free';
+          // Apply migration if needed
+          if (tierMigration[tier]) {
+            tier = tierMigration[tier];
+          }
+          
           setSubscriptionTier(tier);
           const limits = getTierLimits(tier, user);
           setStoriesRemaining(limits.dailyStories - (profile.daily_stories_count || 0));
         } else {
-          // Default to reader tier for logged-in users
-          setSubscriptionTier('reader');
-          const limits = getTierLimits('reader', user);
+          // Default to reader-free tier for logged-in users
+          setSubscriptionTier('reader-free');
+          const limits = getTierLimits('reader-free', user);
           setStoriesRemaining(limits.dailyStories);
         }
       } else {
@@ -352,6 +387,17 @@ function App() {
             `${data.story.title}. Child-friendly, colorful illustration. ${selectedThemeLabels} theme` :
             `A magical story illustration for children. ${selectedThemeLabels} theme`;
           
+          // Determine API tier - include old tier names for compatibility
+          const apiTier = (subscriptionTier === 'family-plus' || 
+                          subscriptionTier === 'story-maker-basic' || 
+                          subscriptionTier === 'movie-director-premium' ||
+                          subscriptionTier === 'premium' ||  // Old premium tier
+                          subscriptionTier === 'plus' ||     // Old plus tier
+                          subscriptionTier === 'basic' ||    // Old basic tier
+                          subscriptionTier === 'family') ? 'ai-enabled' : 'standard';
+          
+          console.log('Sending to API with tier:', apiTier, 'from subscription tier:', subscriptionTier);
+          
           // Fire off image generation without awaiting
           fetch(imageApiUrl, {
             method: 'POST',
@@ -362,7 +408,7 @@ function App() {
               prompt: imagePrompt,
               style: 'illustration',
               mood: 'cheerful',
-              tier: subscriptionTier === 'plus' ? 'pro' : 'standard'
+              tier: apiTier
             })
           })
           .then(response => {
@@ -635,14 +681,14 @@ function App() {
                       </div>
                     )}
                   </div>
-                  {(subscriptionTier === 'reader' || subscriptionTier === 'basic') && storiesRemaining <= 1 && (
+                  {(subscriptionTier === 'reader-free' || subscriptionTier === 'story-maker-basic') && storiesRemaining <= 1 && (
                     <button 
                       className="header-btn trial-btn"
                       onClick={() => setShowAuth(true)}
                     >
-                      ⭐ Upgrade to Premium
+                      ⭐ Upgrade to Story Maker
                       <div className="trial-tooltip">
-                        Unlimited stories! First month free
+                        10 stories/day + AI images • $4.99/month
                       </div>
                     </button>
                   )}
@@ -939,11 +985,11 @@ function App() {
               }}>
                 {subscriptionTier === 'try-now' ? 
                   <>Try Now: {storiesRemaining} story remaining today</> :
-                 subscriptionTier === 'reader' ? 
+                 subscriptionTier === 'reader-free' ? 
                   <>Reader Plan: {storiesRemaining} stories remaining today</> :
-                 subscriptionTier === 'basic' ?
+                 subscriptionTier === 'story-maker-basic' ?
                   <>Story Maker: {storiesRemaining} stories remaining today</> :
-                 subscriptionTier === 'plus' ?
+                 subscriptionTier === 'family-plus' ?
                   <>Family Plan: {storiesRemaining} stories remaining today</> :
                   <>Premium Plan: Unlimited stories</>
                 }
@@ -981,9 +1027,9 @@ function App() {
                 >
                   {!user ? (
                     <>🎉 Save Your Story - Create Free Account</>
-                  ) : (subscriptionTier === 'reader' || subscriptionTier === 'basic') && storiesRemaining <= 1 ? (
-                    <>⭐ Upgrade to {subscriptionTier === 'reader' ? 'Story Maker' : 'Family'} - First Month Free</>
-                  ) : (subscriptionTier === 'basic' || subscriptionTier === 'plus' || subscriptionTier === 'story-maker') ? (
+                  ) : (subscriptionTier === 'reader-free' || subscriptionTier === 'story-maker-basic') && storiesRemaining <= 1 ? (
+                    <>⭐ Upgrade to {subscriptionTier === 'reader-free' ? 'Story Maker' : 'Family'} - First Month Free</>
+                  ) : (subscriptionTier === 'story-maker-basic' || subscriptionTier === 'family-plus') ? (
                     <>👨‍👩‍👧‍👦 Upgrade to Family Plan - Unlimited Everything</>
                   ) : (
                     <>✨ Explore Premium Features</>
@@ -1004,7 +1050,7 @@ function App() {
                         <li>✅ Access to all story themes and lengths</li>
                       </ul>
                     </>
-                  ) : subscriptionTier === 'free' ? (
+                  ) : subscriptionTier === 'reader-free' ? (
                     <>
                       <p style={{ fontWeight: '600', marginBottom: '10px', color: '#333' }}>
                         Premium features include:
@@ -1023,7 +1069,7 @@ function App() {
                         fontStyle: 'italic',
                         textAlign: 'center' 
                       }}>
-                        30-day free trial • Cancel anytime • $9.99/month after trial
+                        Story Maker: $4.99/month • 10 stories/day • 30 AI images • Cancel anytime
                       </p>
                     </>
                   ) : (
@@ -1045,7 +1091,7 @@ function App() {
                         fontStyle: 'italic',
                         textAlign: 'center' 
                       }}>
-                        Best value • $19.99/month • Perfect for multiple children
+                        Family Plan: $7.99/month • 20 stories/day • Unlimited AI • Perfect for families
                       </p>
                     </>
                   )}
@@ -1062,7 +1108,7 @@ function App() {
           <p>
             <a href="/terms.html" target="_blank">Terms of Service</a> | 
             <a href="/privacy.html" target="_blank">Privacy Policy</a> | 
-            <a href="mailto:support@kidsstorytime.org">Contact Us</a>
+            <a href="mailto:support@kidsstorytime.ai">Contact Us</a>
             {user && (
               <>
                 {' | '}
@@ -1288,8 +1334,8 @@ function AuthModal({ onClose, onSuccess }) {
             onClick={() => {
               const mockUser = {
                 id: 'test-free',
-                email: 'test-free@kidsstorytime.org',
-                tier: 'free'
+                email: 'test-free@kidsstorytime.ai',
+                tier: 'reader-free'
               };
               localStorage.setItem('mockUser', JSON.stringify(mockUser));
               onSuccess(mockUser);
@@ -1303,23 +1349,23 @@ function AuthModal({ onClose, onSuccess }) {
             onClick={() => {
               const mockUser = {
                 id: 'test-premium',
-                email: 'test-premium@kidsstorytime.org',
-                tier: 'premium'
+                email: 'test-premium@kidsstorytime.ai',
+                tier: 'story-maker-basic'  // Story Maker Basic tier with AI images
               };
               localStorage.setItem('mockUser', JSON.stringify(mockUser));
               onSuccess(mockUser);
             }}
             disabled={loading}
           >
-            Test Premium
+            Test Premium (Story Maker)
           </button>
           <button 
             className="test-login-btn test-family"
             onClick={() => {
               const mockUser = {
                 id: 'test-family',
-                email: 'test-family@kidsstorytime.org',
-                tier: 'family'
+                email: 'test-family@kidsstorytime.ai',
+                tier: 'family-plus'
               };
               localStorage.setItem('mockUser', JSON.stringify(mockUser));
               onSuccess(mockUser);

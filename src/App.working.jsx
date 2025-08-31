@@ -113,9 +113,9 @@ function LoginPage() {
   // Quick test login buttons
   const quickLogin = async (tier) => {
     const credentials = {
-      free: { email: 'test-free@kidsstorytime.org', password: 'testpass123' },
-      premium: { email: 'test-premium@kidsstorytime.org', password: 'testpass123' },
-      family: { email: 'test-family@kidsstorytime.org', password: 'testpass123' }
+      free: { email: 'test-free@kidsstorytime.ai', password: 'testpass123' },
+      premium: { email: 'test-premium@kidsstorytime.ai', password: 'testpass123' },
+      family: { email: 'test-family@kidsstorytime.ai', password: 'testpass123' }
     };
 
     const creds = credentials[tier];

@@ -13,7 +13,7 @@ export const SUBSCRIPTION_TIERS = {
     watermarkedPdf: false,
     hasAds: true
   },
-  'reader': {
+  'reader-free': {
     name: 'Reader (Free)',
     dailyStories: 3,
     monthlyStories: 10,
@@ -26,8 +26,8 @@ export const SUBSCRIPTION_TIERS = {
     watermarkedPdf: true,
     hasAds: true
   },
-  'basic': {
-    name: 'Story Maker',
+  'story-maker-basic': {
+    name: 'Story Maker (Basic)',
     price: { monthly: 4.99, yearly: 39 },
     dailyStories: 10,
     monthlyStories: 50,
@@ -40,8 +40,8 @@ export const SUBSCRIPTION_TIERS = {
     watermarkedPdf: false,
     hasAds: false
   },
-  'plus': {
-    name: 'Family',
+  'family-plus': {
+    name: 'Family (Plus)',
     price: { monthly: 7.99, yearly: 59 },
     dailyStories: 20,
     monthlyStories: 120,
@@ -55,8 +55,8 @@ export const SUBSCRIPTION_TIERS = {
     hasAds: false,
     extraFeatures: ['bedtime-reminders', 'streaks', 'audio-downloads', 'multi-language']
   },
-  'premium': {
-    name: 'Movie Director',
+  'movie-director-premium': {
+    name: 'Movie Director (Premium)',
     price: { monthly: 14.99, yearly: 99 },
     comingSoon: true,
     dailyStories: 'unlimited',
@@ -80,9 +80,24 @@ export function getTierLimits(tier, user = null) {
     return SUBSCRIPTION_TIERS['try-now'];
   }
   
-  // Default to reader tier for logged-in users without subscription
-  const userTier = tier || 'reader';
-  return SUBSCRIPTION_TIERS[userTier] || SUBSCRIPTION_TIERS['reader'];
+  // Map old tier names to new ones for backward compatibility
+  const tierMigration = {
+    'free': 'reader-free',
+    'reader': 'reader-free',
+    'basic': 'story-maker-basic',
+    'plus': 'family-plus',
+    'premium': 'story-maker-basic',  // Old premium maps to story-maker
+    'family': 'family-plus',
+    'pro': 'family-plus'
+  };
+  
+  // Apply migration if needed
+  let userTier = tier || 'reader-free';
+  if (tierMigration[userTier]) {
+    userTier = tierMigration[userTier];
+  }
+  
+  return SUBSCRIPTION_TIERS[userTier] || SUBSCRIPTION_TIERS['reader-free'];
 }
 
 // Check if user can generate a story
@@ -128,17 +143,17 @@ export function getUpgradeMessage(tier, limitType = 'stories') {
       ai: 'Create a free account to unlock AI illustrations!',
       library: 'Create a free account to save your stories!'
     },
-    'reader': {
+    'reader-free': {
       stories: 'Upgrade to Story Maker for 10 stories per day!',
       ai: 'Upgrade to Story Maker for 30 AI illustrations per month!',
       library: 'Upgrade to Story Maker for full library access!'
     },
-    'basic': {
+    'story-maker-basic': {
       stories: 'Upgrade to Family for 20 stories per day!',
       ai: 'Upgrade to Family for unlimited AI illustrations!',
       library: 'You already have full library access!'
     },
-    'plus': {
+    'family-plus': {
       stories: 'You have the maximum story limit!',
       ai: 'You have unlimited AI illustrations!',
       library: 'You have full library access!'

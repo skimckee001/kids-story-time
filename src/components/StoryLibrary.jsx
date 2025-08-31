@@ -33,7 +33,7 @@ function StoryLibrary({ onBack }) {
     if (user) {
       setUser(user);
       // Get subscription tier from localStorage or default
-      const tier = localStorage.getItem('subscriptionTier') || 'reader';
+      const tier = localStorage.getItem('subscriptionTier') || 'reader-free';
       setSubscriptionTier(tier);
     }
   };

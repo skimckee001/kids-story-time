@@ -202,7 +202,7 @@ class SocialSharingService {
             
             // Create share content
             const shareText = this.createShareText(story);
-            const shareUrl = 'https://kidsstorytime.org';
+            const shareUrl = 'https://kidsstorytime.ai';
             
             // Check if Web Share API is available
             if (navigator.share && imageBlob) {

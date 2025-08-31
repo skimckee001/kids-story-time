@@ -34,7 +34,7 @@ class AnalyticsService {
         // Check if gtag is available
         if (typeof gtag !== 'undefined') {
             // Configure GA4
-            gtag('config', 'G-XXXXXXXXXX', {
+            gtag('config', 'G-NRQH8X9NXP', {
                 'page_title': document.title,
                 'page_location': window.location.href,
                 'page_path': window.location.pathname
@@ -154,7 +154,7 @@ class AnalyticsService {
         // Send enhanced conversion data to Google Analytics
         if (typeof gtag !== 'undefined') {
             gtag('event', 'conversion', {
-                'send_to': 'G-XXXXXXXXXX/conversion',
+                'send_to': 'G-NRQH8X9NXP/conversion',
                 'value': value,
                 'currency': 'USD',
                 'transaction_id': this.generateTransactionId()

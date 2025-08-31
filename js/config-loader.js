@@ -7,7 +7,7 @@
         SUPABASE_URL: process.env.SUPABASE_URL || '',
         SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY || '',
         STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
-        SITE_URL: process.env.SITE_URL || 'https://kidsstorytime.org',
+        SITE_URL: process.env.SITE_URL || 'https://kidsstorytime.ai',
         NODE_ENV: process.env.NODE_ENV || 'production'
     };
 

@@ -11,7 +11,7 @@ function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth,
             <span>📚</span>
           </div>
           <div className="logo-text">
-            KidsStoryTime<span className="logo-domain">.org</span>
+            KidsStoryTime<span className="logo-domain">.ai</span>
           </div>
         </div>
         <div className="header-right">
@@ -64,11 +64,13 @@ function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth,
                   </div>
                 )}
               </div>
-              {(subscriptionTier === 'reader' || subscriptionTier === 'basic') && (
+              {(subscriptionTier === 'reader-free' || subscriptionTier === 'story-maker-basic' || subscriptionTier === 'reader' || subscriptionTier === 'basic') && (
                 <button className="header-btn trial-btn" onClick={onShowAuth}>
-                  ⭐ Upgrade to Premium
+                  ⭐ Upgrade {subscriptionTier === 'reader-free' || subscriptionTier === 'reader' ? 'to Story Maker' : 'to Family'}
                   <div className="trial-tooltip">
-                    Unlimited stories! First month free
+                    {subscriptionTier === 'reader-free' || subscriptionTier === 'reader' ? 
+                      '10 stories/day + AI images • $4.99/month' : 
+                      '20 stories/day + Unlimited AI • $7.99/month'}
                   </div>
                 </button>
               )}

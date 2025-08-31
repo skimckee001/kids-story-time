@@ -39,7 +39,7 @@ exports.handler = async (event) => {
     // Create portal session
     const session = await stripe.billingPortal.sessions.create({
       customer: customer.id,
-      return_url: `${process.env.SITE_URL || 'https://kidsstorytime.org'}/profile`
+      return_url: `${process.env.SITE_URL || 'https://kidsstorytime.ai'}/profile`
     });
 
     return {

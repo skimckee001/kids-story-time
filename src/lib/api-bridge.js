@@ -62,7 +62,7 @@ class APIBridge {
   }
 
   // Image Generation (using existing Netlify function)
-  async generateImage(prompt, tier = 'free') {
+  async generateImage(prompt, tier = 'reader-free') {
     try {
       const headers = await this.getAuthHeaders();
       const response = await fetch('/.netlify/functions/generate-image', {
@@ -143,12 +143,12 @@ class APIBridge {
   // Subscription Management (bridged through Supabase)
   async getSubscription() {
     const user = await auth.getUser();
-    if (!user) return { subscription: { tier: 'free', status: 'active' } };
+    if (!user) return { subscription: { tier: 'reader-free', status: 'active' } };
     
     const { data, error } = await db.subscriptions.get(user.id);
     if (error || !data) {
-      // Default to free tier if no subscription found
-      return { subscription: { tier: 'free', status: 'active' } };
+      // Default to reader-free tier if no subscription found
+      return { subscription: { tier: 'reader-free', status: 'active' } };
     }
     return { subscription: data };
   }
@@ -229,7 +229,7 @@ class APIBridge {
       profile: data || {
         id: user.id,
         email: user.email,
-        subscription_tier: 'free',
+        subscription_tier: 'reader-free',
         star_points: 0
       }
     };

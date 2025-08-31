@@ -175,7 +175,7 @@ export const checkSubscriptionStatus = async () => {
   try {
     const user = await auth.getUser();
     if (!user) {
-      return { tier: 'free', status: 'active' };
+      return { tier: 'reader-free', status: 'active' };
     }
 
     // Check Supabase for subscription record
@@ -187,18 +187,18 @@ export const checkSubscriptionStatus = async () => {
       .single();
 
     if (error || !data) {
-      return { tier: 'free', status: 'active' };
+      return { tier: 'reader-free', status: 'active' };
     }
 
     return {
-      tier: data.tier || 'free',
+      tier: data.tier || 'reader-free',
       status: data.status || 'active',
       currentPeriodEnd: data.current_period_end,
       cancelAtPeriodEnd: data.cancel_at_period_end
     };
   } catch (error) {
     console.error('Error checking subscription:', error);
-    return { tier: 'free', status: 'active' };
+    return { tier: 'reader-free', status: 'active' };
   }
 };
 
@@ -211,7 +211,7 @@ export const updateSubscription = async (userId, subscriptionData) => {
         user_id: userId,
         stripe_subscription_id: subscriptionData.id,
         stripe_customer_id: subscriptionData.customer,
-        tier: subscriptionData.metadata?.tier || 'premium',
+        tier: subscriptionData.metadata?.tier || 'story-maker-basic',
         status: subscriptionData.status,
         current_period_start: new Date(subscriptionData.current_period_start * 1000).toISOString(),
         current_period_end: new Date(subscriptionData.current_period_end * 1000).toISOString(),

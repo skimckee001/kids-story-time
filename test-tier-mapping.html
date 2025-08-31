@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Tier Mapping</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #0f0;
+        }
+        .test {
+            margin: 10px 0;
+            padding: 10px;
+            background: #000;
+            border: 1px solid #0f0;
+        }
+        .pass { color: #0f0; }
+        .fail { color: #f00; }
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        button:hover { background: #0a0; }
+    </style>
+</head>
+<body>
+    <h1>Tier Mapping Test Console</h1>
+    <div id="results"></div>
+    
+    <button onclick="testLocalStorage()">Test localStorage</button>
+    <button onclick="clearMockUser()">Clear Mock User</button>
+    <button onclick="setTestPremium()">Set Test Premium</button>
+    <button onclick="testAPICall()">Test API Call</button>
+
+    <script>
+        const log = (msg, type = 'info') => {
+            const div = document.createElement('div');
+            div.className = `test ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            document.getElementById('results').appendChild(div);
+        };
+
+        function testLocalStorage() {
+            log('Testing localStorage...');
+            const mockUser = localStorage.getItem('mockUser');
+            if (mockUser) {
+                const user = JSON.parse(mockUser);
+                log(`Found mockUser: ${JSON.stringify(user)}`, 'info');
+                log(`Tier: ${user.tier}`, user.tier === 'premium' ? 'fail' : 'pass');
+            } else {
+                log('No mockUser in localStorage', 'info');
+            }
+        }
+
+        function clearMockUser() {
+            localStorage.removeItem('mockUser');
+            log('Cleared mockUser from localStorage', 'pass');
+        }
+
+        function setTestPremium() {
+            const user = {
+                id: 'test-premium',
+                email: 'test-premium@kidsstorytime.ai',
+                tier: 'story-maker-basic'
+            };
+            localStorage.setItem('mockUser', JSON.stringify(user));
+            log(`Set mockUser with tier: ${user.tier}`, 'pass');
+        }
+
+        async function testAPICall() {
+            log('Testing API call to generate-image...');
+            
+            const testTiers = ['premium', 'story-maker-basic', 'family-plus', 'reader-free'];
+            
+            for (const tier of testTiers) {
+                try {
+                    const response = await fetch('http://localhost:9000/.netlify/functions/generate-image', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            prompt: 'Test image',
+                            tier: tier
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    const isAI = data.isAI || data.isPlaceholder === false;
+                    
+                    log(`Tier "${tier}" → ${data.isAI ? 'AI' : data.isStock ? 'Stock' : 'Placeholder'} (URL: ${data.url?.substring(0, 50)}...)`, 
+                        isAI ? 'pass' : 'fail');
+                } catch (error) {
+                    log(`Failed to test tier "${tier}": ${error.message}`, 'fail');
+                }
+            }
+        }
+
+        // Auto-run on load
+        window.addEventListener('load', () => {
+            log('=== Tier Mapping Test Console Ready ===', 'pass');
+            testLocalStorage();
+        });
+    </script>
+</body>
+</html>
