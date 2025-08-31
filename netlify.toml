@@ -11,10 +11,10 @@
 [functions]
   directory = "netlify/functions"
 
-# Redirect www to non-www for new domain (only if request is to www subdomain)
+# Redirect non-www to www (since www is the primary domain)
 [[redirects]]
-  from = "https://www.kidsstorytime.ai/*"
-  to = "https://kidsstorytime.ai/:splat"
+  from = "https://kidsstorytime.ai/*"
+  to = "https://www.kidsstorytime.ai/:splat"
   status = 301
   force = true
 
