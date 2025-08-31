@@ -11,25 +11,15 @@
 [functions]
   directory = "netlify/functions"
 
-# Domain redirects from old domain to new domain
-[[redirects]]
-  from = "https://kidsstorytime.org/*"
-  to = "https://kidsstorytime.ai/:splat"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "https://www.kidsstorytime.org/*"
-  to = "https://kidsstorytime.ai/:splat"
-  status = 301
-  force = true
-
-# Redirect www to non-www for new domain
+# Redirect www to non-www for new domain (only if request is to www subdomain)
 [[redirects]]
   from = "https://www.kidsstorytime.ai/*"
   to = "https://kidsstorytime.ai/:splat"
   status = 301
   force = true
+
+# Note: Old domain redirects removed to prevent loops
+# If you still own kidsstorytime.org, set up redirects at that domain's host instead
 
 # Security Headers
 [[headers]]
