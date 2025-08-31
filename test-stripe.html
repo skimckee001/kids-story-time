@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Stripe Integration - Kids Story Time</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .price-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        .price-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+        .price-card h2 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+        }
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+        }
+        .features {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        .features li {
+            padding: 5px 0;
+            color: #666;
+        }
+        .features li:before {
+            content: "✓ ";
+            color: #4caf50;
+            font-weight: bold;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        .info {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            color: #0c5460;
+        }
+        .keys {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            margin-top: 10px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Stripe Integration Test</h1>
+        
+        <div class="info">
+            <strong>Test Mode Active</strong><br>
+            Use test card: <code>4242 4242 4242 4242</code><br>
+            Any future expiry, any CVC
+        </div>
+
+        <div class="price-card">
+            <h2>Story Maker</h2>
+            <div class="price">$4.99/month</div>
+            <ul class="features">
+                <li>10 stories per day</li>
+                <li>AI-generated images</li>
+                <li>All themes</li>
+                <li>Export to PDF</li>
+                <li>Ad-free experience</li>
+            </ul>
+            <button onclick="checkout('story-maker-basic')">Subscribe to Story Maker</button>
+        </div>
+
+        <div class="price-card">
+            <h2>Family</h2>
+            <div class="price">$7.99/month</div>
+            <ul class="features">
+                <li>Unlimited stories</li>
+                <li>AI-generated images</li>
+                <li>Multiple child profiles</li>
+                <li>Audio narration</li>
+                <li>Priority support</li>
+            </ul>
+            <button onclick="checkout('family-plus')">Subscribe to Family</button>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <div class="keys">
+            <strong>Configuration:</strong><br>
+            Public Key: pk_test_51RsK5a...mskVtFVa<br>
+            Story Maker Price: price_1S2Bdq0MYOtGjLFhBYSIU8L9<br>
+            Family Price: price_1S2BgM0MYOtGjLFhlBjRzwaV
+        </div>
+    </div>
+
+    <script>
+        // Initialize Stripe
+        const stripe = Stripe('pk_test_51RsK5a0MYOtGjLFhHQIFsu70fMh280B1WbipmKXQEYXWt0gQPKK2YvHuhIVfyGSRcVJ21orq3hdK6bCwT5vGU4VU00mskVtFVa');
+
+        // Price IDs mapping
+        const priceIds = {
+            'story-maker-basic': 'price_1S2Bdq0MYOtGjLFhBYSIU8L9',
+            'family-plus': 'price_1S2BgM0MYOtGjLFhlBjRzwaV'
+        };
+
+        async function checkout(tier) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = 'status';
+            statusDiv.textContent = 'Creating checkout session...';
+            
+            try {
+                // Call your Netlify function to create checkout session
+                const response = await fetch('/.netlify/functions/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        priceId: priceIds[tier],
+                        userId: 'test-user-' + Date.now(),
+                        userEmail: 'test@kidsstorytime.ai',
+                        tier: tier
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create checkout session');
+                }
+
+                const { sessionId } = await response.json();
+                
+                statusDiv.className = 'status success';
+                statusDiv.textContent = 'Redirecting to checkout...';
+                
+                // Redirect to Stripe Checkout
+                const { error } = await stripe.redirectToCheckout({ sessionId });
+                
+                if (error) {
+                    throw error;
+                }
+            } catch (error) {
+                console.error('Checkout error:', error);
+                statusDiv.className = 'status error';
+                statusDiv.textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

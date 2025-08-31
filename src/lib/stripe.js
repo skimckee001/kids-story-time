@@ -7,7 +7,8 @@ let stripePromise = null;
 
 export const getStripe = () => {
   if (!stripePromise) {
-    const publicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+    // Use test key directly for now, can switch to env variable later
+    const publicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY || 'pk_test_51RsK5a0MYOtGjLFhHQIFsu70fMh280B1WbipmKXQEYXWt0gQPKK2YvHuhIVfyGSRcVJ21orq3hdK6bCwT5vGU4VU00mskVtFVa';
     if (!publicKey) {
       console.error('Missing Stripe public key. Please set VITE_STRIPE_PUBLIC_KEY');
       return null;
@@ -19,9 +20,9 @@ export const getStripe = () => {
 
 // Subscription tiers configuration
 export const SUBSCRIPTION_TIERS = {
-  free: {
-    id: 'free',
-    name: 'Free',
+  'reader-free': {
+    id: 'reader-free',
+    name: 'Reader (Free)',
     price: 0,
     priceId: null, // No Stripe price ID for free tier
     features: [
@@ -36,30 +37,31 @@ export const SUBSCRIPTION_TIERS = {
       themes: ['adventure', 'fairytale', 'educational', 'bedtime']
     }
   },
-  premium: {
-    id: 'premium',
-    name: 'Premium',
-    price: 9.99,
-    priceId: 'price_premium_monthly', // Replace with actual Stripe price ID
+  'story-maker-basic': {
+    id: 'story-maker-basic',
+    name: 'Story Maker',
+    price: 4.99,
+    priceId: 'price_1S2Bdq0MYOtGjLFhBYSIU8L9', // Story Maker price ID
     features: [
       'Enhanced story generation',
-      'Stock photo images',
+      'AI-generated images',
       '10 stories per day',
       'All themes',
       'Story library',
-      'Export to PDF'
+      'Export to PDF',
+      'Ad-free experience'
     ],
     limits: {
       storiesPerDay: 10,
-      imageQuality: 'stock',
+      imageQuality: 'ai',
       themes: 'all'
     }
   },
-  family: {
-    id: 'family',
+  'family-plus': {
+    id: 'family-plus',
     name: 'Family',
-    price: 19.99,
-    priceId: 'price_family_monthly', // Replace with actual Stripe price ID
+    price: 7.99,
+    priceId: 'price_1S2BgM0MYOtGjLFhlBjRzwaV', // Family price ID
     features: [
       'Unlimited story generation',
       'AI-generated images',
@@ -68,7 +70,8 @@ export const SUBSCRIPTION_TIERS = {
       'Story library',
       'Export to PDF',
       'Audio narration',
-      'Priority support'
+      'Priority support',
+      'Ad-free experience'
     ],
     limits: {
       storiesPerDay: 999,
