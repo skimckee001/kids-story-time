@@ -78,7 +78,7 @@ const THEMES_BY_LEVEL = {
 function App() {
   // Form state
   const [childName, setChildName] = useState('');
-  const [gender, setGender] = useState('');
+  const [genderSelection, setGenderSelection] = useState({ boy: false, girl: false });
   const [includeNameInStory, setIncludeNameInStory] = useState(true);
   const [readingLevel, setReadingLevel] = useState('developing-reader');
   const [selectedThemes, setSelectedThemes] = useState([]);
@@ -143,7 +143,10 @@ function App() {
       setSelectedChildProfile(profile);
       // Auto-populate form with profile data
       setChildName(profile.name || '');
-      setGender(profile.gender === 'male' ? 'boy' : profile.gender === 'female' ? 'girl' : '');
+      setGenderSelection({
+        boy: profile.gender === 'male',
+        girl: profile.gender === 'female'
+      });
       setIncludeNameInStory(profile.include_name_in_stories !== false);
       setReadingLevel(profile.reading_level || 'developing-reader');
       setSelectedThemes(profile.favorite_themes || []);
@@ -288,7 +291,7 @@ function App() {
           storyLength: storyLength,
           theme: selectedThemes[0] || '',
           themes: selectedThemes,
-          gender,
+          gender: genderSelection.boy && genderSelection.girl ? 'both' : genderSelection.boy ? 'boy' : genderSelection.girl ? 'girl' : '',
           customPrompt,
           storyContext,
           includeNameInStory,
@@ -583,7 +586,7 @@ function App() {
           setCurrentStory(null);
           // Reset form
           setChildName('');
-          setGender('');
+          setGenderSelection({ boy: false, girl: false });
           setSelectedThemes([]);
           setCustomPrompt('');
           setStoryContext('');
@@ -856,36 +859,31 @@ function App() {
                 <div className="gender-buttons">
                   <button
                     type="button"
-                    className={`gender-btn ${gender === 'boy' ? 'active' : ''}`}
-                    onClick={() => setGender(gender === 'boy' ? '' : 'boy')}
+                    className={`gender-btn ${genderSelection.boy ? 'active' : ''}`}
+                    onClick={() => setGenderSelection(prev => ({ ...prev, boy: !prev.boy }))}
                   >
                     🧑 Boy
                   </button>
                   <button
                     type="button"
-                    className={`gender-btn ${gender === 'girl' ? 'active' : ''}`}
-                    onClick={() => setGender(gender === 'girl' ? '' : 'girl')}
+                    className={`gender-btn ${genderSelection.girl ? 'active' : ''}`}
+                    onClick={() => setGenderSelection(prev => ({ ...prev, girl: !prev.girl }))}
                   >
                     👩 Girl
                   </button>
-                  <button
-                    type="button"
-                    className={`gender-btn ${gender === 'both' ? 'active' : ''}`}
-                    onClick={() => setGender('both')}
-                  >
-                    👫 Both
-                  </button>
                 </div>
               </div>
-              <label className="include-name-label" style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                <input
-                  type="checkbox"
-                  checked={includeNameInStory}
-                  onChange={(e) => setIncludeNameInStory(e.target.checked)}
-                  style={{margin: 0}}
-                />
-                <span style={{fontWeight: 'normal'}}>Include name as main character</span>
-              </label>
+              <div style={{marginTop: '10px'}}>
+                <label className="include-name-label" style={{display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'flex-start', width: 'auto'}}>
+                  <input
+                    type="checkbox"
+                    checked={includeNameInStory}
+                    onChange={(e) => setIncludeNameInStory(e.target.checked)}
+                    style={{margin: 0}}
+                  />
+                  <span style={{fontWeight: 'normal'}}>Include name as main character</span>
+                </label>
+              </div>
             </div>
 
             {/* Story Prompt */}
@@ -1178,7 +1176,10 @@ function App() {
             setSelectedChildProfile(profile);
             // Auto-populate form with profile data
             setChildName(profile.name || '');
-            setGender(profile.gender === 'male' ? 'boy' : profile.gender === 'female' ? 'girl' : '');
+            setGenderSelection({
+        boy: profile.gender === 'male',
+        girl: profile.gender === 'female'
+      });
             setIncludeNameInStory(profile.include_name_in_stories !== false);
             setReadingLevel(profile.reading_level || 'developing-reader');
             setSelectedThemes(profile.favorite_themes || []);
