@@ -347,7 +347,7 @@ function App() {
         label: 'Realistic',
         icon: '📸',
         description: 'Photo-like quality',
-        prompt: 'photorealistic, detailed, natural lighting',
+        prompt: 'photorealistic style, highly detailed, natural lighting, realistic proportions, life-like, photography style',
         ageRange: [8, 16]
       },
       {
@@ -544,9 +544,10 @@ function App() {
             .filter(Boolean)
             .join(', ');
           
-          const imagePrompt = data.story.title ? 
-            `${data.story.title}. Child-friendly, colorful illustration. ${selectedThemeLabels} theme` :
-            `A magical story illustration for children. ${selectedThemeLabels} theme`;
+          // Use the image prompt that was already determined based on the selected style
+          const storyImagePrompt = imagePrompt ? 
+            `${data.story.title}. ${imagePrompt}. ${selectedThemeLabels} theme` :
+            `${data.story.title}. Child-friendly, colorful illustration. ${selectedThemeLabels} theme`;
           
           // Determine API tier - include old tier names for compatibility
           const apiTier = (subscriptionTier === 'family-plus' || 
@@ -566,9 +567,9 @@ function App() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              prompt: imagePrompt,
-              style: 'illustration',
-              mood: 'cheerful',
+              prompt: storyImagePrompt,
+              style: imageStyle === 'realistic' ? 'photorealistic' : 'illustration',
+              mood: imageStyle === 'realistic' ? 'natural' : 'cheerful',
               tier: apiTier
             })
           })
