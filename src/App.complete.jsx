@@ -857,12 +857,13 @@ function App() {
                     onClick={() => setBedtimeModeActive(!bedtimeModeActive)}
                     title={bedtimeModeActive ? "Bedtime mode active" : "Activate bedtime mode"}
                     style={{
-                      background: bedtimeModeActive ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)' : 'rgba(255, 255, 255, 0.1)',
-                      border: bedtimeModeActive ? '2px solid #fbbf24' : '1px solid rgba(255, 255, 255, 0.2)',
-                      color: bedtimeModeActive ? '#fbbf24' : '#64748b',
+                      background: bedtimeModeActive ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)' : 'rgba(255, 255, 255, 0.9)',
+                      border: bedtimeModeActive ? '2px solid #fbbf24' : '2px solid #9ca3af',
+                      color: bedtimeModeActive ? '#fbbf24' : '#475569',
                       padding: '8px 12px',
                       fontSize: '20px',
-                      transition: 'all 0.3s ease'
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer'
                     }}
                   >
                     {bedtimeModeActive ? '🌙' : '☾'}
