@@ -140,8 +140,9 @@ function StarRewardsSystem({ childProfile, stars, setStars, onClose }) {
           <button className="close-btn" onClick={onClose} style={{position: 'absolute', right: '20px', top: '20px'}}>✕</button>
         </div>
 
-        {/* Star Balance */}
-        <div className="star-balance">
+        <div className="rewards-body">
+          {/* Star Balance */}
+          <div className="star-balance">
           <div className="balance-display">
             <span className="balance-icon">⭐</span>
             <span className="balance-value">{stars}</span>
@@ -276,6 +277,7 @@ function StarRewardsSystem({ childProfile, stars, setStars, onClose }) {
             </p>
           </div>
         )}
+        </div>
       </div>
 
       {/* Purchase Modal */}

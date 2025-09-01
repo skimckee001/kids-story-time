@@ -19,9 +19,11 @@
   width: 90%;
   max-width: 1000px;
   max-height: 85vh;
-  overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 @keyframes fadeIn {
@@ -50,6 +52,8 @@
   align-items: center;
   border-radius: 20px 20px 0 0;
   position: relative;
+  flex-shrink: 0;
+  z-index: 10;
 }
 
 .rewards-header h2 {
@@ -77,6 +81,13 @@
 .rewards-header .close-btn:hover {
   background: rgba(255, 255, 255, 0.3);
   transform: scale(1.1);
+}
+
+/* Scrollable Body */
+.rewards-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Star Balance */
