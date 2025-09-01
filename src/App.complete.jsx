@@ -1259,9 +1259,9 @@ function App() {
             </button>
             <StarRewardsSystem
               childProfile={selectedChildProfile}
-              onRewardUnlocked={(reward) => {
-                console.log('Reward unlocked:', reward);
-              }}
+              stars={starPoints}
+              setStars={setStarPoints}
+              onClose={() => setShowRewards(false)}
             />
           </div>
         </div>
