@@ -21,7 +21,7 @@
 }
 
 .theme-young .header-container {
-  background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+  background: white !important;
   border-radius: var(--border-radius);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
@@ -91,7 +91,7 @@
 }
 
 .theme-middle .header-container {
-  background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+  background: white !important;
   border-radius: var(--border-radius);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
@@ -170,10 +170,9 @@
 }
 
 .theme-older .header-container {
-  background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+  background: white !important;
   border-radius: var(--border-radius);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .theme-older .logo-icon span {
