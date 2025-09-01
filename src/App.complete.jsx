@@ -933,12 +933,12 @@ function App() {
 
         {/* Main Form */}
         <div className="main-content">
-          {/* Reading Streak Display - only show if profile selected */}
-          {selectedChildProfile && (
+          {/* Reading Streak Display - TEMPORARILY HIDDEN */}
+          {/* {selectedChildProfile && (
             <>
               <ReadingStreak childProfile={selectedChildProfile} />
             </>
-          )}
+          )} */}
           
           {/* Prompt to create profile if none selected */}
           {!selectedChildProfile && user && (
