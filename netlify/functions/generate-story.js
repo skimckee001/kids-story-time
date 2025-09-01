@@ -213,11 +213,12 @@ function getSystemPromptForAge(age) {
 }
 
 function buildStoryPrompt(childName, childAge, storyLength, theme, themes = [], gender, customPrompt, includeNameInStory = true) {
+    // Word counts based on average reading speed of 150 words per minute for children
     const lengthInstructions = {
-        short: 'Write a short story (200-300 words, 2-3 minutes reading time)',
-        medium: 'Write a medium-length story (400-600 words, 5-7 minutes reading time)', 
-        long: 'Write a longer story (800-1200 words, 10-15 minutes reading time)',
-        extended: 'Write an extended story (1500-2000 words, 20 minutes reading time)',
+        short: 'Write a short story (300-450 words, 2-3 minutes reading time)',
+        medium: 'Write a medium-length story (750-1050 words, 5-7 minutes reading time)', 
+        long: 'Write a longer story (1500-2250 words, 10-15 minutes reading time)',
+        extended: 'Write an extended story (3000-4000 words, 20+ minutes reading time)',
         'long-extended': 'Write a long extended story (2500-3000 words, 30 minutes reading time)',
         'extra-long': 'Write an extra long story (3500-4000 words, 45 minutes reading time)'
     };
@@ -304,11 +305,12 @@ function getGenericCharacterName(gender, childAge) {
 }
 
 function getMaxTokensForLength(length) {
+    // Adjusted token limits for proper word counts (1 token ≈ 0.75 words)
     const tokenLimits = {
-        short: 400,
-        medium: 800,
-        long: 1500,
-        extended: 2500,
+        short: 600,      // ~450 words
+        medium: 1400,    // ~1050 words
+        long: 3000,      // ~2250 words
+        extended: 5300,  // ~4000 words
         'long-extended': 3500,
         'extra-long': 4500
     };

@@ -1246,7 +1246,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
               <button 
                 onClick={handleMarkAsComplete}
                 style={{
-                  background: 'linear-gradient(135deg, #ffd700, #ffa500)',
+                  background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
                   color: 'white',
                   border: 'none',
                   padding: '12px 30px',
@@ -1256,14 +1256,14 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                   cursor: 'pointer',
                   transform: 'scale(1)',
                   transition: 'transform 0.2s',
-                  boxShadow: '0 4px 15px rgba(255, 165, 0, 0.3)'
+                  boxShadow: '0 4px 15px rgba(139, 92, 246, 0.3)'
                 }}
                 onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
                 onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
               >
-                ⭐ Mark as Complete (+5 Stars)
+                ⭐ Mark as Complete (+10 Stars)
               </button>
-              <p style={{ marginTop: '10px', color: '#64748b', fontSize: '14px' }}>
+              <p style={{ marginTop: '10px', color: '#7c3aed', fontSize: '14px' }}>
                 Complete stories to earn stars and unlock rewards!
               </p>
             </div>
