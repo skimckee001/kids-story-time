@@ -1105,7 +1105,171 @@ body {
   margin: 5px 0;
 }
 
-/* Star Points Display */
+/* ========================================
+   GAMIFICATION SYSTEM - BEST PRACTICES
+   ======================================== */
+
+/* Star Bank (Currency System) */
+.star-bank, .star-display.clickable {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #ffd700, #ffb700);
+  border-radius: 25px;
+  font-weight: bold;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+}
+
+.star-bank:hover, .star-display.clickable:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.5);
+  background: linear-gradient(135deg, #ffdb00, #ffc107);
+}
+
+/* Tooltip on hover */
+.star-bank::after {
+  content: '💰 Star Shop';
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  transition: transform 0.2s ease;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.star-bank:hover::after {
+  transform: translateX(-50%) scale(1);
+}
+
+/* Trophy Room (Achievement System) */
+.trophy-room, .achievement-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+  border-radius: 25px;
+  font-weight: bold;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(155, 89, 182, 0.3);
+}
+
+.trophy-room:hover, .achievement-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(155, 89, 182, 0.5);
+  background: linear-gradient(135deg, #a569bd, #9b59b6);
+}
+
+/* Trophy tooltip */
+.trophy-room::after {
+  content: '🏆 Badge Collection';
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  transition: transform 0.2s ease;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.trophy-room:hover::after {
+  transform: translateX(-50%) scale(1);
+}
+
+/* Icon animations */
+.star-icon, .currency-icon {
+  color: white;
+  font-size: 1.2rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+  50% { 
+    transform: scale(1.1) rotate(5deg);
+    filter: brightness(1.2);
+  }
+}
+
+.trophy-icon {
+  font-size: 1.2rem;
+  animation: trophy-shine 3s ease-in-out infinite;
+}
+
+@keyframes trophy-shine {
+  0%, 100% { 
+    transform: translateY(0) rotate(0deg);
+    filter: brightness(1);
+  }
+  50% { 
+    transform: translateY(-2px) rotate(-5deg);
+    filter: brightness(1.3);
+  }
+}
+
+/* Values and labels */
+.star-count, .currency-value {
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.trophy-count, .achievement-count {
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  opacity: 0.95;
+}
+
+/* Visual separation in header */
+.gamification-separator {
+  width: 2px;
+  height: 30px;
+  background: linear-gradient(to bottom, transparent, #ddd, transparent);
+  margin: 0 10px;
+}
+
+/* Clear labeling for mobile */
+@media (max-width: 768px) {
+  .star-bank::after,
+  .trophy-room::after {
+    display: none;
+  }
+  
+  .star-bank, .trophy-room {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Backwards compatibility */
 .star-display {
   display: flex;
   align-items: center;
@@ -1115,27 +1279,6 @@ body {
   border-radius: 20px;
   border: 2px solid #ffd700;
   transition: all 0.3s ease;
-}
-
-.star-display.clickable {
-  cursor: pointer;
-}
-
-.star-display.clickable:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-  background: linear-gradient(135deg, #fff3cd, #fff);
-}
-
-.star-icon {
-  color: #FFD700;
-  font-size: 1.1rem;
-}
-
-.star-count {
-  color: #667eea;
-  font-weight: 700;
-  font-size: 0.95rem;
 }
 
 /* Responsive Design */

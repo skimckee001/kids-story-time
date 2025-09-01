@@ -107,6 +107,7 @@ function App() {
   const [showDashboard, setShowDashboard] = useState(false);
   const [bedtimeModeActive, setBedtimeModeActive] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [achievementCount, setAchievementCount] = useState(0);
   const { triggerCelebration, CelebrationComponent } = useCelebration();
 
   useEffect(() => {
@@ -161,6 +162,17 @@ function App() {
       const savedStars = localStorage.getItem(`stars_${profile.id}`);
       if (savedStars) {
         setStarPoints(parseInt(savedStars) || 0);
+      }
+      
+      // Load achievement count
+      const savedAchievements = localStorage.getItem(`achievements_${profile.id}`);
+      if (savedAchievements) {
+        try {
+          const achievementList = JSON.parse(savedAchievements);
+          setAchievementCount(achievementList.length);
+        } catch (e) {
+          setAchievementCount(0);
+        }
       }
     }
   }, []);
@@ -635,24 +647,28 @@ function App() {
             <div className="header-right" style={{width: '100%', justifyContent: 'center', flexWrap: 'wrap', gap: '10px', minHeight: 'auto'}}>
               {user ? (
                 <>
-                  {/* Star Display - Always visible for motivation */}
+                  {/* Star Bank - Currency System */}
                   <button 
-                    className="star-display clickable"
+                    className="star-bank"
                     onClick={() => setShowRewards(true)}
-                    title="Click to open rewards shop"
+                    title="Star Shop - Spend your stars!"
+                    aria-label="Star shop with {starPoints} stars"
                   >
-                    <span className="star-icon">⭐</span>
-                    <span className="star-count">{starPoints}</span>
+                    <span className="currency-icon">💰</span>
+                    <span className="currency-value">{starPoints}</span>
+                    <span className="currency-label">Stars</span>
                   </button>
                   
-                  {/* Primary Gamification Actions */}
+                  {/* Trophy Room - Achievement System */}
                   <button 
-                    className="header-btn"
+                    className="trophy-room"
                     onClick={() => setShowAchievements(true)}
-                    title="View achievements"
-                    style={{background: 'linear-gradient(135deg, #ffd700, #ffa500)', color: 'white', border: 'none', flex: '0 0 auto'}}
+                    title="Badge Collection - View your achievements!"
+                    aria-label="View {achievementCount || 0} achievements"
                   >
-                    🏆 Achievements
+                    <span className="trophy-icon">🏆</span>
+                    <span className="trophy-count">{achievementCount || 0}/48</span>
+                    <span className="trophy-label">Badges</span>
                   </button>
                   
                   <button 
@@ -713,21 +729,24 @@ function App() {
                 <>
                   {/* Show gamification elements for non-logged-in users (at 0) */}
                   <div 
-                    className="star-display"
+                    className="star-bank"
                     title="Create an account to start earning stars!"
-                    style={{ cursor: 'help' }}
+                    style={{ cursor: 'help', opacity: 0.7 }}
                   >
-                    <span className="star-icon">⭐</span>
-                    <span className="star-count">0</span>
+                    <span className="currency-icon">💰</span>
+                    <span className="currency-value">0</span>
+                    <span className="currency-label">Stars</span>
                   </div>
                   
                   <button 
-                    className="header-btn"
+                    className="trophy-room"
                     onClick={() => setShowAuth(true)}
-                    title="Sign up to unlock achievements"
-                    style={{background: 'linear-gradient(135deg, #ffd700, #ffa500)', color: 'white', border: 'none', flex: '0 0 auto'}}
+                    title="Sign up to unlock badges!"
+                    style={{ opacity: 0.7 }}
                   >
-                    🏆 Achievements
+                    <span className="trophy-icon">🏆</span>
+                    <span className="trophy-count">0/48</span>
+                    <span className="trophy-label">Badges</span>
                   </button>
                   
                   <button 
@@ -1231,6 +1250,19 @@ function App() {
               setStarPoints(parseInt(savedStars) || 0);
             } else {
               setStarPoints(0);
+            }
+            
+            // Load achievement count for selected profile
+            const savedAchievements = localStorage.getItem(`achievements_${profile.id}`);
+            if (savedAchievements) {
+              try {
+                const achievementList = JSON.parse(savedAchievements);
+                setAchievementCount(achievementList.length);
+              } catch (e) {
+                setAchievementCount(0);
+              }
+            } else {
+              setAchievementCount(0);
             }
             
             setShowProfileManager(false);
