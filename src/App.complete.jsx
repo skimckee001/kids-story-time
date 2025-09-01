@@ -1240,8 +1240,6 @@ function App() {
                   <>Try Now: {storiesRemaining} story remaining today</> :
                  subscriptionTier === 'reader-free' ? 
                   <>Reader Plan: {storiesRemaining} stories remaining today</> :
-                 subscriptionTier === 'story-maker-basic' ?
-                  <>Story Maker: {storiesRemaining} stories remaining today</> :
                  subscriptionTier === 'family-plus' ?
                   <>Family Plan: {storiesRemaining} stories remaining today</> :
                   <>Premium Plan: Unlimited stories</>
@@ -1253,7 +1251,7 @@ function App() {
         </div>
 
         {/* Upgrade Section - Separate Box */}
-        {(!user || subscriptionTier !== 'family-plus') && (
+        {(!user || subscriptionTier === 'reader-free') && (
           <div className="main-content" style={{
             marginTop: '20px',
             padding: '24px',
@@ -1268,38 +1266,35 @@ function App() {
                 marginBottom: '16px',
                 color: '#333'
               }}>
-                {!user ? '🎉 Create Your Free Account' : 
-                 subscriptionTier === 'reader-free' ? '⭐ Upgrade to Story Maker' : 
-                 '👨‍👩‍👧‍👦 Upgrade to Family Plan'}
+                {!user ? '🎉 Create Your Free Account' : '👨‍👩‍👧‍👦 Upgrade to Family Plan'}
               </h3>
               
-              <button
-                type="button"
-                onClick={() => !user ? setShowAuth(true) : window.location.href = '/pricing-new.html'}
-                style={{
-                  width: '100%',
-                  maxWidth: '400px',
-                  padding: '14px 20px',
-                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  marginBottom: '20px',
-                  boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
-                  transition: 'transform 0.2s'
-                }}
-                onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
-                onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
-              >
-                {!user ? 'Sign Up Free - No Credit Card' : 'View Plans & Pricing'}
-              </button>
-
-              <div style={{ fontSize: '14px', color: '#666' }}>
-                {!user ? (
-                  <>
+              {!user ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setShowAuth(true)}
+                    style={{
+                      width: '100%',
+                      maxWidth: '400px',
+                      padding: '14px 20px',
+                      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      marginBottom: '20px',
+                      boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
+                      transition: 'transform 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
+                    onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
+                  >
+                    Sign Up Free - No Credit Card
+                  </button>
+                  <div style={{ fontSize: '14px', color: '#666' }}>
                     <p style={{ fontWeight: '600', marginBottom: '10px', color: '#333' }}>
                       Free Reader account includes:
                     </p>
@@ -1310,55 +1305,92 @@ function App() {
                       <li>✅ Basic themes and story options</li>
                       <li>✅ Placeholder images</li>
                     </ul>
-                  </>
-                ) : subscriptionTier === 'reader-free' ? (
-                  <>
-                    <p style={{ fontWeight: '600', marginBottom: '10px', color: '#333' }}>
-                      Story Maker ($4.99/month) includes:
-                    </p>
-                    <ul style={{ margin: '0 auto', paddingLeft: '20px', lineHeight: '1.8', maxWidth: '500px', textAlign: 'left' }}>
-                      <li>🎨 AI-generated illustrations</li>
-                      <li>📚 10 stories per day</li>
-                      <li>📄 Export stories to PDF</li>
-                      <li>🎯 All themes unlocked</li>
-                      <li>💾 Story library</li>
-                      <li>🚫 Ad-free experience</li>
-                    </ul>
-                    <p style={{ 
-                      marginTop: '12px', 
-                      fontSize: '13px', 
-                      fontStyle: 'italic',
-                      color: '#667eea',
-                      fontWeight: '600'
-                    }}>
-                      🎁 30-Day Free Trial Available
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p style={{ fontWeight: '600', marginBottom: '10px', color: '#333' }}>
-                      Family Plan ($7.99/month) includes:
-                    </p>
-                    <ul style={{ margin: '0 auto', paddingLeft: '20px', lineHeight: '1.8', maxWidth: '500px', textAlign: 'left' }}>
-                      <li>♾️ Unlimited stories</li>
-                      <li>👨‍👩‍👧‍👦 Multiple child profiles</li>
-                      <li>🎨 Premium AI illustrations</li>
-                      <li>🎧 Audio narration</li>
-                      <li>📊 Parent dashboard</li>
-                      <li>⭐ Priority support</li>
-                    </ul>
-                    <p style={{ 
-                      marginTop: '12px', 
-                      fontSize: '13px', 
-                      fontStyle: 'italic',
-                      color: '#667eea',
-                      fontWeight: '600'
-                    }}>
-                      🎁 Perfect for families - Unlimited magic for everyone
-                    </p>
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p style={{ 
+                    fontSize: '14px', 
+                    fontStyle: 'italic',
+                    color: '#667eea',
+                    fontWeight: '600',
+                    marginBottom: '15px'
+                  }}>
+                    🎁 Perfect for families
+                  </p>
+                  
+                  <ul style={{ 
+                    textAlign: 'center', 
+                    listStyle: 'none', 
+                    padding: 0,
+                    fontSize: '14px',
+                    lineHeight: '2',
+                    marginBottom: '20px'
+                  }}>
+                    <li>
+                      <span style={{ 
+                        backgroundColor: '#fef3c7', 
+                        padding: '3px 8px', 
+                        borderRadius: '4px',
+                        fontWeight: 'bold'
+                      }}>
+                        ✓ 20 stories per day
+                      </span>
+                    </li>
+                    <li>
+                      <span style={{ 
+                        backgroundColor: '#fef3c7', 
+                        padding: '3px 8px', 
+                        borderRadius: '4px',
+                        fontWeight: 'bold'
+                      }}>
+                        ✓ 5 child profiles
+                      </span>
+                    </li>
+                    <li>✓ Unlimited AI illustrations*</li>
+                    <li>✓ Unlimited narrations*</li>
+                    <li>✓ Bedtime reminders & streaks</li>
+                    <li>✓ Audio downloads</li>
+                    <li>✓ English + 1 language</li>
+                    <li>✓ Non-watermarked PDFs</li>
+                  </ul>
+                  
+                  <button
+                    type="button"
+                    onClick={() => window.location.href = '/pricing-new.html'}
+                    style={{
+                      padding: '14px 40px',
+                      background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '25px',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      marginBottom: '15px',
+                      boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
+                      transition: 'transform 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
+                    onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                  >
+                    Upgrade to Family Plan
+                  </button>
+                  
+                  <p style={{ 
+                    fontSize: '13px', 
+                    color: '#999',
+                    marginTop: '10px'
+                  }}>
+                    <a 
+                      href="/pricing-new.html" 
+                      style={{ color: '#667eea', textDecoration: 'none' }}
+                    >
+                      View plans and pricing →
+                    </a>
+                  </p>
+                </>
+              )}
             </div>
           </div>
         )}
