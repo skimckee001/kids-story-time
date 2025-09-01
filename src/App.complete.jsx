@@ -398,8 +398,8 @@ function App() {
   const handleGenerateStory = async (e) => {
     e.preventDefault();
     
-    if (!childName || !readingLevel) {
-      alert('Please enter child\'s name and select reading level');
+    if (!readingLevel) {
+      alert('Please select a reading level');
       return;
     }
 
@@ -1020,8 +1020,7 @@ function App() {
                   id="childName"
                   value={childName}
                   onChange={(e) => setChildName(e.target.value)}
-                  placeholder="Enter your child's name"
-                  required
+                  placeholder="Enter your child's name (optional)"
                   className="name-input"
                 />
                 <div className="gender-buttons">
