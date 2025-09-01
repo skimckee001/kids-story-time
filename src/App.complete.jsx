@@ -146,23 +146,27 @@ function App() {
   const [showDashboard, setShowDashboard] = useState(false);
   const [bedtimeModeActive, setBedtimeModeActive] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [achievementCount, setAchievementCount] = useState(0);
   const [showStripeTest, setShowStripeTest] = useState(false);
   const { triggerCelebration, CelebrationComponent } = useCelebration();
 
   useEffect(() => {
-    // Click outside handler for dropdown menu
+    // Click outside handler for dropdown menus
     const handleClickOutside = (event) => {
       if (!event.target.closest('.more-menu-container')) {
         setShowMoreMenu(false);
       }
+      if (!event.target.closest('.user-menu-container')) {
+        setShowUserMenu(false);
+      }
     };
     
-    if (showMoreMenu) {
+    if (showMoreMenu || showUserMenu) {
       document.addEventListener('click', handleClickOutside);
       return () => document.removeEventListener('click', handleClickOutside);
     }
-  }, [showMoreMenu]);
+  }, [showMoreMenu, showUserMenu]);
   
   // Theme colors are now consistent - reading level only affects content
   // The reading level dropdown still controls which themes are available
@@ -402,6 +406,15 @@ function App() {
     
     // Default: show age-appropriate selection
     return allStyles.slice(0, 6);
+  };
+
+  const handleLogout = async () => {
+    localStorage.removeItem('mockUser');
+    await supabase.auth.signOut();
+    setUser(null);
+    setSubscriptionTier('free');
+    setStoriesRemaining(1);
+    setSelectedChildProfile(null);
   };
 
   const handleGenerateStory = async (e) => {
@@ -838,37 +851,158 @@ function App() {
                     📚 Library
                   </button>
                   
-                  {/* More Menu Dropdown */}
-                  <div className="more-menu-container">
+                  {/* Bedtime Mode Toggle - Standalone Icon */}
+                  <button
+                    className="header-btn bedtime-toggle"
+                    onClick={() => setBedtimeModeActive(!bedtimeModeActive)}
+                    title={bedtimeModeActive ? "Bedtime mode active" : "Activate bedtime mode"}
+                    style={{
+                      background: bedtimeModeActive ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)' : 'rgba(255, 255, 255, 0.1)',
+                      border: bedtimeModeActive ? '2px solid #fbbf24' : '1px solid rgba(255, 255, 255, 0.2)',
+                      color: bedtimeModeActive ? '#fbbf24' : '#64748b',
+                      padding: '8px 12px',
+                      fontSize: '20px',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {bedtimeModeActive ? '🌙' : '☾'}
+                  </button>
+                  
+                  {/* User Profile Dropdown */}
+                  <div className="user-menu-container" style={{ position: 'relative' }}>
                     <button 
-                      className="header-btn more-btn"
-                      onClick={() => setShowMoreMenu(!showMoreMenu)}
+                      className="header-btn user-profile-btn"
+                      onClick={() => setShowUserMenu(!showUserMenu)}
+                      style={{
+                        background: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
+                        color: 'white',
+                        border: 'none',
+                        padding: '8px 16px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontWeight: '600'
+                      }}
                     >
-                      ⋯ More
+                      <span style={{ fontSize: '18px' }}>👤</span>
+                      <span>{user?.email?.split('@')[0] || 'Account'}</span>
+                      <span style={{ fontSize: '12px' }}>▼</span>
                     </button>
-                    {showMoreMenu && (
-                      <div className="dropdown-menu">
-                        <button onClick={() => { setShowProfileManager(true); setShowMoreMenu(false); }}>
-                          👤 Manage Profiles
-                        </button>
-                        <button onClick={() => { setShowDashboard(true); setShowMoreMenu(false); }}>
-                          📈 Parent Dashboard
-                        </button>
-                        <button onClick={() => { window.open('/pricing-new.html', '_blank'); setShowMoreMenu(false); }}>
-                          💰 View Plans
-                        </button>
-                        <div className="dropdown-divider"></div>
-                        <BedtimeMode 
-                          isActive={bedtimeModeActive}
-                          onToggle={(active) => {
-                            setBedtimeModeActive(active);
-                            setShowMoreMenu(false);
+                    {showUserMenu && (
+                      <div className="dropdown-menu" style={{
+                        position: 'absolute',
+                        top: '100%',
+                        right: 0,
+                        marginTop: '8px',
+                        background: 'white',
+                        borderRadius: '12px',
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                        minWidth: '220px',
+                        zIndex: 1000,
+                        overflow: 'hidden'
+                      }}>
+                        <button 
+                          onClick={() => { setShowDashboard(true); setShowUserMenu(false); }}
+                          style={{
+                            width: '100%',
+                            padding: '12px 16px',
+                            border: 'none',
+                            background: 'transparent',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            transition: 'background 0.2s',
+                            textAlign: 'left'
                           }}
-                          onTimeout={() => {
-                            setBedtimeModeActive(false);
-                            alert('Bedtime! Sweet dreams! 🌙');
+                          onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                          onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                        >
+                          <span>📊</span> Parent Dashboard
+                        </button>
+                        <button 
+                          onClick={() => { setShowProfileManager(true); setShowUserMenu(false); }}
+                          style={{
+                            width: '100%',
+                            padding: '12px 16px',
+                            border: 'none',
+                            background: 'transparent',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            transition: 'background 0.2s',
+                            textAlign: 'left'
                           }}
-                        />
+                          onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                          onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                        >
+                          <span>👥</span> Manage Profiles
+                        </button>
+                        <button 
+                          onClick={() => { window.open('/pricing-new.html', '_blank'); setShowUserMenu(false); }}
+                          style={{
+                            width: '100%',
+                            padding: '12px 16px',
+                            border: 'none',
+                            background: 'transparent',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            transition: 'background 0.2s',
+                            textAlign: 'left'
+                          }}
+                          onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                          onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                        >
+                          <span>💳</span> Manage Subscription
+                        </button>
+                        <button 
+                          onClick={() => { alert('Account settings coming soon!'); setShowUserMenu(false); }}
+                          style={{
+                            width: '100%',
+                            padding: '12px 16px',
+                            border: 'none',
+                            background: 'transparent',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            transition: 'background 0.2s',
+                            textAlign: 'left'
+                          }}
+                          onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                          onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                        >
+                          <span>⚙️</span> Account Settings
+                        </button>
+                        <div style={{ borderTop: '1px solid #e5e7eb', margin: '4px 0' }}></div>
+                        <button 
+                          onClick={() => { handleLogout(); setShowUserMenu(false); }}
+                          style={{
+                            width: '100%',
+                            padding: '12px 16px',
+                            border: 'none',
+                            background: 'transparent',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            fontSize: '14px',
+                            cursor: 'pointer',
+                            transition: 'background 0.2s',
+                            textAlign: 'left',
+                            color: '#ef4444'
+                          }}
+                          onMouseEnter={(e) => e.target.style.background = '#fef2f2'}
+                          onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                        >
+                          <span>🚪</span> Sign Out
+                        </button>
                       </div>
                     )}
                   </div>
@@ -1407,32 +1541,21 @@ function App() {
         <footer className="footer">
           <p>&copy; 2025 Kids Story Time. All rights reserved.</p>
           <p>
+            <a href="/pricing-new.html" target="_blank">Pricing</a> | 
             <a href="/terms.html" target="_blank">Terms of Service</a> | 
             <a href="/privacy.html" target="_blank">Privacy Policy</a> | 
             <a href="mailto:support@kidsstorytime.ai">Contact Us</a>
-            {user && (
-              <>
-                {' | '}
-                <a 
-                  href="#"
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    localStorage.removeItem('mockUser');
-                    await supabase.auth.signOut();
-                    setUser(null);
-                    setSubscriptionTier('free');
-                    setStoriesRemaining(1);
-                    setSelectedChildProfile(null);
-                  }}
-                  style={{ color: '#999' }}
-                >
-                  Logout
-                </a>
-              </>
-            )}
           </p>
         </footer>
       </div>
+
+      {/* Bedtime Mode Modal */}
+      <BedtimeModeModal
+        isActive={bedtimeModeActive}
+        onClose={() => setBedtimeModeActive(false)}
+        onActivate={() => setBedtimeModeActive(true)}
+        onDeactivate={() => setBedtimeModeActive(false)}
+      />
 
       {/* Auth Modal */}
       {showAuth && (
@@ -1578,6 +1701,127 @@ function App() {
           🧪 Test Stripe
         </button>
       )}
+    </div>
+  );
+}
+
+// Bedtime Mode Modal Component
+function BedtimeModeModal({ isActive, onClose, onActivate, onDeactivate }) {
+  const [timer, setTimer] = useState(30); // Default 30 minutes
+  const [timeRemaining, setTimeRemaining] = useState(null);
+  const [intervalId, setIntervalId] = useState(null);
+
+  useEffect(() => {
+    if (isActive && timer > 0) {
+      setTimeRemaining(timer * 60); // Convert to seconds
+      
+      const id = setInterval(() => {
+        setTimeRemaining(prev => {
+          if (prev <= 1) {
+            clearInterval(id);
+            onDeactivate();
+            alert('Bedtime! Sweet dreams! 🌙');
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      
+      setIntervalId(id);
+      
+      return () => {
+        if (id) clearInterval(id);
+      };
+    }
+  }, [isActive, timer]);
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  if (!isActive) return null;
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: '80px',
+      right: '20px',
+      background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+      color: 'white',
+      padding: '20px',
+      borderRadius: '16px',
+      boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+      zIndex: 999,
+      minWidth: '280px'
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <h3 style={{ margin: 0, fontSize: '18px' }}>🌙 Bedtime Mode Active</h3>
+        <button 
+          onClick={onDeactivate}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'white',
+            fontSize: '24px',
+            cursor: 'pointer',
+            padding: 0
+          }}
+        >×</button>
+      </div>
+      
+      {timeRemaining !== null && (
+        <div style={{
+          fontSize: '32px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          color: '#fbbf24',
+          marginBottom: '16px'
+        }}>
+          {formatTime(timeRemaining)}
+        </div>
+      )}
+      
+      <div style={{ marginBottom: '16px' }}>
+        <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px' }}>
+          Set Timer (minutes):
+        </label>
+        <select
+          value={timer}
+          onChange={(e) => setTimer(Number(e.target.value))}
+          style={{
+            width: '100%',
+            padding: '8px',
+            borderRadius: '8px',
+            border: '1px solid #475569',
+            background: '#334155',
+            color: 'white',
+            fontSize: '14px'
+          }}
+        >
+          <option value={15}>15 minutes</option>
+          <option value={30}>30 minutes</option>
+          <option value={45}>45 minutes</option>
+          <option value={60}>1 hour</option>
+        </select>
+      </div>
+      
+      <div style={{
+        padding: '12px',
+        background: 'rgba(251, 191, 36, 0.1)',
+        borderRadius: '8px',
+        fontSize: '13px',
+        lineHeight: '1.5'
+      }}>
+        <p style={{ margin: '0 0 8px 0' }}>✨ Bedtime features:</p>
+        <ul style={{ margin: 0, paddingLeft: '20px' }}>
+          <li>Calming stories only</li>
+          <li>Soft voice narration</li>
+          <li>Auto-shutdown timer</li>
+          <li>Dimmed interface</li>
+        </ul>
+      </div>
     </div>
   );
 }
