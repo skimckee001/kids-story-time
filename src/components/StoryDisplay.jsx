@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import Header from './Header';
 import AdSense from './AdSense';
-import ReadingStreak from './ReadingStreak';
 import { addStarsToChild } from './StarRewardsSystem';
 import './StoryDisplay.css';
 import '../App.original.css';
 
-function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, subscriptionTier, starPoints, childProfile }) {
+function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, subscriptionTier, starPoints, childProfile, onShowAchievements, onShowRewards, onShowDashboard, onShowProfileManager, bedtimeModeActive, onToggleBedtime }) {
   console.log('StoryDisplay received:', { story, subscriptionTier, hasImageUrl: !!story?.imageUrl });
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -27,6 +25,27 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
   const [hasCompletedReading, setHasCompletedReading] = useState(false);
   const [showCompletionReward, setShowCompletionReward] = useState(false);
   const [localStarPoints, setLocalStarPoints] = useState(starPoints);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  
+  // Click outside handler for dropdown menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.user-menu-container')) {
+        setShowUserMenu(false);
+      }
+    };
+    
+    if (showUserMenu) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [showUserMenu]);
+  
+  const handleLogout = async () => {
+    localStorage.removeItem('mockUser');
+    await supabase.auth.signOut();
+    window.location.reload();
+  };
 
   useEffect(() => {
     // Track story start time
@@ -689,22 +708,273 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
     <div className="story-display-page">
       <div className="story-page-wrapper">
         {/* Main Header */}
-        <Header 
-          user={user}
-          subscriptionTier={subscriptionTier}
-          starPoints={localStarPoints}
-          onShowLibrary={onBack}
-          onShowAuth={onShowAuth}
-          onShowAchievements={null}
-          onLogoClick={onBack}
-        />
+        <header className="header-container">
+          <div className="header-content">
+            <div className="header-left" onClick={onBack} style={{ cursor: 'pointer' }}>
+              <div className="logo-icon">
+                <span>📚</span>
+              </div>
+              <div className="logo-text">
+                KidsStoryTime<span className="logo-domain">.ai</span>
+              </div>
+            </div>
+            {user && (
+              <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                {/* Bedtime Mode Toggle */}
+                <button
+                  className="header-btn bedtime-toggle"
+                  onClick={() => onToggleBedtime && onToggleBedtime(!bedtimeModeActive)}
+                  title={bedtimeModeActive ? "Bedtime mode active" : "Activate bedtime mode"}
+                  style={{
+                    background: bedtimeModeActive ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)' : 'rgba(255, 255, 255, 0.9)',
+                    border: bedtimeModeActive ? '2px solid #fbbf24' : '2px solid #9ca3af',
+                    color: bedtimeModeActive ? '#fbbf24' : '#475569',
+                    padding: '6px 10px',
+                    fontSize: '16px',
+                    borderRadius: '50%',
+                    width: '36px',
+                    height: '36px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {bedtimeModeActive ? '🌙' : '☾'}
+                </button>
+                
+                {/* User Profile Dropdown */}
+                <div className="user-menu-container" style={{ position: 'relative' }}>
+                  <button 
+                    className="header-btn user-profile-btn"
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    title="Account menu"
+                    style={{
+                      background: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
+                      color: 'white',
+                      border: 'none',
+                      padding: '6px 10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '16px',
+                      borderRadius: '50%',
+                      width: '36px',
+                      height: '36px',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    👤
+                  </button>
+                  {showUserMenu && (
+                    <div className="dropdown-menu" style={{
+                      position: 'absolute',
+                      top: '100%',
+                      right: 0,
+                      marginTop: '8px',
+                      background: 'white',
+                      borderRadius: '12px',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                      minWidth: '220px',
+                      zIndex: 1000,
+                      overflow: 'hidden'
+                    }}>
+                      <button 
+                        onClick={() => { onShowDashboard && onShowDashboard(); setShowUserMenu(false); }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >
+                        <span>📊</span> Parent Dashboard
+                      </button>
+                      <button 
+                        onClick={() => { onShowProfileManager && onShowProfileManager(); setShowUserMenu(false); }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >
+                        <span>👥</span> Manage Profiles
+                      </button>
+                      <button 
+                        onClick={() => { window.open('/pricing-new.html', '_blank'); setShowUserMenu(false); }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >
+                        <span>💳</span> Manage Subscription
+                      </button>
+                      <button 
+                        onClick={() => { alert('Account settings coming soon!'); setShowUserMenu(false); }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >
+                        <span>⚙️</span> Account Settings
+                      </button>
+                      <div style={{ borderTop: '1px solid #e5e7eb', margin: '4px 0' }}></div>
+                      <button 
+                        onClick={() => { handleLogout(); setShowUserMenu(false); }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          textAlign: 'left',
+                          color: '#ef4444'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#fef2f2'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >
+                        <span>🚪</span> Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="tagline">Join thousands of families creating magical bedtime moments</div>
+          
+          {/* Navigation Bar */}
+          <div className="header-content" style={{marginTop: '1rem'}}>
+            <div className="header-right" style={{width: '100%', justifyContent: 'center', flexWrap: 'wrap', gap: '10px', minHeight: 'auto'}}>
+              {user ? (
+                <>
+                  {/* Star Bank - Currency System */}
+                  <button 
+                    className="header-btn"
+                    onClick={() => onShowRewards && onShowRewards()}
+                    title="Star Shop - Spend your stars!"
+                    aria-label="Star shop with {starPoints} stars"
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
+                  >
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>💰</span>
+                    <span>{localStarPoints} Stars</span>
+                  </button>
+                  
+                  {/* Trophy Room - Achievement System */}
+                  <button 
+                    className="header-btn"
+                    onClick={() => onShowAchievements && onShowAchievements()}
+                    title="Badge Collection - View your achievements!"
+                    aria-label="View achievements"
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
+                  >
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>🏆</span>
+                    <span>{achievementCount}/48 Badges</span>
+                  </button>
+                  
+                  <button 
+                    className="header-btn"
+                    onClick={onBack}
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
+                  >
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>📚</span>
+                    <span>Library</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button 
+                    className="header-btn"
+                    onClick={onShowAuth}
+                    title="Create an account to start earning stars!"
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600', opacity: 0.7}}
+                  >
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>💰</span>
+                    <span>0 Stars</span>
+                  </button>
+                  
+                  <button 
+                    className="header-btn"
+                    onClick={onShowAuth}
+                    title="Sign up to unlock badges!"
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600', opacity: 0.7}}
+                  >
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>🏆</span>
+                    <span>0/48 Badges</span>
+                  </button>
+                  
+                  <button 
+                    className="header-btn"
+                    onClick={onShowAuth}
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
+                  >
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>📚</span>
+                    <span>Library</span>
+                  </button>
+                  
+                  <button 
+                    className="header-btn"
+                    onClick={onShowAuth}
+                    style={{flex: '0 0 auto'}}
+                  >
+                    ✨ Sign Up Free
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </header>
         
         <div className="story-display-container">
         
-        {/* Reading Streak Display - Same as home page */}
-        {childProfile && (
-          <ReadingStreak childProfile={childProfile} />
-        )}
         
         <div className="story-wrapper">
           {/* Story Actions Bar - Original layout */}

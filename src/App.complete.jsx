@@ -762,6 +762,12 @@ function App() {
         subscriptionTier={subscriptionTier}
         starPoints={starPoints}
         childProfile={selectedChildProfile}
+        onShowAchievements={() => setShowAchievements(true)}
+        onShowRewards={() => setShowRewards(true)}
+        onShowDashboard={() => setShowDashboard(true)}
+        onShowProfileManager={() => setShowProfileManager(true)}
+        bedtimeModeActive={bedtimeModeActive}
+        onToggleBedtime={setBedtimeModeActive}
         onBack={() => {
           setShowStory(false);
           setCurrentStory(null);
