@@ -50,16 +50,7 @@
   100% { transform: scale(1); }
 }
 
-.theme-young .theme-option {
-  border: 3px solid #feca57;
-  background: linear-gradient(135deg, #fff, #ffeaa7);
-  font-size: 16px;
-  padding: 15px;
-}
-
-.theme-young .theme-emoji {
-  font-size: 32px;
-}
+/* Theme options use default styles from App.original.css */
 
 /* Fun animations for young kids */
 .theme-young *:hover {
@@ -137,16 +128,7 @@
   100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
 }
 
-.theme-middle .theme-option {
-  border: 2px solid #6c5ce7;
-  background: linear-gradient(135deg, #fff, #e6e6ff);
-  transition: all 0.3s ease;
-}
-
-.theme-middle .theme-option:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
-}
+/* Theme options use default styles from App.original.css */
 
 /* ========================================
    OLDER KIDS THEME (Ages 10-12+)
@@ -205,22 +187,7 @@
   box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
 }
 
-.theme-older .theme-option {
-  border: 1px solid #34495e;
-  background: linear-gradient(135deg, #2c3e50, #34495e);
-  color: #ecf0f1;
-  transition: all 0.2s ease;
-}
-
-.theme-older .theme-option:hover {
-  background: linear-gradient(135deg, #34495e, #2c3e50);
-  border-color: #3498db;
-}
-
-.theme-older .theme-option.selected {
-  background: linear-gradient(135deg, #3498db, #2980b9);
-  border-color: #3498db;
-}
+/* Theme options use default styles from App.original.css */
 
 /* Form elements for older kids */
 .theme-older input,

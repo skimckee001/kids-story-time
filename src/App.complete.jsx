@@ -81,7 +81,7 @@ const THEMES_BY_LEVEL = {
 function App() {
   // Form state
   const [childName, setChildName] = useState('');
-  const [genderSelection, setGenderSelection] = useState({ boy: false, girl: false });
+  const [genderSelection, setGenderSelection] = useState({ boy: true, girl: true });
   const [includeNameInStory, setIncludeNameInStory] = useState(true);
   const [readingLevel, setReadingLevel] = useState('early-phonics');
   const [selectedThemes, setSelectedThemes] = useState([]);
