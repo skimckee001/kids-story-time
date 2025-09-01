@@ -873,20 +873,23 @@ function App() {
                     <button 
                       className="header-btn user-profile-btn"
                       onClick={() => setShowUserMenu(!showUserMenu)}
+                      title="Account menu"
                       style={{
                         background: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
                         color: 'white',
                         border: 'none',
-                        padding: '8px 16px',
+                        padding: '8px 12px',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '8px',
-                        fontWeight: '600'
+                        justifyContent: 'center',
+                        fontSize: '20px',
+                        borderRadius: '50%',
+                        width: '40px',
+                        height: '40px',
+                        transition: 'all 0.3s ease'
                       }}
                     >
-                      <span style={{ fontSize: '18px' }}>👤</span>
-                      <span>{user?.email?.split('@')[0] || 'Account'}</span>
-                      <span style={{ fontSize: '12px' }}>▼</span>
+                      👤
                     </button>
                     {showUserMenu && (
                       <div className="dropdown-menu" style={{
