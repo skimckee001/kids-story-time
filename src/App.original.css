@@ -352,24 +352,27 @@ body {
 
 /* Beta Banner */
 .beta-banner {
-  background: linear-gradient(135deg, #28a745, #20c997);
-  color: white;
+  background: linear-gradient(135deg, #ede9fe, #f3f0ff);
+  color: #6d28d9;
   text-align: center;
   padding: 12px 20px;
   margin: 15px 0;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+  border: 1px solid #ddd6fe;
 }
 
 .beta-title {
   font-weight: bold;
   font-size: 16px;
+  color: #6d28d9;
 }
 
 .beta-subtitle {
   font-size: 14px;
   margin-top: 4px;
-  opacity: 0.9;
+  color: #7c3aed;
+  opacity: 0.95;
 }
 
 /* Name and Gender Row */

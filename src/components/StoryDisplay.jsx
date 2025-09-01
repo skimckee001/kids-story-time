@@ -904,7 +904,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                     aria-label="Star shop with {starPoints} stars"
                     style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
                   >
-                    <span style={{fontSize: '16px', marginRight: '6px'}}>💰</span>
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>⭐</span>
                     <span>{localStarPoints} Stars</span>
                   </button>
                   
@@ -937,7 +937,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                     title="Create an account to start earning stars!"
                     style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600', opacity: 0.7}}
                   >
-                    <span style={{fontSize: '16px', marginRight: '6px'}}>💰</span>
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>⭐</span>
                     <span>0 Stars</span>
                   </button>
                   
