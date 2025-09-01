@@ -105,6 +105,7 @@ function ProfileManager({ onClose, onProfileSelect, user }) {
         favorite_themes: formData.favorite_themes || [],
         favorite_items: formData.favorite_items || [],
         include_name_in_stories: formData.include_name_in_stories,
+        preferred_image_style: formData.preferred_image_style || 'age-appropriate',
         id: editingProfile?.id || crypto.randomUUID(),
         parent_id: user?.id,
         created_at: editingProfile?.created_at || new Date().toISOString(),

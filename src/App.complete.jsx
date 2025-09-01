@@ -10,8 +10,11 @@ import ParentDashboard from './components/ParentDashboard';
 import BedtimeMode from './components/BedtimeMode';
 import ReadingGoals from './components/ReadingGoals';
 import CelebrationAnimation, { useCelebration } from './components/CelebrationAnimation';
+import OnboardingTooltips from './components/OnboardingTooltips';
+import StripeTestComponent from './components/StripeTestComponent';
 import { getTierLimits, canGenerateStory, canUseAIIllustration, getUpgradeMessage } from './utils/subscriptionTiers';
 import './App.original.css';
+import './styles/ageThemes.css';
 
 // Story length options matching the current HTML
 const STORY_LENGTHS = [
@@ -80,9 +83,9 @@ function App() {
   const [childName, setChildName] = useState('');
   const [genderSelection, setGenderSelection] = useState({ boy: false, girl: false });
   const [includeNameInStory, setIncludeNameInStory] = useState(true);
-  const [readingLevel, setReadingLevel] = useState('developing-reader');
+  const [readingLevel, setReadingLevel] = useState('early-phonics');
   const [selectedThemes, setSelectedThemes] = useState([]);
-  const [storyLength, setStoryLength] = useState('extended');
+  const [storyLength, setStoryLength] = useState('medium');
   const [customPrompt, setCustomPrompt] = useState('');
   const [storyContext, setStoryContext] = useState('');
   const [imageStyle, setImageStyle] = useState('age-appropriate');
@@ -109,6 +112,7 @@ function App() {
   const [bedtimeModeActive, setBedtimeModeActive] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [achievementCount, setAchievementCount] = useState(0);
+  const [showStripeTest, setShowStripeTest] = useState(false);
   const { triggerCelebration, CelebrationComponent } = useCelebration();
 
   useEffect(() => {
@@ -124,6 +128,36 @@ function App() {
       return () => document.removeEventListener('click', handleClickOutside);
     }
   }, [showMoreMenu]);
+  
+  // Apply age-based theme based on reading level
+  useEffect(() => {
+    const applyTheme = () => {
+      const appElement = document.querySelector('.app');
+      if (!appElement) return;
+      
+      // Remove existing theme classes
+      appElement.classList.remove('theme-young', 'theme-middle', 'theme-older');
+      
+      // Add appropriate theme class based on reading level
+      let themeClass = 'theme-middle'; // default
+      
+      if (['pre-reader', 'early-phonics'].includes(readingLevel)) {
+        themeClass = 'theme-young';
+      } else if (['beginning-reader', 'developing-reader'].includes(readingLevel)) {
+        themeClass = 'theme-middle';
+      } else if (['fluent-reader', 'insightful-reader'].includes(readingLevel)) {
+        themeClass = 'theme-older';
+      }
+      
+      appElement.classList.add(themeClass);
+      appElement.classList.add('theme-transition');
+      
+      // Save theme preference
+      localStorage.setItem('preferredTheme', themeClass);
+    };
+    
+    applyTheme();
+  }, [readingLevel]);
   
   useEffect(() => {
     checkUser();
@@ -152,6 +186,7 @@ function App() {
       setIncludeNameInStory(profile.include_name_in_stories !== false);
       setReadingLevel(profile.reading_level || 'developing-reader');
       setSelectedThemes(profile.favorite_themes || []);
+      setImageStyle(profile.preferred_image_style || 'age-appropriate');
       
       // Add favorite items to the story prompt
       if (profile.favorite_items && profile.favorite_items.length > 0) {
@@ -732,6 +767,9 @@ function App() {
 
   return (
     <div className="app">
+      {/* Onboarding Tooltips for First-Time Users */}
+      {!user && <OnboardingTooltips onComplete={() => console.log('Onboarding completed')} />}
+      
       <div className="container">
         {/* Header */}
         <header className="header-container">
@@ -1081,25 +1119,7 @@ function App() {
               </div>
             </div>
 
-            {/* Theme Selection */}
-            <div className="form-group">
-              <label>Would you like to add a theme for this story?</label>
-              <p className="theme-subtitle">Pick one or more themes to make it extra special - Optional</p>
-              <div className="theme-grid">
-                {getAvailableThemes().map(theme => (
-                  <div
-                    key={theme.id}
-                    className={`theme-option ${selectedThemes.includes(theme.id) ? 'selected' : ''}`}
-                    onClick={() => toggleTheme(theme.id)}
-                  >
-                    <span className="theme-emoji">{theme.emoji}</span>
-                    <span className="theme-label">{theme.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Reading Level */}
+            {/* Reading Level - MOVED UP */}
             <div className="form-group">
               <label htmlFor="readingLevel">Reading Level *</label>
               <select
@@ -1118,40 +1138,56 @@ function App() {
               </select>
             </div>
 
-            {/* Image Style Selection */}
+            {/* Theme Selection - MOVED DOWN */}
+            <div className="form-group">
+              <label>Would you like to add a theme for this story?</label>
+              <p className="theme-subtitle">Pick one or more themes to make it extra special - Optional</p>
+              <div className="theme-grid">
+                {getAvailableThemes().map(theme => (
+                  <div
+                    key={theme.id}
+                    className={`theme-option ${selectedThemes.includes(theme.id) ? 'selected' : ''}`}
+                    onClick={() => toggleTheme(theme.id)}
+                  >
+                    <span className="theme-emoji">{theme.emoji}</span>
+                    <span className="theme-label">{theme.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Illustration Style - CONVERTED TO DROPDOWN */}
             <div className="form-group">
               <label htmlFor="imageStyle">
                 Illustration Style 🎨
-                <button 
-                  type="button"
-                  className="info-btn"
-                  title="Choose how you want the story images to look"
-                  style={{ marginLeft: '8px', background: 'none', border: 'none', cursor: 'help' }}
-                >
-                  ℹ️
-                </button>
+                <span style={{ marginLeft: '8px', fontSize: '12px', color: '#666' }}>
+                  (Smart Choice auto-selects based on age)
+                </span>
               </label>
-              <p className="theme-subtitle">Choose the visual style for your story's illustrations</p>
-              <div className="image-style-grid" style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-                gap: '10px',
-                marginTop: '10px'
-              }}>
-                {getImageStyles().map(style => (
-                  <div
-                    key={style.id}
-                    className={`theme-option ${imageStyle === style.id ? 'selected' : ''}`}
-                    onClick={() => setImageStyle(style.id)}
-                    style={{ cursor: 'pointer', textAlign: 'center', padding: '12px' }}
-                  >
-                    <span style={{ fontSize: '24px', display: 'block', marginBottom: '5px' }}>{style.icon}</span>
-                    <span style={{ fontSize: '13px', fontWeight: '600' }}>{style.label}</span>
-                    <span style={{ fontSize: '11px', color: '#666', display: 'block', marginTop: '3px' }}>
-                      {style.description}
-                    </span>
-                  </div>
-                ))}
+              <div style={{ position: 'relative' }}>
+                <select
+                  id="imageStyle"
+                  className="form-select"
+                  value={imageStyle}
+                  onChange={(e) => setImageStyle(e.target.value)}
+                  style={{ paddingLeft: '40px' }}
+                >
+                  {getImageStyles().map(style => (
+                    <option key={style.id} value={style.id}>
+                      {style.label} - {style.description}
+                    </option>
+                  ))}
+                </select>
+                <span style={{
+                  position: 'absolute',
+                  left: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  fontSize: '20px',
+                  pointerEvents: 'none'
+                }}>
+                  {getImageStyles().find(s => s.id === imageStyle)?.icon || '✨'}
+                </span>
               </div>
             </div>
 
@@ -1456,6 +1492,52 @@ function App() {
       
       {/* Celebration Animations */}
       {CelebrationComponent}
+      
+      {/* Age Theme Indicator */}
+      <div 
+        className="age-indicator"
+        onClick={() => {
+          // Cycle through themes for testing
+          const levels = ['pre-reader', 'early-phonics', 'beginning-reader', 'developing-reader', 'fluent-reader', 'insightful-reader'];
+          const currentIndex = levels.indexOf(readingLevel);
+          const nextIndex = (currentIndex + 1) % levels.length;
+          setReadingLevel(levels[nextIndex]);
+        }}
+        title="Click to switch theme"
+      >
+        {readingLevel === 'pre-reader' || readingLevel === 'early-phonics' ? '🧸 Young Reader' :
+         readingLevel === 'beginning-reader' || readingLevel === 'developing-reader' ? '📖 Growing Reader' :
+         '🎓 Advanced Reader'}
+      </div>
+      
+      {/* Stripe Test Component (Development Only) */}
+      {showStripeTest && (
+        <div id="stripe-test-component">
+          <StripeTestComponent />
+        </div>
+      )}
+      
+      {/* Test Button (Development Only) */}
+      {import.meta.env.DEV && (
+        <button
+          onClick={() => setShowStripeTest(true)}
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            left: '20px',
+            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+            color: 'white',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: '8px',
+            fontSize: '14px',
+            cursor: 'pointer',
+            zIndex: 1000
+          }}
+        >
+          🧪 Test Stripe
+        </button>
+      )}
     </div>
   );
 }

@@ -36,7 +36,9 @@ exports.handler = async (event, context) => {
             themes = [], 
             gender = '',
             customPrompt = '',
-            includeNameInStory = true
+            includeNameInStory = true,
+            imageStyle = 'age-appropriate',
+            imagePrompt = ''
         } = JSON.parse(event.body);
 
         // Validate required parameters
@@ -85,7 +87,7 @@ exports.handler = async (event, context) => {
                 messages: [
                     {
                         role: 'system',
-                        content: 'You are a creative children\'s story writer who creates age-appropriate, engaging, and educational stories. Always include positive messages and age-appropriate content. Format your response with "TITLE: [Story Title]" followed by the story content.'
+                        content: getSystemPromptForAge(childAge)
                     },
                     {
                         role: 'user',
@@ -154,6 +156,62 @@ exports.handler = async (event, context) => {
 };
 
 // Helper functions (same as in frontend service)
+function getSystemPromptForAge(age) {
+    const basePrompt = "You are an expert children's story writer. Format your response with 'TITLE: [Story Title]' followed by the story content.";
+    
+    const agePrompts = {
+        'pre-reader': `${basePrompt} You specialize in stories for ages 3-6. Use:
+- Very simple vocabulary (max 100 unique words)
+- Short sentences (3-5 words)
+- Lots of repetition and rhythm
+- Focus on colors, shapes, animals, emotions
+- Include sound effects (Whoosh! Boom! Meow!)
+- Simple moral lessons (sharing, kindness, bravery)`,
+        
+        'early-phonics': `${basePrompt} You write for early readers ages 4-7. Use:
+- Simple phonetic words
+- Sentences of 5-7 words
+- Clear cause and effect
+- Familiar settings (home, school, playground)
+- Basic problem-solving
+- Gentle humor and silly situations`,
+        
+        'beginning-reader': `${basePrompt} You create stories for beginning readers ages 5-8. Use:
+- Mix of sight words and phonetic words
+- Sentences up to 10 words
+- Character emotions and motivations
+- Simple plot twists
+- Friendship themes
+- Light adventure and mystery`,
+        
+        'developing-reader': `${basePrompt} You write for developing readers ages 6-10. Use:
+- Varied vocabulary with context clues
+- Complex sentences (10-15 words)
+- Character development arcs
+- Multiple plot points
+- Themes of courage, friendship, discovery
+- Mild suspense and excitement`,
+        
+        'fluent-reader': `${basePrompt} You craft stories for fluent readers ages 8-13. Use:
+- Rich descriptive language
+- Complex sentence structures
+- Multiple characters with distinct voices
+- Subplots and character relationships
+- Themes of identity, belonging, achievement
+- Age-appropriate challenges and conflicts`,
+        
+        'insightful-reader': `${basePrompt} You write sophisticated stories for ages 10-16. Use:
+- Advanced vocabulary
+- Literary devices (metaphor, foreshadowing)
+- Complex character psychology
+- Moral ambiguity and ethical dilemmas
+- Coming-of-age themes
+- Thought-provoking endings`
+    };
+    
+    return agePrompts[age] || agePrompts['beginning-reader'];
+}
+
 function buildStoryPrompt(childName, childAge, storyLength, theme, themes = [], gender, customPrompt, includeNameInStory = true) {
     const lengthInstructions = {
         short: 'Write a short story (200-300 words, 2-3 minutes reading time)',

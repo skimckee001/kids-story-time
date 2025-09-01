@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stripe Integration Test - KidsStoryTime</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .test-result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .price-card {
+            display: inline-block;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            min-width: 200px;
+            text-align: center;
+        }
+        .price-card h3 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+        }
+        .price-card .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+        }
+        .price-card .price-id {
+            font-size: 12px;
+            color: #666;
+            word-break: break-all;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Stripe Integration Test</h1>
+        
+        <div class="test-section">
+            <h2>1. Stripe.js Initialization</h2>
+            <button onclick="testStripeInit()">Test Stripe Init</button>
+            <div id="stripe-init-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>2. Price Configuration</h2>
+            <div id="price-config">
+                <div class="price-card">
+                    <h3>Story Maker</h3>
+                    <div class="price">$4.99/mo</div>
+                    <div class="price-id">price_1S2Bdq0MYOtGjLFhBYSIU8L9</div>
+                    <button onclick="testCheckout('story-maker-basic')">Test Checkout</button>
+                </div>
+                <div class="price-card">
+                    <h3>Family Plan</h3>
+                    <div class="price">$7.99/mo</div>
+                    <div class="price-id">price_1S2BgM0MYOtGjLFhlBjRzwaV</div>
+                    <button onclick="testCheckout('family-plus')">Test Checkout</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>3. Environment Variables</h2>
+            <button onclick="checkEnvironment()">Check Environment</button>
+            <div id="env-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>4. Netlify Function Test</h2>
+            <button onclick="testNetlifyFunction()">Test Create Session Function</button>
+            <div id="function-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>5. Test Cards</h2>
+            <div class="warning test-result">
+                <strong>Test Mode Active</strong><br>
+                Use these test card numbers:<br>
+                • Success: 4242 4242 4242 4242<br>
+                • Decline: 4000 0000 0000 0002<br>
+                • 3D Secure: 4000 0025 0000 3155<br>
+                • Any future expiry date, any 3-digit CVC
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Results Log</h2>
+            <pre id="test-log"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Test configuration
+        const STRIPE_PUBLIC_KEY = 'pk_test_51RsK5a0MYOtGjLFhHQIFsu70fMh280B1WbipmKXQEYXWt0gQPKK2YvHuhIVfyGSRcVJ21orq3hdK6bCwT5vGU4VU00mskVtFVa';
+        
+        const PRICE_IDS = {
+            'story-maker-basic': 'price_1S2Bdq0MYOtGjLFhBYSIU8L9',
+            'family-plus': 'price_1S2BgM0MYOtGjLFhlBjRzwaV'
+        };
+        
+        let stripe = null;
+        
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logEl.textContent += `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+            console.log(`[${type}]`, message);
+        }
+        
+        async function testStripeInit() {
+            const resultEl = document.getElementById('stripe-init-result');
+            try {
+                log('Initializing Stripe...');
+                stripe = Stripe(STRIPE_PUBLIC_KEY);
+                
+                if (stripe) {
+                    resultEl.innerHTML = '<div class="test-result success">✅ Stripe initialized successfully</div>';
+                    log('Stripe initialized successfully', 'success');
+                } else {
+                    throw new Error('Stripe initialization returned null');
+                }
+            } catch (error) {
+                resultEl.innerHTML = `<div class="test-result error">❌ Failed to initialize Stripe: ${error.message}</div>`;
+                log(`Stripe initialization failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function checkEnvironment() {
+            const resultEl = document.getElementById('env-result');
+            const results = [];
+            
+            // Check if we're on localhost or production
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            results.push(`Environment: ${isLocal ? 'Local Development' : 'Production'}`);
+            
+            // Check if Stripe key is test or live
+            const isTestKey = STRIPE_PUBLIC_KEY.startsWith('pk_test_');
+            results.push(`Stripe Mode: ${isTestKey ? 'TEST MODE' : 'LIVE MODE'}`);
+            
+            // Check for Netlify environment
+            const isNetlify = window.location.hostname.includes('netlify');
+            results.push(`Hosting: ${isNetlify ? 'Netlify' : 'Other'}`);
+            
+            resultEl.innerHTML = `<div class="test-result ${isTestKey ? 'success' : 'warning'}">
+                ${results.join('<br>')}
+            </div>`;
+            
+            results.forEach(r => log(r));
+        }
+        
+        async function testNetlifyFunction() {
+            const resultEl = document.getElementById('function-result');
+            
+            try {
+                log('Testing Netlify function...');
+                
+                // Mock data for testing
+                const testData = {
+                    priceId: PRICE_IDS['story-maker-basic'],
+                    userId: 'test-user-' + Date.now(),
+                    userEmail: 'test@kidsstorytime.ai',
+                    tier: 'story-maker-basic'
+                };
+                
+                log(`Sending test data: ${JSON.stringify(testData, null, 2)}`);
+                
+                const response = await fetch('/.netlify/functions/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                const responseText = await response.text();
+                let data;
+                
+                try {
+                    data = JSON.parse(responseText);
+                } catch (e) {
+                    throw new Error(`Invalid JSON response: ${responseText}`);
+                }
+                
+                if (response.ok && data.sessionId) {
+                    resultEl.innerHTML = `<div class="test-result success">
+                        ✅ Netlify function working!<br>
+                        Session ID: ${data.sessionId.substring(0, 20)}...
+                    </div>`;
+                    log(`Function test successful. Session ID: ${data.sessionId}`, 'success');
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+            } catch (error) {
+                resultEl.innerHTML = `<div class="test-result error">
+                    ❌ Function test failed: ${error.message}<br>
+                    <small>Note: This is expected if not running on Netlify or if credentials are not configured.</small>
+                </div>`;
+                log(`Function test failed: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testCheckout(tier) {
+            if (!stripe) {
+                alert('Please initialize Stripe first');
+                return;
+            }
+            
+            try {
+                log(`Testing checkout for ${tier}...`);
+                
+                // In a real app, this would call your backend
+                const testData = {
+                    priceId: PRICE_IDS[tier],
+                    userId: 'test-user-' + Date.now(),
+                    userEmail: 'test@kidsstorytime.ai',
+                    tier: tier
+                };
+                
+                // Try to create a session (this will fail without backend, but shows the flow)
+                const response = await fetch('/.netlify/functions/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                if (response.ok) {
+                    const { sessionId } = await response.json();
+                    log(`Redirecting to checkout with session: ${sessionId}`, 'success');
+                    
+                    // Redirect to Stripe Checkout
+                    const { error } = await stripe.redirectToCheckout({ sessionId });
+                    
+                    if (error) {
+                        throw error;
+                    }
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to create session');
+                }
+            } catch (error) {
+                log(`Checkout test failed: ${error.message}`, 'error');
+                alert(`Checkout test failed: ${error.message}\n\nNote: Full checkout requires backend configuration.`);
+            }
+        }
+        
+        // Auto-initialize on load
+        window.addEventListener('load', () => {
+            log('Page loaded, ready for testing');
+            testStripeInit();
+        });
+    </script>
+</body>
+</html>
