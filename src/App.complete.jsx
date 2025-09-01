@@ -805,6 +805,176 @@ function App() {
                 KidsStoryTime<span className="logo-domain">.ai</span>
               </div>
             </div>
+            {user && (
+              <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                {/* Bedtime Mode Toggle */}
+                <button
+                  className="header-btn bedtime-toggle"
+                  onClick={() => setBedtimeModeActive(!bedtimeModeActive)}
+                  title={bedtimeModeActive ? "Bedtime mode active" : "Activate bedtime mode"}
+                  style={{
+                    background: bedtimeModeActive ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)' : 'rgba(255, 255, 255, 0.9)',
+                    border: bedtimeModeActive ? '2px solid #fbbf24' : '2px solid #9ca3af',
+                    color: bedtimeModeActive ? '#fbbf24' : '#475569',
+                    padding: '6px 10px',
+                    fontSize: '16px',
+                    borderRadius: '50%',
+                    width: '36px',
+                    height: '36px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {bedtimeModeActive ? '🌙' : '☾'}
+                </button>
+                
+                {/* User Profile Dropdown */}
+                <div className="user-menu-container" style={{ position: 'relative' }}>
+                  <button 
+                    className="header-btn user-profile-btn"
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    title="Account menu"
+                    style={{
+                      background: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
+                      color: 'white',
+                      border: 'none',
+                      padding: '6px 10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '16px',
+                      borderRadius: '50%',
+                      width: '36px',
+                      height: '36px',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    👤
+                  </button>
+                  {showUserMenu && (
+                    <div className="dropdown-menu" style={{
+                      position: 'absolute',
+                      top: '100%',
+                      right: 0,
+                      marginTop: '8px',
+                      background: 'white',
+                      borderRadius: '12px',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                      minWidth: '220px',
+                      zIndex: 1000,
+                      overflow: 'hidden'
+                    }}>
+                      <button 
+                        onClick={() => { setShowDashboard(true); setShowUserMenu(false); }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >
+                        <span>📊</span> Parent Dashboard
+                      </button>
+                      <button 
+                        onClick={() => { setShowProfileManager(true); setShowUserMenu(false); }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >
+                        <span>👥</span> Manage Profiles
+                      </button>
+                      <button 
+                        onClick={() => { window.open('/pricing-new.html', '_blank'); setShowUserMenu(false); }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >
+                        <span>💳</span> Manage Subscription
+                      </button>
+                      <button 
+                        onClick={() => { alert('Account settings coming soon!'); setShowUserMenu(false); }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >
+                        <span>⚙️</span> Account Settings
+                      </button>
+                      <div style={{ borderTop: '1px solid #e5e7eb', margin: '4px 0' }}></div>
+                      <button 
+                        onClick={() => { handleLogout(); setShowUserMenu(false); }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          textAlign: 'left',
+                          color: '#ef4444'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#fef2f2'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >
+                        <span>🚪</span> Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
           <div className="tagline">Join thousands of families creating magical bedtime moments</div>
           
@@ -821,195 +991,36 @@ function App() {
                 <>
                   {/* Star Bank - Currency System */}
                   <button 
-                    className="star-bank"
+                    className="header-btn"
                     onClick={() => setShowRewards(true)}
                     title="Star Shop - Spend your stars!"
                     aria-label="Star shop with {starPoints} stars"
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
                   >
-                    <span className="currency-icon">💰</span>
-                    <span className="currency-value">{starPoints}</span>
-                    <span className="currency-label">Stars</span>
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>💰</span>
+                    <span>{starPoints} Stars</span>
                   </button>
                   
                   {/* Trophy Room - Achievement System */}
                   <button 
-                    className="trophy-room"
+                    className="header-btn"
                     onClick={() => setShowAchievements(true)}
                     title="Badge Collection - View your achievements!"
                     aria-label="View {achievementCount || 0} achievements"
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
                   >
-                    <span className="trophy-icon">🏆</span>
-                    <span className="trophy-count">{achievementCount || 0}/48</span>
-                    <span className="trophy-label">Badges</span>
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>🏆</span>
+                    <span>{achievementCount || 0}/48 Badges</span>
                   </button>
                   
                   <button 
                     className="header-btn"
                     onClick={() => setShowLibrary(true)}
-                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto'}}
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
                   >
-                    📚 Library
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>📚</span>
+                    <span>Library</span>
                   </button>
-                  
-                  {/* Bedtime Mode Toggle - Standalone Icon */}
-                  <button
-                    className="header-btn bedtime-toggle"
-                    onClick={() => setBedtimeModeActive(!bedtimeModeActive)}
-                    title={bedtimeModeActive ? "Bedtime mode active" : "Activate bedtime mode"}
-                    style={{
-                      background: bedtimeModeActive ? 'linear-gradient(135deg, #1e293b 0%, #334155 100%)' : 'rgba(255, 255, 255, 0.9)',
-                      border: bedtimeModeActive ? '2px solid #fbbf24' : '2px solid #9ca3af',
-                      color: bedtimeModeActive ? '#fbbf24' : '#475569',
-                      padding: '8px 12px',
-                      fontSize: '20px',
-                      transition: 'all 0.3s ease',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    {bedtimeModeActive ? '🌙' : '☾'}
-                  </button>
-                  
-                  {/* User Profile Dropdown */}
-                  <div className="user-menu-container" style={{ position: 'relative' }}>
-                    <button 
-                      className="header-btn user-profile-btn"
-                      onClick={() => setShowUserMenu(!showUserMenu)}
-                      title="Account menu"
-                      style={{
-                        background: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
-                        color: 'white',
-                        border: 'none',
-                        padding: '8px 12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '20px',
-                        borderRadius: '50%',
-                        width: '40px',
-                        height: '40px',
-                        transition: 'all 0.3s ease'
-                      }}
-                    >
-                      👤
-                    </button>
-                    {showUserMenu && (
-                      <div className="dropdown-menu" style={{
-                        position: 'absolute',
-                        top: '100%',
-                        right: 0,
-                        marginTop: '8px',
-                        background: 'white',
-                        borderRadius: '12px',
-                        boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-                        minWidth: '220px',
-                        zIndex: 1000,
-                        overflow: 'hidden'
-                      }}>
-                        <button 
-                          onClick={() => { setShowDashboard(true); setShowUserMenu(false); }}
-                          style={{
-                            width: '100%',
-                            padding: '12px 16px',
-                            border: 'none',
-                            background: 'transparent',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            fontSize: '14px',
-                            cursor: 'pointer',
-                            transition: 'background 0.2s',
-                            textAlign: 'left'
-                          }}
-                          onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
-                          onMouseLeave={(e) => e.target.style.background = 'transparent'}
-                        >
-                          <span>📊</span> Parent Dashboard
-                        </button>
-                        <button 
-                          onClick={() => { setShowProfileManager(true); setShowUserMenu(false); }}
-                          style={{
-                            width: '100%',
-                            padding: '12px 16px',
-                            border: 'none',
-                            background: 'transparent',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            fontSize: '14px',
-                            cursor: 'pointer',
-                            transition: 'background 0.2s',
-                            textAlign: 'left'
-                          }}
-                          onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
-                          onMouseLeave={(e) => e.target.style.background = 'transparent'}
-                        >
-                          <span>👥</span> Manage Profiles
-                        </button>
-                        <button 
-                          onClick={() => { window.open('/pricing-new.html', '_blank'); setShowUserMenu(false); }}
-                          style={{
-                            width: '100%',
-                            padding: '12px 16px',
-                            border: 'none',
-                            background: 'transparent',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            fontSize: '14px',
-                            cursor: 'pointer',
-                            transition: 'background 0.2s',
-                            textAlign: 'left'
-                          }}
-                          onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
-                          onMouseLeave={(e) => e.target.style.background = 'transparent'}
-                        >
-                          <span>💳</span> Manage Subscription
-                        </button>
-                        <button 
-                          onClick={() => { alert('Account settings coming soon!'); setShowUserMenu(false); }}
-                          style={{
-                            width: '100%',
-                            padding: '12px 16px',
-                            border: 'none',
-                            background: 'transparent',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            fontSize: '14px',
-                            cursor: 'pointer',
-                            transition: 'background 0.2s',
-                            textAlign: 'left'
-                          }}
-                          onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
-                          onMouseLeave={(e) => e.target.style.background = 'transparent'}
-                        >
-                          <span>⚙️</span> Account Settings
-                        </button>
-                        <div style={{ borderTop: '1px solid #e5e7eb', margin: '4px 0' }}></div>
-                        <button 
-                          onClick={() => { handleLogout(); setShowUserMenu(false); }}
-                          style={{
-                            width: '100%',
-                            padding: '12px 16px',
-                            border: 'none',
-                            background: 'transparent',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            fontSize: '14px',
-                            cursor: 'pointer',
-                            transition: 'background 0.2s',
-                            textAlign: 'left',
-                            color: '#ef4444'
-                          }}
-                          onMouseEnter={(e) => e.target.style.background = '#fef2f2'}
-                          onMouseLeave={(e) => e.target.style.background = 'transparent'}
-                        >
-                          <span>🚪</span> Sign Out
-                        </button>
-                      </div>
-                    )}
-                  </div>
                   {(subscriptionTier === 'reader-free' || subscriptionTier === 'story-maker-basic') && storiesRemaining <= 1 && (
                     <button 
                       className="header-btn trial-btn"
@@ -1025,33 +1036,33 @@ function App() {
               ) : (
                 <>
                   {/* Show gamification elements for non-logged-in users (at 0) */}
-                  <div 
-                    className="star-bank"
-                    title="Create an account to start earning stars!"
-                    style={{ cursor: 'help', opacity: 0.7 }}
-                  >
-                    <span className="currency-icon">💰</span>
-                    <span className="currency-value">0</span>
-                    <span className="currency-label">Stars</span>
-                  </div>
-                  
                   <button 
-                    className="trophy-room"
+                    className="header-btn"
                     onClick={() => setShowAuth(true)}
-                    title="Sign up to unlock badges!"
-                    style={{ opacity: 0.7 }}
+                    title="Create an account to start earning stars!"
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600', opacity: 0.7}}
                   >
-                    <span className="trophy-icon">🏆</span>
-                    <span className="trophy-count">0/48</span>
-                    <span className="trophy-label">Badges</span>
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>💰</span>
+                    <span>0 Stars</span>
                   </button>
                   
                   <button 
                     className="header-btn"
                     onClick={() => setShowAuth(true)}
-                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto'}}
+                    title="Sign up to unlock badges!"
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600', opacity: 0.7}}
                   >
-                    📚 Library
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>🏆</span>
+                    <span>0/48 Badges</span>
+                  </button>
+                  
+                  <button 
+                    className="header-btn"
+                    onClick={() => setShowAuth(true)}
+                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
+                  >
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>📚</span>
+                    <span>Library</span>
                   </button>
                   
                   <button 
