@@ -5,30 +5,70 @@ function BedtimeMode({ isActive, onToggle, onTimeout }) {
   const [timer, setTimer] = useState(30); // Default 30 minutes
   const [timeRemaining, setTimeRemaining] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [secondsRemaining, setSecondsRemaining] = useState(null);
+  
+  // Check for existing bedtime mode on mount
+  useEffect(() => {
+    const savedBedtime = localStorage.getItem('bedtimeMode');
+    if (savedBedtime) {
+      const bedtimeData = JSON.parse(savedBedtime);
+      const now = Date.now();
+      const endTime = bedtimeData.endTime;
+      
+      if (endTime > now) {
+        // Bedtime mode is still active
+        const remainingSeconds = Math.ceil((endTime - now) / 1000);
+        const remainingMinutes = Math.ceil(remainingSeconds / 60);
+        
+        setSecondsRemaining(remainingSeconds);
+        setTimeRemaining(remainingMinutes);
+        onToggle(true);
+        document.body.classList.add('bedtime-mode');
+        
+        console.log(`Restored bedtime mode with ${remainingMinutes} minutes remaining`);
+      } else {
+        // Bedtime mode expired while away
+        localStorage.removeItem('bedtimeMode');
+        document.body.classList.remove('bedtime-mode');
+      }
+    }
+  }, []);
 
   useEffect(() => {
     let interval;
     
-    if (isActive && timeRemaining > 0) {
+    if (isActive && secondsRemaining > 0) {
       interval = setInterval(() => {
-        setTimeRemaining(prev => {
+        setSecondsRemaining(prev => {
           if (prev <= 1) {
             // Timer expired
+            handleDeactivate();
             if (onTimeout) onTimeout();
             return 0;
           }
-          return prev - 1;
+          
+          // Update minutes display when crossing minute boundary
+          const newSeconds = prev - 1;
+          const newMinutes = Math.ceil(newSeconds / 60);
+          const oldMinutes = Math.ceil(prev / 60);
+          if (newMinutes !== oldMinutes) {
+            setTimeRemaining(newMinutes);
+          }
+          
+          return newSeconds;
         });
-      }, 60000); // Update every minute
+      }, 1000); // Update every second for better UX
     }
     
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isActive, timeRemaining, onTimeout]);
+  }, [isActive, secondsRemaining, onTimeout]);
 
   const handleActivate = () => {
+    const totalSeconds = timer * 60;
     setTimeRemaining(timer);
+    setSecondsRemaining(totalSeconds);
     onToggle(true);
     setShowSettings(false);
     
@@ -39,12 +79,17 @@ function BedtimeMode({ isActive, onToggle, onTimeout }) {
     localStorage.setItem('bedtimeMode', JSON.stringify({
       active: true,
       startTime: Date.now(),
-      duration: timer
+      duration: timer,
+      endTime: Date.now() + (totalSeconds * 1000)
     }));
+    
+    // Show confirmation
+    console.log(`Bedtime mode activated for ${timer} minutes`);
   };
 
   const handleDeactivate = () => {
     setTimeRemaining(null);
+    setSecondsRemaining(null);
     onToggle(false);
     
     // Remove bedtime class from body
@@ -52,16 +97,26 @@ function BedtimeMode({ isActive, onToggle, onTimeout }) {
     
     // Clear bedtime mode state
     localStorage.removeItem('bedtimeMode');
+    
+    console.log('Bedtime mode deactivated');
   };
 
-  const formatTime = (minutes) => {
-    if (!minutes) return '0:00';
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    if (hours > 0) {
-      return `${hours}:${mins.toString().padStart(2, '0')}`;
+  const formatTime = (seconds) => {
+    if (!seconds && seconds !== 0) return '0:00';
+    
+    // If we're showing minutes (for display)
+    if (seconds > 60) {
+      const minutes = Math.ceil(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      if (hours > 0) {
+        return `${hours}h ${mins}m`;
+      }
+      return `${mins} min${mins !== 1 ? 's' : ''}`;
     }
-    return `${mins} min`;
+    
+    // Show seconds for last minute
+    return `${seconds} sec${seconds !== 1 ? 's' : ''}`;
   };
 
   if (!isActive && !showSettings) {
@@ -154,9 +209,9 @@ function BedtimeMode({ isActive, onToggle, onTimeout }) {
         <div className="bedtime-status">
           <span className="moon-animated">🌙</span>
           <span className="status-text">Bedtime Mode Active</span>
-          {timeRemaining > 0 && (
+          {secondsRemaining > 0 && (
             <span className="time-remaining">
-              {formatTime(timeRemaining)} remaining
+              {formatTime(secondsRemaining)} remaining
             </span>
           )}
           <button 
