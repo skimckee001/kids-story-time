@@ -85,6 +85,7 @@ function App() {
   const [storyLength, setStoryLength] = useState('extended');
   const [customPrompt, setCustomPrompt] = useState('');
   const [storyContext, setStoryContext] = useState('');
+  const [imageStyle, setImageStyle] = useState('age-appropriate');
   
   // UI state
   const [isGenerating, setIsGenerating] = useState(false);
@@ -268,6 +269,96 @@ function App() {
         : [...prev, themeId]
     );
   };
+  
+  const getImageStyles = () => {
+    // Determine age-appropriate styles based on reading level
+    const isYounger = ['pre-reader', 'early-phonics', 'beginning-reader'].includes(readingLevel);
+    const isOlder = ['fluent-reader', 'insightful-reader'].includes(readingLevel);
+    
+    const allStyles = [
+      {
+        id: 'age-appropriate',
+        label: 'Smart Choice',
+        icon: '✨',
+        description: 'Auto-selects best style',
+        prompt: '' // Will be determined based on age
+      },
+      {
+        id: 'cartoon',
+        label: 'Cartoon Fun',
+        icon: '🎨',
+        description: 'Colorful & playful',
+        prompt: 'bright cartoon style, child-friendly, vibrant colors',
+        ageRange: [3, 10]
+      },
+      {
+        id: 'watercolor',
+        label: 'Watercolor',
+        icon: '🖌️',
+        description: 'Soft & dreamy',
+        prompt: 'watercolor painting style, soft edges, pastel colors',
+        ageRange: [4, 12]
+      },
+      {
+        id: 'storybook',
+        label: 'Classic Book',
+        icon: '📖',
+        description: 'Traditional illustrations',
+        prompt: 'classic children\'s book illustration, detailed, warm',
+        ageRange: [5, 14]
+      },
+      {
+        id: 'realistic',
+        label: 'Realistic',
+        icon: '📸',
+        description: 'Photo-like quality',
+        prompt: 'photorealistic, detailed, natural lighting',
+        ageRange: [8, 16]
+      },
+      {
+        id: 'anime',
+        label: 'Anime/Manga',
+        icon: '🎌',
+        description: 'Japanese style art',
+        prompt: 'anime style illustration, manga art, expressive',
+        ageRange: [10, 16]
+      },
+      {
+        id: 'comic',
+        label: 'Comic Book',
+        icon: '💥',
+        description: 'Action-packed style',
+        prompt: 'comic book style, dynamic poses, bold colors',
+        ageRange: [8, 16]
+      },
+      {
+        id: 'fantasy',
+        label: 'Fantasy Art',
+        icon: '🐉',
+        description: 'Epic & magical',
+        prompt: 'fantasy art style, magical, detailed, atmospheric',
+        ageRange: [10, 16]
+      }
+    ];
+    
+    // Filter styles based on age appropriateness
+    if (isYounger) {
+      return allStyles.filter(s => 
+        s.id === 'age-appropriate' || 
+        !s.ageRange || 
+        s.ageRange[0] <= 8
+      ).slice(0, 5); // Limit choices for younger kids
+    } else if (isOlder) {
+      return allStyles.filter(s => 
+        s.id === 'age-appropriate' || 
+        !s.ageRange || 
+        s.ageRange[1] >= 10
+      );
+    }
+    
+    // Default: show age-appropriate selection
+    return allStyles.slice(0, 6);
+  };
 
   const handleGenerateStory = async (e) => {
     e.preventDefault();
@@ -292,6 +383,24 @@ function App() {
         ? 'http://localhost:9000/.netlify/functions/generate-story'
         : '/.netlify/functions/generate-story';
       
+      // Get the appropriate image style prompt
+      const selectedStyle = getImageStyles().find(s => s.id === imageStyle);
+      let imagePrompt = selectedStyle?.prompt || '';
+      
+      // If "age-appropriate" is selected, determine the best style based on age
+      if (imageStyle === 'age-appropriate') {
+        const isYounger = ['pre-reader', 'early-phonics', 'beginning-reader'].includes(readingLevel);
+        const isOlder = ['fluent-reader', 'insightful-reader'].includes(readingLevel);
+        
+        if (isYounger) {
+          imagePrompt = 'bright cartoon style, child-friendly, vibrant colors, simple shapes';
+        } else if (isOlder) {
+          imagePrompt = 'detailed illustration, semi-realistic, dynamic composition';
+        } else {
+          imagePrompt = 'classic children\'s book illustration, warm and inviting';
+        }
+      }
+      
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -307,7 +416,9 @@ function App() {
           customPrompt,
           storyContext,
           includeNameInStory,
-          subscriptionTier
+          subscriptionTier,
+          imageStyle: imageStyle,
+          imagePrompt: imagePrompt
         })
       });
 
@@ -1005,6 +1116,43 @@ function App() {
                 <option value="fluent-reader">Fluent Reader (ages 8–13)</option>
                 <option value="insightful-reader">Insightful Reader (ages 10–16+)</option>
               </select>
+            </div>
+
+            {/* Image Style Selection */}
+            <div className="form-group">
+              <label htmlFor="imageStyle">
+                Illustration Style 🎨
+                <button 
+                  type="button"
+                  className="info-btn"
+                  title="Choose how you want the story images to look"
+                  style={{ marginLeft: '8px', background: 'none', border: 'none', cursor: 'help' }}
+                >
+                  ℹ️
+                </button>
+              </label>
+              <p className="theme-subtitle">Choose the visual style for your story's illustrations</p>
+              <div className="image-style-grid" style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+                gap: '10px',
+                marginTop: '10px'
+              }}>
+                {getImageStyles().map(style => (
+                  <div
+                    key={style.id}
+                    className={`theme-option ${imageStyle === style.id ? 'selected' : ''}`}
+                    onClick={() => setImageStyle(style.id)}
+                    style={{ cursor: 'pointer', textAlign: 'center', padding: '12px' }}
+                  >
+                    <span style={{ fontSize: '24px', display: 'block', marginBottom: '5px' }}>{style.icon}</span>
+                    <span style={{ fontSize: '13px', fontWeight: '600' }}>{style.label}</span>
+                    <span style={{ fontSize: '11px', color: '#666', display: 'block', marginTop: '3px' }}>
+                      {style.description}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Story Length */}
