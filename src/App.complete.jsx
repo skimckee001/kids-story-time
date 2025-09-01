@@ -25,55 +25,91 @@ const STORY_LENGTHS = [
   { id: 'extra-long', label: 'Extra Long (45 minutes)' }
 ];
 
-// Dynamic themes based on reading level
+// Dynamic themes based on reading level - expanded with popular topics
 const THEMES_BY_LEVEL = {
   'pre-reader': [
     { id: 'animals', label: 'Animals', emoji: '🐻' },
-    { id: 'colors', label: 'Colors', emoji: '🌈' },
-    { id: 'shapes', label: 'Shapes', emoji: '⭐' },
+    { id: 'bedtime', label: 'Bedtime Stories', emoji: '🌙' },
+    { id: 'colors', label: 'Colors & Shapes', emoji: '🌈' },
     { id: 'family', label: 'Family', emoji: '👨‍👩‍👧‍👦' },
-    { id: 'nature', label: 'Nature', emoji: '🌳' },
-    { id: 'vehicles', label: 'Vehicles', emoji: '🚗' }
+    { id: 'vehicles', label: 'Cars & Trucks', emoji: '🚗' },
+    { id: 'farm', label: 'Farm Life', emoji: '🚜' },
+    { id: 'feelings', label: 'Feelings', emoji: '😊' },
+    { id: 'counting', label: 'Numbers', emoji: '🔢' },
+    { id: 'playground', label: 'Playground Fun', emoji: '🎠' },
+    { id: 'pets', label: 'Pets', emoji: '🐕' },
+    { id: 'seasons', label: 'Seasons', emoji: '🍂' },
+    { id: 'food', label: 'Yummy Food', emoji: '🍎' }
   ],
   'early-phonics': [
     { id: 'adventure', label: 'Adventure', emoji: '🗺️' },
-    { id: 'animals', label: 'Animals', emoji: '🦁' },
-    { id: 'friendship', label: 'Friendship', emoji: '🤝' },
-    { id: 'fairytale', label: 'Fairy Tale', emoji: '🏰' },
+    { id: 'animals', label: 'Animal Friends', emoji: '🦁' },
+    { id: 'friendship', label: 'Best Friends', emoji: '🤝' },
+    { id: 'fairytale', label: 'Fairy Tales', emoji: '🏰' },
     { id: 'dinosaurs', label: 'Dinosaurs', emoji: '🦕' },
-    { id: 'ocean', label: 'Ocean', emoji: '🌊' }
+    { id: 'ocean', label: 'Under the Sea', emoji: '🌊' },
+    { id: 'school', label: 'School Days', emoji: '🎒' },
+    { id: 'superheroes', label: 'Superheroes', emoji: '🦸' },
+    { id: 'princesses', label: 'Princesses', emoji: '👸' },
+    { id: 'pirates', label: 'Pirates', emoji: '🏴‍☠️' },
+    { id: 'bugs', label: 'Bugs & Insects', emoji: '🐛' },
+    { id: 'birthday', label: 'Birthday Party', emoji: '🎂' }
   ],
   'beginning-reader': [
-    { id: 'adventure', label: 'Adventure', emoji: '🗺️' },
-    { id: 'mystery', label: 'Mystery', emoji: '🔍' },
-    { id: 'space', label: 'Space', emoji: '🚀' },
-    { id: 'superheroes', label: 'Superheroes', emoji: '🦸' },
-    { id: 'magic', label: 'Magic', emoji: '✨' },
-    { id: 'sports', label: 'Sports', emoji: '⚽' }
+    { id: 'adventure', label: 'Adventure Quest', emoji: '🗺️' },
+    { id: 'mystery', label: 'Mystery Solving', emoji: '🔍' },
+    { id: 'space', label: 'Space Explorer', emoji: '🚀' },
+    { id: 'superheroes', label: 'Superhero Team', emoji: '🦸' },
+    { id: 'magic', label: 'Magic School', emoji: '✨' },
+    { id: 'sports', label: 'Sports Champions', emoji: '⚽' },
+    { id: 'dragons', label: 'Dragon Tales', emoji: '🐉' },
+    { id: 'unicorns', label: 'Unicorn Magic', emoji: '🦄' },
+    { id: 'robots', label: 'Robot Friends', emoji: '🤖' },
+    { id: 'ninjas', label: 'Ninja Training', emoji: '🥷' },
+    { id: 'detectives', label: 'Detective Club', emoji: '🕵️' },
+    { id: 'camping', label: 'Camping Adventure', emoji: '🏕️' }
   ],
   'developing-reader': [
-    { id: 'adventure', label: 'Adventure', emoji: '🗺️' },
-    { id: 'mystery', label: 'Mystery', emoji: '🔍' },
-    { id: 'fantasy', label: 'Fantasy', emoji: '🧙‍♂️' },
-    { id: 'scifi', label: 'Sci-Fi', emoji: '🚀' },
-    { id: 'friendship', label: 'Friendship', emoji: '🤝' },
-    { id: 'history', label: 'History', emoji: '📜' }
+    { id: 'adventure', label: 'Epic Adventure', emoji: '🗺️' },
+    { id: 'mystery', label: 'Mystery Detective', emoji: '🔍' },
+    { id: 'fantasy', label: 'Fantasy Quest', emoji: '🧙‍♂️' },
+    { id: 'scifi', label: 'Sci-Fi Future', emoji: '🚀' },
+    { id: 'friendship', label: 'Friendship Challenge', emoji: '🤝' },
+    { id: 'history', label: 'Time Travelers', emoji: '📜' },
+    { id: 'survival', label: 'Survival Skills', emoji: '🏃' },
+    { id: 'magic-school', label: 'Magic Academy', emoji: '🎓' },
+    { id: 'spy', label: 'Secret Agent', emoji: '🕶️' },
+    { id: 'mythology', label: 'Greek Myths', emoji: '⚡' },
+    { id: 'haunted', label: 'Haunted House', emoji: '👻' },
+    { id: 'treasure', label: 'Treasure Hunt', emoji: '💎' }
   ],
   'fluent-reader': [
-    { id: 'adventure', label: 'Adventure', emoji: '🗺️' },
-    { id: 'mystery', label: 'Mystery', emoji: '🔍' },
-    { id: 'fantasy', label: 'Fantasy', emoji: '🧙‍♂️' },
-    { id: 'scifi', label: 'Sci-Fi', emoji: '🚀' },
-    { id: 'mythology', label: 'Mythology', emoji: '⚡' },
-    { id: 'time-travel', label: 'Time Travel', emoji: '⏰' }
+    { id: 'adventure', label: 'World Adventure', emoji: '🗺️' },
+    { id: 'mystery', label: 'Mystery Thriller', emoji: '🔍' },
+    { id: 'fantasy', label: 'Epic Fantasy', emoji: '🧙‍♂️' },
+    { id: 'scifi', label: 'Science Fiction', emoji: '🚀' },
+    { id: 'mythology', label: 'Ancient Mythology', emoji: '⚡' },
+    { id: 'time-travel', label: 'Time Travel', emoji: '⏰' },
+    { id: 'dystopian', label: 'Future World', emoji: '🌆' },
+    { id: 'parallel', label: 'Parallel Universe', emoji: '🌌' },
+    { id: 'superpowers', label: 'Hidden Powers', emoji: '💫' },
+    { id: 'quest', label: 'Hero\'s Journey', emoji: '🗡️' },
+    { id: 'aliens', label: 'Alien Contact', emoji: '👽' },
+    { id: 'virtual', label: 'Virtual Reality', emoji: '🎮' }
   ],
   'insightful-reader': [
-    { id: 'dystopian', label: 'Dystopian', emoji: '🌆' },
-    { id: 'philosophy', label: 'Philosophy', emoji: '💭' },
-    { id: 'mystery', label: 'Mystery', emoji: '🔍' },
-    { id: 'scifi', label: 'Sci-Fi', emoji: '🚀' },
-    { id: 'historical', label: 'Historical', emoji: '📜' },
-    { id: 'psychological', label: 'Psychological', emoji: '🧠' }
+    { id: 'dystopian', label: 'Dystopian Future', emoji: '🌆' },
+    { id: 'philosophy', label: 'Deep Questions', emoji: '💭' },
+    { id: 'mystery', label: 'Complex Mystery', emoji: '🔍' },
+    { id: 'scifi', label: 'Hard Sci-Fi', emoji: '🚀' },
+    { id: 'historical', label: 'Historical Fiction', emoji: '📜' },
+    { id: 'psychological', label: 'Mind Games', emoji: '🧠' },
+    { id: 'coming-of-age', label: 'Coming of Age', emoji: '🌱' },
+    { id: 'social', label: 'Social Issues', emoji: '🌍' },
+    { id: 'identity', label: 'Finding Identity', emoji: '🎭' },
+    { id: 'rebellion', label: 'Teen Rebellion', emoji: '✊' },
+    { id: 'apocalyptic', label: 'Post-Apocalyptic', emoji: '🌅' },
+    { id: 'ai', label: 'AI Ethics', emoji: '🤖' }
   ]
 };
 
@@ -1113,8 +1149,8 @@ function App() {
 
             {/* Theme Selection - MOVED DOWN */}
             <div className="form-group">
-              <label>Would you like to add a theme for this story?</label>
-              <p className="theme-subtitle">Pick one or more themes to make it extra special - Optional</p>
+              <label>Would you like to add a theme or topic?</label>
+              <p className="theme-subtitle">Pick one or more to make it extra special - Optional</p>
               <div className="theme-grid">
                 {getAvailableThemes().map(theme => (
                   <div

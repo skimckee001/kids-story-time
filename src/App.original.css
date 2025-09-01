@@ -686,20 +686,25 @@ body {
 
 /* Theme Grid */
 .theme-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-top: 15px;
 }
 
 .theme-option {
-  padding: 15px;
+  padding: 8px 16px;
   border: 2px solid #e0e0e0;
-  border-radius: 15px;
-  text-align: center;
+  border-radius: 25px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   background: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .theme-option:hover {
@@ -715,14 +720,15 @@ body {
 }
 
 .theme-emoji {
-  display: block;
-  font-size: 2rem;
-  margin-bottom: 5px;
+  font-size: 1.2rem;
+  display: inline-block;
+  flex-shrink: 0;
 }
 
 .theme-label {
   font-size: 0.9rem;
   font-weight: 500;
+  display: inline-block;
 }
 
 /* Length Options */
