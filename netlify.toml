@@ -85,6 +85,12 @@
   status = 200
   force = true
 
+[[redirects]]
+  from = "/landing.html"
+  to = "/landing.html"
+  status = 200
+  force = true
+
 # Handle client-side routing for React SPA (catch-all, must be last)
 [[redirects]]
   from = "/*"

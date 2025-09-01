@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KidsStoryTime.ai - Transform Bedtime Into Adventure Time</title>
+    <meta name="description" content="AI-powered personalized stories that make your child the hero. Join 10,000+ families creating magical moments every night.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --secondary: #fbbf24;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f9fafb;
+            --bg-purple-light: #f3f0ff;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Fredoka', cursive;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f3f0ff 0%, #ede9fe 100%);
+            padding: 100px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-text p {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-purple-light);
+            transform: translateY(-2px);
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 500px;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-card:nth-child(1) {
+            top: 20px;
+            left: 20px;
+            animation-delay: 0s;
+        }
+
+        .floating-card:nth-child(2) {
+            top: 150px;
+            right: 40px;
+            animation-delay: 2s;
+        }
+
+        .floating-card:nth-child(3) {
+            bottom: 40px;
+            left: 60px;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .story-preview {
+            width: 280px;
+        }
+
+        .story-preview img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .story-preview h4 {
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .story-preview p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        /* Trust Bar */
+        .trust-bar {
+            background: white;
+            padding: 30px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .trust-items {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .trust-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-purple-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .trust-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .trust-value {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .trust-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        /* Problem Solution Section */
+        .problem-solution {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .solution-flow {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .solution-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .solution-card.problem {
+            opacity: 0.6;
+            background: #f3f4f6;
+        }
+
+        .solution-card.magic {
+            background: linear-gradient(135deg, #f3f0ff 0%, #ede9fe 100%);
+            border: 2px solid var(--primary);
+        }
+
+        .solution-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: var(--bg-purple-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .solution-arrow {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        .step-image {
+            width: 100%;
+            height: 200px;
+            background: var(--bg-purple-light);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .step h3 {
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .step p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Features */
+        .features {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.125rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .coming-soon {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--secondary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Connection Moments */
+        .connection {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .connection-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .connection-card {
+            background: var(--bg-light);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .connection-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .connection-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .connection-content {
+            padding: 30px;
+        }
+
+        .connection-card h3 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .connection-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 80px 0;
+            background: var(--bg-purple-light);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .stars {
+            color: var(--secondary);
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+        }
+
+        .testimonial-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--bg-purple-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .author-info h4 {
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .author-info p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        /* Comparison Table */
+        .comparison {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table th:first-child {
+            width: 30%;
+        }
+
+        .comparison-table td {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table .our-col {
+            background: var(--bg-purple-light);
+            font-weight: 600;
+        }
+
+        .check {
+            color: var(--success);
+            font-size: 1.5rem;
+        }
+
+        .cross {
+            color: #ef4444;
+            font-size: 1.5rem;
+        }
+
+        .partial {
+            color: var(--secondary);
+            font-size: 1.5rem;
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card.popular {
+            transform: scale(1.05);
+            border: 3px solid var(--primary);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 20px 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pricing-features .check-icon {
+            color: var(--success);
+        }
+
+        /* Safety Section */
+        .safety {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .safety-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .safety-item {
+            text-align: center;
+        }
+
+        .safety-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-purple-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 20px;
+        }
+
+        .safety-item h3 {
+            font-size: 1.125rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .safety-item p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 60px auto 0;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: var(--bg-purple-light);
+        }
+
+        .faq-question span {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question span {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 25px 25px;
+            max-height: 500px;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .final-cta p {
+            font-size: 1.25rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .email-capture {
+            display: flex;
+            gap: 20px;
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .email-capture input {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .countdown {
+            font-size: 1.125rem;
+            margin-top: 30px;
+        }
+
+        .countdown span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin: 0 5px;
+            display: inline-block;
+            min-width: 60px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            font-size: 1.125rem;
+            margin-bottom: 20px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding-top: 30px;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-visual {
+                height: 300px;
+            }
+
+            .solution-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .solution-arrow {
+                transform: rotate(90deg);
+            }
+
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+
+            .connection-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                overflow-x: auto;
+            }
+
+            .email-capture {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Transform Bedtime Into Adventure Time – In 30 Seconds</h1>
+                    <p>AI-powered personalized stories that make your child the hero. Join thousands of families creating magical moments every night.</p>
+                    
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="storiesCount">2,847</span>
+                            <span class="stat-label">Stories Today</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">10,000+</span>
+                            <span class="stat-label">Happy Families</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">4.9★</span>
+                            <span class="stat-label">Parent Rating</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-cta">
+                        <button class="btn btn-primary">
+                            ✨ Create Your First Story FREE
+                        </button>
+                        <button class="btn btn-secondary">
+                            ▶️ Watch How It Works
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="hero-visual">
+                    <div class="floating-card story-preview">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23ddd6fe' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%238b5cf6' font-size='20'%3EAdventure Story%3C/text%3E%3C/svg%3E" alt="Story preview">
+                        <h4>Emma's Dragon Adventure</h4>
+                        <p>A magical journey awaits...</p>
+                    </div>
+                    
+                    <div class="floating-card story-preview">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23fef3c7' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23f59e0b' font-size='20'%3ESpace Story%3C/text%3E%3C/svg%3E" alt="Story preview">
+                        <h4>Jake's Space Mission</h4>
+                        <p>To the stars and beyond...</p>
+                    </div>
+                    
+                    <div class="floating-card story-preview">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23dcfce7' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%2310b981' font-size='20'%3EFriendship Story%3C/text%3E%3C/svg%3E" alt="Story preview">
+                        <h4>Lily's New Friend</h4>
+                        <p>Making friends is magical...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Bar -->
+    <section class="trust-bar">
+        <div class="container">
+            <div class="trust-items">
+                <div class="trust-item">
+                    <div class="trust-icon">📚</div>
+                    <div class="trust-text">
+                        <span class="trust-value">1M+</span>
+                        <span class="trust-label">Stories Created</span>
+                    </div>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-icon">👨‍👩‍👧‍👦</div>
+                    <div class="trust-text">
+                        <span class="trust-value">10,000+</span>
+                        <span class="trust-label">Happy Families</span>
+                    </div>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-icon">⭐</div>
+                    <div class="trust-text">
+                        <span class="trust-value">4.9/5</span>
+                        <span class="trust-label">Parent Rating</span>
+                    </div>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-icon">🛡️</div>
+                    <div class="trust-text">
+                        <span class="trust-value">COPPA</span>
+                        <span class="trust-label">Compliant</span>
+                    </div>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-icon">👩‍🏫</div>
+                    <div class="trust-text">
+                        <span class="trust-value">Teacher</span>
+                        <span class="trust-label">Approved</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem/Solution Section -->
+    <section class="problem-solution">
+        <div class="container">
+            <div class="section-header">
+                <h2>Bedtime Doesn't Have to Be a Battle</h2>
+                <p>Transform the nightly struggle into quality time your child looks forward to</p>
+            </div>
+            
+            <div class="solution-flow">
+                <div class="solution-card problem">
+                    <div class="solution-icon">😩</div>
+                    <h3>The Struggle</h3>
+                    <p>Same stories repeatedly<br>Screen time guilt<br>Bedtime resistance</p>
+                </div>
+                
+                <div class="solution-arrow">→</div>
+                
+                <div class="solution-card">
+                    <div class="solution-icon">⚡</div>
+                    <h3>30-Second Setup</h3>
+                    <p>Enter child's name<br>Pick a theme<br>Click generate</p>
+                </div>
+                
+                <div class="solution-arrow">→</div>
+                
+                <div class="solution-card magic">
+                    <div class="solution-icon">✨</div>
+                    <h3>Pure Magic</h3>
+                    <p>Personalized adventures<br>Educational content<br>Happy bedtimes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>From Idea to Adventure in 3 Simple Steps</h2>
+                <p>Creating magical stories has never been easier</p>
+            </div>
+            
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-image">👧</div>
+                    <h3>Choose Your Hero</h3>
+                    <p>Enter your child's name, age, and interests to make them the star of the story</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-image">🎨</div>
+                    <h3>Pick Your Adventure</h3>
+                    <p>Select from dozens of themes or let AI surprise you with something magical</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-image">📖</div>
+                    <h3>Watch the Magic</h3>
+                    <p>Your personalized story with illustrations appears in seconds, ready to read</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary">
+                    Try It Now - No Signup Required
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Everything You Need for Magical Storytelling</h2>
+                <p>Powerful features designed to delight children and parents alike</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🦸</div>
+                    <h3>Personalized Heroes</h3>
+                    <p>Your child becomes the star of every story with their name and characteristics</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>AI Illustrations</h3>
+                    <p>Unique, beautiful artwork generated for every single story</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎙️</div>
+                    <h3>Voice Narration</h3>
+                    <p>Professional storytelling voices bring stories to life (30/month)</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Educational Themes</h3>
+                    <p>Learn numbers, letters, values, and life lessons through adventure</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌙</div>
+                    <h3>Bedtime Mode</h3>
+                    <p>Calming stories with auto-timer to help kids wind down</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3>Star Rewards</h3>
+                    <p>Motivating achievement system that encourages daily reading</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Parent Dashboard</h3>
+                    <p>Track reading progress, favorite themes, and milestones</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📥</div>
+                    <h3>Export & Share</h3>
+                    <p>Download PDF books and audio files to keep forever</p>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="coming-soon">Coming Soon</span>
+                    <div class="feature-icon">🎬</div>
+                    <h3>Video Stories</h3>
+                    <p>Watch your stories come to life with animated videos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Connection Moments -->
+    <section class="connection">
+        <div class="container">
+            <div class="section-header">
+                <h2>Create Bonds That Last a Lifetime</h2>
+                <p>Special moments for every family relationship</p>
+            </div>
+            
+            <div class="connection-grid">
+                <div class="connection-card">
+                    <div class="connection-image">🦸‍♂️</div>
+                    <div class="connection-content">
+                        <h3>Dads & Sons: Epic Adventures</h3>
+                        <p>Action-packed stories featuring superheroes, sports champions, and brave explorers. Build confidence and courage together.</p>
+                        <button class="btn btn-primary">Start Father-Son Journey</button>
+                    </div>
+                </div>
+                
+                <div class="connection-card">
+                    <div class="connection-image">👑</div>
+                    <div class="connection-content">
+                        <h3>Moms & Daughters: Magical Moments</h3>
+                        <p>Enchanting tales of friendship, creativity, and empowerment. Nurture imagination and self-belief together.</p>
+                        <button class="btn btn-primary">Create Mother-Daughter Magic</button>
+                    </div>
+                </div>
+                
+                <div class="connection-card">
+                    <div class="connection-image">📚</div>
+                    <div class="connection-content">
+                        <h3>Grandparents: Legacy Stories</h3>
+                        <p>Share wisdom through timeless tales and family adventures. Pass down values and create lasting memories.</p>
+                        <button class="btn btn-primary">Share Your Family's Story</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>Join Thousands of Happy Families</h2>
+                <p>Real stories from real parents</p>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"My son used to fight bedtime every night. Now he asks for his special story! The personalization makes him feel so special. We've gone from tears to cheers at bedtime."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">👨</div>
+                        <div class="author-info">
+                            <h4>Michael Chen</h4>
+                            <p>Dad of 2</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"As a teacher, I love how educational these stories are without feeling like homework. My daughter has learned so much about friendship and problem-solving through her adventures."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">👩</div>
+                        <div class="author-info">
+                            <h4>Sarah Williams</h4>
+                            <p>Mom & Teacher</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p class="testimonial-text">"Three kids, three different interests, and this app handles them all perfectly! Each child gets their own personalized stories. It's been a game-changer for our family."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">👩</div>
+                        <div class="author-info">
+                            <h4>Jessica Martinez</h4>
+                            <p>Mom of 3</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="comparison">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Families Choose KidsStoryTime</h2>
+                <p>See how we compare to other options</p>
+            </div>
+            
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Features</th>
+                            <th class="our-col">KidsStoryTime</th>
+                            <th>Generic Apps</th>
+                            <th>YouTube Kids</th>
+                            <th>Traditional Books</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Personalized Content</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Child as Hero</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Educational Value</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="partial">⚠</span></td>
+                            <td><span class="partial">⚠</span></td>
+                            <td><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Unlimited Variety</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="partial">⚠</span></td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Safe & Ad-Free</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Reward System</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="partial">⚠</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Bedtime Optimized</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="partial">⚠</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Choose Your Adventure Level</h2>
+                <p>Start free, upgrade when you're ready</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Reader</h3>
+                    <div class="price">FREE<span>/forever</span></div>
+                    <ul class="pricing-features">
+                        <li><span class="check-icon">✓</span> 3 stories per day</li>
+                        <li><span class="check-icon">✓</span> Basic themes</li>
+                        <li><span class="check-icon">✓</span> 1 child profile</li>
+                        <li><span class="check-icon">✓</span> 1 AI image/month</li>
+                        <li><span class="check-icon">✓</span> 1 narration/month</li>
+                    </ul>
+                    <button class="btn btn-secondary">Start Free</button>
+                </div>
+                
+                <div class="pricing-card popular">
+                    <span class="popular-badge">Most Popular</span>
+                    <h3>Family</h3>
+                    <div class="price">$7.99<span>/month</span></div>
+                    <ul class="pricing-features">
+                        <li><span class="check-icon">✓</span> 20 stories per day</li>
+                        <li><span class="check-icon">✓</span> All themes unlocked</li>
+                        <li><span class="check-icon">✓</span> 5 child profiles</li>
+                        <li><span class="check-icon">✓</span> Unlimited AI images</li>
+                        <li><span class="check-icon">✓</span> 30 narrations/month</li>
+                        <li><span class="check-icon">✓</span> Bedtime mode</li>
+                        <li><span class="check-icon">✓</span> Export PDFs</li>
+                    </ul>
+                    <button class="btn btn-primary">Start Free Trial</button>
+                    <p style="margin-top: 10px; color: var(--text-light); font-size: 0.875rem;">First month FREE!</p>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>Story Maker</h3>
+                    <div class="price">$4.99<span>/month</span></div>
+                    <ul class="pricing-features">
+                        <li><span class="check-icon">✓</span> 10 stories per day</li>
+                        <li><span class="check-icon">✓</span> Most themes</li>
+                        <li><span class="check-icon">✓</span> 2 child profiles</li>
+                        <li><span class="check-icon">✓</span> 30 AI images/month</li>
+                        <li><span class="check-icon">✓</span> 10 narrations/month</li>
+                    </ul>
+                    <button class="btn btn-secondary">Start Free Trial</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Safety Section -->
+    <section class="safety">
+        <div class="container">
+            <div class="section-header">
+                <h2>Your Family's Safety Is Our Priority</h2>
+                <p>Built with trust and security at every level</p>
+            </div>
+            
+            <div class="safety-grid">
+                <div class="safety-item">
+                    <div class="safety-icon">🔒</div>
+                    <h3>COPPA Compliant</h3>
+                    <p>Fully compliant with children's online privacy protection regulations</p>
+                </div>
+                
+                <div class="safety-item">
+                    <div class="safety-icon">🚫</div>
+                    <h3>No Data Selling</h3>
+                    <p>Your family's data is never sold or shared with third parties</p>
+                </div>
+                
+                <div class="safety-item">
+                    <div class="safety-icon">👀</div>
+                    <h3>Content Moderation</h3>
+                    <p>All AI-generated content is filtered for age-appropriateness</p>
+                </div>
+                
+                <div class="safety-item">
+                    <div class="safety-icon">👪</div>
+                    <h3>Parent Controls</h3>
+                    <p>Full control over content, screen time, and account settings</p>
+                </div>
+                
+                <div class="safety-item">
+                    <div class="safety-icon">🛡️</div>
+                    <h3>SSL Secure</h3>
+                    <p>Bank-level encryption protects all data transmission</p>
+                </div>
+                
+                <div class="safety-item">
+                    <div class="safety-icon">💯</div>
+                    <h3>Money-Back Guarantee</h3>
+                    <p>30-day guarantee if you're not completely satisfied</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Everything you need to know about KidsStoryTime</p>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How does personalization work?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You enter your child's name, age, and interests. Our AI then creates a unique story where your child is the main character, facing age-appropriate challenges and adventures tailored to their preferences.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Is the content age-appropriate?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! Stories are generated based on your child's age with appropriate vocabulary, themes, and complexity. All content is filtered for safety and educational value.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can multiple children use one account?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! Depending on your plan, you can create multiple child profiles. The Family plan supports up to 5 children, each with their own personalized stories and progress tracking.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do rewards work?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Children earn stars for reading stories, completing milestones, and maintaining reading streaks. Stars can be collected for badges and achievements, motivating continued reading.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Is there a free trial?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! All paid plans come with a 30-day free trial. Plus, our free Reader plan lets you create 3 stories per day forever with no credit card required.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can I cancel anytime?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Of course! You can cancel your subscription anytime with no questions asked. You'll continue to have access until the end of your billing period.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to Transform Bedtime?</h2>
+            <p>Join 10,000+ families creating magical moments every night</p>
+            
+            <div class="email-capture">
+                <input type="email" placeholder="Enter your email">
+                <button class="btn btn-primary" style="background: white; color: var(--primary);">
+                    Get Your First Story FREE
+                </button>
+            </div>
+            
+            <div class="countdown">
+                <p>🎉 Launch Special Ending In:</p>
+                <div style="margin-top: 15px;">
+                    <span id="days">02</span>
+                    <span id="hours">14</span>
+                    <span id="minutes">38</span>
+                    <span id="seconds">42</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Press Kit</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">COPPA Compliance</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Partners</h4>
+                    <ul>
+                        <li><a href="#">School Program</a></li>
+                        <li><a href="#">Affiliate Program</a></li>
+                        <li><a href="#">Bulk Subscriptions</a></li>
+                        <li><a href="#">API Access</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 KidsStoryTime.ai. All rights reserved. Made with ❤️ for families everywhere.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animate story counter
+        function animateCounter() {
+            const counter = document.getElementById('storiesCount');
+            const baseCount = 2847;
+            const increment = Math.floor(Math.random() * 5) + 1;
+            
+            setInterval(() => {
+                const currentCount = parseInt(counter.textContent.replace(',', ''));
+                const newCount = currentCount + increment;
+                counter.textContent = newCount.toLocaleString();
+            }, 5000);
+        }
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+                
+                // Close other items
+                document.querySelectorAll('.faq-item').forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Countdown Timer
+        function updateCountdown() {
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 2);
+            endDate.setHours(23, 59, 59);
+            
+            const now = new Date();
+            const diff = endDate - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        // Initialize animations
+        animateCounter();
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // CTA button clicks
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            button.addEventListener('click', () => {
+                // Redirect to main app
+                window.location.href = '/';
+            });
+        });
+    </script>
+</body>
+</html>
