@@ -1,130 +1,132 @@
 /* Star Rewards System Styles */
-
-.star-rewards-container {
-  background: white;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
-}
-
-/* No profile message */
-.no-profile-message {
-  text-align: center;
-  padding: 40px;
-  color: #666;
-}
-
-.no-profile-message .star-icon {
-  font-size: 48px;
-  display: block;
-  margin-bottom: 15px;
-  opacity: 0.5;
-}
-
-/* Header section */
-.rewards-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #f0f0f0;
-}
-
-.star-balance {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.star-icon-large {
-  font-size: 48px;
-  animation: sparkle 2s ease-in-out infinite;
-}
-
-@keyframes sparkle {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(1.1) rotate(5deg); }
-}
-
-.balance-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.balance-label {
-  font-size: 14px;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.balance-amount {
-  font-size: 36px;
-  font-weight: bold;
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Progress section */
-.rewards-progress {
-  flex: 1;
-  max-width: 300px;
-}
-
-.progress-label {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
-  text-align: right;
-}
-
-.progress-bar {
-  height: 12px;
-  background: #f0f0f0;
-  border-radius: 6px;
-  overflow: hidden;
-  position: relative;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #667eea, #764ba2);
-  border-radius: 6px;
-  transition: width 0.5s ease;
-  position: relative;
-}
-
-.progress-fill::after {
-  content: '';
-  position: absolute;
+.rewards-system {
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  animation: shimmer 2s infinite;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
 }
 
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+.rewards-content {
+  background: white;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 1000px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
 }
 
-/* Earn stars info */
-.earn-stars-info {
-  background: linear-gradient(135deg, #f8f9ff, #fff5f5);
-  border-radius: 15px;
-  padding: 20px;
-  margin-bottom: 25px;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.earn-stars-info h3 {
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.rewards-header {
+  padding: 24px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px 20px 0 0;
+  position: relative;
+}
+
+.rewards-header h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.rewards-header .close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.rewards-header .close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+/* Star Balance */
+.star-balance {
+  padding: 20px 24px;
+  background: linear-gradient(to bottom, #fff8e1, #ffffff);
+  border-bottom: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.balance-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.balance-icon {
+  font-size: 32px;
+}
+
+.balance-value {
+  font-size: 36px;
+  font-weight: bold;
+  color: #ffa500;
+}
+
+.balance-label {
+  font-size: 16px;
+  color: #666;
+  font-weight: 600;
+}
+
+.earning-tip {
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Earn Stars Section */
+.earn-stars-section {
+  padding: 20px 24px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.earn-stars-section h3 {
+  margin: 0 0 15px 0;
   color: #333;
-  margin-bottom: 15px;
   font-size: 18px;
 }
 
@@ -138,52 +140,50 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
+  padding: 10px;
   background: white;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
 }
 
 .method-icon {
   font-size: 20px;
 }
 
-.method-text {
-  color: #666;
-}
-
-/* Category filters */
+/* Category Filters */
 .rewards-filters {
+  padding: 20px 24px;
   display: flex;
   gap: 10px;
-  margin-bottom: 25px;
   flex-wrap: wrap;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.filter-btn {
+.rewards-filters button {
   padding: 8px 16px;
   border: 2px solid #e0e0e0;
   background: white;
   border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-weight: 600;
+  transition: all 0.2s;
+  color: #666;
 }
 
-.filter-btn:hover {
-  border-color: #667eea;
-  transform: translateY(-2px);
+.rewards-filters button:hover {
+  border-color: #ffa500;
+  color: #ffa500;
 }
 
-.filter-btn.active {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+.rewards-filters button.active {
+  background: linear-gradient(135deg, #ffd700, #ffa500);
   color: white;
-  border-color: #667eea;
+  border-color: #ffa500;
 }
 
-/* Rewards grid */
+/* Rewards Grid */
 .rewards-grid {
+  padding: 24px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
@@ -197,103 +197,136 @@
   text-align: center;
   transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .reward-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border-color: #ffa500;
 }
 
-.reward-card.unlocked {
-  background: linear-gradient(135deg, #f0fff4, #fff);
+.reward-card.owned {
+  background: linear-gradient(135deg, #f0f9ff, #e0f7fa);
   border-color: #4caf50;
 }
 
 .reward-card.locked {
   opacity: 0.7;
+  background: #f5f5f5;
 }
 
 .reward-icon {
   font-size: 48px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
-.reward-name {
+.reward-info h3 {
+  margin: 0 0 8px 0;
   font-size: 16px;
-  font-weight: bold;
   color: #333;
-  margin-bottom: 8px;
 }
 
-.reward-description {
+.reward-info p {
+  margin: 0 0 10px 0;
   font-size: 13px;
   color: #666;
-  margin-bottom: 15px;
   line-height: 1.4;
 }
 
-/* Reward status */
-.reward-status {
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
+.consumable-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  background: #fff3cd;
+  color: #856404;
+  border-radius: 10px;
+  font-size: 11px;
   font-weight: 600;
 }
 
-.reward-status.unlocked {
-  background: #4caf50;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-
-.check-icon {
-  font-size: 16px;
-}
-
-/* Purchase section */
-.reward-purchase {
+.reward-footer {
+  margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
 }
 
 .reward-cost {
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-weight: bold;
-  color: #FFD700;
 }
 
-.purchase-btn {
-  padding: 8px 20px;
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  color: white;
-  border: none;
+.cost-icon {
+  font-size: 16px;
+}
+
+.cost-value {
+  font-size: 18px;
+  color: #ffa500;
+}
+
+.purchase-btn,
+.owned-btn {
+  width: 100%;
+  padding: 8px 16px;
   border-radius: 20px;
-  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s;
+  border: none;
+  font-size: 14px;
 }
 
-.purchase-btn:hover:not(:disabled) {
+.purchase-btn.can-afford {
+  background: linear-gradient(135deg, #ffd700, #ffa500);
+  color: white;
+}
+
+.purchase-btn.can-afford:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 165, 0, 0.4);
 }
 
-.purchase-btn:disabled {
+.purchase-btn.cannot-afford {
   background: #e0e0e0;
   color: #999;
   cursor: not-allowed;
-  font-size: 12px;
 }
 
-/* Reward animation overlay */
-.reward-animation-overlay {
+.owned-btn {
+  background: #4caf50;
+  color: white;
+  cursor: default;
+}
+
+/* Empty State */
+.empty-state {
+  padding: 60px 24px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.empty-state h3 {
+  color: #333;
+  margin: 0 0 10px 0;
+}
+
+.empty-state p {
+  color: #666;
+  margin: 0;
+}
+
+/* Purchase Modal */
+.purchase-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -303,99 +336,122 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
-  animation: fadeIn 0.3s ease;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.reward-animation {
+.modal-content {
   background: white;
-  border-radius: 30px;
-  padding: 40px;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 400px;
+  width: 90%;
   text-align: center;
-  animation: bounceIn 0.5s ease;
+  animation: scaleIn 0.3s ease;
 }
 
-@keyframes bounceIn {
-  0% { transform: scale(0.3); opacity: 0; }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); opacity: 1; }
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.animation-icon {
-  font-size: 80px;
+.modal-icon {
+  font-size: 64px;
   margin-bottom: 20px;
-  animation: rotate 1s ease-in-out;
 }
 
-@keyframes rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.reward-animation h2 {
+.modal-content h3 {
+  margin: 0 0 10px 0;
   color: #333;
-  margin-bottom: 10px;
-  font-size: 28px;
+  font-size: 22px;
 }
 
-.reward-animation p {
+.modal-content p {
+  margin: 0 0 20px 0;
   color: #666;
+  font-size: 16px;
+}
+
+.modal-message {
   font-size: 18px;
-  margin-bottom: 20px;
+  font-weight: 600;
+  color: #333;
 }
 
-.sparkles {
+.modal-actions {
   display: flex;
+  gap: 12px;
   justify-content: center;
-  gap: 15px;
-  font-size: 24px;
 }
 
-.sparkles span {
-  animation: sparkleFloat 1.5s ease-in-out infinite;
+.modal-actions button {
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-size: 16px;
 }
 
-.sparkles span:nth-child(2) {
-  animation-delay: 0.3s;
+.cancel-btn {
+  background: #e0e0e0;
+  color: #666;
 }
 
-.sparkles span:nth-child(3) {
-  animation-delay: 0.6s;
+.cancel-btn:hover {
+  background: #d0d0d0;
 }
 
-@keyframes sparkleFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+.confirm-btn {
+  background: linear-gradient(135deg, #ffd700, #ffa500);
+  color: white;
 }
 
-/* Responsive design */
+.confirm-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255, 165, 0, 0.4);
+}
+
+/* Mobile Responsive */
 @media (max-width: 768px) {
-  .rewards-header {
-    flex-direction: column;
-    gap: 20px;
-    align-items: stretch;
+  .rewards-content {
+    width: 95%;
+    max-height: 90vh;
   }
   
-  .rewards-progress {
-    max-width: 100%;
+  .rewards-header h2 {
+    font-size: 22px;
   }
   
-  .progress-label {
-    text-align: left;
+  .balance-value {
+    font-size: 28px;
   }
   
   .earn-methods {
     grid-template-columns: 1fr;
   }
   
+  .rewards-filters {
+    padding: 15px;
+    gap: 8px;
+  }
+  
+  .rewards-filters button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  
   .rewards-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 15px;
+    padding: 15px;
   }
   
   .reward-card {
@@ -406,11 +462,30 @@
     font-size: 36px;
   }
   
-  .reward-name {
+  .reward-info h3 {
     font-size: 14px;
   }
   
-  .reward-description {
+  .reward-info p {
     font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rewards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+  }
+  
+  .reward-card {
+    padding: 12px;
+  }
+  
+  .modal-content {
+    padding: 20px;
+  }
+  
+  .modal-icon {
+    font-size: 48px;
   }
 }

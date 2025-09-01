@@ -4,9 +4,10 @@ import { supabase } from '../lib/supabase';
 function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth, onLogout, onShowAchievements, onLogoClick, onShowRewards }) {
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   return (
-    <header className="header-container">
-      <div className="header-content">
-        <div className="header-left" onClick={onLogoClick} style={{ cursor: 'pointer' }}>
+    <header className="header-container" style={{display: 'flex', flexDirection: 'column', gap: '0'}}>
+      {/* Logo Line */}
+      <div className="header-content" style={{padding: '0', marginBottom: '10px'}}>
+        <div className="header-left" onClick={onLogoClick} style={{ cursor: 'pointer', margin: '0 auto' }}>
           <div className="logo-icon">
             <span>📚</span>
           </div>
@@ -14,7 +15,20 @@ function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth,
             KidsStoryTime<span className="logo-domain">.ai</span>
           </div>
         </div>
-        <div className="header-right">
+      </div>
+      
+      {/* Tagline Line */}
+      <div className="tagline" style={{textAlign: 'center', marginBottom: '10px'}}>Join thousands of families creating magical bedtime moments</div>
+      
+      {/* Launch Special Banner */}
+      <div className="beta-banner" style={{marginBottom: '15px'}}>
+        <div className="beta-title">🎉 LAUNCH SPECIAL - First Month FREE on All Plans!</div>
+        <div className="beta-subtitle">Try our Story Maker or Family plans risk-free for 30 days</div>
+      </div>
+      
+      {/* Navigation Bar */}
+      <div className="header-content" style={{padding: '0'}}>
+        <div className="header-right" style={{width: '100%', justifyContent: 'center', flexWrap: 'wrap', gap: '10px', minHeight: 'auto'}}>
           {user ? (
             <>
               {/* Star Display - Always visible for motivation */}
@@ -96,24 +110,24 @@ function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth,
                 onClick={onShowAuth}
                 style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto'}}
               >
-                📖 My Library
+                📚 Library
+              </button>
+              <button 
+                className="header-btn"
+                onClick={() => window.open('/pricing-new.html', '_blank')}
+                style={{flex: '0 0 auto'}}
+              >
+                💰 Plans
               </button>
               <button className="header-btn trial-btn" onClick={onShowAuth}>
-                🎉 Start Free Trial
+                ✨ Create Your First Story
                 <div className="trial-tooltip">
-                  Free for first month! All premium features unlocked
+                  Try it free! No signup required
                 </div>
               </button>
             </>
           )}
         </div>
-      </div>
-      <div className="tagline">Magical Personalized Stories for Your Child</div>
-      
-      {/* Beta Banner */}
-      <div className="beta-banner">
-        <div className="beta-title">🎉 FREE BETA - All Premium Features Unlocked!</div>
-        <div className="beta-subtitle">Create unlimited stories, export to PDF, and enjoy all features completely free during our launch period</div>
       </div>
     </header>
   );

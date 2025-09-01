@@ -39,6 +39,7 @@ function AchievementSystem({ childProfile, onClose, onGoalComplete }) {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showNewAchievement, setShowNewAchievement] = useState(null);
   const [totalPoints, setTotalPoints] = useState(0);
+  const [activeTab, setActiveTab] = useState('achievements'); // 'achievements' or 'goals'
 
   useEffect(() => {
     loadAchievements();
@@ -170,10 +171,54 @@ function AchievementSystem({ childProfile, onClose, onGoalComplete }) {
     <div className="achievement-system">
       <div className="achievement-content">
         <div className="achievement-header">
-          <h2>🏆 Achievements</h2>
-          <button className="close-btn" onClick={onClose}>✕</button>
+          <h2>🏆 Achievements & Goals</h2>
+          <button className="close-btn" onClick={onClose} style={{position: 'absolute', right: '20px', top: '20px'}}>✕</button>
+        </div>
+        
+        {/* Tab Navigation */}
+        <div className="achievement-tabs" style={{
+          display: 'flex',
+          gap: '10px',
+          marginBottom: '20px',
+          borderBottom: '2px solid #e0e0e0',
+          paddingBottom: '10px'
+        }}>
+          <button 
+            className={activeTab === 'achievements' ? 'active' : ''}
+            onClick={() => setActiveTab('achievements')}
+            style={{
+              padding: '10px 20px',
+              background: activeTab === 'achievements' ? 'linear-gradient(135deg, #667eea, #764ba2)' : 'white',
+              color: activeTab === 'achievements' ? 'white' : '#667eea',
+              border: '2px solid #667eea',
+              borderRadius: '20px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            🏆 Achievements
+          </button>
+          <button 
+            className={activeTab === 'goals' ? 'active' : ''}
+            onClick={() => setActiveTab('goals')}
+            style={{
+              padding: '10px 20px',
+              background: activeTab === 'goals' ? 'linear-gradient(135deg, #667eea, #764ba2)' : 'white',
+              color: activeTab === 'goals' ? 'white' : '#667eea',
+              border: '2px solid #667eea',
+              borderRadius: '20px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            🎯 Reading Goals
+          </button>
         </div>
 
+        {activeTab === 'achievements' ? (
+          <>
         {/* Progress Overview */}
         <div className="achievement-overview">
           <div className="achievement-stats">
@@ -270,6 +315,18 @@ function AchievementSystem({ childProfile, onClose, onGoalComplete }) {
             );
           })}
         </div>
+          </>
+        ) : (
+          /* Reading Goals Tab */
+          <div className="reading-goals-tab">
+            <ReadingGoals 
+              childProfile={childProfile}
+              onGoalComplete={onGoalComplete || ((goal, stars) => {
+                console.log(`Goal completed: ${goal.title}, earned ${stars} stars!`);
+              })}
+            />
+          </div>
+        )}
       </div>
 
       {/* New Achievement Notification */}
@@ -285,17 +342,6 @@ function AchievementSystem({ childProfile, onClose, onGoalComplete }) {
           </div>
         </div>
       )}
-      
-      {/* Reading Goals Section */}
-      <div className="reading-goals-section" style={{ marginTop: '20px' }}>
-        <h3 style={{ color: '#667eea', marginBottom: '15px', fontSize: '1.3rem' }}>Reading Goals</h3>
-        <ReadingGoals 
-          childProfile={childProfile}
-          onGoalComplete={onGoalComplete || ((goal, stars) => {
-            console.log(`Goal completed: ${goal.title}, earned ${stars} stars!`);
-          })}
-        />
-      </div>
     </div>
   );
 }

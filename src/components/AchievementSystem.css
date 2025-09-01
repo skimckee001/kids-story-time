@@ -46,9 +46,10 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   border-radius: 16px 16px 0 0;
+  position: relative;
 }
 
 .achievement-header h2 {

@@ -1,357 +1,307 @@
 import { useState, useEffect } from 'react';
 import './StarRewardsSystem.css';
 
-function StarRewardsSystem({ childProfile, onRewardUnlocked }) {
-  const [stars, setStars] = useState(0);
-  const [unlockedRewards, setUnlockedRewards] = useState([]);
-  const [showRewardAnimation, setShowRewardAnimation] = useState(false);
-  const [animationReward, setAnimationReward] = useState(null);
+// Define reward items
+const REWARDS = [
+  // Themes & Styles
+  { id: 'theme_superhero', name: 'Superhero Theme', description: 'Unlock superhero story themes', cost: 50, category: 'themes', icon: '🦸' },
+  { id: 'theme_dinosaur', name: 'Dinosaur Theme', description: 'Unlock dinosaur adventure stories', cost: 50, category: 'themes', icon: '🦕' },
+  { id: 'theme_pirate', name: 'Pirate Theme', description: 'Unlock pirate adventure stories', cost: 50, category: 'themes', icon: '🏴‍☠️' },
+  { id: 'theme_unicorn', name: 'Unicorn Theme', description: 'Unlock magical unicorn stories', cost: 50, category: 'themes', icon: '🦄' },
+  { id: 'theme_space', name: 'Space Adventure', description: 'Unlock space exploration stories', cost: 45, category: 'themes', icon: '🚀' },
+  { id: 'theme_ocean', name: 'Ocean Explorer', description: 'Unlock underwater adventures', cost: 45, category: 'themes', icon: '🌊' },
+  
+  // Avatars & Badges
+  { id: 'avatar_wizard', name: 'Wizard Avatar', description: 'Magical wizard profile picture', cost: 30, category: 'avatars', icon: '🧙‍♂️' },
+  { id: 'avatar_princess', name: 'Princess Avatar', description: 'Royal princess profile picture', cost: 30, category: 'avatars', icon: '👸' },
+  { id: 'avatar_astronaut', name: 'Astronaut Avatar', description: 'Space explorer profile picture', cost: 30, category: 'avatars', icon: '👨‍🚀' },
+  { id: 'avatar_dragon', name: 'Dragon Avatar', description: 'Mighty dragon profile picture', cost: 40, category: 'avatars', icon: '🐲' },
+  { id: 'avatar_robot', name: 'Robot Avatar', description: 'Futuristic robot profile', cost: 35, category: 'avatars', icon: '🤖' },
+  
+  // Story Boosts
+  { id: 'boost_extra_story', name: 'Extra Story', description: 'Get one extra story today', cost: 20, category: 'boosts', icon: '📚', consumable: true },
+  { id: 'boost_longer_story', name: 'Epic Story', description: 'Create an extra-long story', cost: 25, category: 'boosts', icon: '📖', consumable: true },
+  { id: 'boost_ai_image', name: 'AI Illustration', description: 'Get AI-generated image for one story', cost: 35, category: 'boosts', icon: '🎨', consumable: true },
+  { id: 'boost_voice_pack', name: 'Voice Pack', description: 'Unlock premium narrator voices', cost: 60, category: 'boosts', icon: '🎙️' },
+  
+  // Backgrounds & Frames
+  { id: 'frame_golden', name: 'Golden Frame', description: 'Prestigious golden story frame', cost: 45, category: 'frames', icon: '🖼️' },
+  { id: 'frame_rainbow', name: 'Rainbow Frame', description: 'Colorful rainbow story frame', cost: 35, category: 'frames', icon: '🌈' },
+  { id: 'bg_space', name: 'Space Background', description: 'Cosmic space theme for library', cost: 40, category: 'frames', icon: '🌌' },
+  { id: 'bg_forest', name: 'Forest Background', description: 'Enchanted forest theme', cost: 40, category: 'frames', icon: '🌲' },
+  
+  // Special Powers
+  { id: 'power_name_sparkle', name: 'Sparkle Name', description: 'Your name sparkles in stories', cost: 25, category: 'powers', icon: '✨' },
+  { id: 'power_sound_effects', name: 'Sound Effects', description: 'Add sound effects to stories', cost: 55, category: 'powers', icon: '🔊' },
+  { id: 'power_story_music', name: 'Background Music', description: 'Magical music for your stories', cost: 70, category: 'powers', icon: '🎵' },
+  { id: 'power_share_boost', name: 'Share Boost', description: 'Get extra stars when sharing stories', cost: 80, category: 'powers', icon: '🚀' }
+];
+
+function StarRewardsSystem({ childProfile, stars, setStars, onClose }) {
+  const [ownedRewards, setOwnedRewards] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [selectedReward, setSelectedReward] = useState(null);
+  const [purchaseMessage, setPurchaseMessage] = useState('');
 
-  // Define rewards catalog
-  const rewards = [
-    // Themes
-    {
-      id: 'theme_space',
-      name: 'Space Adventure Theme',
-      category: 'themes',
-      cost: 50,
-      icon: '🚀',
-      description: 'Unlock space-themed story backgrounds',
-      type: 'theme'
-    },
-    {
-      id: 'theme_ocean',
-      name: 'Ocean Explorer Theme',
-      category: 'themes',
-      cost: 50,
-      icon: '🌊',
-      description: 'Unlock underwater story themes',
-      type: 'theme'
-    },
-    {
-      id: 'theme_rainbow',
-      name: 'Rainbow Magic Theme',
-      category: 'themes',
-      cost: 75,
-      icon: '🌈',
-      description: 'Unlock magical rainbow themes',
-      type: 'theme'
-    },
-    {
-      id: 'theme_dinosaur',
-      name: 'Dinosaur World Theme',
-      category: 'themes',
-      cost: 60,
-      icon: '🦕',
-      description: 'Unlock prehistoric adventures',
-      type: 'theme'
-    },
-    
-    // Avatars
-    {
-      id: 'avatar_astronaut',
-      name: 'Astronaut Avatar',
-      category: 'avatars',
-      cost: 30,
-      icon: '👨‍🚀',
-      description: 'Become a space explorer',
-      type: 'avatar'
-    },
-    {
-      id: 'avatar_princess',
-      name: 'Princess Avatar',
-      category: 'avatars',
-      cost: 30,
-      icon: '👸',
-      description: 'Royal profile picture',
-      type: 'avatar'
-    },
-    {
-      id: 'avatar_superhero',
-      name: 'Superhero Avatar',
-      category: 'avatars',
-      cost: 40,
-      icon: '🦸',
-      description: 'Be a super reader',
-      type: 'avatar'
-    },
-    {
-      id: 'avatar_wizard',
-      name: 'Wizard Avatar',
-      category: 'avatars',
-      cost: 35,
-      icon: '🧙',
-      description: 'Magical reader avatar',
-      type: 'avatar'
-    },
-    
-    // Special Features
-    {
-      id: 'feature_voice',
-      name: 'Special Voice Pack',
-      category: 'features',
-      cost: 100,
-      icon: '🎤',
-      description: 'Unlock special narration voices',
-      type: 'feature'
-    },
-    {
-      id: 'feature_music',
-      name: 'Background Music',
-      category: 'features',
-      cost: 80,
-      icon: '🎵',
-      description: 'Add music to your stories',
-      type: 'feature'
-    },
-    {
-      id: 'feature_effects',
-      name: 'Sound Effects Pack',
-      category: 'features',
-      cost: 70,
-      icon: '🔊',
-      description: 'Add fun sound effects',
-      type: 'feature'
-    },
-    {
-      id: 'feature_stickers',
-      name: 'Story Stickers',
-      category: 'features',
-      cost: 45,
-      icon: '⭐',
-      description: 'Decorate your stories',
-      type: 'feature'
-    },
-    
-    // Badges
-    {
-      id: 'badge_gold_star',
-      name: 'Gold Star Reader',
-      category: 'badges',
-      cost: 25,
-      icon: '⭐',
-      description: 'Show off your reading skills',
-      type: 'badge'
-    },
-    {
-      id: 'badge_bookworm',
-      name: 'Bookworm Badge',
-      category: 'badges',
-      cost: 20,
-      icon: '📚',
-      description: 'For dedicated readers',
-      type: 'badge'
-    },
-    {
-      id: 'badge_creative',
-      name: 'Creative Mind',
-      category: 'badges',
-      cost: 30,
-      icon: '🎨',
-      description: 'For imaginative storytellers',
-      type: 'badge'
-    }
-  ];
-
-  // Load saved data on mount
   useEffect(() => {
-    if (childProfile?.id) {
-      const savedStars = localStorage.getItem(`stars_${childProfile.id}`);
-      const savedRewards = localStorage.getItem(`unlocked_rewards_${childProfile.id}`);
-      
-      if (savedStars) setStars(parseInt(savedStars));
-      if (savedRewards) setUnlockedRewards(JSON.parse(savedRewards));
-    }
+    loadOwnedRewards();
   }, [childProfile]);
 
-  // Save data when it changes
-  useEffect(() => {
-    if (childProfile?.id) {
-      localStorage.setItem(`stars_${childProfile.id}`, stars.toString());
-      localStorage.setItem(`unlocked_rewards_${childProfile.id}`, JSON.stringify(unlockedRewards));
-    }
-  }, [stars, unlockedRewards, childProfile]);
-
-  // Handle reward purchase
-  const purchaseReward = (reward) => {
-    if (stars >= reward.cost && !unlockedRewards.includes(reward.id)) {
-      setStars(prev => prev - reward.cost);
-      setUnlockedRewards(prev => [...prev, reward.id]);
-      
-      // Show animation
-      setAnimationReward(reward);
-      setShowRewardAnimation(true);
-      setTimeout(() => setShowRewardAnimation(false), 3000);
-      
-      // Notify parent component
-      if (onRewardUnlocked) {
-        onRewardUnlocked(reward);
-      }
-    }
-  };
-
-  // Add stars (called from parent when activities are completed)
-  const addStars = (amount, reason) => {
-    setStars(prev => prev + amount);
+  const loadOwnedRewards = () => {
+    if (!childProfile?.id) return;
     
-    // You could show a brief animation here
-    console.log(`Earned ${amount} stars for: ${reason}`);
+    const savedRewards = localStorage.getItem(`rewards_${childProfile.id}`);
+    if (savedRewards) {
+      setOwnedRewards(JSON.parse(savedRewards));
+    }
   };
 
-  // Filter rewards by category
-  const filteredRewards = selectedCategory === 'all' 
-    ? rewards 
-    : rewards.filter(r => r.category === selectedCategory);
+  const handlePurchase = (reward) => {
+    if (stars < reward.cost) {
+      setPurchaseMessage('Not enough stars! Keep reading to earn more!');
+      setSelectedReward(reward);
+      setShowPurchaseModal(true);
+      setTimeout(() => {
+        setShowPurchaseModal(false);
+        setPurchaseMessage('');
+      }, 3000);
+      return;
+    }
 
-  // Calculate total unlocked
-  const totalUnlocked = unlockedRewards.length;
-  const totalRewards = rewards.length;
-  const progressPercent = (totalUnlocked / totalRewards) * 100;
+    setSelectedReward(reward);
+    setShowPurchaseModal(true);
+  };
 
-  if (!childProfile) {
-    return (
-      <div className="star-rewards-container">
-        <div className="no-profile-message">
-          <span className="star-icon">⭐</span>
-          <p>Select a child profile to view rewards</p>
-        </div>
-      </div>
-    );
-  }
+  const confirmPurchase = () => {
+    if (!selectedReward || !childProfile?.id) return;
+    
+    // Deduct stars
+    const newStarCount = stars - selectedReward.cost;
+    setStars(newStarCount);
+    localStorage.setItem(`stars_${childProfile.id}`, newStarCount.toString());
+    
+    // Add to owned rewards (if not consumable)
+    if (!selectedReward.consumable) {
+      const updatedRewards = [...ownedRewards, selectedReward.id];
+      setOwnedRewards(updatedRewards);
+      localStorage.setItem(`rewards_${childProfile.id}`, JSON.stringify(updatedRewards));
+    } else {
+      // Handle consumable rewards
+      const consumables = JSON.parse(localStorage.getItem(`consumables_${childProfile.id}`) || '{}');
+      consumables[selectedReward.id] = (consumables[selectedReward.id] || 0) + 1;
+      localStorage.setItem(`consumables_${childProfile.id}`, JSON.stringify(consumables));
+    }
+    
+    // Show success message
+    setPurchaseMessage(`🎉 You got ${selectedReward.name}!`);
+    setTimeout(() => {
+      setShowPurchaseModal(false);
+      setPurchaseMessage('');
+      setSelectedReward(null);
+    }, 2000);
+    
+    // Track achievement
+    checkRewardAchievements();
+  };
+
+  const checkRewardAchievements = () => {
+    // This could trigger achievements for first purchase, big spender, etc.
+    const purchaseCount = ownedRewards.length + 1;
+    if (purchaseCount === 1) {
+      console.log('First reward purchased!');
+    }
+    if (purchaseCount === 5) {
+      console.log('Reward collector achievement!');
+    }
+  };
+
+  const getFilteredRewards = () => {
+    if (selectedCategory === 'all') return REWARDS;
+    if (selectedCategory === 'owned') {
+      return REWARDS.filter(r => ownedRewards.includes(r.id));
+    }
+    return REWARDS.filter(r => r.category === selectedCategory);
+  };
+
+  const getCategoryCount = (category) => {
+    if (category === 'all') return REWARDS.length;
+    if (category === 'owned') return ownedRewards.length;
+    return REWARDS.filter(r => r.category === category).length;
+  };
+
+  const filteredRewards = getFilteredRewards();
 
   return (
-    <div className="star-rewards-container">
-      {/* Header with star balance */}
-      <div className="rewards-header">
+    <div className="rewards-system">
+      <div className="rewards-content">
+        <div className="rewards-header">
+          <h2>⭐ Star Rewards Shop</h2>
+          <button className="close-btn" onClick={onClose} style={{position: 'absolute', right: '20px', top: '20px'}}>✕</button>
+        </div>
+
+        {/* Star Balance */}
         <div className="star-balance">
-          <span className="star-icon-large">⭐</span>
-          <div className="balance-info">
-            <span className="balance-label">Your Stars</span>
-            <span className="balance-amount">{stars}</span>
+          <div className="balance-display">
+            <span className="balance-icon">⭐</span>
+            <span className="balance-value">{stars}</span>
+            <span className="balance-label">Stars Available</span>
+          </div>
+          <div className="earning-tip">
+            💡 Tip: Read stories daily to earn more stars!
           </div>
         </div>
-        
-        <div className="rewards-progress">
-          <div className="progress-label">
-            Rewards Unlocked: {totalUnlocked}/{totalRewards}
-          </div>
-          <div className="progress-bar">
-            <div 
-              className="progress-fill" 
-              style={{ width: `${progressPercent}%` }}
-            />
+
+        {/* How to Earn Stars */}
+        <div className="earn-stars-section">
+          <h3>How to Earn Stars</h3>
+          <div className="earn-methods">
+            <div className="earn-method">
+              <span className="method-icon">📖</span>
+              <span>Complete a story (+10 ⭐)</span>
+            </div>
+            <div className="earn-method">
+              <span className="method-icon">🔥</span>
+              <span>Daily streak (+5 ⭐ per day)</span>
+            </div>
+            <div className="earn-method">
+              <span className="method-icon">🏆</span>
+              <span>Unlock achievement (+15 ⭐)</span>
+            </div>
+            <div className="earn-method">
+              <span className="method-icon">🎯</span>
+              <span>Complete goals (+20 ⭐)</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* How to earn stars */}
-      <div className="earn-stars-info">
-        <h3>How to Earn Stars</h3>
-        <div className="earn-methods">
-          <div className="earn-method">
-            <span className="method-icon">📖</span>
-            <span className="method-text">Complete a story (+10 ⭐)</span>
-          </div>
-          <div className="earn-method">
-            <span className="method-icon">🎯</span>
-            <span className="method-text">Daily reading (+5 ⭐)</span>
-          </div>
-          <div className="earn-method">
-            <span className="method-icon">🏆</span>
-            <span className="method-text">Unlock achievement (+15 ⭐)</span>
-          </div>
-          <div className="earn-method">
-            <span className="method-icon">🔥</span>
-            <span className="method-text">7-day streak (+25 ⭐)</span>
-          </div>
+        {/* Category Filters */}
+        <div className="rewards-filters">
+          <button 
+            className={selectedCategory === 'all' ? 'active' : ''}
+            onClick={() => setSelectedCategory('all')}
+          >
+            All ({getCategoryCount('all')})
+          </button>
+          <button 
+            className={selectedCategory === 'owned' ? 'active' : ''}
+            onClick={() => setSelectedCategory('owned')}
+          >
+            My Rewards ({getCategoryCount('owned')})
+          </button>
+          <button 
+            className={selectedCategory === 'themes' ? 'active' : ''}
+            onClick={() => setSelectedCategory('themes')}
+          >
+            Themes
+          </button>
+          <button 
+            className={selectedCategory === 'avatars' ? 'active' : ''}
+            onClick={() => setSelectedCategory('avatars')}
+          >
+            Avatars
+          </button>
+          <button 
+            className={selectedCategory === 'boosts' ? 'active' : ''}
+            onClick={() => setSelectedCategory('boosts')}
+          >
+            Boosts
+          </button>
+          <button 
+            className={selectedCategory === 'frames' ? 'active' : ''}
+            onClick={() => setSelectedCategory('frames')}
+          >
+            Frames
+          </button>
+          <button 
+            className={selectedCategory === 'powers' ? 'active' : ''}
+            onClick={() => setSelectedCategory('powers')}
+          >
+            Powers
+          </button>
         </div>
-      </div>
 
-      {/* Category filters */}
-      <div className="rewards-filters">
-        <button 
-          className={`filter-btn ${selectedCategory === 'all' ? 'active' : ''}`}
-          onClick={() => setSelectedCategory('all')}
-        >
-          All Rewards
-        </button>
-        <button 
-          className={`filter-btn ${selectedCategory === 'themes' ? 'active' : ''}`}
-          onClick={() => setSelectedCategory('themes')}
-        >
-          🎨 Themes
-        </button>
-        <button 
-          className={`filter-btn ${selectedCategory === 'avatars' ? 'active' : ''}`}
-          onClick={() => setSelectedCategory('avatars')}
-        >
-          👤 Avatars
-        </button>
-        <button 
-          className={`filter-btn ${selectedCategory === 'features' ? 'active' : ''}`}
-          onClick={() => setSelectedCategory('features')}
-        >
-          ✨ Features
-        </button>
-        <button 
-          className={`filter-btn ${selectedCategory === 'badges' ? 'active' : ''}`}
-          onClick={() => setSelectedCategory('badges')}
-        >
-          🏅 Badges
-        </button>
-      </div>
-
-      {/* Rewards grid */}
-      <div className="rewards-grid">
-        {filteredRewards.map(reward => {
-          const isUnlocked = unlockedRewards.includes(reward.id);
-          const canAfford = stars >= reward.cost;
-          
-          return (
-            <div 
-              key={reward.id} 
-              className={`reward-card ${isUnlocked ? 'unlocked' : ''} ${!canAfford && !isUnlocked ? 'locked' : ''}`}
-            >
-              <div className="reward-icon">{reward.icon}</div>
-              <h4 className="reward-name">{reward.name}</h4>
-              <p className="reward-description">{reward.description}</p>
-              
-              {isUnlocked ? (
-                <div className="reward-status unlocked">
-                  <span className="check-icon">✓</span> Unlocked
+        {/* Rewards Grid */}
+        <div className="rewards-grid">
+          {filteredRewards.map(reward => {
+            const isOwned = ownedRewards.includes(reward.id);
+            const canAfford = stars >= reward.cost;
+            
+            return (
+              <div 
+                key={reward.id} 
+                className={`reward-card ${isOwned ? 'owned' : ''} ${!canAfford && !isOwned ? 'locked' : ''}`}
+              >
+                <div className="reward-icon">{reward.icon}</div>
+                <div className="reward-info">
+                  <h3>{reward.name}</h3>
+                  <p>{reward.description}</p>
+                  {reward.consumable && (
+                    <span className="consumable-badge">Consumable</span>
+                  )}
                 </div>
-              ) : (
-                <div className="reward-purchase">
-                  <span className="reward-cost">
-                    {reward.cost} ⭐
-                  </span>
-                  <button 
-                    className="purchase-btn"
-                    onClick={() => purchaseReward(reward)}
-                    disabled={!canAfford}
-                  >
-                    {canAfford ? 'Unlock' : 'Need More Stars'}
+                <div className="reward-footer">
+                  {isOwned ? (
+                    <button className="owned-btn" disabled>
+                      ✓ Owned
+                    </button>
+                  ) : (
+                    <>
+                      <div className="reward-cost">
+                        <span className="cost-icon">⭐</span>
+                        <span className="cost-value">{reward.cost}</span>
+                      </div>
+                      <button 
+                        className={`purchase-btn ${canAfford ? 'can-afford' : 'cannot-afford'}`}
+                        onClick={() => handlePurchase(reward)}
+                      >
+                        {canAfford ? 'Get' : 'Need More'}
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {filteredRewards.length === 0 && (
+          <div className="empty-state">
+            <div className="empty-icon">🌟</div>
+            <h3>No rewards found</h3>
+            <p>
+              {selectedCategory === 'owned' 
+                ? "You haven't purchased any rewards yet. Start shopping!"
+                : "Check back later for new rewards!"}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Purchase Modal */}
+      {showPurchaseModal && selectedReward && (
+        <div className="purchase-modal">
+          <div className="modal-content">
+            {purchaseMessage ? (
+              <>
+                <div className="modal-icon">{purchaseMessage.includes('🎉') ? '🎉' : '😔'}</div>
+                <p className="modal-message">{purchaseMessage}</p>
+              </>
+            ) : (
+              <>
+                <div className="modal-icon">{selectedReward.icon}</div>
+                <h3>Purchase {selectedReward.name}?</h3>
+                <p>This will cost {selectedReward.cost} ⭐ stars</p>
+                <div className="modal-actions">
+                  <button onClick={() => setShowPurchaseModal(false)} className="cancel-btn">
+                    Cancel
+                  </button>
+                  <button onClick={confirmPurchase} className="confirm-btn">
+                    Purchase
                   </button>
                 </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Reward unlock animation */}
-      {showRewardAnimation && animationReward && (
-        <div className="reward-animation-overlay">
-          <div className="reward-animation">
-            <div className="animation-icon">{animationReward.icon}</div>
-            <h2>Reward Unlocked!</h2>
-            <p>{animationReward.name}</p>
-            <div className="sparkles">
-              <span>✨</span>
-              <span>⭐</span>
-              <span>✨</span>
-            </div>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -359,7 +309,7 @@ function StarRewardsSystem({ childProfile, onRewardUnlocked }) {
   );
 }
 
-// Export a function to add stars from outside the component
+// Export helper function to add stars
 export const addStarsToChild = (childId, amount, reason) => {
   const currentStars = parseInt(localStorage.getItem(`stars_${childId}`) || '0');
   const newTotal = currentStars + amount;

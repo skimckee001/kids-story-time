@@ -861,15 +861,19 @@ function App() {
                     type="button"
                     className={`gender-btn ${genderSelection.boy ? 'active' : ''}`}
                     onClick={() => setGenderSelection(prev => ({ ...prev, boy: !prev.boy }))}
+                    title="Boy"
                   >
-                    🧑 Boy
+                    <span className="gender-icon">👦</span>
+                    <span className="gender-text">Boy</span>
                   </button>
                   <button
                     type="button"
                     className={`gender-btn ${genderSelection.girl ? 'active' : ''}`}
                     onClick={() => setGenderSelection(prev => ({ ...prev, girl: !prev.girl }))}
+                    title="Girl"
                   >
-                    👩 Girl
+                    <span className="gender-icon">👧</span>
+                    <span className="gender-text">Girl</span>
                   </button>
                 </div>
               </div>

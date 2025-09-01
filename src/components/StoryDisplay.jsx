@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import Header from './Header';
 import AdSense from './AdSense';
 import ReadingStreak from './ReadingStreak';
+import { addStarsToChild } from './StarRewardsSystem';
 import './StoryDisplay.css';
 import '../App.original.css';
 
@@ -23,11 +24,23 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
   const [achievementCount, setAchievementCount] = useState(0);
   const [currentStreak, setCurrentStreak] = useState(0);
   const [storyStartTime, setStoryStartTime] = useState(null);
+  const [hasCompletedReading, setHasCompletedReading] = useState(false);
+  const [showCompletionReward, setShowCompletionReward] = useState(false);
+  const [localStarPoints, setLocalStarPoints] = useState(starPoints);
 
   useEffect(() => {
     // Track story start time
     const startTime = Date.now();
     setStoryStartTime(startTime);
+    
+    // Check if this story has already been completed today
+    if (childProfile?.id && story?.id) {
+      const today = new Date().toDateString();
+      const completedKey = `completed_${childProfile.id}_${story.id}_${today}`;
+      if (localStorage.getItem(completedKey)) {
+        setHasCompletedReading(true);
+      }
+    }
     
     // Check if story is already saved (or auto-saved)
     if (story?.savedId) {
@@ -462,6 +475,10 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
       utterance.onend = () => {
         setIsReading(false);
         setIsPaused(false);
+        // Automatically mark as complete when read aloud finishes
+        if (!hasCompletedReading) {
+          handleMarkAsComplete();
+        }
       };
       
       utterance.onerror = (event) => {
@@ -572,6 +589,88 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
       console.error('Error saving rating:', error);
     }
   };
+  
+  const handleMarkAsComplete = () => {
+    if (!childProfile?.id || hasCompletedReading) return;
+    
+    // Award stars for completing the story
+    const starsEarned = 5; // 5 stars for reading completion (different from 10 for generation)
+    const newTotal = addStarsToChild(childProfile.id, starsEarned, 'Finished reading a story');
+    setLocalStarPoints(newTotal);
+    
+    // Mark as completed for today
+    const today = new Date().toDateString();
+    const completedKey = `completed_${childProfile.id}_${story?.id || 'unknown'}_${today}`;
+    localStorage.setItem(completedKey, 'true');
+    setHasCompletedReading(true);
+    
+    // Show completion reward animation
+    setShowCompletionReward(true);
+    setTimeout(() => setShowCompletionReward(false), 3000);
+    
+    // Update reading streak
+    const streakData = JSON.parse(localStorage.getItem(`readingStreak_${childProfile.id}`) || '{}');
+    const lastRead = streakData.lastRead ? new Date(streakData.lastRead).toDateString() : null;
+    const todayStr = new Date().toDateString();
+    
+    if (lastRead !== todayStr) {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toDateString();
+      
+      if (lastRead === yesterdayStr) {
+        // Continue streak
+        streakData.current = (streakData.current || 0) + 1;
+      } else {
+        // Start new streak
+        streakData.current = 1;
+      }
+      
+      streakData.lastRead = new Date().toISOString();
+      streakData.longest = Math.max(streakData.longest || 0, streakData.current);
+      localStorage.setItem(`readingStreak_${childProfile.id}`, JSON.stringify(streakData));
+    }
+    
+    // Track completion for achievements
+    const completions = JSON.parse(localStorage.getItem(`storyCompletions_${childProfile.id}`) || '[]');
+    completions.push({
+      storyId: story?.id,
+      title: story?.title,
+      completedAt: new Date().toISOString()
+    });
+    localStorage.setItem(`storyCompletions_${childProfile.id}`, JSON.stringify(completions));
+    
+    // Check for achievements
+    checkReadingAchievements(completions.length);
+  };
+  
+  const checkReadingAchievements = (totalCompletions) => {
+    const achievements = JSON.parse(localStorage.getItem(`achievements_${childProfile.id}`) || '[]');
+    const newAchievements = [];
+    
+    // First story achievement
+    if (totalCompletions === 1 && !achievements.includes('first_story')) {
+      newAchievements.push('first_story');
+      addStarsToChild(childProfile.id, 15, 'Achievement: First Story!');
+    }
+    
+    // 5 stories achievement
+    if (totalCompletions === 5 && !achievements.includes('bookworm_5')) {
+      newAchievements.push('bookworm_5');
+      addStarsToChild(childProfile.id, 20, 'Achievement: Read 5 Stories!');
+    }
+    
+    // 10 stories achievement
+    if (totalCompletions === 10 && !achievements.includes('bookworm_10')) {
+      newAchievements.push('bookworm_10');
+      addStarsToChild(childProfile.id, 30, 'Achievement: Read 10 Stories!');
+    }
+    
+    if (newAchievements.length > 0) {
+      achievements.push(...newAchievements);
+      localStorage.setItem(`achievements_${childProfile.id}`, JSON.stringify(achievements));
+    }
+  };
 
   if (!story) {
     return (
@@ -593,7 +692,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
         <Header 
           user={user}
           subscriptionTier={subscriptionTier}
-          starPoints={starPoints}
+          starPoints={localStarPoints}
           onShowLibrary={onBack}
           onShowAuth={onShowAuth}
           onShowAchievements={null}
@@ -862,6 +961,81 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
               })}
             </div>
 
+
+          {/* Story Completion Button */}
+          {childProfile && !hasCompletedReading && (
+            <div className="story-completion" style={{
+              textAlign: 'center',
+              margin: '30px 0',
+              padding: '20px',
+              background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
+              borderRadius: '12px',
+              border: '2px dashed #0ea5e9'
+            }}>
+              <h3 style={{ color: '#0369a1', marginBottom: '15px' }}>Finished Reading?</h3>
+              <button 
+                onClick={handleMarkAsComplete}
+                style={{
+                  background: 'linear-gradient(135deg, #ffd700, #ffa500)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '12px 30px',
+                  borderRadius: '25px',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  transform: 'scale(1)',
+                  transition: 'transform 0.2s',
+                  boxShadow: '0 4px 15px rgba(255, 165, 0, 0.3)'
+                }}
+                onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
+                onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+              >
+                ⭐ Mark as Complete (+5 Stars)
+              </button>
+              <p style={{ marginTop: '10px', color: '#64748b', fontSize: '14px' }}>
+                Complete stories to earn stars and unlock rewards!
+              </p>
+            </div>
+          )}
+          
+          {/* Completion Reward Animation */}
+          {showCompletionReward && (
+            <div style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              background: 'white',
+              padding: '30px',
+              borderRadius: '20px',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+              zIndex: 9999,
+              textAlign: 'center',
+              animation: 'bounceIn 0.5s ease'
+            }}>
+              <div style={{ fontSize: '60px', marginBottom: '20px' }}>🌟</div>
+              <h2 style={{ color: '#ffa500', marginBottom: '10px' }}>Great Job!</h2>
+              <p style={{ fontSize: '20px', color: '#333' }}>You earned 5 stars!</p>
+              <p style={{ fontSize: '16px', color: '#666', marginTop: '10px' }}>Keep reading to earn more rewards!</p>
+            </div>
+          )}
+          
+          {/* Show completion status if already completed */}
+          {hasCompletedReading && (
+            <div style={{
+              textAlign: 'center',
+              margin: '30px 0',
+              padding: '15px',
+              background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
+              borderRadius: '12px',
+              border: '2px solid #86efac'
+            }}>
+              <div style={{ fontSize: '24px', marginBottom: '10px' }}>✅</div>
+              <p style={{ color: '#16a34a', fontWeight: 'bold' }}>Story Completed!</p>
+              <p style={{ color: '#64748b', fontSize: '14px' }}>You've already earned stars for this story today.</p>
+            </div>
+          )}
 
           {/* Rating */}
           <div className="story-rating">

@@ -36,6 +36,9 @@ body {
   padding: 20px;
   border-radius: 15px;
   margin-bottom: 30px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .header-content {
@@ -285,6 +288,8 @@ body {
   border-radius: 20px;
   padding: 40px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .main-content h2 {
@@ -383,6 +388,7 @@ body {
   background: #f0f0f0;
   border-radius: 25px;
   padding: 3px;
+  flex-shrink: 0;
 }
 
 .gender-btn {
@@ -393,11 +399,63 @@ body {
   cursor: pointer;
   font-size: 14px;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .gender-btn.active {
   background: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.gender-icon {
+  font-size: 18px;
+}
+
+.gender-text {
+  font-weight: 500;
+}
+
+/* Mobile adjustments for gender buttons */
+@media (max-width: 768px) {
+  .name-gender-row {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .name-input {
+    width: 100%;
+    flex: none;
+  }
+  
+  .gender-buttons {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .gender-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .gender-btn {
+    padding: 10px 12px;
+  }
+  
+  .gender-text {
+    display: none;
+  }
+  
+  .gender-icon {
+    font-size: 20px;
+  }
+  
+  .gender-buttons {
+    gap: 5px;
+  }
 }
 
 .include-name-label {
@@ -1088,13 +1146,15 @@ body {
   }
 
   .header-container {
-    padding: 15px 10px;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
   }
 
   .header-content {
     flex-direction: column;
     gap: 15px;
-    padding: 0 10px;
+    padding: 0;
   }
 
   .header-left {
@@ -1124,7 +1184,7 @@ body {
   }
 
   .main-content {
-    padding: 20px 15px;
+    padding: 25px 20px;
     border-radius: 15px;
   }
 
@@ -1154,6 +1214,21 @@ body {
 }
 
 @media (max-width: 480px) {
+  .app {
+    padding: 8px;
+  }
+
+  .header-container {
+    padding: 12px 10px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+  }
+
+  .main-content {
+    padding: 20px 15px;
+    border-radius: 12px;
+  }
+
   .logo {
     font-size: 1.5rem;
   }
