@@ -1249,111 +1249,119 @@ function App() {
               </div>
             )}
 
-            {/* Upgrade Section */}
-            {(!user || subscriptionTier !== 'family') && (
-              <div style={{
-                marginTop: '24px',
-                padding: '20px',
-                background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
-                border: '2px solid #e0e0e0',
-                borderRadius: '12px'
-              }}>
-                <button
-                  type="button"
-                  onClick={() => !user ? setShowAuth(true) : window.location.href = '/pricing-new.html'}
-                  style={{
-                    width: '100%',
-                    padding: '14px 20px',
-                    background: 'linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    fontSize: '16px',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    marginBottom: '16px',
-                    boxShadow: '0 4px 12px rgba(255, 107, 107, 0.3)',
-                    transition: 'transform 0.2s'
-                  }}
-                  onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
-                  onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
-                >
-                  {!user ? (
-                    <>🎉 Save Your Story - Create Free Account</>
-                  ) : (subscriptionTier === 'reader-free' || subscriptionTier === 'story-maker-basic') && storiesRemaining <= 1 ? (
-                    <>⭐ Upgrade to {subscriptionTier === 'reader-free' ? 'Story Maker' : 'Family'} - First Month Free</>
-                  ) : (subscriptionTier === 'story-maker-basic' || subscriptionTier === 'family-plus') ? (
-                    <>👨‍👩‍👧‍👦 Upgrade to Family Plan - Unlimited Everything</>
-                  ) : (
-                    <>✨ Explore Premium Features</>
-                  )}
-                </button>
-
-                <div style={{ fontSize: '14px', color: '#666' }}>
-                  {!user ? (
-                    <>
-                      <p style={{ fontWeight: '600', marginBottom: '10px', color: '#333' }}>
-                        Register for free and unlock:
-                      </p>
-                      <ul style={{ margin: '0', paddingLeft: '20px', lineHeight: '1.8' }}>
-                        <li>✅ Save all your stories in your personal library</li>
-                        <li>✅ Create multiple child profiles</li>
-                        <li>✅ Track reading streaks and achievements</li>
-                        <li>✅ 1 free story per day</li>
-                        <li>✅ Access to all story themes and lengths</li>
-                      </ul>
-                    </>
-                  ) : subscriptionTier === 'reader-free' ? (
-                    <>
-                      <p style={{ fontWeight: '600', marginBottom: '10px', color: '#333' }}>
-                        Premium features include:
-                      </p>
-                      <ul style={{ margin: '0', paddingLeft: '20px', lineHeight: '1.8' }}>
-                        <li>🎨 Beautiful AI-generated illustrations for every story</li>
-                        <li>📚 10 stories per day (vs. 1 on free plan)</li>
-                        <li>📄 Export stories as PDF to keep forever</li>
-                        <li>🎧 Audio narration (coming soon)</li>
-                        <li>⚡ Priority story generation</li>
-                        <li>💾 Unlimited story storage</li>
-                      </ul>
-                      <p style={{ 
-                        marginTop: '10px', 
-                        fontSize: '13px', 
-                        fontStyle: 'italic',
-                        textAlign: 'center' 
-                      }}>
-                        Story Maker: $4.99/month • 10 stories/day • 30 AI images • Cancel anytime
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <p style={{ fontWeight: '600', marginBottom: '10px', color: '#333' }}>
-                        Family Plan extras:
-                      </p>
-                      <ul style={{ margin: '0', paddingLeft: '20px', lineHeight: '1.8' }}>
-                        <li>♾️ Unlimited stories every day</li>
-                        <li>👨‍👩‍👧‍👦 Up to 6 child profiles</li>
-                        <li>🎨 Premium HD illustrations</li>
-                        <li>📊 Advanced parent dashboard & analytics</li>
-                        <li>🎯 Personalized learning paths</li>
-                        <li>🌟 Early access to new features</li>
-                      </ul>
-                      <p style={{ 
-                        marginTop: '10px', 
-                        fontSize: '13px', 
-                        fontStyle: 'italic',
-                        textAlign: 'center' 
-                      }}>
-                        Family Plan: $7.99/month • 20 stories/day • Unlimited AI • Perfect for families
-                      </p>
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
           </form>
-
         </div>
+
+        {/* Upgrade Section - Separate Box */}
+        {(!user || subscriptionTier !== 'family-plus') && (
+          <div className="main-content" style={{
+            marginTop: '20px',
+            padding: '24px',
+            background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
+            borderRadius: '12px',
+            border: '2px solid #667eea'
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <h3 style={{ 
+                fontSize: '20px', 
+                fontWeight: 'bold', 
+                marginBottom: '16px',
+                color: '#333'
+              }}>
+                {!user ? '🎉 Create Your Free Account' : 
+                 subscriptionTier === 'reader-free' ? '⭐ Upgrade to Story Maker' : 
+                 '👨‍👩‍👧‍👦 Upgrade to Family Plan'}
+              </h3>
+              
+              <button
+                type="button"
+                onClick={() => !user ? setShowAuth(true) : window.location.href = '/pricing-new.html'}
+                style={{
+                  width: '100%',
+                  maxWidth: '400px',
+                  padding: '14px 20px',
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  marginBottom: '20px',
+                  boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
+                  transition: 'transform 0.2s'
+                }}
+                onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
+                onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
+              >
+                {!user ? 'Sign Up Free - No Credit Card' : 'View Plans & Pricing'}
+              </button>
+
+              <div style={{ fontSize: '14px', color: '#666' }}>
+                {!user ? (
+                  <>
+                    <p style={{ fontWeight: '600', marginBottom: '10px', color: '#333' }}>
+                      Free Reader account includes:
+                    </p>
+                    <ul style={{ margin: '0 auto', paddingLeft: '20px', lineHeight: '1.8', maxWidth: '500px', textAlign: 'left' }}>
+                      <li>✅ 3 stories per day</li>
+                      <li>✅ Save stories to your library</li>
+                      <li>✅ Create child profiles</li>
+                      <li>✅ Basic themes and story options</li>
+                      <li>✅ Placeholder images</li>
+                    </ul>
+                  </>
+                ) : subscriptionTier === 'reader-free' ? (
+                  <>
+                    <p style={{ fontWeight: '600', marginBottom: '10px', color: '#333' }}>
+                      Story Maker ($4.99/month) includes:
+                    </p>
+                    <ul style={{ margin: '0 auto', paddingLeft: '20px', lineHeight: '1.8', maxWidth: '500px', textAlign: 'left' }}>
+                      <li>🎨 AI-generated illustrations</li>
+                      <li>📚 10 stories per day</li>
+                      <li>📄 Export stories to PDF</li>
+                      <li>🎯 All themes unlocked</li>
+                      <li>💾 Story library</li>
+                      <li>🚫 Ad-free experience</li>
+                    </ul>
+                    <p style={{ 
+                      marginTop: '12px', 
+                      fontSize: '13px', 
+                      fontStyle: 'italic',
+                      color: '#667eea',
+                      fontWeight: '600'
+                    }}>
+                      🎁 30-Day Free Trial Available
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p style={{ fontWeight: '600', marginBottom: '10px', color: '#333' }}>
+                      Family Plan ($7.99/month) includes:
+                    </p>
+                    <ul style={{ margin: '0 auto', paddingLeft: '20px', lineHeight: '1.8', maxWidth: '500px', textAlign: 'left' }}>
+                      <li>♾️ Unlimited stories</li>
+                      <li>👨‍👩‍👧‍👦 Multiple child profiles</li>
+                      <li>🎨 Premium AI illustrations</li>
+                      <li>🎧 Audio narration</li>
+                      <li>📊 Parent dashboard</li>
+                      <li>⭐ Priority support</li>
+                    </ul>
+                    <p style={{ 
+                      marginTop: '12px', 
+                      fontSize: '13px', 
+                      fontStyle: 'italic',
+                      color: '#667eea',
+                      fontWeight: '600'
+                    }}>
+                      🎁 Perfect for families - Unlimited magic for everyone
+                    </p>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer */}
         <footer className="footer">
