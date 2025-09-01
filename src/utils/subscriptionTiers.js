@@ -32,7 +32,7 @@ export const SUBSCRIPTION_TIERS = {
     dailyStories: 10,
     monthlyStories: 50,
     aiIllustrations: 30, // per month
-    narrations: 30, // per month
+    narrations: 10, // per month
     childProfiles: 2,
     libraryAccess: 'full',
     saveStories: true,
@@ -46,14 +46,14 @@ export const SUBSCRIPTION_TIERS = {
     dailyStories: 20,
     monthlyStories: 120,
     aiIllustrations: 'unlimited', // Fair use: up to 5 per story
-    narrations: 'unlimited', // Fair use: up to 5 per day
+    narrations: 30, // per month
     childProfiles: 5,
     libraryAccess: 'full',
     saveStories: true,
     pdfExport: true,
     watermarkedPdf: false,
     hasAds: false,
-    extraFeatures: ['bedtime-reminders', 'streaks', 'audio-downloads', 'multi-language']
+    extraFeatures: ['bedtime-reminders', 'streaks', 'audio-downloads']
   },
   'movie-director-premium': {
     name: 'Movie Director (Premium)',

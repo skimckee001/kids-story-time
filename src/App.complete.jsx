@@ -1266,7 +1266,7 @@ function App() {
                 marginBottom: '16px',
                 color: '#333'
               }}>
-                {!user ? '🎉 Create Your Free Account' : '👨‍👩‍👧‍👦 Upgrade to Family Plan'}
+                {!user ? '🎉 Create Your Free Account' : '🌈 Upgrade to Family Plan'}
               </h3>
               
               {!user ? (
@@ -1327,16 +1327,7 @@ function App() {
                     lineHeight: '2',
                     marginBottom: '20px'
                   }}>
-                    <li>
-                      <span style={{ 
-                        backgroundColor: '#fef3c7', 
-                        padding: '3px 8px', 
-                        borderRadius: '4px',
-                        fontWeight: 'bold'
-                      }}>
-                        ✓ 20 stories per day
-                      </span>
-                    </li>
+                    <li>✓ 20 stories per day</li>
                     <li>
                       <span style={{ 
                         backgroundColor: '#fef3c7', 
@@ -1347,11 +1338,19 @@ function App() {
                         ✓ 5 child profiles
                       </span>
                     </li>
-                    <li>✓ Unlimited AI illustrations*</li>
-                    <li>✓ Unlimited narrations*</li>
+                    <li>
+                      <span style={{ 
+                        backgroundColor: '#fef3c7', 
+                        padding: '3px 8px', 
+                        borderRadius: '4px',
+                        fontWeight: 'bold'
+                      }}>
+                        ✓ Unlimited AI illustrations*
+                      </span>
+                    </li>
+                    <li>✓ 30 Voice Narrations/month</li>
                     <li>✓ Bedtime reminders & streaks</li>
                     <li>✓ Audio downloads</li>
-                    <li>✓ English + 1 language</li>
                     <li>✓ Non-watermarked PDFs</li>
                   </ul>
                   
