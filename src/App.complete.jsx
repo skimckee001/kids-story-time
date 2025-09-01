@@ -1149,7 +1149,7 @@ function App() {
 
             {/* Theme Selection - MOVED DOWN */}
             <div className="form-group">
-              <label>Would you like to add a theme or topic?</label>
+              <label>Add a theme or topic</label>
               <p className="theme-subtitle">Pick one or more to make it extra special - Optional</p>
               <div className="theme-grid">
                 {getAvailableThemes().map(theme => (
