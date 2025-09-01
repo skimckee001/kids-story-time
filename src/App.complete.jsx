@@ -1409,10 +1409,13 @@ function App() {
         {(!user || (subscriptionTier !== 'family-plus' && subscriptionTier !== 'family')) && (
           <div className="main-content" style={{
             marginTop: '20px',
-            padding: '24px',
+            padding: window.innerWidth <= 480 ? '16px' : window.innerWidth <= 768 ? '20px' : '24px',
             background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
             borderRadius: '12px',
-            border: '2px solid #667eea'
+            border: '2px solid #667eea',
+            maxWidth: '900px',
+            margin: '20px auto 0',
+            width: '100%'
           }}>
             <div style={{ textAlign: 'center' }}>
               <h3 style={{ 

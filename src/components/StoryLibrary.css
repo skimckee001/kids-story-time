@@ -15,6 +15,19 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 0 20px 20px 20px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .library-container {
+    padding: 0 10px 15px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .library-container {
+    padding: 0 5px 10px 5px;
+  }
 }
 
 /* Library Title Section */
@@ -27,7 +40,20 @@
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 20px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .library-title-section {
+    padding: 15px;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .library-title-section {
+    padding: 12px 10px;
+  }
 }
 
 .library-title-section h1 {
@@ -144,6 +170,24 @@
   gap: 15px;
   flex-wrap: wrap;
   align-items: stretch;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .library-controls {
+    padding: 15px;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .library-controls {
+    padding: 12px 8px;
+    gap: 8px;
+  }
 }
 
 .search-container {
@@ -344,6 +388,21 @@
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .stories-container {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stories-container {
+    padding: 12px 8px;
+  }
 }
 
 /* Stories Grid */
