@@ -1348,7 +1348,16 @@ function App() {
                         ✓ Unlimited AI illustrations*
                       </span>
                     </li>
-                    <li>✓ 30 Voice Narrations/month</li>
+                    <li>
+                      <span style={{ 
+                        backgroundColor: '#fef3c7', 
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontWeight: 'bold'
+                      }}>
+                        ✓ 30 Voice Narrations/month
+                      </span>
+                    </li>
                     <li>✓ Bedtime reminders & streaks</li>
                     <li>✓ Audio downloads</li>
                     <li>✓ Non-watermarked PDFs</li>
