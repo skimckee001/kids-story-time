@@ -1251,7 +1251,7 @@ function App() {
         </div>
 
         {/* Upgrade Section - Separate Box */}
-        {(!user || subscriptionTier === 'reader-free') && (
+        {(!user || (subscriptionTier !== 'family-plus' && subscriptionTier !== 'family')) && (
           <div className="main-content" style={{
             marginTop: '20px',
             padding: '24px',
