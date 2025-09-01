@@ -14,7 +14,6 @@ import OnboardingTooltips from './components/OnboardingTooltips';
 import StripeTestComponent from './components/StripeTestComponent';
 import { getTierLimits, canGenerateStory, canUseAIIllustration, getUpgradeMessage } from './utils/subscriptionTiers';
 import './App.original.css';
-import './styles/ageThemes.css';
 
 // Story length options matching the current HTML
 const STORY_LENGTHS = [
@@ -129,35 +128,9 @@ function App() {
     }
   }, [showMoreMenu]);
   
-  // Apply age-based theme based on reading level
-  useEffect(() => {
-    const applyTheme = () => {
-      const appElement = document.querySelector('.app');
-      if (!appElement) return;
-      
-      // Remove existing theme classes
-      appElement.classList.remove('theme-young', 'theme-middle', 'theme-older');
-      
-      // Add appropriate theme class based on reading level
-      let themeClass = 'theme-middle'; // default
-      
-      if (['pre-reader', 'early-phonics'].includes(readingLevel)) {
-        themeClass = 'theme-young';
-      } else if (['beginning-reader', 'developing-reader'].includes(readingLevel)) {
-        themeClass = 'theme-middle';
-      } else if (['fluent-reader', 'insightful-reader'].includes(readingLevel)) {
-        themeClass = 'theme-older';
-      }
-      
-      appElement.classList.add(themeClass);
-      appElement.classList.add('theme-transition');
-      
-      // Save theme preference
-      localStorage.setItem('preferredTheme', themeClass);
-    };
-    
-    applyTheme();
-  }, [readingLevel]);
+  // Theme colors are now consistent - reading level only affects content
+  // The reading level dropdown still controls which themes are available
+  // but doesn't change the app's color scheme
   
   useEffect(() => {
     checkUser();
@@ -1492,23 +1465,6 @@ function App() {
       
       {/* Celebration Animations */}
       {CelebrationComponent}
-      
-      {/* Age Theme Indicator */}
-      <div 
-        className="age-indicator"
-        onClick={() => {
-          // Cycle through themes for testing
-          const levels = ['pre-reader', 'early-phonics', 'beginning-reader', 'developing-reader', 'fluent-reader', 'insightful-reader'];
-          const currentIndex = levels.indexOf(readingLevel);
-          const nextIndex = (currentIndex + 1) % levels.length;
-          setReadingLevel(levels[nextIndex]);
-        }}
-        title="Click to switch theme"
-      >
-        {readingLevel === 'pre-reader' || readingLevel === 'early-phonics' ? '🧸 Young Reader' :
-         readingLevel === 'beginning-reader' || readingLevel === 'developing-reader' ? '📖 Growing Reader' :
-         '🎓 Advanced Reader'}
-      </div>
       
       {/* Stripe Test Component (Development Only) */}
       {showStripeTest && (
