@@ -17,16 +17,17 @@
         }
 
         :root {
-            --primary: #8b5cf6;
-            --primary-dark: #7c3aed;
-            --secondary: #fbbf24;
-            --accent: #3b82f6;
+            --primary: #FF6B9D;
+            --primary-dark: #FF5580;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
             --success: #10b981;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-            --bg-light: #f9fafb;
-            --bg-purple-light: #f3f0ff;
-            --border: #e5e7eb;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #FFF5F7;
+            --bg-gradient: linear-gradient(135deg, #FFF5F7 0%, #E3F9F6 100%);
+            --bg-accent: #FFF0F3;
+            --border: #FFD6E0;
         }
 
         body {
@@ -47,7 +48,7 @@
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #f3f0ff 0%, #ede9fe 100%);
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
             padding: 100px 0 60px;
             position: relative;
             overflow: hidden;
@@ -62,7 +63,10 @@
 
         .hero-text h1 {
             font-size: clamp(2.5rem, 5vw, 3.5rem);
-            color: var(--primary-dark);
+            background: linear-gradient(135deg, #FF6B9D, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 20px;
             line-height: 1.2;
         }
@@ -117,24 +121,24 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF5580 100%);
             color: white;
-            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 15px 35px rgba(255, 107, 157, 0.4);
         }
 
         .btn-secondary {
             background: white;
-            color: var(--primary);
-            border: 2px solid var(--primary);
+            color: #FF6B9D;
+            border: 2px solid #FF6B9D;
         }
 
         .btn-secondary:hover {
-            background: var(--bg-purple-light);
+            background: #FFF5F7;
             transform: translateY(-2px);
         }
 
@@ -222,7 +226,7 @@
         .trust-icon {
             width: 40px;
             height: 40px;
-            background: var(--bg-purple-light);
+            background: linear-gradient(135deg, #FFE5EC, #E3F9F6);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -248,7 +252,7 @@
         /* Problem Solution Section */
         .problem-solution {
             padding: 80px 0;
-            background: var(--bg-light);
+            background: linear-gradient(135deg, #FFF9FA 0%, #F0FFFD 100%);
         }
 
         .section-header {
@@ -290,8 +294,8 @@
         }
 
         .solution-card.magic {
-            background: linear-gradient(135deg, #f3f0ff 0%, #ede9fe 100%);
-            border: 2px solid var(--primary);
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
+            border: 2px solid #FF6B9D;
         }
 
         .solution-icon {
@@ -332,7 +336,7 @@
         .step-number {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -369,7 +373,7 @@
         /* Features */
         .features {
             padding: 80px 0;
-            background: var(--bg-light);
+            background: linear-gradient(135deg, #FFFBFC 0%, #F5FFFD 100%);
         }
 
         .features-grid {
@@ -396,13 +400,14 @@
         .feature-icon {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
             border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
             margin: 0 auto 20px;
+            border: 2px solid white;
         }
 
         .feature-card h3 {
@@ -432,7 +437,7 @@
         /* Connection Moments */
         .connection {
             padding: 80px 0;
-            background: white;
+            background: linear-gradient(135deg, #FFF5F7 0%, #E3F9F6 100%);
         }
 
         .connection-grid {
@@ -456,11 +461,13 @@
 
         .connection-image {
             height: 200px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 4rem;
+            overflow: hidden;
+            position: relative;
         }
 
         .connection-content {
@@ -482,14 +489,34 @@
         /* Testimonials */
         .testimonials {
             padding: 80px 0;
-            background: var(--bg-purple-light);
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
+            overflow: hidden;
         }
 
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
+        .testimonials-container {
+            position: relative;
+            max-width: 100%;
             margin-top: 60px;
+            overflow: hidden;
+        }
+
+        .testimonials-scroll {
+            display: flex;
+            animation: scroll 40s linear infinite;
+            gap: 30px;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .testimonials-scroll:hover {
+            animation-play-state: paused;
         }
 
         .testimonial-card {
@@ -497,6 +524,8 @@
             padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            min-width: 400px;
+            flex-shrink: 0;
         }
 
         .stars {
@@ -521,7 +550,7 @@
         .author-avatar {
             width: 50px;
             height: 50px;
-            background: var(--bg-purple-light);
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -543,7 +572,7 @@
         /* Comparison Table */
         .comparison {
             padding: 80px 0;
-            background: white;
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
         }
 
         .comparison-table {
@@ -560,11 +589,12 @@
         }
 
         .comparison-table th {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
+            background: white;
+            color: var(--text-dark);
             padding: 20px;
             text-align: left;
             font-weight: 600;
+            border-bottom: 3px solid #FF6B9D;
         }
 
         .comparison-table th:first-child {
@@ -580,8 +610,14 @@
             border-bottom: none;
         }
 
-        .comparison-table .our-col {
-            background: var(--bg-purple-light);
+        .comparison-table th.our-col {
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
+            color: white;
+            font-weight: 700;
+        }
+        
+        .comparison-table td.our-col {
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
             font-weight: 600;
         }
 
@@ -603,7 +639,7 @@
         /* Pricing */
         .pricing {
             padding: 80px 0;
-            background: var(--bg-light);
+            background: linear-gradient(135deg, #FFF9FA 0%, #F0FFFD 100%);
         }
 
         .pricing-grid {
@@ -624,7 +660,8 @@
 
         .pricing-card.popular {
             transform: scale(1.05);
-            border: 3px solid var(--primary);
+            border: 3px solid #FF6B9D;
+            background: linear-gradient(135deg, #FFFBFC 0%, #F5FFFD 100%);
         }
 
         .popular-badge {
@@ -632,7 +669,7 @@
             top: -15px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
             color: white;
             padding: 6px 20px;
             border-radius: 20px;
@@ -649,7 +686,10 @@
         .price {
             font-size: 3rem;
             font-weight: 700;
-            color: var(--primary);
+            background: linear-gradient(135deg, #FF6B9D, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin: 20px 0;
         }
 
@@ -696,13 +736,14 @@
         .safety-icon {
             width: 80px;
             height: 80px;
-            background: var(--bg-purple-light);
+            background: linear-gradient(135deg, #FFE5EC, #E3F9F6);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
             margin: 0 auto 20px;
+            border: 3px solid white;
         }
 
         .safety-item h3 {
@@ -720,7 +761,7 @@
         /* FAQ */
         .faq {
             padding: 80px 0;
-            background: var(--bg-light);
+            background: linear-gradient(135deg, #FFFBFC 0%, #F5FFFD 100%);
         }
 
         .faq-container {
@@ -747,7 +788,7 @@
         }
 
         .faq-question:hover {
-            background: var(--bg-purple-light);
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
         }
 
         .faq-question span {
@@ -774,7 +815,7 @@
         /* Final CTA */
         .final-cta {
             padding: 100px 0;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
             color: white;
             text-align: center;
         }
@@ -1215,39 +1256,115 @@
                 <p>Real stories from real parents</p>
             </div>
             
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="stars">⭐⭐⭐⭐⭐</div>
-                    <p class="testimonial-text">"My son used to fight bedtime every night. Now he asks for his special story! The personalization makes him feel so special. We've gone from tears to cheers at bedtime."</p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">👨</div>
-                        <div class="author-info">
-                            <h4>Michael Chen</h4>
-                            <p>Dad of 2</p>
+            <div class="testimonials-container">
+                <div class="testimonials-scroll">
+                    <!-- First set of testimonials -->
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"My son used to fight bedtime every night. Now he asks for his special story! The personalization makes him feel so special."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👨</div>
+                            <div class="author-info">
+                                <h4>Michael Chen</h4>
+                                <p>Dad of 2</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="testimonial-card">
-                    <div class="stars">⭐⭐⭐⭐⭐</div>
-                    <p class="testimonial-text">"As a teacher, I love how educational these stories are without feeling like homework. My daughter has learned so much about friendship and problem-solving through her adventures."</p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">👩</div>
-                        <div class="author-info">
-                            <h4>Sarah Williams</h4>
-                            <p>Mom & Teacher</p>
+                    
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"As a teacher, I love how educational these stories are. My daughter has learned so much through her adventures."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>Sarah Williams</h4>
+                                <p>Mom & Teacher</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="testimonial-card">
-                    <div class="stars">⭐⭐⭐⭐⭐</div>
-                    <p class="testimonial-text">"Three kids, three different interests, and this app handles them all perfectly! Each child gets their own personalized stories. It's been a game-changer for our family."</p>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">👩</div>
-                        <div class="author-info">
-                            <h4>Jessica Martinez</h4>
-                            <p>Mom of 3</p>
+                    
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"Three kids, three different interests, and this app handles them all perfectly! It's been a game-changer."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>Jessica Martinez</h4>
+                                <p>Mom of 3</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"Finally, stories that include my son's wheelchair! Representation matters and this app delivers beautifully."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>Jennifer Rodriguez</h4>
+                                <p>Special Needs Parent</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"My twins love choosing different themes. One picks dinosaurs, the other picks space - both are happy!"</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👨</div>
+                            <div class="author-info">
+                                <h4>David Thompson</h4>
+                                <p>Dad of Twins</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"The bedtime mode stories are perfectly paced to help my daughter wind down for sleep."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>Amanda Park</h4>
+                                <p>Working Mom</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Duplicate set for seamless scrolling -->
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"My son used to fight bedtime every night. Now he asks for his special story! The personalization makes him feel so special."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👨</div>
+                            <div class="author-info">
+                                <h4>Michael Chen</h4>
+                                <p>Dad of 2</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"As a teacher, I love how educational these stories are. My daughter has learned so much through her adventures."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>Sarah Williams</h4>
+                                <p>Mom & Teacher</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"Three kids, three different interests, and this app handles them all perfectly! It's been a game-changer."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>Jessica Martinez</h4>
+                                <p>Mom of 3</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1256,25 +1373,25 @@
     </section>
 
     <!-- Brett's Story - Founder Section -->
-    <section class="founder-story" style="background: linear-gradient(135deg, #f3f0ff 0%, #ede9fe 100%); padding: 80px 0;">
+    <section class="founder-story" style="background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%); padding: 80px 0;">
         <div class="container">
             <div class="section-header">
                 <h2>Brett's Story</h2>
-                <p style="color: #8b5cf6; font-weight: 600;">Our Founder's Journey</p>
+                <p style="color: #FF6B9D; font-weight: 600;">Our Founder's Journey</p>
             </div>
             
             <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 60px; align-items: center; margin-top: 60px;">
                 <div style="text-align: center;">
                     <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&h=400&fit=crop" 
                          alt="Brett - Founder" 
-                         style="width: 300px; height: 300px; border-radius: 50%; box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);">
-                    <h3 style="margin-top: 20px; color: #7c3aed;">Brett</h3>
-                    <p style="color: #8b5cf6;">Founder & Dad</p>
+                         style="width: 300px; height: 300px; border-radius: 50%; box-shadow: 0 20px 40px rgba(255, 107, 157, 0.2);">
+                    <h3 style="margin-top: 20px; color: #FF6B9D;">Brett</h3>
+                    <p style="color: #4ECDC4;">Founder & Dad</p>
                 </div>
                 
                 <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
                     <p style="font-size: 1.125rem; line-height: 1.8; color: #4b5563; margin-bottom: 20px;">
-                        <span style="font-size: 2rem; color: #8b5cf6; float: left; margin-right: 10px; line-height: 1;">"</span>
+                        <span style="font-size: 2rem; color: #FF6B9D; float: left; margin-right: 10px; line-height: 1;">"</span>
                         Our founder, Brett, has a young boy who loves bedtime stories. After reading to his son consistently, Brett noticed his son was more interested in stories that were funny and about things he could relate to - like bikes and, yes, even poo (I know)!
                     </p>
                     
@@ -1284,11 +1401,11 @@
                     
                     <p style="font-size: 1.125rem; line-height: 1.8; color: #4b5563;">
                         So Brett decided to build an app! Now he and his son sit down together and create stories using KidsStoryTime. They pick themes, add silly elements, and watch as magical stories unfold - turning bedtime from a creative struggle into their favorite part of the day.
-                        <span style="font-size: 2rem; color: #8b5cf6; float: right; margin-left: 10px; line-height: 1;">"</span>
+                        <span style="font-size: 2rem; color: #4ECDC4; float: right; margin-left: 10px; line-height: 1;">"</span>
                     </p>
                     
                     <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #f3f4f6;">
-                        <p style="font-style: italic; color: #8b5cf6; font-weight: 600;">
+                        <p style="font-style: italic; color: #FF6B9D; font-weight: 600;">
                             "Every parent deserves to be the hero of bedtime without the pressure of being a master storyteller."
                         </p>
                     </div>
@@ -1298,7 +1415,7 @@
     </section>
 
     <!-- Remote Reading Section -->
-    <section class="remote-reading" style="background: white; padding: 80px 0;">
+    <section class="remote-reading" style="background: linear-gradient(135deg, #FFF5F7 0%, #E3F9F6 100%); padding: 80px 0;">
         <div class="container">
             <div class="section-header">
                 <h2>Stay Connected, Even When Apart</h2>
@@ -1357,7 +1474,7 @@
     </section>
 
     <!-- Print & Read Section -->
-    <section class="print-reading" style="background: var(--bg-light); padding: 80px 0;">
+    <section class="print-reading" style="background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%); padding: 80px 0;">
         <div class="container">
             <div class="section-header">
                 <h2>The Magic of Print & Digital Combined</h2>

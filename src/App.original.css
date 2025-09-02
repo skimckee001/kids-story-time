@@ -21,12 +21,15 @@ body {
 @media (max-width: 768px) {
   .app {
     padding: 10px 5px;  /* Reduced horizontal padding for mobile */
+    padding-bottom: 100px; /* Extra bottom padding for mobile */
   }
 }
 
 @media (max-width: 480px) {
   .app {
     padding: 8px 3px;  /* Even less padding for small phones */
+    padding-bottom: 120px; /* Extra bottom padding to prevent cutoff */
+    min-height: 100vh;
   }
 }
 
@@ -428,6 +431,7 @@ body {
   display: flex;
   align-items: center;
   gap: 5px;
+  min-height: 44px;
 }
 
 .gender-btn.active {
@@ -468,7 +472,8 @@ body {
 
 @media (max-width: 480px) {
   .gender-btn {
-    padding: 10px 12px;
+    padding: 12px 14px;
+    min-height: 48px;
   }
   
   .gender-text {
@@ -476,7 +481,7 @@ body {
   }
   
   .gender-icon {
-    font-size: 20px;
+    font-size: 24px;
   }
   
   .gender-buttons {
@@ -731,6 +736,8 @@ body {
   font-size: 0.9rem;
   font-weight: 500;
   white-space: nowrap;
+  min-height: 44px;
+  justify-content: center;
 }
 
 .theme-option:hover {
@@ -937,6 +944,16 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-height: 48px;
+}
+
+@media (max-width: 480px) {
+  .auth-submit {
+    padding: 16px 30px;
+    font-size: 1rem;
+    min-height: 52px;
+    width: 100%;
+  }
 }
 
 .auth-submit:hover {
@@ -1295,9 +1312,25 @@ body {
     display: none;
   }
   
-  .star-bank, .trophy-room {
-    padding: 6px 12px;
+  .star-bank, .trophy-room, .star-display.clickable, .achievement-btn {
+    padding: 8px 14px;
     font-size: 0.9rem;
+    min-height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .star-bank, .trophy-room, .star-display.clickable, .achievement-btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    min-height: 44px;
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .header-actions {
+    width: 100%;
+    gap: 8px;
   }
 }
 
@@ -1364,8 +1397,9 @@ body {
   }
 
   .theme-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
 
   .user-nav {
@@ -1401,7 +1435,9 @@ body {
 
   .main-content {
     padding: 20px 15px;
+    padding-bottom: 60px;
     border-radius: 12px;
+    margin-bottom: 40px;
   }
 
   .logo {
@@ -1418,6 +1454,8 @@ body {
 
   .theme-option {
     padding: 12px 8px;
+    width: 100%;
+    min-height: 48px;
   }
 
   .theme-emoji {
