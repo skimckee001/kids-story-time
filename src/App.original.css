@@ -32,7 +32,7 @@ body {
 
 @media (max-width: 480px) {
   .app {
-    padding: 4px;  /* Minimal padding for better width usage */
+    padding: 1px;  /* Ultra-minimal padding for maximum width usage */
     padding-bottom: 120px; /* Extra bottom padding to prevent cutoff */
     min-height: 100vh;
   }
