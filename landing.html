@@ -1089,6 +1089,23 @@
             .bedtime-magical {
                 padding: 60px 0 !important;
             }
+
+            /* Story Ideas Section Mobile */
+            .story-ideas > div > div:nth-child(2) {
+                grid-template-columns: 1fr !important;
+                gap: 30px !important;
+            }
+
+            /* Story categories - 2 columns on mobile */
+            .story-ideas div[style*="grid-template-columns: repeat(4, 1fr)"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 15px !important;
+            }
+
+            /* Hide decorative elements on mobile */
+            .story-ideas div[style*="position: absolute"][style*="font-size: 3rem"] {
+                display: none !important;
+            }
         }
     </style>
 </head>
@@ -1414,6 +1431,166 @@
                     <h3>Video Stories</h3>
                     <p>Watch your stories come to life with animated videos</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hilarious Story Ideas Section -->
+    <section class="story-ideas" style="background: linear-gradient(135deg, #FFF9E6 0%, #FFE5EC 100%); padding: 80px 0; position: relative; overflow: hidden;">
+        <!-- Fun decorative elements -->
+        <div style="position: absolute; top: 20px; left: 5%; font-size: 3rem; opacity: 0.1; transform: rotate(-15deg);">💩</div>
+        <div style="position: absolute; top: 100px; right: 10%; font-size: 3rem; opacity: 0.1; transform: rotate(20deg);">🦄</div>
+        <div style="position: absolute; bottom: 50px; left: 8%; font-size: 3rem; opacity: 0.1; transform: rotate(10deg);">🚀</div>
+        <div style="position: absolute; bottom: 80px; right: 5%; font-size: 3rem; opacity: 0.1; transform: rotate(-20deg);">🦖</div>
+        
+        <div class="container" style="position: relative;">
+            <div class="section-header">
+                <div style="font-size: 3rem; margin-bottom: 20px;">🎭</div>
+                <h2 style="background: linear-gradient(135deg, #FF6B9D, #FFB800); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Stories That Make Kids LOL (and Learn!)</h2>
+                <p style="font-size: 1.2rem; color: #636e72;">From silly to spectacular, create stories your kids will beg for again and again</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 60px;">
+                <!-- The Hilariously Gross -->
+                <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -5px; right: 20px; background: linear-gradient(135deg, #10B981, #059669); color: white; padding: 5px 15px; border-radius: 0 0 10px 10px; font-size: 0.8rem; font-weight: 600;">
+                        KIDS' FAVORITE
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <div style="font-size: 2.5rem;">💩</div>
+                        <h3 style="font-size: 1.5rem; color: #2d3436; margin: 0;">The Hilariously Gross</h3>
+                    </div>
+                    <p style="color: #636e72; margin-bottom: 20px; font-style: italic;">"Because every kid thinks poop is comedy gold!"</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="background: linear-gradient(135deg, #FFF9E6, #FFE5EC); padding: 15px; border-radius: 12px; border-left: 4px solid #FFB800;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">The Great Poop Emoji Adventure</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"When [Child's Name] discovers their poop has come to life and needs help getting back to Toilet Town before the Flush Festival begins!"</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #E3F9F6, #FFF5F7); padding: 15px; border-radius: 12px; border-left: 4px solid #4ECDC4;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Captain Underpants Meets the Burp Monster</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"[Child's Name] must save the school from a giant burp that escaped from the cafeteria and is making everyone speak in hiccups!"</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #FFF5F7, #E3F9F6); padding: 15px; border-radius: 12px; border-left: 4px solid #FF6B9D;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">The Booger That Saved Christmas</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"When Santa gets stuck in a tissue factory, only [Child's Name] and their magical talking booger can save the day!"</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gen Alpha Vibes -->
+                <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -5px; right: 20px; background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; padding: 5px 15px; border-radius: 0 0 10px 10px; font-size: 0.8rem; font-weight: 600;">
+                        NO CAP FR FR
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <div style="font-size: 2.5rem;">✨</div>
+                        <h3 style="font-size: 1.5rem; color: #2d3436; margin: 0;">Gen Alpha Vibes</h3>
+                    </div>
+                    <p style="color: #636e72; margin-bottom: 20px; font-style: italic;">"Stories that absolutely slay, bestie!"</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="background: linear-gradient(135deg, #F5F3FF, #FAF5FF); padding: 15px; border-radius: 12px; border-left: 4px solid #8B5CF6;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">The Sigma Unicorn's Glow-Up</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"[Child's Name] helps a shy unicorn become the main character energy queen of Sparkle Valley - it's giving confidence!"</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #FFE5EC, #F5F3FF); padding: 15px; border-radius: 12px; border-left: 4px solid #EC4899;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">The Skibidi Dragon's Rizz Academy</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"When [Child's Name] enrolls in dragon school, they must pass the ultimate vibe check to earn their fire-breathing certificate!"</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #E3F9F6, #F5F3FF); padding: 15px; border-radius: 12px; border-left: 4px solid #4ECDC4;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Ohio vs. The Bussin' Breakfast Club</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"[Child's Name] discovers their cereal is lowkey alive and needs help defeating the sus toast army - no cap, this slaps!"</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Epic Mashups -->
+                <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -5px; right: 20px; background: linear-gradient(135deg, #F59E0B, #DC2626); color: white; padding: 5px 15px; border-radius: 0 0 10px 10px; font-size: 0.8rem; font-weight: 600;">
+                        MIND = BLOWN
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <div style="font-size: 2.5rem;">🤯</div>
+                        <h3 style="font-size: 1.5rem; color: #2d3436; margin: 0;">Epic Mashups</h3>
+                    </div>
+                    <p style="color: #636e72; margin-bottom: 20px; font-style: italic;">"When worlds collide in the best way possible!"</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="background: linear-gradient(135deg, #FFF9E6, #FFE5EC); padding: 15px; border-radius: 12px; border-left: 4px solid #F59E0B;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Dinosaurs in Space Playing Soccer</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"[Child's Name] coaches a T-Rex team against alien octopi for the Galaxy Cup - with meteors as soccer balls!"</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #FFE5EC, #E3F9F6); padding: 15px; border-radius: 12px; border-left: 4px solid #DC2626;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Ninja Pirates vs. Robot Cowboys</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"[Child's Name] must unite sworn enemies to defeat the evil Homework Monster terrorizing Funtown!"</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #E3F9F6, #FFF5F7); padding: 15px; border-radius: 12px; border-left: 4px solid #3B82F6;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Superhero Vegetables Battle Junk Food Villains</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"Captain Broccoli and [Child's Name] team up to stop the Candy King from turning all vegetables into chocolate!"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- More Story Categories -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-top: 40px;">
+                <div style="background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.06);">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🎮</div>
+                    <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Gaming Adventures</strong>
+                    <p style="color: #636e72; font-size: 0.85rem;">Minecraft meets Roblox in real life</p>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.06);">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🍕</div>
+                    <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Food Fights</strong>
+                    <p style="color: #636e72; font-size: 0.85rem;">Pizza vs. Tacos ultimate showdown</p>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.06);">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🐾</div>
+                    <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Pet Superpowers</strong>
+                    <p style="color: #636e72; font-size: 0.85rem;">When hamsters become heroes</p>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.06);">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🎪</div>
+                    <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Circus Chaos</strong>
+                    <p style="color: #636e72; font-size: 0.85rem;">Clowns, acrobats, and flying elephants</p>
+                </div>
+            </div>
+            
+            <!-- Try It Now -->
+            <div style="text-align: center; margin-top: 50px; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                <h3 style="font-size: 1.8rem; color: #2d3436; margin-bottom: 15px;">Ready to Create Your Own Hilarious Adventure?</h3>
+                <p style="color: #636e72; margin-bottom: 25px; font-size: 1.1rem;">Type anything - seriously, ANYTHING - and watch the magic happen!</p>
+                
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-bottom: 25px;">
+                        <span style="background: linear-gradient(135deg, #FFE66D, #FFB800); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; color: #2d3436;">
+                            "Farting unicorns" ✓
+                        </span>
+                        <span style="background: linear-gradient(135deg, #FF6B9D, #FF5580); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; color: white;">
+                            "Sussy imposters" ✓
+                        </span>
+                        <span style="background: linear-gradient(135deg, #4ECDC4, #44A3AA); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; color: white;">
+                            "Dancing pickles" ✓
+                        </span>
+                        <span style="background: linear-gradient(135deg, #8B5CF6, #7C3AED); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; color: white;">
+                            "Ninja grandmas" ✓
+                        </span>
+                    </div>
+                </div>
+                
+                <button style="padding: 14px 32px; background: linear-gradient(135deg, #FF6B9D, #4ECDC4); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 600; cursor: pointer; box-shadow: 0 10px 25px rgba(255, 107, 157, 0.3); transition: all 0.3s ease;">
+                    🚀 Create Your Wildest Story Now
+                </button>
             </div>
         </div>
     </section>
