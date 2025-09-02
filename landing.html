@@ -1070,6 +1070,25 @@
                 width: 260px !important;
                 height: 340px !important;
             }
+
+            /* Bedtime Magical Section Mobile */
+            .bedtime-magical > div > div:nth-child(2) {
+                grid-template-columns: 1fr !important;
+                gap: 30px !important;
+            }
+
+            .bedtime-magical h3 {
+                font-size: 1.2rem !important;
+            }
+
+            .bedtime-magical div[style*="padding: 40px 30px"] {
+                padding: 25px 20px !important;
+            }
+
+            /* Section padding on mobile */
+            .bedtime-magical {
+                padding: 60px 0 !important;
+            }
         }
     </style>
 </head>
@@ -1177,38 +1196,120 @@
         </div>
     </section>
 
-    <!-- Problem/Solution Section -->
-    <section class="problem-solution">
-        <div class="container">
-            <div class="section-header">
-                <h2>Bedtime Doesn't Have to Be a Battle</h2>
-                <p>Transform the nightly struggle into quality time your child looks forward to</p>
+    <!-- Make Bedtime Magical Section -->
+    <section class="bedtime-magical" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); padding: 100px 0; position: relative; overflow: hidden;">
+        <!-- Starry background effect -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1;">
+            <div style="position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; top: 10%; left: 15%; animation: twinkle 3s infinite;"></div>
+            <div style="position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; top: 20%; left: 80%; animation: twinkle 3s infinite 0.5s;"></div>
+            <div style="position: absolute; width: 3px; height: 3px; background: white; border-radius: 50%; top: 60%; left: 10%; animation: twinkle 3s infinite 1s;"></div>
+            <div style="position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; top: 80%; left: 70%; animation: twinkle 3s infinite 1.5s;"></div>
+            <div style="position: absolute; width: 3px; height: 3px; background: white; border-radius: 50%; top: 30%; left: 50%; animation: twinkle 3s infinite 2s;"></div>
+        </div>
+        
+        <div class="container" style="position: relative; z-index: 1;">
+            <div class="section-header" style="margin-bottom: 60px;">
+                <div style="font-size: 3rem; margin-bottom: 20px;">🌙</div>
+                <h2 style="font-size: clamp(2rem, 4vw, 3rem); color: white; margin-bottom: 20px;">Make Bedtime Their Favorite Part of the Day</h2>
+                <p style="font-size: 1.25rem; color: #cbd5e1; max-width: 700px; margin: 0 auto;">Turn restless nights and storytime frustration into special moments your child can't wait for.</p>
             </div>
             
-            <div class="solution-flow">
-                <div class="solution-card problem">
-                    <div class="solution-icon" style="background-image: url('https://images.unsplash.com/photo-1489710020360-66c504829358?w=120&h=120&fit=crop'); background-size: cover; background-position: center;"></div>
-                    <h3>The Struggle</h3>
-                    <p>Same stories repeatedly<br>Screen time guilt<br>Bedtime resistance</p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 80px;">
+                <!-- Common Nighttime Challenges -->
+                <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 40px 30px;">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #ef4444, #dc2626); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            😩
+                        </div>
+                        <h3 style="font-size: 1.4rem; color: white; margin: 0;">Common Nighttime Challenges</h3>
+                    </div>
+                    
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="display: flex; align-items: start; gap: 12px; margin-bottom: 20px;">
+                            <span style="color: #ef4444; font-size: 1.2rem; margin-top: 2px;">•</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Endless requests for "one more story"</span>
+                        </li>
+                        <li style="display: flex; align-items: start; gap: 12px; margin-bottom: 20px;">
+                            <span style="color: #ef4444; font-size: 1.2rem; margin-top: 2px;">•</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Struggling to compete with screens</span>
+                        </li>
+                        <li style="display: flex; align-items: start; gap: 12px;">
+                            <span style="color: #ef4444; font-size: 1.2rem; margin-top: 2px;">•</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Kids restless, parents exhausted</span>
+                        </li>
+                    </ul>
                 </div>
                 
-                <div class="solution-arrow">→</div>
-                
-                <div class="solution-card">
-                    <div class="solution-icon" style="background-image: url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=120&h=120&fit=crop'); background-size: cover; background-position: center;"></div>
-                    <h3>30-Second Setup</h3>
-                    <p>Enter child's name<br>Pick a theme<br>Click generate</p>
+                <!-- Let the Magic Begin -->
+                <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1)); backdrop-filter: blur(10px); border: 2px solid rgba(139, 92, 246, 0.3); border-radius: 20px; padding: 40px 30px; position: relative;">
+                    <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; padding: 6px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                        30 SECONDS
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #8b5cf6, #a78bfa); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            ✨
+                        </div>
+                        <h3 style="font-size: 1.4rem; color: white; margin: 0;">Let the Magic Begin</h3>
+                    </div>
+                    
+                    <ol style="list-style: none; padding: 0; margin: 0; counter-reset: step-counter;">
+                        <li style="display: flex; align-items: start; gap: 15px; margin-bottom: 20px; counter-increment: step-counter;">
+                            <span style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; border-radius: 50%; font-size: 0.9rem; font-weight: 600; flex-shrink: 0;">1</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Tell us about your child</span>
+                        </li>
+                        <li style="display: flex; align-items: start; gap: 15px; margin-bottom: 20px; counter-increment: step-counter;">
+                            <span style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; border-radius: 50%; font-size: 0.9rem; font-weight: 600; flex-shrink: 0;">2</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Pick the kind of adventure they'll love</span>
+                        </li>
+                        <li style="display: flex; align-items: start; gap: 15px;">
+                            <span style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; border-radius: 50%; font-size: 0.9rem; font-weight: 600; flex-shrink: 0;">3</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Get a unique story—ready to read, explore, and cherish</span>
+                        </li>
+                    </ol>
                 </div>
                 
-                <div class="solution-arrow">→</div>
-                
-                <div class="solution-card magic">
-                    <div class="solution-icon" style="background-image: url('https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?w=120&h=120&fit=crop'); background-size: cover; background-position: center;"></div>
-                    <h3>Pure Magic</h3>
-                    <p>Personalized adventures<br>Educational content<br>Happy bedtimes</p>
+                <!-- Why Families Love the Change -->
+                <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 40px 30px;">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            💚
+                        </div>
+                        <h3 style="font-size: 1.4rem; color: white; margin: 0;">Why Families Love the Change</h3>
+                    </div>
+                    
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="display: flex; align-items: start; gap: 12px; margin-bottom: 20px;">
+                            <span style="color: #10b981; font-size: 1.2rem; margin-top: 2px;">✓</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Every story is new and made just for your child</span>
+                        </li>
+                        <li style="display: flex; align-items: start; gap: 12px; margin-bottom: 20px;">
+                            <span style="color: #10b981; font-size: 1.2rem; margin-top: 2px;">✓</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Promotes relaxation and learning before sleep</span>
+                        </li>
+                        <li style="display: flex; align-items: start; gap: 12px;">
+                            <span style="color: #10b981; font-size: 1.2rem; margin-top: 2px;">✓</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Turns nightly routines into lasting memories</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
+            
+            <!-- Call to Action -->
+            <div style="text-align: center; margin-top: 60px;">
+                <button style="padding: 16px 40px; background: linear-gradient(135deg, #FFB800, #FF6B9D); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 600; cursor: pointer; box-shadow: 0 20px 40px rgba(255, 107, 157, 0.3); transition: all 0.3s ease;">
+                    ✨ Start Your Magical Bedtime Journey
+                </button>
+                <p style="color: #94a3b8; margin-top: 15px; font-size: 0.95rem;">Join 10,000+ families who've transformed bedtime</p>
+            </div>
         </div>
+        
+        <style>
+            @keyframes twinkle {
+                0%, 100% { opacity: 0; }
+                50% { opacity: 1; }
+            }
+        </style>
     </section>
 
     <!-- How It Works -->
