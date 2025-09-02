@@ -1506,29 +1506,8 @@ body {
 }
 
 @media (max-width: 480px) {
-  .app {
-    padding: 0;
-  }
-
-  .header-container {
-    padding: 12px 10px;
-    border-radius: 0;
-    margin-bottom: 0;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .main-content {
-    padding: 20px 15px;
-    padding-bottom: 60px;
-    border-radius: 0;
-    margin-bottom: 40px;
-    margin-left: 0;
-    margin-right: 0;
-    width: 100%;
-    max-width: 100%;
-  }
-
+  /* Additional mobile styles - main container styles defined earlier */
+  
   .logo {
     font-size: 1.5rem;
   }
