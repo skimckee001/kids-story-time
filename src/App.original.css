@@ -32,7 +32,7 @@ body {
 
 @media (max-width: 480px) {
   .app {
-    padding: 8px;  /* Small padding to allow rounded corners */
+    padding: 4px;  /* Minimal padding for better width usage */
     padding-bottom: 120px; /* Extra bottom padding to prevent cutoff */
     min-height: 100vh;
   }
@@ -74,11 +74,11 @@ body {
 
 @media (max-width: 480px) {
   .header-container {
-    padding: 12px 15px;
-    margin-bottom: 10px;
+    padding: 12px 10px;
+    margin-bottom: 8px;
     border-radius: 12px !important;
     -webkit-border-radius: 12px !important;
-    margin: 0 0 10px 0;
+    margin: 0 0 8px 0;
     width: 100%;
     max-width: 100%;
     position: relative;
@@ -382,10 +382,10 @@ body {
 
 @media (max-width: 480px) {
   .main-content {
-    padding: 20px 15px;
+    padding: 18px 12px;
     border-radius: 12px !important;
     -webkit-border-radius: 12px !important;
-    margin: 0 0 20px 0;
+    margin: 0 0 15px 0;
     width: 100%;
     max-width: 100%;
     position: relative;
@@ -796,25 +796,26 @@ body {
 .theme-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   margin-top: 15px;
 }
 
 .theme-option {
-  padding: 8px 16px;
+  padding: 6px 12px;
   border: 2px solid #e0e0e0;
   border-radius: 25px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   cursor: pointer;
   transition: all 0.3s ease;
   background: white;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
   white-space: nowrap;
-  min-height: 44px;
+  min-height: 38px;
   justify-content: center;
+  flex: 0 0 auto;
 }
 
 .theme-option:hover {
@@ -837,7 +838,11 @@ body {
 
 @media (max-width: 480px) {
   .theme-emoji {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+  }
+  
+  .theme-label {
+    font-size: 0.75rem;
   }
 }
 
@@ -1482,7 +1487,7 @@ body {
   .theme-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 6px;
   }
 
   .user-nav {
@@ -1521,9 +1526,10 @@ body {
   }
 
   .theme-option {
-    padding: 12px 8px;
+    padding: 6px 8px;
     width: 100%;
-    min-height: 48px;
+    min-height: 40px;
+    font-size: 0.8rem;
   }
 
   .theme-emoji {
