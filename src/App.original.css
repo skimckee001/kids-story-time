@@ -32,7 +32,7 @@ body {
 
 @media (max-width: 480px) {
   .app {
-    padding: 0;  /* No padding for full width */
+    padding: 8px;  /* Small padding to allow rounded corners */
     padding-bottom: 120px; /* Extra bottom padding to prevent cutoff */
     min-height: 100vh;
   }
@@ -71,9 +71,9 @@ body {
     padding: 12px 8px;
     margin-bottom: 10px;
     border-radius: 12px;
-    margin: 0 8px 10px 8px;
-    width: calc(100% - 16px);
-    max-width: calc(100% - 16px);
+    margin: 0 0 10px 0;
+    width: 100%;
+    max-width: 100%;
   }
 }
 
@@ -283,9 +283,9 @@ body {
   .account-section {
     padding: 20px 15px;
     border-radius: 12px;
-    margin: 0 8px 20px 8px;
-    width: calc(100% - 16px);
-    max-width: calc(100% - 16px);
+    margin: 0 0 20px 0;
+    width: 100%;
+    max-width: 100%;
   }
 }
 
@@ -360,9 +360,9 @@ body {
   .main-content {
     padding: 20px 15px;
     border-radius: 12px;
-    margin: 0 8px 20px 8px;
-    width: calc(100% - 16px);
-    max-width: calc(100% - 16px);
+    margin: 0 0 20px 0;
+    width: 100%;
+    max-width: 100%;
   }
 }
 
