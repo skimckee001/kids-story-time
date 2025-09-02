@@ -1,5 +1,29 @@
 # Kids Story Time - TODO List
 
+## ✅ COMPLETED (September 2, 2025)
+
+### Mobile UI Improvements
+- [x] Fixed iOS Safari border-radius rendering issues
+- [x] Added webkit prefixes and transform3d hack for Chrome iOS
+- [x] Optimized mobile padding (reduced to 1px for maximum content width)
+- [x] Fixed theme button overflow on small screens
+- [x] Improved mobile header alignment and spacing
+- [x] Ensured rounded corners display properly on all devices
+
+### Landing Page Enhancements
+- [x] Added hilarious story prompts section
+- [x] Replaced "bedtime battle" with "magical bedtime journey" (positive language)
+- [x] Added dedicated Stars and Badges sections
+- [x] Added online/offline reading section
+- [x] Fixed table alignment issues
+- [x] Updated moms & daughters image to custom portrait
+
+### Visual Updates
+- [x] Experimented with black starfield background (reverted)
+- [x] Updated header background to light purple/blue
+- [x] Maintained purple gradient theme consistency
+- [x] Added all custom images to Images/ and public/images/ directories
+
 ## ✅ COMPLETED (August 31, 2025)
 
 ### UI/UX Improvements
