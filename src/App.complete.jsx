@@ -328,7 +328,7 @@ function App() {
         id: 'age-appropriate',
         label: 'Smart Choice',
         icon: '✨',
-        description: 'Auto-selects best style',
+        description: '',
         prompt: '' // Will be determined based on age
       },
       {
@@ -1203,9 +1203,6 @@ function App() {
               <label htmlFor="customPrompt">
                 What would you like this story to be about?
               </label>
-              <div style={{fontSize: '0.85rem', color: '#666', marginBottom: '8px', fontWeight: 'normal'}}>
-                Tips: Be specific about the setting • Include your child's interests • Add a lesson or moral
-              </div>
               <div className="prompt-container">
                 <textarea
                   id="customPrompt"
@@ -1215,6 +1212,15 @@ function App() {
                   placeholder="The more elaborate the better..."
                   className="prompt-textarea"
                 />
+                <button 
+                  type="button" 
+                  className="info-btn tips-btn" 
+                  onClick={() => alert('Tips:\n• Be specific about the setting (e.g., "underwater kingdom", "space station")\n• Include your child\'s interests (e.g., "dinosaurs who love pizza")\n• Add a lesson or moral (e.g., "about sharing", "being brave")\n• Mention favorite characters or themes\n• The more detail, the better the story!')}
+                  title="Click for story tips"
+                  style={{marginTop: '8px', background: 'none', border: 'none', color: '#667eea', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px'}}
+                >
+                  💡 Tips
+                </button>
                 <button
                   type="button"
                   className={`voice-btn ${isRecording ? 'recording' : ''}`}
@@ -1290,7 +1296,7 @@ function App() {
                 >
                   {getImageStyles().map(style => (
                     <option key={style.id} value={style.id}>
-                      {style.label} - {style.description}
+                      {style.label}
                     </option>
                   ))}
                 </select>
@@ -1332,7 +1338,7 @@ function App() {
               disabled={isGenerating || (!user && storiesRemaining <= 0)}
             >
               {isGenerating ? 'Creating your magical story...' : 
-               !user ? '✨ Create Your First Story! ✨' : '✨ Generate My Story! ✨'}
+               !user ? '✨ Create Story! ✨' : '✨ Generate Story! ✨'}
             </button>
             
             {/* Plan Status */}

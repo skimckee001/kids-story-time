@@ -8,9 +8,40 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0a0a0a;
+  background-image: 
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(2px 2px at 60% 70%, white, transparent),
+    radial-gradient(1px 1px at 50% 50%, white, transparent),
+    radial-gradient(1px 1px at 80% 20%, white, transparent),
+    radial-gradient(2px 2px at 10% 80%, white, transparent);
+  background-size: 200px 200px;
   min-height: 100vh;
   color: #333;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(3px 3px at 15% 25%, rgba(255,255,255,0.7), transparent),
+    radial-gradient(2px 2px at 70% 60%, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.6), transparent),
+    radial-gradient(2px 2px at 85% 40%, rgba(255,255,255,0.4), transparent);
+  background-size: 300px 300px;
+  animation: twinkle 5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
 .app {
@@ -27,7 +58,7 @@ body {
 
 @media (max-width: 480px) {
   .app {
-    padding: 8px 3px;  /* Even less padding for small phones */
+    padding: 0;  /* No padding for full width */
     padding-bottom: 120px; /* Extra bottom padding to prevent cutoff */
     min-height: 100vh;
   }
@@ -63,7 +94,12 @@ body {
 @media (max-width: 480px) {
   .header-container {
     padding: 12px 8px;
-    margin-bottom: 15px;
+    margin-bottom: 0;
+    border-radius: 0;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    max-width: 100%;
   }
 }
 
@@ -472,8 +508,9 @@ body {
 
 @media (max-width: 480px) {
   .gender-btn {
-    padding: 12px 14px;
-    min-height: 48px;
+    padding: 5px 10px;
+    min-height: 32px;
+    height: 32px;
   }
   
   .gender-text {
@@ -481,7 +518,7 @@ body {
   }
   
   .gender-icon {
-    font-size: 24px;
+    font-size: 18px;
   }
   
   .gender-buttons {
@@ -1430,20 +1467,26 @@ body {
 
 @media (max-width: 480px) {
   .app {
-    padding: 8px;
+    padding: 0;
   }
 
   .header-container {
     padding: 12px 10px;
-    border-radius: 10px;
-    margin-bottom: 15px;
+    border-radius: 0;
+    margin-bottom: 0;
+    width: 100%;
+    max-width: 100%;
   }
 
   .main-content {
     padding: 20px 15px;
     padding-bottom: 60px;
-    border-radius: 12px;
+    border-radius: 0;
     margin-bottom: 40px;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    max-width: 100%;
   }
 
   .logo {
