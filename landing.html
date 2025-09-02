@@ -604,6 +604,12 @@
         .comparison-table td {
             padding: 20px;
             border-bottom: 1px solid var(--border);
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .comparison-table td:first-child {
+            text-align: left;
         }
 
         .comparison-table tr:last-child td {
@@ -624,11 +630,13 @@
         .check {
             color: var(--success);
             font-size: 1.5rem;
+            display: inline-block;
         }
 
         .cross {
             color: #ef4444;
             font-size: 1.5rem;
+            display: inline-block;
         }
 
         .partial {
@@ -1033,6 +1041,34 @@
             /* Stats text smaller */
             div[style*="font-size: 2.5rem"] {
                 font-size: 1.8rem !important;
+            }
+
+            /* Online/Offline Section Mobile */
+            .online-offline > div > div:nth-child(2) {
+                grid-template-columns: 1fr !important;
+                gap: 40px !important;
+            }
+
+            /* Print showcase - stack on mobile */
+            .online-offline div[style*="grid-template-columns: 1fr 2fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 30px !important;
+            }
+
+            /* Print formats - 2 columns on mobile */
+            .online-offline div[style*="grid-template-columns: repeat(4, 1fr)"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            /* Hide book 3D transform on mobile */
+            .online-offline div[style*="transform: perspective"] {
+                transform: none !important;
+            }
+
+            /* Adjust book mockup size */
+            .online-offline div[style*="width: 320px; height: 420px"] {
+                width: 260px !important;
+                height: 340px !important;
             }
         }
     </style>
@@ -1500,6 +1536,273 @@
                     <div>
                         <div style="font-size: 2.5rem; font-weight: 700; color: #8B5CF6;">94%</div>
                         <p style="color: #636e72; margin-top: 5px;">Parents report improved habits</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Online & Offline Reading Section -->
+    <section class="online-offline" style="background: linear-gradient(135deg, #F0F9FF 0%, #FFF5F7 100%); padding: 80px 0;">
+        <div class="container">
+            <div class="section-header">
+                <div style="font-size: 3rem; margin-bottom: 20px;">📖</div>
+                <h2 style="background: linear-gradient(135deg, #3B82F6, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Read Anywhere, Anytime</h2>
+                <p>Enjoy stories online or take them offline - perfect for every situation</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 60px;">
+                <!-- Online Features -->
+                <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #3B82F6, #60A5FA); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            🌐
+                        </div>
+                        <h3 style="font-size: 1.6rem; color: #1e293b; margin: 0;">Online Reading</h3>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Instant Access</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Read stories immediately after generation</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Interactive Features</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Voice narration, animations, and sound effects</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Cloud Library</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">All stories saved automatically in your account</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Multi-Device Sync</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Access from phone, tablet, or computer</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Real-Time Updates</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">New features and content added regularly</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #EFF6FF, #F0F9FF); border-radius: 12px;">
+                        <p style="color: #1e293b; font-weight: 600; margin-bottom: 10px;">📱 Perfect For:</p>
+                        <p style="color: #64748b; font-size: 0.9rem;">Home reading, waiting rooms, restaurants, quick bedtime stories</p>
+                    </div>
+                </div>
+                
+                <!-- Offline Features -->
+                <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #8B5CF6, #A78BFA); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            📥
+                        </div>
+                        <h3 style="font-size: 1.6rem; color: #1e293b; margin: 0;">Offline Reading</h3>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Download Stories</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Save stories for offline reading anytime</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">PDF Export</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Professional format with images included</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Audio Downloads</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">MP3 files for car rides and travel</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">No Internet Needed</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Read anywhere without WiFi or data</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Share with Family</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Send stories to grandparents and relatives</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #F5F3FF, #FAF5FF); border-radius: 12px;">
+                        <p style="color: #1e293b; font-weight: 600; margin-bottom: 10px;">✈️ Perfect For:</p>
+                        <p style="color: #64748b; font-size: 0.9rem;">Airplane trips, road trips, camping, areas with poor internet</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Print Version Showcase -->
+            <div style="margin-top: 80px;">
+                <div style="text-align: center; margin-bottom: 50px;">
+                    <h3 style="font-size: 2rem; color: #1e293b; margin-bottom: 15px;">🖨️ Create Beautiful Printed Books</h3>
+                    <p style="color: #64748b; font-size: 1.1rem;">Transform digital stories into keepsake books your child will treasure forever</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 40px; align-items: center;">
+                    <!-- Left: Print Features -->
+                    <div>
+                        <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;">📏</span>
+                                <strong style="color: #1e293b;">Custom Formatting</strong>
+                            </div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Perfect page layouts optimized for printing</p>
+                        </div>
+                        
+                        <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;">🎨</span>
+                                <strong style="color: #1e293b;">High-Quality Images</strong>
+                            </div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Print-resolution illustrations on every page</p>
+                        </div>
+                        
+                        <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06);">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;">📚</span>
+                                <strong style="color: #1e293b;">Collection Building</strong>
+                            </div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Create a personal library of printed stories</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Center: Mock Book Preview -->
+                    <div style="position: relative; height: 500px; display: flex; justify-content: center; align-items: center;">
+                        <!-- Book mockup using CSS -->
+                        <div style="position: relative; transform: perspective(1200px) rotateY(-15deg);">
+                            <!-- Book Cover -->
+                            <div style="width: 320px; height: 420px; background: linear-gradient(135deg, #FFE5EC, #E3F9F6); border-radius: 8px 16px 16px 8px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); position: relative; overflow: hidden;">
+                                <!-- Cover Design -->
+                                <div style="padding: 40px 30px; height: 100%; display: flex; flex-direction: column;">
+                                    <!-- Title Area -->
+                                    <div style="text-align: center; margin-bottom: 20px;">
+                                        <div style="font-size: 2rem; margin-bottom: 10px;">🦄</div>
+                                        <h4 style="font-family: 'Fredoka', cursive; font-size: 1.8rem; color: #FF6B9D; margin-bottom: 10px;">Luna's Magical Adventure</h4>
+                                        <p style="color: #64748b; font-size: 0.9rem;">A Personalized Story</p>
+                                    </div>
+                                    
+                                    <!-- Illustration Preview -->
+                                    <div style="flex: 1; background: white; border-radius: 12px; padding: 20px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);">
+                                        <div style="text-align: center;">
+                                            <div style="font-size: 4rem; margin-bottom: 10px;">🌈</div>
+                                            <p style="color: #94a3b8; font-size: 0.85rem;">Beautiful illustrations<br/>on every page</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Bottom Info -->
+                                    <div style="text-align: center; margin-top: 20px;">
+                                        <p style="color: #64748b; font-size: 0.8rem;">Created with KidsStoryTime.ai</p>
+                                        <p style="color: #94a3b8; font-size: 0.75rem;">For Emma • Age 6</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Book spine effect -->
+                                <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 30px; background: linear-gradient(90deg, rgba(0,0,0,0.1), transparent); border-radius: 8px 0 0 8px;"></div>
+                            </div>
+                            
+                            <!-- Page edges effect -->
+                            <div style="position: absolute; right: -5px; top: 10px; bottom: 10px; width: 15px; background: repeating-linear-gradient(0deg, #fff 0px, #fff 2px, #f0f0f0 2px, #f0f0f0 3px); border-radius: 0 4px 4px 0; box-shadow: 2px 0 10px rgba(0,0,0,0.1);"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right: Benefits -->
+                    <div>
+                        <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;">🎁</span>
+                                <strong style="color: #1e293b;">Perfect Gifts</strong>
+                            </div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Unique presents for birthdays & holidays</p>
+                        </div>
+                        
+                        <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;">💝</span>
+                                <strong style="color: #1e293b;">Family Keepsakes</strong>
+                            </div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Stories to pass down through generations</p>
+                        </div>
+                        
+                        <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06);">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;">🏫</span>
+                                <strong style="color: #1e293b;">School Sharing</strong>
+                            </div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Bring printed stories for show and tell</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Print Options -->
+                <div style="margin-top: 60px; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                    <h4 style="font-size: 1.5rem; color: #1e293b; margin-bottom: 30px; text-align: center;">📄 Available Print Formats</h4>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px;">
+                        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #FFF9E6, #FFE5EC); border-radius: 12px;">
+                            <div style="font-size: 2.5rem; margin-bottom: 10px;">📑</div>
+                            <strong style="color: #1e293b; display: block; margin-bottom: 5px;">Standard PDF</strong>
+                            <p style="color: #64748b; font-size: 0.85rem;">8.5" x 11" format<br/>Ready to print at home</p>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #E3F9F6, #FFF5F7); border-radius: 12px;">
+                            <div style="font-size: 2.5rem; margin-bottom: 10px;">📔</div>
+                            <strong style="color: #1e293b; display: block; margin-bottom: 5px;">Booklet Format</strong>
+                            <p style="color: #64748b; font-size: 0.85rem;">A5 size pages<br/>Perfect for binding</p>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #FFF5F7, #E3F9F6); border-radius: 12px;">
+                            <div style="font-size: 2.5rem; margin-bottom: 10px;">🖼️</div>
+                            <strong style="color: #1e293b; display: block; margin-bottom: 5px;">Picture Book</strong>
+                            <p style="color: #64748b; font-size: 0.85rem;">Large format<br/>Full-page illustrations</p>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #F0F9FF, #FAF5FF); border-radius: 12px;">
+                            <div style="font-size: 2.5rem; margin-bottom: 10px;">📱</div>
+                            <strong style="color: #1e293b; display: block; margin-bottom: 5px;">E-Reader</strong>
+                            <p style="color: #64748b; font-size: 0.85rem;">EPUB format<br/>For Kindle & tablets</p>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button style="padding: 14px 32px; background: linear-gradient(135deg, #3B82F6, #8B5CF6); color: white; border: none; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);">
+                            🎯 Try Creating Your First Printable Story
+                        </button>
                     </div>
                 </div>
             </div>
