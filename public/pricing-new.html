@@ -204,6 +204,10 @@
             background: linear-gradient(135deg, #8b5cf6, #a78bfa);
         }
 
+        .tier-premium .tier-icon {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        }
+        
         .tier-premium-new .tier-icon {
             background: linear-gradient(135deg, #f59e0b, #fbbf24);
         }
@@ -225,6 +229,7 @@
         .tier-free .tier-name { color: #10b981; }
         .tier-basic .tier-name { color: #3b82f6; }
         .tier-plus .tier-name { color: #8b5cf6; }
+        .tier-premium .tier-name { color: #8b5cf6; }
         .tier-premium-new .tier-name { color: #f59e0b; }
 
         .tier-price {
@@ -310,6 +315,11 @@
         }
 
         .tier-plus .cta-button {
+            background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+            color: white;
+        }
+        
+        .tier-premium .cta-button {
             background: linear-gradient(135deg, #8b5cf6, #a78bfa);
             color: white;
         }
@@ -429,53 +439,12 @@
         </div>
 
         <div class="pricing-grid">
-            <!-- Try Now Tier -->
-            <div class="tier-card tier-try">
-                <div class="tier-header">
-                    <div class="tier-icon">👀</div>
-                    <div class="tier-name">Try Now</div>
-                    <div class="tier-subtitle">No signup required</div>
-                    <div class="tier-price">FREE</div>
-                    <div class="tier-billing">No account needed</div>
-                </div>
-                <div class="limits-info">
-                    <strong>Daily Limits:</strong> 1 story per 24 hours
-                </div>
-                <ul class="features-list">
-                    <li class="feature-item">
-                        <span class="feature-icon">✓</span>
-                        <span>1 story per day</span>
-                    </li>
-                    <li class="feature-item">
-                        <span class="feature-icon">✓</span>
-                        <span>Basic themes available</span>
-                    </li>
-                    <li class="feature-item">
-                        <span class="feature-icon">✓</span>
-                        <span>Instant story generation</span>
-                    </li>
-                    <li class="feature-item disabled">
-                        <span class="feature-icon">✗</span>
-                        <span>No story saving</span>
-                    </li>
-                    <li class="feature-item disabled">
-                        <span class="feature-icon">✗</span>
-                        <span>No PDF export</span>
-                    </li>
-                    <li class="feature-item disabled">
-                        <span class="feature-icon">✗</span>
-                        <span>No library access</span>
-                    </li>
-                </ul>
-                <button class="cta-button" onclick="window.location.href='/'">Try Now - No Signup</button>
-            </div>
-
-            <!-- Free (Reader) Tier -->
+            <!-- Free (Infrequent Reader) Tier -->
             <div class="tier-card tier-free">
                 <div class="tier-header">
                     <div class="tier-icon">📚</div>
-                    <div class="tier-name">Reader</div>
-                    <div class="tier-subtitle">Free with account</div>
+                    <div class="tier-name">Infrequent Reader</div>
+                    <div class="tier-subtitle">For occasional story lovers</div>
                     <div class="tier-price">FREE</div>
                     <div class="tier-billing">Forever free</div>
                 </div>
@@ -513,16 +482,15 @@
                         <span>Light, kid-safe ads</span>
                     </li>
                 </ul>
-                <button class="cta-button" onclick="window.location.href='/?plan=reader'">Get Started Free</button>
-                <div class="note">2nd story gets free AI illustration!</div>
+                <button class="cta-button" onclick="window.location.href='/?plan=reader'">Perfect for Occasional Storytimes</button>
             </div>
 
-            <!-- Basic (Story Maker) Tier -->
+            <!-- Basic (Story Pro) Tier -->
             <div class="tier-card tier-basic">
                 <div class="tier-header">
                     <div class="tier-icon">✨</div>
-                    <div class="tier-name">Story Maker</div>
-                    <div class="tier-subtitle">Basic Plan</div>
+                    <div class="tier-name">Story Pro</div>
+                    <div class="tier-subtitle">For regular story creators</div>
                     <div class="tier-price monthly-price">$4.99</div>
                     <div class="tier-price yearly-price" style="display: none;">$3.25</div>
                     <div class="tier-billing monthly-billing">per month</div>
@@ -531,7 +499,7 @@
                 </div>
                 <div class="limits-info">
                     <strong>Limits:</strong> 10 stories/day • 50/month<br>
-                    <strong>AI Features:</strong> 30 images/month • 10 narrations/month
+                    <strong>AI Features:</strong> 30 images/month • 3 narrations/month
                 </div>
                 <ul class="features-list">
                     <li class="feature-item">
@@ -548,7 +516,7 @@
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon">✓</span>
-                        <span>10 Voice Narrations/month</span>
+                        <span>3 Voice Narrations/month</span>
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon">✓</span>
@@ -563,16 +531,73 @@
                         <span>Non-watermarked PDFs</span>
                     </li>
                 </ul>
-                <button class="cta-button" onclick="window.location.href='/?plan=story-maker'">Choose Story Maker</button>
+                <button class="cta-button" onclick="window.location.href='/?plan=story-pro'">Ideal for Regular Readers</button>
             </div>
 
-            <!-- Plus (Family) Tier -->
-            <div class="tier-card tier-plus popular">
-                <span class="badge popular">Most Popular</span>
+            <!-- New Read to Me ProMax Tier -->
+            <div class="tier-card tier-plus">
+                <div class="tier-header">
+                    <div class="tier-icon">🎧</div>
+                    <div class="tier-name">Read to Me ProMax</div>
+                    <div class="tier-subtitle">For narrated story fans</div>
+                    <div class="tier-price monthly-price">$6.99</div>
+                    <div class="tier-price yearly-price" style="display: none;">$4.58</div>
+                    <div class="tier-billing monthly-billing">per month</div>
+                    <div class="tier-billing yearly-billing" style="display: none;">per month (billed $55/year)</div>
+                    <div class="tier-yearly-price yearly-savings" style="display: none;">Save $28.88 (34%)</div>
+                </div>
+                <div class="limits-info">
+                    <strong>Limits:</strong> 20 stories/day • 100/month<br>
+                    <strong>AI Features:</strong> Unlimited images • 30 narrations/month
+                </div>
+                <ul class="features-list">
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span><strong>20 stories per day</strong></span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>100 stories per month</span>
+                    </li>
+                    <li class="feature-item highlight">
+                        <span class="feature-icon">✓</span>
+                        <span><strong>30+ Voice Narrations/month</strong></span>
+                    </li>
+                    <li class="feature-item highlight">
+                        <span class="feature-icon">✓</span>
+                        <span><strong>Unlimited AI illustrations</strong></span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>3-4 child profiles</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Bedtime reminders & streaks</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Audio downloads</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Non-watermarked PDFs</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span><strong>Ad-free experience</strong></span>
+                    </li>
+                </ul>
+                <button class="cta-button" onclick="window.location.href='/?plan=read-to-me-promax'">Perfect for Narrated Stories</button>
+            </div>
+
+            <!-- Family Plus Tier -->
+            <div class="tier-card tier-premium popular">
+                <span class="badge popular">Most Popular • Best Value</span>
                 <div class="tier-header">
                     <div class="tier-icon">🌈</div>
-                    <div class="tier-name">Family</div>
-                    <div class="tier-subtitle">Plus Plan</div>
+                    <div class="tier-name">Family Plus</div>
+                    <div class="tier-subtitle">Share with the whole family</div>
                     <div class="tier-price monthly-price">$7.99</div>
                     <div class="tier-price yearly-price" style="display: none;">$4.92</div>
                     <div class="tier-billing monthly-billing">per month</div>
@@ -613,16 +638,17 @@
                         <span>Non-watermarked PDFs</span>
                     </li>
                 </ul>
-                <button class="cta-button" onclick="window.location.href='/?plan=family'">Choose Family Plan</button>
+                <button class="cta-button" onclick="window.location.href='/?plan=family-plus'">Share with the Whole Family</button>
                 <div class="note">*Fair use: up to 5 AI illustrations per story</div>
             </div>
 
-            <!-- Premium (Movie Director) Tier -->
+            <!-- Premium (Movie Maker) Tier -->
             <div class="tier-card tier-premium-new coming-soon">
+                <span class="badge coming-soon">Coming Soon</span>
                 <div class="tier-header">
                     <div class="tier-icon">🎬</div>
-                    <div class="tier-name">Movie Director</div>
-                    <div class="tier-subtitle">Premium Plan</div>
+                    <div class="tier-name">Movie Maker</div>
+                    <div class="tier-subtitle">Ultimate animated experience</div>
                     <div class="tier-price monthly-price">$14.99</div>
                     <div class="tier-price yearly-price" style="display: none;">$8.25</div>
                     <div class="tier-billing monthly-billing">per month</div>
@@ -632,7 +658,7 @@
                 <ul class="features-list">
                     <li class="feature-item">
                         <span class="feature-icon">✓</span>
-                        <span>Everything in Family, plus:</span>
+                        <span>Everything in Family Plus, plus:</span>
                     </li>
                     <li class="feature-item">
                         <span class="feature-icon">✓</span>
