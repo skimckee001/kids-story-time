@@ -962,6 +962,78 @@
             .email-capture {
                 flex-direction: column;
             }
+
+            /* Star Rewards Mobile */
+            .star-rewards > div > div:nth-child(2) {
+                grid-template-columns: 1fr !important;
+                gap: 40px !important;
+            }
+
+            .star-rewards h3 {
+                font-size: 1.5rem !important;
+            }
+
+            /* Achievement Badges Mobile */
+            .achievement-badges > div > div:nth-child(2) {
+                grid-template-columns: 1fr !important;
+                gap: 40px !important;
+            }
+
+            .achievement-badges h3 {
+                font-size: 1.5rem !important;
+            }
+
+            /* Badge Categories - Stack on mobile */
+            .achievement-badges div[style*="grid-template-columns: repeat(2, 1fr)"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Badge Showcase - 3 columns on mobile */
+            .achievement-badges div[style*="grid-template-columns: repeat(4, 1fr)"] {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+
+            /* Rewards Shop - 2 columns on mobile */
+            .star-rewards div[style*="grid-template-columns: repeat(3, 1fr)"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            /* Stats Grid - 2x2 on mobile */
+            div[style*="grid-template-columns: repeat(4, 1fr)"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            /* Badge size adjustments */
+            div[style*="width: 80px; height: 80px"] {
+                width: 60px !important;
+                height: 60px !important;
+            }
+        }
+
+        /* Small mobile */
+        @media (max-width: 480px) {
+            /* Badge Showcase - 2 columns on small mobile */
+            .achievement-badges div[style*="grid-template-columns: repeat(4, 1fr)"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+
+            /* Section padding */
+            .star-rewards,
+            .achievement-badges {
+                padding: 40px 0 !important;
+            }
+
+            /* Smaller text */
+            .star-rewards h2,
+            .achievement-badges h2 {
+                font-size: 1.8rem !important;
+            }
+
+            /* Stats text smaller */
+            div[style*="font-size: 2.5rem"] {
+                font-size: 1.8rem !important;
+            }
         }
     </style>
 </head>
@@ -1204,6 +1276,231 @@
                     <div class="feature-icon" style="background-image: url('https://images.unsplash.com/photo-1536240478700-b869070f9279?w=100&h=100&fit=crop'); background-size: cover; width: 60px; height: 60px;"></div>
                     <h3>Video Stories</h3>
                     <p>Watch your stories come to life with animated videos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Star Rewards Section -->
+    <section class="star-rewards" style="background: linear-gradient(135deg, #FFF9E6 0%, #FFE5EC 100%); padding: 80px 0;">
+        <div class="container">
+            <div class="section-header">
+                <div style="font-size: 3rem; margin-bottom: 20px;">⭐</div>
+                <h2 style="background: linear-gradient(135deg, #FFB800, #FF6B9D); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Earn Stars, Unlock Magic!</h2>
+                <p>Every story earns 10 stars - watch your child's excitement grow with each achievement</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 60px;">
+                <!-- Left: How it Works -->
+                <div>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 30px; color: #FF6B9D;">How Star Rewards Work</h3>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: flex; align-items: center; gap: 20px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem;">📖</div>
+                            <div>
+                                <strong style="color: #2d3436;">Read or Listen</strong>
+                                <p style="margin: 5px 0 0; color: #636e72; font-size: 0.95rem;">Complete any story to earn stars</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 20px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem;">⭐</div>
+                            <div>
+                                <strong style="color: #2d3436;">Earn 10 Stars</strong>
+                                <p style="margin: 5px 0 0; color: #636e72; font-size: 0.95rem;">Every story rewards 10 shiny stars</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 20px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem;">🎁</div>
+                            <div>
+                                <strong style="color: #2d3436;">Unlock Rewards</strong>
+                                <p style="margin: 5px 0 0; color: #636e72; font-size: 0.95rem;">Trade stars for amazing digital rewards</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right: Rewards Shop Preview -->
+                <div>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 30px; color: #4ECDC4;">Rewards Shop Preview</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🦄</div>
+                            <div style="font-size: 0.85rem; color: #2d3436; font-weight: 600;">Unicorn Theme</div>
+                            <div style="font-size: 0.75rem; color: #FFB800; margin-top: 5px;">⭐ 50 stars</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🚀</div>
+                            <div style="font-size: 0.85rem; color: #2d3436; font-weight: 600;">Space Theme</div>
+                            <div style="font-size: 0.75rem; color: #FFB800; margin-top: 5px;">⭐ 75 stars</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🌈</div>
+                            <div style="font-size: 0.85rem; color: #2d3436; font-weight: 600;">Rainbow Theme</div>
+                            <div style="font-size: 0.75rem; color: #FFB800; margin-top: 5px;">⭐ 100 stars</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🎨</div>
+                            <div style="font-size: 0.85rem; color: #2d3436; font-weight: 600;">Custom Avatar</div>
+                            <div style="font-size: 0.75rem; color: #FFB800; margin-top: 5px;">⭐ 150 stars</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🎵</div>
+                            <div style="font-size: 0.85rem; color: #2d3436; font-weight: 600;">Music Pack</div>
+                            <div style="font-size: 0.75rem; color: #FFB800; margin-top: 5px;">⭐ 200 stars</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">👑</div>
+                            <div style="font-size: 0.85rem; color: #2d3436; font-weight: 600;">Royal Crown</div>
+                            <div style="font-size: 0.75rem; color: #FFB800; margin-top: 5px;">⭐ 500 stars</div>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 20px; text-align: center; color: #636e72; font-size: 0.9rem;">
+                        <strong>20+ rewards available</strong> - New items added monthly!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievement Badges Section -->
+    <section class="achievement-badges" style="background: white; padding: 80px 0;">
+        <div class="container">
+            <div class="section-header">
+                <div style="font-size: 3rem; margin-bottom: 20px;">🏆</div>
+                <h2 style="background: linear-gradient(135deg, #4ECDC4, #44A3AA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Unlock Achievement Badges!</h2>
+                <p>Celebrate every milestone with special badges that showcase your child's reading journey</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 60px;">
+                <!-- Left: Badge Categories -->
+                <div>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 30px; color: #4ECDC4;">Badge Categories</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                        <div style="background: linear-gradient(135deg, #E3F9F6, #FFF5F7); padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">📚</div>
+                            <strong style="color: #2d3436;">Reading Milestones</strong>
+                            <p style="margin: 5px 0 0; color: #636e72; font-size: 0.85rem;">First Story, 10 Stories, 50 Stories, 100 Stories</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #FFF5F7, #E3F9F6); padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">🔥</div>
+                            <strong style="color: #2d3436;">Reading Streaks</strong>
+                            <p style="margin: 5px 0 0; color: #636e72; font-size: 0.85rem;">3-Day, 7-Day, 30-Day, 100-Day Streaks</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #FFF5F7, #E3F9F6); padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">🌟</div>
+                            <strong style="color: #2d3436;">Star Collector</strong>
+                            <p style="margin: 5px 0 0; color: #636e72; font-size: 0.85rem;">100 Stars, 500 Stars, 1000 Stars, 5000 Stars</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #E3F9F6, #FFF5F7); padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">🎯</div>
+                            <strong style="color: #2d3436;">Special Achievements</strong>
+                            <p style="margin: 5px 0 0; color: #636e72; font-size: 0.85rem;">Night Owl, Early Bird, Weekend Warrior</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right: Badge Showcase -->
+                <div>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 30px; color: #FF6B9D;">Popular Badges to Earn</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #FFE66D, #FFB800); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(255, 184, 0, 0.3);">
+                                🌟
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">First Story</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #4ECDC4, #44A3AA); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);">
+                                🔥
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">7-Day Streak</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #FF6B9D, #FF5580); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);">
+                                📚
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">10 Stories</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #A78BFA, #8B5CF6); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);">
+                                🌙
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">Night Owl</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #10B981, #059669); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+                                💎
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">100 Stars</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #F59E0B, #D97706); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
+                                🏅
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">30-Day Streak</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #EC4899, #DB2777); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);">
+                                🦄
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">Fantasy Fan</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #6366F1, #4F46E5); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
+                                👑
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">100 Stories</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #FFF9E6, #E3F9F6); border-radius: 12px; text-align: center;">
+                        <p style="color: #2d3436; font-weight: 600; margin-bottom: 10px;">🎊 Share Your Achievements!</p>
+                        <p style="color: #636e72; font-size: 0.9rem;">Display badges on your profile and share with family & friends</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Motivational Stats -->
+            <div style="margin-top: 60px; padding: 40px; background: linear-gradient(135deg, #667eea15, #4ECDC415); border-radius: 20px;">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; text-align: center;">
+                    <div>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: #FF6B9D;">89%</div>
+                        <p style="color: #636e72; margin-top: 5px;">Kids read more with rewards</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: #4ECDC4;">15 min</div>
+                        <p style="color: #636e72; margin-top: 5px;">Average daily reading increase</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: #FFB800;">2.5x</div>
+                        <p style="color: #636e72; margin-top: 5px;">More engaged with badges</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: #8B5CF6;">94%</div>
+                        <p style="color: #636e72; margin-top: 5px;">Parents report improved habits</p>
+                    </div>
                 </div>
             </div>
         </div>

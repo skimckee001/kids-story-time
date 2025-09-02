@@ -3,11 +3,17 @@
 ## ⚠️ CRITICAL: Read This First
 This file contains essential context for the KidsStoryTime.ai React project. **ALWAYS** read this file when starting a new session.
 
+## 🚨 CORRECT DIRECTORY - USE ONLY THIS ONE
+**ACTIVE PROJECT:** `/Users/skimckee/Documents/Github/kids-story-time`
+- ✅ THIS IS THE ONLY DIRECTORY TO USE
+- ❌ DO NOT USE: `/Users/skimckee/Projects/` directories (those are archived)
+- 📝 Note: Dropbox path `/Users/skimckee/Dropbox/.../GitHub/kids-story-time` is the SAME directory (synced)
+
 ## Project Overview
 KidsStoryTime.ai is a **React 18 + Vite** web application for generating personalized children's stories using AI. The app includes features for story generation, library management, achievements, reading streaks, and subscription management via Stripe.
 
 ## Project Location & Version
-- **Active Directory**: `/Users/skimckee/Documents/Github/kids-story-time`
+- **Active Directory**: `/Users/skimckee/Documents/Github/kids-story-time` ⬅️ ONLY USE THIS
 - **Framework**: React 18 with Vite (NOT vanilla HTML/JS)
 - **Main App File**: `src/App.complete.jsx` (NOT App.jsx)
 - **Live URL**: https://kidsstorytime.ai
