@@ -2,6 +2,18 @@
 
 ## ✅ COMPLETED (September 2, 2025)
 
+### Pricing Structure Overhaul
+- [x] Removed "Try Now" no-signup tier
+- [x] Renamed tiers: Infrequent Reader, Story Pro, Read to Me ProMax, Family Plus, Movie Maker
+- [x] Added new Read to Me ProMax tier at $6.99
+- [x] Updated narration limits (3 for Story Pro, 30 for Read to Me, 40 for Family Plus)
+- [x] Changed AI illustration limits to specific numbers (150 for higher tiers)
+- [x] Moved "Most Popular" badge to Story Pro
+- [x] Added "Best Value" badge to Read to Me ProMax
+- [x] Updated landing page images (Moms & Daughters, Dads & Sons portraits)
+
+## ✅ COMPLETED (September 2, 2025 - Earlier)
+
 ### Mobile UI Improvements
 - [x] Fixed iOS Safari border-radius rendering issues
 - [x] Added webkit prefixes and transform3d hack for Chrome iOS
@@ -85,6 +97,76 @@
 - [x] Built comparison table, pricing, safety sections
 - [x] Added FAQ accordion and final CTA
 - [x] Fixed deployment configuration for /landing.html
+
+## 🚨 CRITICAL - NEW PRICING IMPLEMENTATION TASKS (September 2025)
+
+### Stripe & Payment Infrastructure
+- [ ] **Update Stripe Products/Prices** for new tier structure:
+  - [ ] Create Read to Me ProMax product at $6.99/month
+  - [ ] Update Story Pro to $4.99 (ensure 3 narrations limit)
+  - [ ] Update Family Plus to $7.99 (ensure 40 narrations)
+  - [ ] Archive old "Try Now" tier references
+  - [ ] Update yearly pricing calculations
+- [ ] **Update webhook handlers** for new plan names (read-to-me-promax, story-pro, family-plus)
+- [ ] **Test payment flows** end-to-end for each tier
+
+### Application Limit Enforcement
+- [ ] **Implement usage tracking & limits**:
+  - [ ] AI illustrations counter (30/150 per month based on tier)
+  - [ ] Voice narrations counter (1/3/30/40 based on tier)
+  - [ ] Child profiles limit (1/2/2/5 based on tier)
+  - [ ] Stories per day/month limits
+- [ ] **Add usage indicators in UI**:
+  - [ ] "X narrations remaining this month" badge
+  - [ ] "X AI illustrations remaining" counter
+  - [ ] Progress bars for monthly limits
+  - [ ] Warning when approaching limits (80% used)
+  - [ ] Clear upgrade prompts when limits reached
+
+### Landing Page Updates
+- [ ] **Update pricing section** on landing.html to match new tiers
+- [ ] **Update comparison table** with new features/limits
+- [ ] **Update all pricing CTAs** to reflect new tier names
+- [ ] **Update testimonials** to mention specific tier benefits
+- [ ] **Add "From $4.99/month"** instead of generic pricing
+
+### Database & Backend Updates
+- [ ] **Update Supabase tables** for new tier structure:
+  - [ ] Add read_to_me_promax to subscription_tier enum
+  - [ ] Update tier_limits table with new values
+  - [ ] Migrate existing users to appropriate new tiers
+- [ ] **Update API endpoints** to recognize new plan names
+- [ ] **Implement monthly usage reset** job
+
+### Main App Updates (App.complete.jsx)
+- [ ] **Update subscription tier checking** for new plan names
+- [ ] **Add usage tracking components**:
+  - [ ] Narration counter display
+  - [ ] AI illustration counter
+  - [ ] "Upgrade for more" prompts
+- [ ] **Update feature gates** based on new tier structure
+- [ ] **Add profile limit enforcement** (2 for Read to Me ProMax)
+
+### Analytics & Monitoring
+- [ ] **Track tier selection** in analytics (which tier users choose)
+- [ ] **Monitor usage patterns** (how many hit limits)
+- [ ] **Track upgrade paths** (which limits trigger upgrades)
+- [ ] **A/B test** badge placement effectiveness
+
+### User Communication
+- [ ] **Email existing users** about tier changes
+- [ ] **Update onboarding flow** to explain new tiers
+- [ ] **Create upgrade path messaging** for each limit
+- [ ] **Update FAQ** with new pricing structure
+
+### Testing Checklist
+- [ ] Test free tier (Infrequent Reader) limits
+- [ ] Test Story Pro 3 narration limit
+- [ ] Test Read to Me ProMax 30 narrations & 150 illustrations
+- [ ] Test Family Plus 40 narrations & 150 illustrations
+- [ ] Test profile creation limits per tier
+- [ ] Test upgrade/downgrade flows
+- [ ] Test usage reset at month boundary
 
 ## 🔴 HIGH PRIORITY - COMPETITOR FEATURES TO IMPLEMENT
 
