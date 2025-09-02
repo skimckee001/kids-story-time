@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Landing Page Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .status { 
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Landing Page Verification</h1>
+    
+    <div class="status info">
+        <h2>Server Check</h2>
+        <p>Current time: <script>document.write(new Date().toLocaleString());</script></p>
+        <p>Page URL: <script>document.write(window.location.href);</script></p>
+    </div>
+
+    <div class="status success">
+        <h2>Expected Changes</h2>
+        <ul>
+            <li>✅ Primary color should be PINK (#FF6B9D) not purple (#8b5cf6)</li>
+            <li>✅ Secondary color should be TEAL (#4ECDC4)</li>
+            <li>✅ Testimonials should scroll horizontally</li>
+            <li>✅ Background gradients throughout</li>
+            <li>✅ Comparison table header with dark text on white</li>
+        </ul>
+    </div>
+
+    <div class="status info">
+        <h2>Direct Links</h2>
+        <p>Click these to test:</p>
+        <ul>
+            <li><a href="/landing.html" target="_blank">Open Landing Page in New Tab</a></li>
+            <li><a href="/test-color.html" target="_blank">Open Color Test Page</a></li>
+        </ul>
+    </div>
+
+    <div class="status info">
+        <h2>Live Color Check</h2>
+        <p>Fetching landing page colors...</p>
+        <pre id="color-check">Loading...</pre>
+    </div>
+
+    <h2>Landing Page Preview (iframe)</h2>
+    <iframe src="/landing.html" id="landing-frame"></iframe>
+
+    <script>
+        // Check the actual colors in the landing page
+        fetch('/landing.html')
+            .then(response => response.text())
+            .then(html => {
+                const colorCheck = document.getElementById('color-check');
+                
+                // Extract color definitions
+                const primaryMatch = html.match(/--primary:\s*(#[A-Fa-f0-9]+)/);
+                const secondaryMatch = html.match(/--secondary:\s*(#[A-Fa-f0-9]+)/);
+                const hasScrollingTestimonials = html.includes('testimonials-scroll');
+                const hasScrollAnimation = html.includes('@keyframes scroll');
+                
+                let result = 'Color Analysis:\n';
+                result += `Primary Color: ${primaryMatch ? primaryMatch[1] : 'NOT FOUND'}\n`;
+                result += `Secondary Color: ${secondaryMatch ? secondaryMatch[1] : 'NOT FOUND'}\n`;
+                result += `Has Scrolling Testimonials: ${hasScrollingTestimonials ? 'YES' : 'NO'}\n`;
+                result += `Has Scroll Animation: ${hasScrollAnimation ? 'YES' : 'NO'}\n\n`;
+                
+                if (primaryMatch && primaryMatch[1] === '#FF6B9D') {
+                    result += '✅ CORRECT: Pink color theme is active!';
+                } else if (primaryMatch && primaryMatch[1] === '#8b5cf6') {
+                    result += '❌ ERROR: Old purple color is still showing!';
+                } else {
+                    result += '⚠️ WARNING: Unexpected color scheme';
+                }
+                
+                colorCheck.textContent = result;
+            })
+            .catch(error => {
+                document.getElementById('color-check').textContent = 'Error loading page: ' + error;
+            });
+
+        // Check if service worker is registered
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                if (registrations.length > 0) {
+                    const warning = document.createElement('div');
+                    warning.className = 'status error';
+                    warning.innerHTML = '<h2>⚠️ Service Worker Detected!</h2>' +
+                        '<p>A service worker is registered which may be caching old content.</p>' +
+                        '<button onclick="clearServiceWorker()">Clear Service Worker</button>';
+                    document.body.insertBefore(warning, document.body.children[3]);
+                }
+            });
+        }
+
+        function clearServiceWorker() {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+                alert('Service Worker cleared! Please refresh the page.');
+                window.location.reload(true);
+            });
+        }
+    </script>
+</body>
+</html>

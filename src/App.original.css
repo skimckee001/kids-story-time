@@ -753,9 +753,15 @@ body {
 }
 
 .theme-emoji {
-  font-size: 1.2rem;
+  font-size: 1rem;
   display: inline-block;
   flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .theme-emoji {
+    font-size: 0.9rem;
+  }
 }
 
 .theme-label {
@@ -1459,7 +1465,7 @@ body {
   }
 
   .theme-emoji {
-    font-size: 1.5rem;
+    font-size: 0.9rem;
   }
 
   .length-options {

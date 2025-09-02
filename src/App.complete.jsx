@@ -987,7 +987,7 @@ function App() {
           {/* Beta Banner */}
           <div className="beta-banner">
             <div className="beta-title">🎉 LAUNCH SPECIAL - First Month FREE on All Plans!</div>
-            <div className="beta-subtitle">Try our Story Maker or Family plans risk-free for 30 days</div>
+            {/* Launch special subtitle removed for mobile clarity */}
           </div>
           
           {/* Navigation Bar */}
@@ -1004,7 +1004,7 @@ function App() {
                     style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
                   >
                     <span style={{fontSize: '16px', marginRight: '6px'}}>⭐</span>
-                    <span>{starPoints} Stars</span>
+                    <span>{starPoints}</span>
                   </button>
                   
                   {/* Trophy Room - Achievement System */}
@@ -1015,18 +1015,11 @@ function App() {
                     aria-label="View {achievementCount || 0} achievements"
                     style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
                   >
-                    <span style={{fontSize: '16px', marginRight: '6px'}}>🏆</span>
-                    <span>{achievementCount || 0}/48 Badges</span>
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>🎖️</span>
+                    <span>{achievementCount || 0}/48</span>
                   </button>
                   
-                  <button 
-                    className="header-btn"
-                    onClick={() => setShowLibrary(true)}
-                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
-                  >
-                    <span style={{fontSize: '16px', marginRight: '6px'}}>📚</span>
-                    <span>Library</span>
-                  </button>
+                  {/* Library button removed for mobile simplicity */}
                   {(subscriptionTier === 'reader-free' || subscriptionTier === 'story-maker-basic') && storiesRemaining <= 1 && (
                     <button 
                       className="header-btn trial-btn"
@@ -1049,7 +1042,7 @@ function App() {
                     style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600', opacity: 0.7}}
                   >
                     <span style={{fontSize: '16px', marginRight: '6px'}}>⭐</span>
-                    <span>0 Stars</span>
+                    <span>0</span>
                   </button>
                   
                   <button 
@@ -1058,42 +1051,11 @@ function App() {
                     title="Sign up to unlock badges!"
                     style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600', opacity: 0.7}}
                   >
-                    <span style={{fontSize: '16px', marginRight: '6px'}}>🏆</span>
-                    <span>0/48 Badges</span>
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>🎖️</span>
+                    <span>0/48</span>
                   </button>
                   
-                  <button 
-                    className="header-btn"
-                    onClick={() => setShowAuth(true)}
-                    style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
-                  >
-                    <span style={{fontSize: '16px', marginRight: '6px'}}>📚</span>
-                    <span>Library</span>
-                  </button>
-                  
-                  <button 
-                    className="header-btn"
-                    onClick={() => window.open('/pricing-new.html', '_blank')}
-                    style={{flex: '0 0 auto'}}
-                  >
-                    💳 Plans
-                  </button>
-                  
-                  <button 
-                    className="header-btn trial-btn" 
-                    onClick={() => {
-                      // Scroll to the story generation form
-                      const formElement = document.querySelector('.main-content');
-                      if (formElement) {
-                        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
-                    }}
-                  >
-                    ✨ Create Your First Story
-                    <div className="trial-tooltip">
-                      Try it free! No signup required
-                    </div>
-                  </button>
+                  {/* Library, Plans and Create buttons removed for mobile simplicity */}
                 </>
               )}
             </div>
@@ -1240,16 +1202,10 @@ function App() {
             <div className="form-group">
               <label htmlFor="customPrompt">
                 What would you like this story to be about?
-                <button 
-                  type="button" 
-                  className="info-btn" 
-                  onClick={() => alert('Tips:\n• Be specific about the setting (e.g., "underwater kingdom", "space station")\n• Include your child\'s interests (e.g., "dinosaurs who love pizza")\n• Add a lesson or moral (e.g., "about sharing", "being brave")\n• Mention favorite characters or themes\n• The more detail, the better the story!')}
-                  title="Click for story tips"
-                  style={{color: '#667eea', fontWeight: '600', cursor: 'pointer'}}
-                >
-                  💡 Tips
-                </button>
               </label>
+              <div style={{fontSize: '0.85rem', color: '#666', marginBottom: '8px', fontWeight: 'normal'}}>
+                Tips: Be specific about the setting • Include your child's interests • Add a lesson or moral
+              </div>
               <div className="prompt-container">
                 <textarea
                   id="customPrompt"
@@ -1305,7 +1261,6 @@ function App() {
             {/* Theme Selection - MOVED DOWN */}
             <div className="form-group">
               <label>Add a theme or topic</label>
-              <p className="theme-subtitle">Pick one or more to make it extra special - Optional</p>
               <div className="theme-grid">
                 {getAvailableThemes().map(theme => (
                   <div
@@ -1324,9 +1279,6 @@ function App() {
             <div className="form-group">
               <label htmlFor="imageStyle">
                 Illustration Style 🎨
-                <span style={{ marginLeft: '8px', fontSize: '12px', color: '#666' }}>
-                  (Smart Choice auto-selects based on age)
-                </span>
               </label>
               <div style={{ position: 'relative' }}>
                 <select
@@ -1380,7 +1332,7 @@ function App() {
               disabled={isGenerating || (!user && storiesRemaining <= 0)}
             >
               {isGenerating ? 'Creating your magical story...' : 
-               !user ? 'Create Your First Story! ✨' : 'Generate My Story! ✨'}
+               !user ? '✨ Create Your First Story! ✨' : '✨ Generate My Story! ✨'}
             </button>
             
             {/* Plan Status */}
@@ -1563,13 +1515,14 @@ function App() {
 
         {/* Footer */}
         <footer className="footer">
-          <p>&copy; 2025 Kids Story Time. All rights reserved.</p>
           <p>
             <a href="/pricing-new.html" target="_blank">Pricing</a> | 
             <a href="/terms.html" target="_blank">Terms of Service</a> | 
             <a href="/privacy.html" target="_blank">Privacy Policy</a> | 
             <a href="mailto:support@kidsstorytime.ai">Contact Us</a>
           </p>
+          <p>&copy; 2025 Kids Story Time.</p>
+          <p>All rights reserved.</p>
         </footer>
       </div>
 
