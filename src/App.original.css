@@ -69,12 +69,11 @@ body {
 @media (max-width: 480px) {
   .header-container {
     padding: 12px 8px;
-    margin-bottom: 0;
-    border-radius: 0;
-    margin-left: 0;
-    margin-right: 0;
-    width: 100%;
-    max-width: 100%;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    margin: 0 8px 10px 8px;
+    width: calc(100% - 16px);
+    max-width: calc(100% - 16px);
   }
 }
 
