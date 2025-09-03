@@ -1,5 +1,6 @@
 /* Import unified theme variables */
 @import './styles/theme.css';
+@import './styles/typography.css';
 
 @tailwind base;
 @tailwind components;
