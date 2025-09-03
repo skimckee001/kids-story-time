@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import AdSense from './AdSense';
 import { addStarsToChild } from './StarRewardsSystem';
+import SocialSharing from './SocialSharing';
 import './StoryDisplay.css';
 import '../App.original.css';
 
@@ -10,7 +11,6 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [rating, setRating] = useState(0);
-  const [showShareMenu, setShowShareMenu] = useState(false);
   const [isReading, setIsReading] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [speechUtterance, setSpeechUtterance] = useState(null);
@@ -566,22 +566,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
     }
   };
 
-  const handleShare = (platform) => {
-    const url = window.location.href;
-    const text = `Check out this amazing story: ${story.title}`;
-    
-    const shareUrls = {
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-      twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
-      whatsapp: `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`,
-      email: `mailto:?subject=${encodeURIComponent(story.title)}&body=${encodeURIComponent(text + '\n\n' + url)}`
-    };
-
-    if (shareUrls[platform]) {
-      window.open(shareUrls[platform], '_blank');
-    }
-    setShowShareMenu(false);
-  };
+  // Share functionality is now handled by the SocialSharing component
 
   const handleRating = (stars) => {
     setRating(stars);
@@ -994,22 +979,16 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
               <button onClick={handlePrint} className="print-btn">
                 🖨️ Print
               </button>
-              <div className="share-dropdown">
-                <button 
-                  onClick={() => setShowShareMenu(!showShareMenu)} 
-                  className="share-btn"
-                >
-                  📤 Share
-                </button>
-                {showShareMenu && (
-                  <div className="share-menu">
-                    <button onClick={() => handleShare('facebook')}>Facebook</button>
-                    <button onClick={() => handleShare('twitter')}>Twitter</button>
-                    <button onClick={() => handleShare('whatsapp')}>WhatsApp</button>
-                    <button onClick={() => handleShare('email')}>Email</button>
-                  </div>
-                )}
-              </div>
+              <SocialSharing
+                story={story}
+                userId={user?.id || 'guest'}
+                onStarsEarned={(stars) => {
+                  setLocalStarPoints(prev => prev + stars);
+                  if (childProfile) {
+                    localStorage.setItem(`stars_${childProfile.id}`, localStarPoints + stars);
+                  }
+                }}
+              />
             </div>
           </div>
 

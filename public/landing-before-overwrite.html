@@ -1,0 +1,2853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KidsStoryTime.ai - Transform Bedtime Into Adventure Time</title>
+    <meta name="description" content="AI-powered personalized stories that make your child the hero. Join 10,000+ families creating magical moments every night.">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B9D;
+            --primary-dark: #FF5580;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --success: #10b981;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #FFF5F7;
+            --bg-gradient: linear-gradient(135deg, #FFF5F7 0%, #E3F9F6 100%);
+            --bg-accent: #FFF0F3;
+            --border: #FFD6E0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Fredoka', cursive;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
+            padding: 100px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            background: linear-gradient(135deg, #FF6B9D, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-text p {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF5580 100%);
+            color: white;
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(255, 107, 157, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #FF6B9D;
+            border: 2px solid #FF6B9D;
+        }
+
+        .btn-secondary:hover {
+            background: #FFF5F7;
+            transform: translateY(-2px);
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 500px;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-card:nth-child(1) {
+            top: 20px;
+            left: 20px;
+            animation-delay: 0s;
+        }
+
+        .floating-card:nth-child(2) {
+            top: 150px;
+            right: 40px;
+            animation-delay: 2s;
+        }
+
+        .floating-card:nth-child(3) {
+            bottom: 40px;
+            left: 60px;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .story-preview {
+            width: 280px;
+        }
+
+        .story-preview img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .story-preview h4 {
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .story-preview p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        /* Trust Bar */
+        .trust-bar {
+            background: white;
+            padding: 30px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .trust-items {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .trust-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #FFE5EC, #E3F9F6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .trust-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .trust-value {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .trust-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        /* Problem Solution Section */
+        .problem-solution {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #FFF9FA 0%, #F0FFFD 100%);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .solution-flow {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .solution-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .solution-card.problem {
+            opacity: 0.6;
+            background: #f3f4f6;
+        }
+
+        .solution-card.magic {
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
+            border: 2px solid #FF6B9D;
+        }
+
+        .solution-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: var(--bg-purple-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .solution-arrow {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        .step-image {
+            width: 100%;
+            height: 200px;
+            background: var(--bg-purple-light);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .step h3 {
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .step p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Features */
+        .features {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #FFFBFC 0%, #F5FFFD 100%);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 20px;
+            border: 2px solid white;
+        }
+
+        .feature-card h3 {
+            font-size: 1.125rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .coming-soon {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--secondary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Connection Moments */
+        .connection {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #FFF5F7 0%, #E3F9F6 100%);
+        }
+
+        .connection-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .connection-card {
+            background: var(--bg-light);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .connection-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .connection-image {
+            height: 300px;
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .connection-content {
+            padding: 30px;
+        }
+
+        .connection-card h3 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .connection-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
+            overflow: hidden;
+        }
+
+        .testimonials-container {
+            position: relative;
+            max-width: 100%;
+            margin-top: 60px;
+            overflow: hidden;
+        }
+
+        .testimonials-scroll {
+            display: flex;
+            animation: scroll 40s linear infinite;
+            gap: 30px;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .testimonials-scroll:hover {
+            animation-play-state: paused;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            min-width: 400px;
+            flex-shrink: 0;
+        }
+
+        .stars {
+            color: var(--secondary);
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+        }
+
+        .testimonial-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .author-info h4 {
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .author-info p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        /* Comparison Table */
+        .comparison {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: white;
+            color: var(--text-dark);
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 3px solid #FF6B9D;
+        }
+
+        .comparison-table th:first-child {
+            width: 30%;
+        }
+
+        .comparison-table td {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .comparison-table td:first-child {
+            text-align: left;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table th.our-col {
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
+            color: white;
+            font-weight: 700;
+        }
+        
+        .comparison-table td.our-col {
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
+            font-weight: 600;
+        }
+
+        .check {
+            color: var(--success);
+            font-size: 1.5rem;
+            display: inline-block;
+        }
+
+        .cross {
+            color: #ef4444;
+            font-size: 1.5rem;
+            display: inline-block;
+        }
+
+        .partial {
+            color: var(--secondary);
+            font-size: 1.5rem;
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #FFF9FA 0%, #F0FFFD 100%);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card.popular {
+            transform: scale(1.05);
+            border: 3px solid #FF6B9D;
+            background: linear-gradient(135deg, #FFFBFC 0%, #F5FFFD 100%);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B9D, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 20px 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pricing-features .check-icon {
+            color: var(--success);
+        }
+
+        /* Safety Section */
+        .safety {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .safety-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .safety-item {
+            text-align: center;
+        }
+
+        .safety-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #FFE5EC, #E3F9F6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 20px;
+            border: 3px solid white;
+        }
+
+        .safety-item h3 {
+            font-size: 1.125rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .safety-item p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #FFFBFC 0%, #F5FFFD 100%);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 60px auto 0;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%);
+        }
+
+        .faq-question span {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question span {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 25px 25px;
+            max-height: 500px;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .final-cta p {
+            font-size: 1.25rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .email-capture {
+            display: flex;
+            gap: 20px;
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .email-capture input {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .countdown {
+            font-size: 1.125rem;
+            margin-top: 30px;
+        }
+
+        .countdown span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin: 0 5px;
+            display: inline-block;
+            min-width: 60px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            font-size: 1.125rem;
+            margin-bottom: 20px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding-top: 30px;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        /* Founder Story Responsive */
+        @media (max-width: 768px) {
+            .founder-story > div > div:last-child {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        /* Remote Reading Responsive */
+        @media (max-width: 768px) {
+            .remote-reading > div > div:last-child {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        /* Print Reading Responsive */
+        @media (max-width: 768px) {
+            .print-reading > div > div:last-child {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            /* Hero logo and title on mobile */
+            .hero-text > div:first-child {
+                flex-direction: column !important;
+                text-align: center;
+                gap: 10px !important;
+            }
+            
+            .hero-text h1 {
+                font-size: 1.75rem !important;
+            }
+            
+            /* Before/After images on mobile - stack vertically */
+            .before-after-grid,
+            div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+            
+            /* Challenge cards (3 tiles) on mobile - stack vertically */
+            .challenge-cards-grid,
+            div[style*="grid-template-columns: repeat(3, 1fr)"] {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+
+            .hero-visual {
+                height: 300px;
+            }
+
+            .solution-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .solution-arrow {
+                transform: rotate(90deg);
+            }
+
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+
+            .connection-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                overflow-x: auto;
+            }
+
+            .email-capture {
+                flex-direction: column;
+            }
+
+            /* Star Rewards Mobile */
+            .star-rewards > div > div:nth-child(2) {
+                grid-template-columns: 1fr !important;
+                gap: 40px !important;
+            }
+
+            .star-rewards h3 {
+                font-size: 1.5rem !important;
+            }
+
+            /* Achievement Badges Mobile */
+            .achievement-badges > div > div:nth-child(2) {
+                grid-template-columns: 1fr !important;
+                gap: 40px !important;
+            }
+
+            .achievement-badges h3 {
+                font-size: 1.5rem !important;
+            }
+
+            /* Badge Categories - Stack on mobile */
+            .achievement-badges div[style*="grid-template-columns: repeat(2, 1fr)"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Badge Showcase - 3 columns on mobile */
+            .achievement-badges div[style*="grid-template-columns: repeat(4, 1fr)"] {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+
+            /* Rewards Shop - 2 columns on mobile */
+            .star-rewards div[style*="grid-template-columns: repeat(3, 1fr)"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            /* Stats Grid - 2x2 on mobile */
+            div[style*="grid-template-columns: repeat(4, 1fr)"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            /* Badge size adjustments */
+            div[style*="width: 80px; height: 80px"] {
+                width: 60px !important;
+                height: 60px !important;
+            }
+        }
+
+        /* Small mobile */
+        @media (max-width: 480px) {
+            /* Badge Showcase - 2 columns on small mobile */
+            .achievement-badges div[style*="grid-template-columns: repeat(4, 1fr)"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+
+            /* Section padding */
+            .star-rewards,
+            .achievement-badges {
+                padding: 40px 0 !important;
+            }
+
+            /* Smaller text */
+            .star-rewards h2,
+            .achievement-badges h2 {
+                font-size: 1.8rem !important;
+            }
+
+            /* Stats text smaller */
+            div[style*="font-size: 2.5rem"] {
+                font-size: 1.8rem !important;
+            }
+
+            /* Online/Offline Section Mobile */
+            .online-offline > div > div:nth-child(2) {
+                grid-template-columns: 1fr !important;
+                gap: 40px !important;
+            }
+
+            /* Print showcase - stack on mobile */
+            .online-offline div[style*="grid-template-columns: 1fr 2fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 30px !important;
+            }
+
+            /* Print formats - 2 columns on mobile */
+            .online-offline div[style*="grid-template-columns: repeat(4, 1fr)"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            /* Hide book 3D transform on mobile */
+            .online-offline div[style*="transform: perspective"] {
+                transform: none !important;
+            }
+
+            /* Adjust book mockup size */
+            .online-offline div[style*="width: 320px; height: 420px"] {
+                width: 260px !important;
+                height: 340px !important;
+            }
+
+            /* Bedtime Magical Section Mobile */
+            .bedtime-magical > div > div:nth-child(2) {
+                grid-template-columns: 1fr !important;
+                gap: 30px !important;
+            }
+
+            .bedtime-magical h3 {
+                font-size: 1.2rem !important;
+            }
+
+            .bedtime-magical div[style*="padding: 40px 30px"] {
+                padding: 25px 20px !important;
+            }
+
+            /* Section padding on mobile */
+            .bedtime-magical {
+                padding: 60px 0 !important;
+            }
+
+            /* Story Ideas Section Mobile */
+            .story-ideas > div > div:nth-child(2) {
+                grid-template-columns: 1fr !important;
+                gap: 30px !important;
+            }
+
+            /* Story categories - 2 columns on mobile */
+            .story-ideas div[style*="grid-template-columns: repeat(4, 1fr)"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 15px !important;
+            }
+
+            /* Hide decorative elements on mobile */
+            .story-ideas div[style*="position: absolute"][style*="font-size: 3rem"] {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                        <img src="./images/KidsStoryTime_previews_v1/08_Brand/App_Icon_1024.png" alt="KidsStoryTime.ai" style="height: 80px; width: 80px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);" loading="eager">
+                        <h1 style="margin-bottom: 0;">Transform Bedtime Into Adventure Time – In 30 Seconds</h1>
+                    </div>
+                    <p>AI-powered personalized stories that make your child the hero. Join thousands of families creating magical moments every night.</p>
+                    
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="storiesCount">2,847</span>
+                            <span class="stat-label">Stories Today</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">10,000+</span>
+                            <span class="stat-label">Happy Families</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">4.9★</span>
+                            <span class="stat-label">Parent Rating</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-cta">
+                        <button class="btn btn-primary">
+                            ✨ Create Your First Story FREE
+                        </button>
+                        <button class="btn btn-secondary">
+                            ▶️ Watch How It Works
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="hero-visual">
+                    <img src="./images/KidsStoryTime_previews_v1/01_Hero/03_Child_with_Tablet.png" alt="Child enjoying story on tablet" style="width: 100%; max-width: 500px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);" loading="lazy">
+                </div>
+        </div>
+    </section>
+
+    <!-- Trust Bar -->
+    <section class="trust-bar">
+        <div class="container">
+            <div class="trust-items">
+                <div class="trust-item">
+                    <div class="trust-icon">📚</div>
+                    <div class="trust-text">
+                        <span class="trust-value">1M+</span>
+                        <span class="trust-label">Stories Created</span>
+                    </div>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-icon">👨‍👩‍👧‍👦</div>
+                    <div class="trust-text">
+                        <span class="trust-value">10,000+</span>
+                        <span class="trust-label">Happy Families</span>
+                    </div>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-icon">⭐</div>
+                    <div class="trust-text">
+                        <span class="trust-value">4.9/5</span>
+                        <span class="trust-label">Parent Rating</span>
+                    </div>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-icon">🛡️</div>
+                    <div class="trust-text">
+                        <span class="trust-value">COPPA</span>
+                        <span class="trust-label">Compliant</span>
+                    </div>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-icon">👩‍🏫</div>
+                    <div class="trust-text">
+                        <span class="trust-value">Teacher</span>
+                        <span class="trust-label">Approved</span>
+                    </div>
+                    
+            </div>
+        </div>
+    </section>
+
+    <!-- Make Bedtime Magical Section -->
+    <section class="bedtime-magical" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); padding: 100px 0; position: relative; overflow: hidden;">
+        <!-- Starry background effect -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1;">
+            <div style="position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; top: 10%; left: 15%; animation: twinkle 3s infinite;"></div>
+            <div style="position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; top: 20%; left: 80%; animation: twinkle 3s infinite 0.5s;"></div>
+            <div style="position: absolute; width: 3px; height: 3px; background: white; border-radius: 50%; top: 60%; left: 10%; animation: twinkle 3s infinite 1s;"></div>
+            <div style="position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; top: 80%; left: 70%; animation: twinkle 3s infinite 1.5s;"></div>
+            <div style="position: absolute; width: 3px; height: 3px; background: white; border-radius: 50%; top: 30%; left: 50%; animation: twinkle 3s infinite 2s;"></div>
+        </div>
+        
+        <div class="container" style="position: relative; z-index: 1;">
+            <div class="section-header" style="margin-bottom: 60px;">
+                <div style="font-size: 3rem; margin-bottom: 20px;">🌙</div>
+                <h2 style="font-size: clamp(2rem, 4vw, 3rem); color: white; margin-bottom: 20px;">Make Bedtime Their Favorite Part of the Day</h2>
+                <p style="font-size: 1.25rem; color: #cbd5e1; max-width: 700px; margin: 0 auto;">Turn restless nights and storytime frustration into special moments your child can't wait for.</p>
+            </div>
+            
+            <!-- Before/After Visual -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 60px; max-width: 1000px; margin-left: auto; margin-right: auto;">
+                <img src="./images/KidsStoryTime_previews_v1/09_Before_After/BeforeAfter_Split_v1.png" alt="Before and After KidsStoryTime - Reading" style="width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);" loading="lazy">
+                <img src="./images/KidsStoryTime_previews_v1/09_Before_After/BeforeAfter_Split_v2_iPhone_Printout.png" alt="Before and After KidsStoryTime - Digital and Print" style="width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);" loading="lazy">
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 80px;">
+                <!-- Common Nighttime Challenges -->
+                <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 40px 30px;">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #ef4444, #dc2626); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            😩
+                        </div>
+                        <h3 style="font-size: 1.4rem; color: white; margin: 0;">Common Nighttime Challenges</h3>
+                    </div>
+                    
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="display: flex; align-items: start; gap: 12px; margin-bottom: 20px;">
+                            <span style="color: #ef4444; font-size: 1.2rem; margin-top: 2px;">•</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Endless requests for "one more story"</span>
+                        </li>
+                        <li style="display: flex; align-items: start; gap: 12px; margin-bottom: 20px;">
+                            <span style="color: #ef4444; font-size: 1.2rem; margin-top: 2px;">•</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Struggling to compete with screens</span>
+                        </li>
+                        <li style="display: flex; align-items: start; gap: 12px;">
+                            <span style="color: #ef4444; font-size: 1.2rem; margin-top: 2px;">•</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Kids restless, parents exhausted</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Let the Magic Begin -->
+                <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1)); backdrop-filter: blur(10px); border: 2px solid rgba(139, 92, 246, 0.3); border-radius: 20px; padding: 40px 30px; position: relative;">
+                    <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; padding: 6px 20px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                        30 SECONDS
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #8b5cf6, #a78bfa); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            ✨
+                        </div>
+                        <h3 style="font-size: 1.4rem; color: white; margin: 0;">Let the Magic Begin</h3>
+                    </div>
+                    
+                    <ol style="list-style: none; padding: 0; margin: 0; counter-reset: step-counter;">
+                        <li style="display: flex; align-items: start; gap: 15px; margin-bottom: 20px; counter-increment: step-counter;">
+                            <span style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; border-radius: 50%; font-size: 0.9rem; font-weight: 600; flex-shrink: 0;">1</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Tell us about your child</span>
+                        </li>
+                        <li style="display: flex; align-items: start; gap: 15px; margin-bottom: 20px; counter-increment: step-counter;">
+                            <span style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; border-radius: 50%; font-size: 0.9rem; font-weight: 600; flex-shrink: 0;">2</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Pick the kind of adventure they'll love</span>
+                        </li>
+                        <li style="display: flex; align-items: start; gap: 15px;">
+                            <span style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; border-radius: 50%; font-size: 0.9rem; font-weight: 600; flex-shrink: 0;">3</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Get a unique story—ready to read, explore, and cherish</span>
+                        </li>
+                    </ol>
+                </div>
+                
+                <!-- Why Families Love the Change -->
+                <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 40px 30px;">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            💚
+                        </div>
+                        <h3 style="font-size: 1.4rem; color: white; margin: 0;">Why Families Love the Change</h3>
+                    </div>
+                    
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="display: flex; align-items: start; gap: 12px; margin-bottom: 20px;">
+                            <span style="color: #10b981; font-size: 1.2rem; margin-top: 2px;">✓</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Every story is new and made just for your child</span>
+                        </li>
+                        <li style="display: flex; align-items: start; gap: 12px; margin-bottom: 20px;">
+                            <span style="color: #10b981; font-size: 1.2rem; margin-top: 2px;">✓</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Promotes relaxation and learning before sleep</span>
+                        </li>
+                        <li style="display: flex; align-items: start; gap: 12px;">
+                            <span style="color: #10b981; font-size: 1.2rem; margin-top: 2px;">✓</span>
+                            <span style="color: #e2e8f0; line-height: 1.6;">Turns nightly routines into lasting memories</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Call to Action -->
+            <div style="text-align: center; margin-top: 60px;">
+                <button style="padding: 16px 40px; background: linear-gradient(135deg, #FFB800, #FF6B9D); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 600; cursor: pointer; box-shadow: 0 20px 40px rgba(255, 107, 157, 0.3); transition: all 0.3s ease;">
+                    ✨ Start Your Magical Bedtime Journey
+                </button>
+                <p style="color: #94a3b8; margin-top: 15px; font-size: 0.95rem;">Join 10,000+ families who've transformed bedtime</p>
+            </div>
+        </div>
+        
+        <style>
+            @keyframes twinkle {
+                0%, 100% { opacity: 0; }
+                50% { opacity: 1; }
+            }
+        </style>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>From Idea to Adventure in 3 Simple Steps</h2>
+                <p>Creating magical stories has never been easier</p>
+            </div>
+            
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <img src="./images/KidsStoryTime_previews_v1/07_Characters/Child_Girl_Teal_Nightgown_Moon_Wand.png" alt="Choose Your Hero" style="width: 100%; height: 200px; object-fit: contain; object-position: top; background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%); border-radius: 20px; margin-bottom: 20px;" loading="lazy">
+                    <h3>Choose Your Hero</h3>
+                    <p>Enter your child's name, age, and interests to make them the star of the story</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <img src="./images/KidsStoryTime_previews_v1/02_Story_Themes/Space_Adventure_Theme.png" alt="Pick Your Adventure" style="width: 100%; height: 200px; object-fit: contain; background: #f0f9ff; border-radius: 20px; margin-bottom: 20px;" loading="lazy">
+                    <h3>Pick Your Adventure</h3>
+                    <p>Select from dozens of themes or let AI surprise you with something magical</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <img src="./images/KidsStoryTime_previews_v1/01_Hero/02_Parent_Reading_to_Child.png" alt="Watch the Magic" style="width: 100%; height: 200px; object-fit: cover; border-radius: 20px; margin-bottom: 20px;" loading="lazy">
+                    <h3>Watch the Magic</h3>
+                    <p>Your personalized story with illustrations appears in seconds, ready to read</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary">
+                    Try It Now - No Signup Required
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Everything You Need for Magical Storytelling</h2>
+                <p>Powerful features designed to delight children and parents alike</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card" style="background-image: url('./images/KidsStoryTime_previews_v1/03_Feature_Section/Hero_Child_Star.png'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
+                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
+                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
+                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Personalized Heroes</h3>
+                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Your child becomes the star of every story with their name and characteristics</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card" style="background-image: url('./images/KidsStoryTime_previews_v1/02_Story_Themes/Fantasy_Magic_Theme.png'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
+                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
+                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
+                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">AI Illustrations</h3>
+                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Unique, beautiful artwork generated for every single story</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card" style="background-image: url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=400&h=300&fit=crop'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
+                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
+                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
+                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Voice Narration</h3>
+                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Professional storytelling voices bring stories to life (30/month)</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card" style="background-image: url('./images/KidsStoryTime_previews_v1/02_Story_Themes/Educational_Theme.png'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
+                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
+                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
+                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Educational Themes</h3>
+                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Learn numbers, letters, values, and life lessons through adventure</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card" style="background-image: url('./images/KidsStoryTime_previews_v1/06_Backgrounds/Outer_Space.png'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
+                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
+                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
+                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Bedtime Mode</h3>
+                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Calming stories with auto-timer to help kids wind down</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card" style="background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
+                    <div style="position: absolute; inset: 0; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><polygon points="100,10 130,70 195,70 145,110 165,170 100,130 35,170 55,110 5,70 70,70" fill="gold" opacity="0.3"/></svg>'); background-size: 100px 100px; background-repeat: repeat; opacity: 0.3;"></div>
+                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
+                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
+                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Star Rewards</h3>
+                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Motivating achievement system that encourages daily reading</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
+                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
+                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
+                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Parent Dashboard</h3>
+                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Track reading progress, favorite themes, and milestones</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
+                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
+                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
+                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Export & Share</h3>
+                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Download PDF books and audio files to keep forever</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="coming-soon">Coming Soon</span>
+                    <div class="feature-icon" style="background-image: url('https://images.unsplash.com/photo-1536240478700-b869070f9279?w=100&h=100&fit=crop'); background-size: cover; width: 60px; height: 60px;"></div>
+                    <h3>Video Stories</h3>
+                    <p>Watch your stories come to life with animated videos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hilarious Story Ideas Section -->
+    <section class="story-ideas" style="background: linear-gradient(135deg, #FFF9E6 0%, #FFE5EC 100%); padding: 80px 0; position: relative; overflow: hidden;">
+        <!-- Fun decorative elements -->
+        <div style="position: absolute; top: 20px; left: 5%; font-size: 3rem; opacity: 0.1; transform: rotate(-15deg);">💩</div>
+        <div style="position: absolute; top: 100px; right: 10%; font-size: 3rem; opacity: 0.1; transform: rotate(20deg);">🦄</div>
+        <div style="position: absolute; bottom: 50px; left: 8%; font-size: 3rem; opacity: 0.1; transform: rotate(10deg);">🚀</div>
+        <div style="position: absolute; bottom: 80px; right: 5%; font-size: 3rem; opacity: 0.1; transform: rotate(-20deg);">🦖</div>
+        
+        <div class="container" style="position: relative;">
+            <div class="section-header">
+                <div style="font-size: 3rem; margin-bottom: 20px;">🎭</div>
+                <h2 style="background: linear-gradient(135deg, #FF6B9D, #FFB800); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Stories That Make Kids LOL (and Learn!)</h2>
+                <p style="font-size: 1.2rem; color: #636e72;">From silly to spectacular, create stories your kids will beg for again and again</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 60px;">
+                <!-- The Hilariously Gross -->
+                <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -5px; right: 20px; background: linear-gradient(135deg, #10B981, #059669); color: white; padding: 5px 15px; border-radius: 0 0 10px 10px; font-size: 0.8rem; font-weight: 600;">
+                        KIDS' FAVORITE
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <div style="font-size: 2.5rem;">💩</div>
+                        <h3 style="font-size: 1.5rem; color: #2d3436; margin: 0;">The Hilariously Gross</h3>
+                    </div>
+                    <p style="color: #636e72; margin-bottom: 20px; font-style: italic;">"Because every kid thinks poop is comedy gold!"</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="background: linear-gradient(135deg, #FFF9E6, #FFE5EC); padding: 15px; border-radius: 12px; border-left: 4px solid #FFB800;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">The Great Poop Emoji Adventure</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"When [Child's Name] discovers their poop has come to life and needs help getting back to Toilet Town before the Flush Festival begins!"</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #E3F9F6, #FFF5F7); padding: 15px; border-radius: 12px; border-left: 4px solid #4ECDC4;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Captain Underpants Meets the Burp Monster</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"[Child's Name] must save the school from a giant burp that escaped from the cafeteria and is making everyone speak in hiccups!"</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #FFF5F7, #E3F9F6); padding: 15px; border-radius: 12px; border-left: 4px solid #FF6B9D;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">The Booger That Saved Christmas</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"When Santa gets stuck in a tissue factory, only [Child's Name] and their magical talking booger can save the day!"</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gen Alpha Vibes -->
+                <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -5px; right: 20px; background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; padding: 5px 15px; border-radius: 0 0 10px 10px; font-size: 0.8rem; font-weight: 600;">
+                        NO CAP FR FR
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <div style="font-size: 2.5rem;">✨</div>
+                        <h3 style="font-size: 1.5rem; color: #2d3436; margin: 0;">Gen Alpha Vibes</h3>
+                    </div>
+                    <p style="color: #636e72; margin-bottom: 20px; font-style: italic;">"Stories that absolutely slay, bestie!"</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="background: linear-gradient(135deg, #F5F3FF, #FAF5FF); padding: 15px; border-radius: 12px; border-left: 4px solid #8B5CF6;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">The Sigma Unicorn's Glow-Up</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"[Child's Name] helps a shy unicorn become the main character energy queen of Sparkle Valley - it's giving confidence!"</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #FFE5EC, #F5F3FF); padding: 15px; border-radius: 12px; border-left: 4px solid #EC4899;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">The Skibidi Dragon's Rizz Academy</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"When [Child's Name] enrolls in dragon school, they must pass the ultimate vibe check to earn their fire-breathing certificate!"</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #E3F9F6, #F5F3FF); padding: 15px; border-radius: 12px; border-left: 4px solid #4ECDC4;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Ohio vs. The Bussin' Breakfast Club</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"[Child's Name] discovers their cereal is lowkey alive and needs help defeating the sus toast army - no cap, this slaps!"</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Epic Mashups -->
+                <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: -5px; right: 20px; background: linear-gradient(135deg, #F59E0B, #DC2626); color: white; padding: 5px 15px; border-radius: 0 0 10px 10px; font-size: 0.8rem; font-weight: 600;">
+                        MIND = BLOWN
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <div style="font-size: 2.5rem;">🤯</div>
+                        <h3 style="font-size: 1.5rem; color: #2d3436; margin: 0;">Epic Mashups</h3>
+                    </div>
+                    <p style="color: #636e72; margin-bottom: 20px; font-style: italic;">"When worlds collide in the best way possible!"</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="background: linear-gradient(135deg, #FFF9E6, #FFE5EC); padding: 15px; border-radius: 12px; border-left: 4px solid #F59E0B;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Dinosaurs in Space Playing Soccer</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"[Child's Name] coaches a T-Rex team against alien octopi for the Galaxy Cup - with meteors as soccer balls!"</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #FFE5EC, #E3F9F6); padding: 15px; border-radius: 12px; border-left: 4px solid #DC2626;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Ninja Pirates vs. Robot Cowboys</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"[Child's Name] must unite sworn enemies to defeat the evil Homework Monster terrorizing Funtown!"</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #E3F9F6, #FFF5F7); padding: 15px; border-radius: 12px; border-left: 4px solid #3B82F6;">
+                            <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Superhero Vegetables Battle Junk Food Villains</strong>
+                            <p style="color: #636e72; font-size: 0.9rem; margin: 0;">"Captain Broccoli and [Child's Name] team up to stop the Candy King from turning all vegetables into chocolate!"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- More Story Categories -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-top: 40px;">
+                <div style="background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.06);">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🎮</div>
+                    <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Gaming Adventures</strong>
+                    <p style="color: #636e72; font-size: 0.85rem;">Minecraft meets Roblox in real life</p>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.06);">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🍕</div>
+                    <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Food Fights</strong>
+                    <p style="color: #636e72; font-size: 0.85rem;">Pizza vs. Tacos ultimate showdown</p>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.06);">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🐾</div>
+                    <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Pet Superpowers</strong>
+                    <p style="color: #636e72; font-size: 0.85rem;">When hamsters become heroes</p>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.06);">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🎪</div>
+                    <strong style="color: #2d3436; display: block; margin-bottom: 5px;">Circus Chaos</strong>
+                    <p style="color: #636e72; font-size: 0.85rem;">Clowns, acrobats, and flying elephants</p>
+                </div>
+            </div>
+            
+            <!-- Try It Now -->
+            <div style="text-align: center; margin-top: 50px; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                <h3 style="font-size: 1.8rem; color: #2d3436; margin-bottom: 15px;">Ready to Create Your Own Hilarious Adventure?</h3>
+                <p style="color: #636e72; margin-bottom: 25px; font-size: 1.1rem;">Type anything - seriously, ANYTHING - and watch the magic happen!</p>
+                
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-bottom: 25px;">
+                        <span style="background: linear-gradient(135deg, #FFE66D, #FFB800); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; color: #2d3436;">
+                            "Farting unicorns" ✓
+                        </span>
+                        <span style="background: linear-gradient(135deg, #FF6B9D, #FF5580); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; color: white;">
+                            "Sussy imposters" ✓
+                        </span>
+                        <span style="background: linear-gradient(135deg, #4ECDC4, #44A3AA); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; color: white;">
+                            "Dancing pickles" ✓
+                        </span>
+                        <span style="background: linear-gradient(135deg, #8B5CF6, #7C3AED); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; color: white;">
+                            "Ninja grandmas" ✓
+                        </span>
+                    </div>
+                </div>
+                
+                <button style="padding: 14px 32px; background: linear-gradient(135deg, #FF6B9D, #4ECDC4); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 600; cursor: pointer; box-shadow: 0 10px 25px rgba(255, 107, 157, 0.3); transition: all 0.3s ease;">
+                    🚀 Create Your Wildest Story Now
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Star Rewards Section -->
+    <section class="star-rewards" style="background: linear-gradient(135deg, #FFF9E6 0%, #FFE5EC 100%); padding: 80px 0;">
+        <div class="container">
+            <div class="section-header">
+                <div style="font-size: 3rem; margin-bottom: 20px;">⭐</div>
+                <h2 style="background: linear-gradient(135deg, #FFB800, #FF6B9D); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Earn Stars, Unlock Magic!</h2>
+                <p>Every story earns 10 stars - watch your child's excitement grow with each achievement</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 60px;">
+                <!-- Left: How it Works -->
+                <div>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 30px; color: #FF6B9D;">How Star Rewards Work</h3>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: flex; align-items: center; gap: 20px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem;">📖</div>
+                            <div>
+                                <strong style="color: #2d3436;">Read or Listen</strong>
+                                <p style="margin: 5px 0 0; color: #636e72; font-size: 0.95rem;">Complete any story to earn stars</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 20px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem;">⭐</div>
+                            <div>
+                                <strong style="color: #2d3436;">Earn 10 Stars</strong>
+                                <p style="margin: 5px 0 0; color: #636e72; font-size: 0.95rem;">Every story rewards 10 shiny stars</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 20px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem;">🎁</div>
+                            <div>
+                                <strong style="color: #2d3436;">Unlock Rewards</strong>
+                                <p style="margin: 5px 0 0; color: #636e72; font-size: 0.95rem;">Trade stars for amazing digital rewards</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right: Rewards Shop Preview -->
+                <div>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 30px; color: #4ECDC4;">Rewards Shop Preview</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🦄</div>
+                            <div style="font-size: 0.85rem; color: #2d3436; font-weight: 600;">Unicorn Theme</div>
+                            <div style="font-size: 0.75rem; color: #FFB800; margin-top: 5px;">⭐ 50 stars</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🚀</div>
+                            <div style="font-size: 0.85rem; color: #2d3436; font-weight: 600;">Space Theme</div>
+                            <div style="font-size: 0.75rem; color: #FFB800; margin-top: 5px;">⭐ 75 stars</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🌈</div>
+                            <div style="font-size: 0.85rem; color: #2d3436; font-weight: 600;">Rainbow Theme</div>
+                            <div style="font-size: 0.75rem; color: #FFB800; margin-top: 5px;">⭐ 100 stars</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🎨</div>
+                            <div style="font-size: 0.85rem; color: #2d3436; font-weight: 600;">Custom Avatar</div>
+                            <div style="font-size: 0.75rem; color: #FFB800; margin-top: 5px;">⭐ 150 stars</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🎵</div>
+                            <div style="font-size: 0.85rem; color: #2d3436; font-weight: 600;">Music Pack</div>
+                            <div style="font-size: 0.75rem; color: #FFB800; margin-top: 5px;">⭐ 200 stars</div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">👑</div>
+                            <div style="font-size: 0.85rem; color: #2d3436; font-weight: 600;">Royal Crown</div>
+                            <div style="font-size: 0.75rem; color: #FFB800; margin-top: 5px;">⭐ 500 stars</div>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 20px; text-align: center; color: #636e72; font-size: 0.9rem;">
+                        <strong>20+ rewards available</strong> - New items added monthly!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievement Badges Section -->
+    <section class="achievement-badges" style="background: white; padding: 80px 0;">
+        <div class="container">
+            <div class="section-header">
+                <div style="font-size: 3rem; margin-bottom: 20px;">🏆</div>
+                <h2 style="background: linear-gradient(135deg, #4ECDC4, #44A3AA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Unlock Achievement Badges!</h2>
+                <p>Celebrate every milestone with special badges that showcase your child's reading journey</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 60px;">
+                <!-- Left: Badge Categories -->
+                <div>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 30px; color: #4ECDC4;">Badge Categories</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                        <div style="background: linear-gradient(135deg, #E3F9F6, #FFF5F7); padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">📚</div>
+                            <strong style="color: #2d3436;">Reading Milestones</strong>
+                            <p style="margin: 5px 0 0; color: #636e72; font-size: 0.85rem;">First Story, 10 Stories, 50 Stories, 100 Stories</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #FFF5F7, #E3F9F6); padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">🔥</div>
+                            <strong style="color: #2d3436;">Reading Streaks</strong>
+                            <p style="margin: 5px 0 0; color: #636e72; font-size: 0.85rem;">3-Day, 7-Day, 30-Day, 100-Day Streaks</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #FFF5F7, #E3F9F6); padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">🌟</div>
+                            <strong style="color: #2d3436;">Star Collector</strong>
+                            <p style="margin: 5px 0 0; color: #636e72; font-size: 0.85rem;">100 Stars, 500 Stars, 1000 Stars, 5000 Stars</p>
+                        </div>
+                        
+                        <div style="background: linear-gradient(135deg, #E3F9F6, #FFF5F7); padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">🎯</div>
+                            <strong style="color: #2d3436;">Special Achievements</strong>
+                            <p style="margin: 5px 0 0; color: #636e72; font-size: 0.85rem;">Night Owl, Early Bird, Weekend Warrior</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right: Badge Showcase -->
+                <div>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 30px; color: #FF6B9D;">Popular Badges to Earn</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #FFE66D, #FFB800); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(255, 184, 0, 0.3);">
+                                🌟
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">First Story</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #4ECDC4, #44A3AA); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);">
+                                🔥
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">7-Day Streak</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #FF6B9D, #FF5580); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);">
+                                📚
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">10 Stories</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #A78BFA, #8B5CF6); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);">
+                                🌙
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">Night Owl</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #10B981, #059669); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+                                💎
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">100 Stars</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #F59E0B, #D97706); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
+                                🏅
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">30-Day Streak</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #EC4899, #DB2777); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);">
+                                🦄
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">Fantasy Fan</div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <div style="width: 80px; height: 80px; margin: 0 auto 8px; background: linear-gradient(135deg, #6366F1, #4F46E5); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
+                                👑
+                            </div>
+                            <div style="font-size: 0.75rem; color: #2d3436; font-weight: 600;">100 Stories</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #FFF9E6, #E3F9F6); border-radius: 12px; text-align: center;">
+                        <p style="color: #2d3436; font-weight: 600; margin-bottom: 10px;">🎊 Share Your Achievements!</p>
+                        <p style="color: #636e72; font-size: 0.9rem;">Display badges on your profile and share with family & friends</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Motivational Stats -->
+            <div style="margin-top: 60px; padding: 40px; background: linear-gradient(135deg, #667eea15, #4ECDC415); border-radius: 20px;">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; text-align: center;">
+                    <div>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: #FF6B9D;">89%</div>
+                        <p style="color: #636e72; margin-top: 5px;">Kids read more with rewards</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: #4ECDC4;">15 min</div>
+                        <p style="color: #636e72; margin-top: 5px;">Average daily reading increase</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: #FFB800;">2.5x</div>
+                        <p style="color: #636e72; margin-top: 5px;">More engaged with badges</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: #8B5CF6;">94%</div>
+                        <p style="color: #636e72; margin-top: 5px;">Parents report improved habits</p>
+                    </div>
+                    
+            </div>
+        </div>
+    </section>
+
+    <!-- Online & Offline Reading Section -->
+    <section class="online-offline" style="background: linear-gradient(135deg, #F0F9FF 0%, #FFF5F7 100%); padding: 80px 0;">
+        <div class="container">
+            <div class="section-header">
+                <div style="font-size: 3rem; margin-bottom: 20px;">📖</div>
+                <h2 style="background: linear-gradient(135deg, #3B82F6, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Read Anywhere, Anytime</h2>
+                <p>Enjoy stories online or take them offline - perfect for every situation</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 60px;">
+                <!-- Online Features -->
+                <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #3B82F6, #60A5FA); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            🌐
+                        </div>
+                        <h3 style="font-size: 1.6rem; color: #1e293b; margin: 0;">Online Reading</h3>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Instant Access</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Read stories immediately after generation</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Interactive Features</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Voice narration, animations, and sound effects</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Cloud Library</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">All stories saved automatically in your account</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Multi-Device Sync</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Access from phone, tablet, or computer</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Real-Time Updates</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">New features and content added regularly</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #EFF6FF, #F0F9FF); border-radius: 12px;">
+                        <p style="color: #1e293b; font-weight: 600; margin-bottom: 10px;">📱 Perfect For:</p>
+                        <p style="color: #64748b; font-size: 0.9rem;">Home reading, waiting rooms, restaurants, quick bedtime stories</p>
+                    </div>
+                </div>
+                
+                <!-- Offline Features -->
+                <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #8B5CF6, #A78BFA); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            📥
+                        </div>
+                        <h3 style="font-size: 1.6rem; color: #1e293b; margin: 0;">Offline Reading</h3>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Download Stories</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Save stories for offline reading anytime</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">PDF Export</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Professional format with images included</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Audio Downloads</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">MP3 files for car rides and travel</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">No Internet Needed</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Read anywhere without WiFi or data</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="color: #10B981; font-size: 1.2rem; margin-top: 2px;">✓</div>
+                            <div>
+                                <strong style="color: #1e293b;">Share with Family</strong>
+                                <p style="margin: 5px 0 0; color: #64748b; font-size: 0.95rem;">Send stories to grandparents and relatives</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #F5F3FF, #FAF5FF); border-radius: 12px;">
+                        <p style="color: #1e293b; font-weight: 600; margin-bottom: 10px;">✈️ Perfect For:</p>
+                        <p style="color: #64748b; font-size: 0.9rem;">Airplane trips, road trips, camping, areas with poor internet</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Print Version Showcase -->
+            <div style="margin-top: 80px;">
+                <div style="text-align: center; margin-bottom: 50px;">
+                    <h3 style="font-size: 2rem; color: #1e293b; margin-bottom: 15px;">🖨️ Create Beautiful Printed Books</h3>
+                    <p style="color: #64748b; font-size: 1.1rem;">Transform digital stories into keepsake books your child will treasure forever</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 40px; align-items: center;">
+                    <!-- Left: Print Features -->
+                    <div>
+                        <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;">📏</span>
+                                <strong style="color: #1e293b;">Custom Formatting</strong>
+                            </div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Perfect page layouts optimized for printing</p>
+                        </div>
+                        
+                        <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;">🎨</span>
+                                <strong style="color: #1e293b;">High-Quality Images</strong>
+                            </div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Print-resolution illustrations on every page</p>
+                        </div>
+                        
+                        <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06);">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;">📚</span>
+                                <strong style="color: #1e293b;">Collection Building</strong>
+                            </div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Create a personal library of printed stories</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Center: Mock Book Preview -->
+                    <div style="position: relative; height: 500px; display: flex; justify-content: center; align-items: center;">
+                        <!-- Book mockup using CSS -->
+                        <div style="position: relative; transform: perspective(1200px) rotateY(-15deg);">
+                            <!-- Book Cover -->
+                            <div style="width: 320px; height: 420px; background: linear-gradient(135deg, #FFE5EC, #E3F9F6); border-radius: 8px 16px 16px 8px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); position: relative; overflow: hidden;">
+                                <!-- Cover Design -->
+                                <div style="padding: 40px 30px; height: 100%; display: flex; flex-direction: column;">
+                                    <!-- Title Area -->
+                                    <div style="text-align: center; margin-bottom: 20px;">
+                                        <div style="font-size: 2rem; margin-bottom: 10px;">🦄</div>
+                                        <h4 style="font-family: 'Fredoka', cursive; font-size: 1.8rem; color: #FF6B9D; margin-bottom: 10px;">Luna's Magical Adventure</h4>
+                                        <p style="color: #64748b; font-size: 0.9rem;">A Personalized Story</p>
+                                    </div>
+                                    
+                                    <!-- Illustration Preview -->
+                                    <div style="flex: 1; background: white; border-radius: 12px; padding: 20px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);">
+                                        <div style="text-align: center;">
+                                            <div style="font-size: 4rem; margin-bottom: 10px;">🌈</div>
+                                            <p style="color: #94a3b8; font-size: 0.85rem;">Beautiful illustrations<br/>on every page</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Bottom Info -->
+                                    <div style="text-align: center; margin-top: 20px;">
+                                        <p style="color: #64748b; font-size: 0.8rem;">Created with KidsStoryTime.ai</p>
+                                        <p style="color: #94a3b8; font-size: 0.75rem;">For Emma • Age 6</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Book spine effect -->
+                                <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 30px; background: linear-gradient(90deg, rgba(0,0,0,0.1), transparent); border-radius: 8px 0 0 8px;"></div>
+                            </div>
+                            
+                            <!-- Page edges effect -->
+                            <div style="position: absolute; right: -5px; top: 10px; bottom: 10px; width: 15px; background: repeating-linear-gradient(0deg, #fff 0px, #fff 2px, #f0f0f0 2px, #f0f0f0 3px); border-radius: 0 4px 4px 0; box-shadow: 2px 0 10px rgba(0,0,0,0.1);"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right: Benefits -->
+                    <div>
+                        <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;">🎁</span>
+                                <strong style="color: #1e293b;">Perfect Gifts</strong>
+                            </div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Unique presents for birthdays & holidays</p>
+                        </div>
+                        
+                        <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); margin-bottom: 20px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;">💝</span>
+                                <strong style="color: #1e293b;">Family Keepsakes</strong>
+                            </div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Stories to pass down through generations</p>
+                        </div>
+                        
+                        <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.06);">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                                <span style="font-size: 1.5rem;">🏫</span>
+                                <strong style="color: #1e293b;">School Sharing</strong>
+                            </div>
+                            <p style="color: #64748b; font-size: 0.9rem;">Bring printed stories for show and tell</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Print Options -->
+                <div style="margin-top: 60px; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                    <h4 style="font-size: 1.5rem; color: #1e293b; margin-bottom: 30px; text-align: center;">📄 Available Print Formats</h4>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px;">
+                        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #FFF9E6, #FFE5EC); border-radius: 12px;">
+                            <div style="font-size: 2.5rem; margin-bottom: 10px;">📑</div>
+                            <strong style="color: #1e293b; display: block; margin-bottom: 5px;">Standard PDF</strong>
+                            <p style="color: #64748b; font-size: 0.85rem;">8.5" x 11" format<br/>Ready to print at home</p>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #E3F9F6, #FFF5F7); border-radius: 12px;">
+                            <div style="font-size: 2.5rem; margin-bottom: 10px;">📔</div>
+                            <strong style="color: #1e293b; display: block; margin-bottom: 5px;">Booklet Format</strong>
+                            <p style="color: #64748b; font-size: 0.85rem;">A5 size pages<br/>Perfect for binding</p>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #FFF5F7, #E3F9F6); border-radius: 12px;">
+                            <div style="font-size: 2.5rem; margin-bottom: 10px;">🖼️</div>
+                            <strong style="color: #1e293b; display: block; margin-bottom: 5px;">Picture Book</strong>
+                            <p style="color: #64748b; font-size: 0.85rem;">Large format<br/>Full-page illustrations</p>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #F0F9FF, #FAF5FF); border-radius: 12px;">
+                            <div style="font-size: 2.5rem; margin-bottom: 10px;">📱</div>
+                            <strong style="color: #1e293b; display: block; margin-bottom: 5px;">E-Reader</strong>
+                            <p style="color: #64748b; font-size: 0.85rem;">EPUB format<br/>For Kindle & tablets</p>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button style="padding: 14px 32px; background: linear-gradient(135deg, #3B82F6, #8B5CF6); color: white; border: none; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);">
+                            🎯 Try Creating Your First Printable Story
+                        </button>
+                    </div>
+                    
+            </div>
+        </div>
+    </section>
+
+    <!-- Connection Moments -->
+    <section class="connection">
+        <div class="container">
+            <div class="section-header">
+                <h2>Create Bonds That Last a Lifetime</h2>
+                <p>Special moments for every family relationship</p>
+            </div>
+            
+            <div class="connection-grid">
+                <div class="connection-card">
+                    <div class="connection-image" style="background-image: url('./images/KidsStoryTime_previews_v1/10_Campaign_Portraits/Dads_Sons_Epic_Adventures_Portrait_short.png'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;"></div>
+                    <div class="connection-content">
+                        <h3>Dads & Sons: Epic Adventures</h3>
+                        <p>Action-packed stories featuring superheroes, sports champions, and brave explorers. Build confidence and courage together.</p>
+                        <button class="btn btn-primary">Start Father-Son Journey</button>
+                    </div>
+                </div>
+                
+                <div class="connection-card">
+                    <div class="connection-image" style="background-image: url('./images/KidsStoryTime_previews_v1/10_Campaign_Portraits/Moms_Daughters_Magical_Moments_Portrait_short.png'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;"></div>
+                    <div class="connection-content">
+                        <h3>Moms & Daughters: Magical Moments</h3>
+                        <p>Enchanting tales of friendship, creativity, and empowerment. Nurture imagination and self-belief together.</p>
+                        <button class="btn btn-primary">Create Mother-Daughter Magic</button>
+                    </div>
+                </div>
+                
+                <div class="connection-card">
+                    <div class="connection-image" style="background-image: url('./images/KidsStoryTime_previews_v1/10_Campaign_Portraits/Grandparents_Legacy_Stories_Portrait.png'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;"></div>
+                    <div class="connection-content">
+                        <h3>Grandparents: Legacy Stories</h3>
+                        <p>Share wisdom through timeless tales and family adventures. Pass down values and create lasting memories.</p>
+                        <button class="btn btn-primary">Share Your Family's Story</button>
+                    </div>
+                    
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>Join Thousands of Happy Families</h2>
+                <p>Real stories from real parents</p>
+            </div>
+            
+            <div class="testimonials-container">
+                <div class="testimonials-scroll">
+                    <!-- First set of testimonials -->
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"My son used to fight bedtime every night. Now he asks for his special story! The personalization makes him feel so special."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👨</div>
+                            <div class="author-info">
+                                <h4>Michael Chen</h4>
+                                <p>Dad of 2</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"As a teacher, I love how educational these stories are. My daughter has learned so much through her adventures."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>Sarah Williams</h4>
+                                <p>Mom & Teacher</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"Three kids, three different interests, and this app handles them all perfectly! It's been a game-changer."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>Jessica Martinez</h4>
+                                <p>Mom of 3</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"Finally, stories that include my son's wheelchair! Representation matters and this app delivers beautifully."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>Jennifer Rodriguez</h4>
+                                <p>Special Needs Parent</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"My twins love choosing different themes. One picks dinosaurs, the other picks space - both are happy!"</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👨</div>
+                            <div class="author-info">
+                                <h4>David Thompson</h4>
+                                <p>Dad of Twins</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"The bedtime mode stories are perfectly paced to help my daughter wind down for sleep."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>Amanda Park</h4>
+                                <p>Working Mom</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Duplicate set for seamless scrolling -->
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"My son used to fight bedtime every night. Now he asks for his special story! The personalization makes him feel so special."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👨</div>
+                            <div class="author-info">
+                                <h4>Michael Chen</h4>
+                                <p>Dad of 2</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"As a teacher, I love how educational these stories are. My daughter has learned so much through her adventures."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>Sarah Williams</h4>
+                                <p>Mom & Teacher</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">"Three kids, three different interests, and this app handles them all perfectly! It's been a game-changer."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>Jessica Martinez</h4>
+                                <p>Mom of 3</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brett's Story - Founder Section -->
+    <section class="founder-story" style="background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%); padding: 80px 0;">
+        <div class="container">
+            <div class="section-header">
+                <h2>Brett's Story</h2>
+                <p style="color: #FF6B9D; font-weight: 600;">Our Founder's Journey</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 60px; align-items: center; margin-top: 60px;">
+                <div style="text-align: center;">
+                    <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&h=400&fit=crop" 
+                         alt="Brett - Founder" 
+                         style="width: 300px; height: 300px; border-radius: 50%; box-shadow: 0 20px 40px rgba(255, 107, 157, 0.2);">
+                    <h3 style="margin-top: 20px; color: #FF6B9D;">Brett</h3>
+                    <p style="color: #4ECDC4;">Founder & Dad</p>
+                </div>
+                
+                <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <p style="font-size: 1.125rem; line-height: 1.8; color: #4b5563; margin-bottom: 20px;">
+                        <span style="font-size: 2rem; color: #FF6B9D; float: left; margin-right: 10px; line-height: 1;">"</span>
+                        Our founder, Brett, has a young boy who loves bedtime stories. After reading to his son consistently, Brett noticed his son was more interested in stories that were funny and about things he could relate to - like bikes and, yes, even poo (I know)!
+                    </p>
+                    
+                    <p style="font-size: 1.125rem; line-height: 1.8; color: #4b5563; margin-bottom: 20px;">
+                        Brett would come up with stories every night, but his son always wanted something different. The bonding and engagement were amazing, but having to create new and imaginative stories was becoming a real challenge.
+                    </p>
+                    
+                    <p style="font-size: 1.125rem; line-height: 1.8; color: #4b5563;">
+                        So Brett decided to build an app! Now he and his son sit down together and create stories using KidsStoryTime. They pick themes, add silly elements, and watch as magical stories unfold - turning bedtime from a creative struggle into their favorite part of the day.
+                        <span style="font-size: 2rem; color: #4ECDC4; float: right; margin-left: 10px; line-height: 1;">"</span>
+                    </p>
+                    
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #f3f4f6;">
+                        <p style="font-style: italic; color: #FF6B9D; font-weight: 600;">
+                            "Every parent deserves to be the hero of bedtime without the pressure of being a master storyteller."
+                        </p>
+                    </div>
+                    
+            </div>
+        </div>
+    </section>
+
+    <!-- Remote Reading Section -->
+    <section class="remote-reading" style="background: linear-gradient(135deg, #FFF5F7 0%, #E3F9F6 100%); padding: 80px 0;">
+        <div class="container">
+            <div class="section-header">
+                <h2>Stay Connected, Even When Apart</h2>
+                <p>Perfect for traveling parents and long-distance families</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 60px;">
+                <div>
+                    <img src="./images/Stay_Connected_Military_Family.png" 
+                         alt="Military family staying connected through digital storytime" 
+                         style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                </div>
+                
+                <div>
+                    <h3 style="font-size: 1.75rem; color: #1f2937; margin-bottom: 20px;">
+                        <span style="color: #8b5cf6;">📱</span> Read Together, Anywhere
+                    </h3>
+                    
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 20px; display: flex; align-items: start; gap: 15px;">
+                            <span style="color: #10b981; font-size: 1.5rem;">✓</span>
+                            <div>
+                                <strong style="color: #1f2937;">Video Call Story Time</strong><br>
+                                <span style="color: #6b7280;">Share your screen during WhatsApp or Zoom calls - your child follows along in real-time</span>
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 20px; display: flex; align-items: start; gap: 15px;">
+                            <span style="color: #10b981; font-size: 1.5rem;">✓</span>
+                            <div>
+                                <strong style="color: #1f2937;">Business Travel Solution</strong><br>
+                                <span style="color: #6b7280;">Consultants and traveling parents can maintain bedtime routines from anywhere</span>
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 20px; display: flex; align-items: start; gap: 15px;">
+                            <span style="color: #10b981; font-size: 1.5rem;">✓</span>
+                            <div>
+                                <strong style="color: #1f2937;">Grandparent Connection</strong><br>
+                                <span style="color: #6b7280;">Long-distance grandparents can share magical moments with grandchildren</span>
+                            </div>
+                        </li>
+                        <li style="display: flex; align-items: start; gap: 15px;">
+                            <span style="color: #10b981; font-size: 1.5rem;">✓</span>
+                            <div>
+                                <strong style="color: #1f2937;">Military Families</strong><br>
+                                <span style="color: #6b7280;">Deployed parents stay connected through personalized story time</span>
+                            </div>
+                        </li>
+                    </ul>
+                    
+                    <button class="btn btn-primary" style="margin-top: 30px;">
+                        Start Remote Reading Today
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Print & Read Section -->
+    <section class="print-reading" style="background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%); padding: 80px 0;">
+        <div class="container">
+            <div class="section-header">
+                <h2>The Magic of Print & Digital Combined</h2>
+                <p>Create lasting memories with printed stories</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 60px;">
+                <div>
+                    <h3 style="font-size: 1.75rem; color: #1f2937; margin-bottom: 20px;">
+                        <span style="color: #8b5cf6;">📖</span> Print Your Adventures
+                    </h3>
+                    
+                    <p style="font-size: 1.125rem; line-height: 1.8; color: #4b5563; margin-bottom: 25px;">
+                        Transform digital stories into beautiful printed keepsakes. Perfect for bedtime reading, travel, or creating a personal library of your child's adventures.
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                        <div style="background: white; padding: 20px; border-radius: 15px; text-align: center;">
+                            <span style="font-size: 2.5rem;">🖨️</span>
+                            <h4 style="margin: 10px 0; color: #1f2937;">Easy Print</h4>
+                            <p style="font-size: 0.875rem; color: #6b7280;">One-click PDF export</p>
+                        </div>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 15px; text-align: center;">
+                            <span style="font-size: 2.5rem;">📚</span>
+                            <h4 style="margin: 10px 0; color: #1f2937;">Story Books</h4>
+                            <p style="font-size: 0.875rem; color: #6b7280;">Create collections</p>
+                        </div>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 15px; text-align: center;">
+                            <span style="font-size: 2.5rem;">🎨</span>
+                            <h4 style="margin: 10px 0; color: #1f2937;">Illustrations</h4>
+                            <p style="font-size: 0.875rem; color: #6b7280;">High-quality images</p>
+                        </div>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 15px; text-align: center;">
+                            <span style="font-size: 2.5rem;">🎁</span>
+                            <h4 style="margin: 10px 0; color: #1f2937;">Gift Ready</h4>
+                            <p style="font-size: 0.875rem; color: #6b7280;">Perfect presents</p>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary">
+                        Try Print Export Free
+                    </button>
+                </div>
+                
+                <div>
+                    <img src="./images/KidsStoryTime_previews_v1/09_Before_After/BeforeAfter_Split_v2_iPhone_Printout.png" 
+                         alt="Digital and Print Stories Combined - iPhone and Printed Book" 
+                         style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    
+                    <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: center;">
+                        <p style="font-weight: 600; margin: 0;">
+                            "We print out the best stories and keep them in a special binder. It's become our family treasure!"
+                        </p>
+                        <p style="margin: 10px 0 0; opacity: 0.9;">- Emma, Mom of two</p>
+                    </div>
+                    
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="comparison">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Families Choose KidsStoryTime</h2>
+                <p>See how we compare to other options</p>
+            </div>
+            
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Features</th>
+                            <th class="our-col">KidsStoryTime</th>
+                            <th>Generic Apps</th>
+                            <th>YouTube Kids</th>
+                            <th>Traditional Books</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Personalized Content</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Child as Hero</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Educational Value</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="partial">⚠</span></td>
+                            <td><span class="partial">⚠</span></td>
+                            <td><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Unlimited Variety</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="partial">⚠</span></td>
+                            <td><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Safe & Ad-Free</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Reward System</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="partial">⚠</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Bedtime Optimized</td>
+                            <td class="our-col"><span class="check">✓</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="cross">✗</span></td>
+                            <td><span class="partial">⚠</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Choose Your Adventure Level</h2>
+                <p>Start free, upgrade when you're ready</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Reader</h3>
+                    <div class="price">FREE<span>/forever</span></div>
+                    <ul class="pricing-features">
+                        <li><span class="check-icon">✓</span> 3 stories per day</li>
+                        <li><span class="check-icon">✓</span> Basic themes</li>
+                        <li><span class="check-icon">✓</span> 1 child profile</li>
+                        <li><span class="check-icon">✓</span> 1 AI image/month</li>
+                        <li><span class="check-icon">✓</span> 1 narration/month</li>
+                    </ul>
+                    <button class="btn btn-secondary">Start Free</button>
+                </div>
+                
+                <div class="pricing-card popular">
+                    <span class="popular-badge">Most Popular</span>
+                    <h3>Family</h3>
+                    <div class="price">$7.99<span>/month</span></div>
+                    <ul class="pricing-features">
+                        <li><span class="check-icon">✓</span> 20 stories per day</li>
+                        <li><span class="check-icon">✓</span> All themes unlocked</li>
+                        <li><span class="check-icon">✓</span> 5 child profiles</li>
+                        <li><span class="check-icon">✓</span> Unlimited AI images</li>
+                        <li><span class="check-icon">✓</span> 30 narrations/month</li>
+                        <li><span class="check-icon">✓</span> Bedtime mode</li>
+                        <li><span class="check-icon">✓</span> Export PDFs</li>
+                    </ul>
+                    <button class="btn btn-primary">Start Free Trial</button>
+                    <p style="margin-top: 10px; color: var(--text-light); font-size: 0.875rem;">First month FREE!</p>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3>Story Maker</h3>
+                    <div class="price">$4.99<span>/month</span></div>
+                    <ul class="pricing-features">
+                        <li><span class="check-icon">✓</span> 10 stories per day</li>
+                        <li><span class="check-icon">✓</span> Most themes</li>
+                        <li><span class="check-icon">✓</span> 2 child profiles</li>
+                        <li><span class="check-icon">✓</span> 30 AI images/month</li>
+                        <li><span class="check-icon">✓</span> 10 narrations/month</li>
+                    </ul>
+                    <button class="btn btn-secondary">Start Free Trial</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Safety Section -->
+    <section class="safety">
+        <div class="container">
+            <div class="section-header">
+                <h2>Your Family's Safety Is Our Priority</h2>
+                <p>Built with trust and security at every level</p>
+            </div>
+            
+            <div class="safety-grid">
+                <div class="safety-item">
+                    <div class="safety-icon">🔒</div>
+                    <h3>COPPA Compliant</h3>
+                    <p>Fully compliant with children's online privacy protection regulations</p>
+                </div>
+                
+                <div class="safety-item">
+                    <div class="safety-icon">🚫</div>
+                    <h3>No Data Selling</h3>
+                    <p>Your family's data is never sold or shared with third parties</p>
+                </div>
+                
+                <div class="safety-item">
+                    <div class="safety-icon">👀</div>
+                    <h3>Content Moderation</h3>
+                    <p>All AI-generated content is filtered for age-appropriateness</p>
+                </div>
+                
+                <div class="safety-item">
+                    <div class="safety-icon">👪</div>
+                    <h3>Parent Controls</h3>
+                    <p>Full control over content, screen time, and account settings</p>
+                </div>
+                
+                <div class="safety-item">
+                    <div class="safety-icon">🛡️</div>
+                    <h3>SSL Secure</h3>
+                    <p>Bank-level encryption protects all data transmission</p>
+                </div>
+                
+                <div class="safety-item">
+                    <div class="safety-icon">💯</div>
+                    <h3>Money-Back Guarantee</h3>
+                    <p>30-day guarantee if you're not completely satisfied</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Everything you need to know about KidsStoryTime</p>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How does personalization work?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You enter your child's name, age, and interests. Our AI then creates a unique story where your child is the main character, facing age-appropriate challenges and adventures tailored to their preferences.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Is the content age-appropriate?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! Stories are generated based on your child's age with appropriate vocabulary, themes, and complexity. All content is filtered for safety and educational value.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can multiple children use one account?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! Depending on your plan, you can create multiple child profiles. The Family plan supports up to 5 children, each with their own personalized stories and progress tracking.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do rewards work?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Children earn stars for reading stories, completing milestones, and maintaining reading streaks. Stars can be collected for badges and achievements, motivating continued reading.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Is there a free trial?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! All paid plans come with a 30-day free trial. Plus, our free Reader plan lets you create 3 stories per day forever with no credit card required.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can I cancel anytime?
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Of course! You can cancel your subscription anytime with no questions asked. You'll continue to have access until the end of your billing period.</p>
+                    </div>
+                    
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to Transform Bedtime?</h2>
+            <p>Join 10,000+ families creating magical moments every night</p>
+            
+            <div class="email-capture">
+                <input type="email" placeholder="Enter your email">
+                <button class="btn btn-primary" style="background: white; color: var(--primary);">
+                    Get Your First Story FREE
+                </button>
+            </div>
+            
+            <div class="countdown">
+                <p>🎉 Launch Special Ending In:</p>
+                <div style="margin-top: 15px;">
+                    <span id="days">02</span>
+                    <span id="hours">14</span>
+                    <span id="minutes">38</span>
+                    <span id="seconds">42</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Press Kit</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">COPPA Compliance</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Partners</h4>
+                    <ul>
+                        <li><a href="#">School Program</a></li>
+                        <li><a href="#">Affiliate Program</a></li>
+                        <li><a href="#">Bulk Subscriptions</a></li>
+                        <li><a href="#">API Access</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 KidsStoryTime.ai. All rights reserved. Made with ❤️ for families everywhere.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animate story counter
+        function animateCounter() {
+            const counter = document.getElementById('storiesCount');
+            const baseCount = 2847;
+            const increment = Math.floor(Math.random() * 5) + 1;
+            
+            setInterval(() => {
+                const currentCount = parseInt(counter.textContent.replace(',', ''));
+                const newCount = currentCount + increment;
+                counter.textContent = newCount.toLocaleString();
+            }, 5000);
+        }
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+                
+                // Close other items
+                document.querySelectorAll('.faq-item').forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Countdown Timer
+        function updateCountdown() {
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 2);
+            endDate.setHours(23, 59, 59);
+            
+            const now = new Date();
+            const diff = endDate - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        // Initialize animations
+        animateCounter();
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // CTA button clicks
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            button.addEventListener('click', () => {
+                // Redirect to main app
+                window.location.href = '/';
+            });
+        });
+    </script>
+</body>
+</html>

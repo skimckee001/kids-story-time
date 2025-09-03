@@ -12,6 +12,9 @@ import ReadingGoals from './components/ReadingGoals';
 import CelebrationAnimation, { useCelebration } from './components/CelebrationAnimation';
 import OnboardingTooltips from './components/OnboardingTooltips';
 import StripeTestComponent from './components/StripeTestComponent';
+import CommunityAchievements from './components/CommunityAchievements';
+import ReferralProgram from './components/ReferralProgram';
+import UserGeneratedContent from './components/UserGeneratedContent';
 import { getTierLimits, canGenerateStory, canUseAIIllustration, getUpgradeMessage } from './utils/subscriptionTiers';
 import './App.original.css';
 
@@ -149,6 +152,9 @@ function App() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [achievementCount, setAchievementCount] = useState(0);
   const [showStripeTest, setShowStripeTest] = useState(false);
+  const [showCommunityAchievements, setShowCommunityAchievements] = useState(false);
+  const [showReferralProgram, setShowReferralProgram] = useState(false);
+  const [showUserContent, setShowUserContent] = useState(false);
   const { triggerCelebration, CelebrationComponent } = useCelebration();
 
   useEffect(() => {
@@ -934,6 +940,68 @@ function App() {
                       >
                         <span>💳</span> Manage Subscription
                       </button>
+                      <div style={{ borderTop: '1px solid #e5e7eb', margin: '4px 0' }}></div>
+                      <button 
+                        onClick={() => { setShowCommunityAchievements(true); setShowUserMenu(false); }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >
+                        <span>🏆</span> Community Achievements
+                      </button>
+                      <button 
+                        onClick={() => { setShowReferralProgram(true); setShowUserMenu(false); }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >
+                        <span>🎁</span> Referral Program
+                      </button>
+                      <button 
+                        onClick={() => { setShowUserContent(true); setShowUserMenu(false); }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          border: 'none',
+                          background: 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '12px',
+                          fontSize: '14px',
+                          cursor: 'pointer',
+                          transition: 'background 0.2s',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#f3f4f6'}
+                        onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                      >
+                        <span>💬</span> Community Reviews
+                      </button>
+                      <div style={{ borderTop: '1px solid #e5e7eb', margin: '4px 0' }}></div>
                       <button 
                         onClick={() => { alert('Account settings coming soon!'); setShowUserMenu(false); }}
                         style={{
@@ -1650,6 +1718,50 @@ function App() {
       {showDashboard && (
         <ParentDashboard
           onClose={() => setShowDashboard(false)}
+        />
+      )}
+      
+      {/* Community Achievements Modal */}
+      {showCommunityAchievements && (
+        <CommunityAchievements
+          childProfile={selectedChildProfile}
+          onClose={() => setShowCommunityAchievements(false)}
+          onStarsEarned={(stars) => {
+            setStarPoints(prev => prev + stars);
+            localStorage.setItem(`stars_${selectedChildProfile?.id}`, starPoints + stars);
+            triggerCelebration('achievement');
+          }}
+        />
+      )}
+      
+      {/* Referral Program Modal */}
+      {showReferralProgram && (
+        <ReferralProgram
+          userId={user?.id || 'guest'}
+          onStarsEarned={(stars) => {
+            setStarPoints(prev => prev + stars);
+            if (selectedChildProfile) {
+              localStorage.setItem(`stars_${selectedChildProfile.id}`, starPoints + stars);
+            }
+            triggerCelebration('referral');
+          }}
+          onClose={() => setShowReferralProgram(false)}
+        />
+      )}
+      
+      {/* User Generated Content Modal */}
+      {showUserContent && (
+        <UserGeneratedContent
+          storyId={currentStory?.id}
+          userId={user?.id || 'guest'}
+          onStarsEarned={(stars) => {
+            setStarPoints(prev => prev + stars);
+            if (selectedChildProfile) {
+              localStorage.setItem(`stars_${selectedChildProfile.id}`, starPoints + stars);
+            }
+            triggerCelebration('review');
+          }}
+          onClose={() => setShowUserContent(false)}
         />
       )}
       
