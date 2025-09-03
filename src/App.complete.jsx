@@ -1221,8 +1221,7 @@ function App() {
           </div>
           
           {/* Quick Actions Bar */}
-          {user && (
-            <div className="quick-actions-bar" style={{
+          <div className="quick-actions-bar" style={{
               display: 'flex',
               justifyContent: 'center',
               gap: '12px',
@@ -1345,7 +1344,6 @@ function App() {
                 </button>
               )}
             </div>
-          )}
         </header>
 
         {/* Account Section - Hidden during beta period */}

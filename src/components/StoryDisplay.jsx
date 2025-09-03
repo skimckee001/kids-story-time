@@ -7,7 +7,7 @@ import CelebrationAnimation from './CelebrationAnimation';
 import './StoryDisplay.css';
 import '../App.original.css';
 
-function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, subscriptionTier, starPoints, childProfile, onShowAchievements, onShowRewards, onShowDashboard, onShowProfileManager, bedtimeModeActive, onToggleBedtime }) {
+function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, subscriptionTier, starPoints, childProfile, onShowAchievements, onShowRewards, onShowDashboard, onShowProfileManager, bedtimeModeActive, onToggleBedtime, onStarsUpdate }) {
   console.log('StoryDisplay received:', { story, subscriptionTier, hasImageUrl: !!story?.imageUrl });
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -599,6 +599,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
   };
   
   const handleMarkAsComplete = () => {
+    console.log('Mark as complete clicked!', { hasCompletedReading, childProfile });
     if (hasCompletedReading) return;
     
     // Award stars for completing the story
@@ -606,7 +607,9 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
     
     // For non-signed-in users, use a default guest profile
     const profileId = childProfile?.id || 'guest';
+    console.log('Awarding stars to profile:', profileId);
     const newTotal = addStarsToChild(profileId, starsEarned, 'Finished reading a story');
+    console.log('New star total:', newTotal);
     setLocalStarPoints(newTotal);
     
     // Trigger star update in parent component
