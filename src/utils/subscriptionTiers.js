@@ -26,13 +26,13 @@ export const SUBSCRIPTION_TIERS = {
     watermarkedPdf: true,
     hasAds: true
   },
-  'story-maker-basic': {
-    name: 'Story Maker (Basic)',
+  'story-pro': {
+    name: 'Story Pro',
     price: { monthly: 4.99, yearly: 39 },
     dailyStories: 10,
     monthlyStories: 50,
     aiIllustrations: 30, // per month
-    narrations: 10, // per month
+    narrations: 3, // per month
     childProfiles: 2,
     libraryAccess: 'full',
     saveStories: true,
@@ -40,14 +40,14 @@ export const SUBSCRIPTION_TIERS = {
     watermarkedPdf: false,
     hasAds: false
   },
-  'family-plus': {
-    name: 'Family (Plus)',
-    price: { monthly: 7.99, yearly: 59 },
+  'read-to-me-promax': {
+    name: 'Read to Me ProMax',
+    price: { monthly: 6.99, yearly: 55 },
     dailyStories: 20,
-    monthlyStories: 120,
-    aiIllustrations: 'unlimited', // Fair use: up to 5 per story
+    monthlyStories: 100,
+    aiIllustrations: 150, // per month
     narrations: 30, // per month
-    childProfiles: 5,
+    childProfiles: 2,
     libraryAccess: 'full',
     saveStories: true,
     pdfExport: true,
@@ -55,21 +55,20 @@ export const SUBSCRIPTION_TIERS = {
     hasAds: false,
     extraFeatures: ['bedtime-reminders', 'streaks', 'audio-downloads']
   },
-  'movie-director-premium': {
-    name: 'Movie Director (Premium)',
-    price: { monthly: 14.99, yearly: 99 },
-    comingSoon: true,
+  'family-plus': {
+    name: 'Family Plus',
+    price: { monthly: 7.99, yearly: 59 },
     dailyStories: 'unlimited',
     monthlyStories: 'unlimited',
-    aiIllustrations: 'unlimited',
-    narrations: 'unlimited',
-    childProfiles: 'unlimited',
+    aiIllustrations: 250, // per month
+    narrations: 50, // per month
+    childProfiles: 4,
     libraryAccess: 'full',
     saveStories: true,
     pdfExport: true,
     watermarkedPdf: false,
     hasAds: false,
-    extraFeatures: ['video-stories', 'custom-characters', 'multiple-art-styles', 'voice-cloning']
+    extraFeatures: ['priority-support', 'beta-features']
   }
 };
 
@@ -84,11 +83,13 @@ export function getTierLimits(tier, user = null) {
   const tierMigration = {
     'free': 'reader-free',
     'reader': 'reader-free',
-    'basic': 'story-maker-basic',
-    'plus': 'family-plus',
-    'premium': 'story-maker-basic',  // Old premium maps to story-maker
+    'basic': 'story-pro',
+    'story-maker-basic': 'story-pro',
+    'plus': 'read-to-me-promax',
+    'premium': 'read-to-me-promax',
     'family': 'family-plus',
-    'pro': 'family-plus'
+    'pro': 'family-plus',
+    'movie-director-premium': 'family-plus'
   };
   
   // Apply migration if needed
@@ -144,18 +145,23 @@ export function getUpgradeMessage(tier, limitType = 'stories') {
       library: 'Create a free account to save your stories!'
     },
     'reader-free': {
-      stories: 'Upgrade to Story Maker for 10 stories per day!',
-      ai: 'Upgrade to Story Maker for 30 AI illustrations per month!',
-      library: 'Upgrade to Story Maker for full library access!'
+      stories: 'Upgrade to Story Pro for 10 stories per day!',
+      ai: 'Upgrade to Story Pro for 30 AI illustrations per month!',
+      library: 'Upgrade to Story Pro for full library access!'
     },
-    'story-maker-basic': {
-      stories: 'Upgrade to Family for 20 stories per day!',
-      ai: 'Upgrade to Family for unlimited AI illustrations!',
+    'story-pro': {
+      stories: 'Upgrade to Read to Me ProMax for 20 stories per day!',
+      ai: 'Upgrade to Read to Me ProMax for 150 AI illustrations!',
+      library: 'You already have full library access!'
+    },
+    'read-to-me-promax': {
+      stories: 'Upgrade to Family Plus for unlimited stories!',
+      ai: 'Upgrade to Family Plus for 250 AI illustrations!',
       library: 'You already have full library access!'
     },
     'family-plus': {
-      stories: 'You have the maximum story limit!',
-      ai: 'You have unlimited AI illustrations!',
+      stories: 'You have unlimited stories!',
+      ai: 'You have the maximum AI illustrations!',
       library: 'You have full library access!'
     }
   };

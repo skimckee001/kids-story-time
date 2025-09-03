@@ -153,7 +153,7 @@ function SocialSharing({ story, childProfile, onStarsEarned }) {
     
     // Award stars for sharing (once per day)
     if (childProfile?.id && !hasSharedToday) {
-      const starsEarned = 3;
+      const starsEarned = 25;
       const newTotal = addStarsToChild(childProfile.id, starsEarned, 'Shared a story with friends!');
       
       // Mark as shared today
@@ -250,14 +250,14 @@ function SocialSharing({ story, childProfile, onStarsEarned }) {
     if (hasSharedToday) {
       return '📤 Share Again';
     }
-    return '📤 Share (+3 ⭐)';
+    return '📤 Share (+25 ⭐)';
   };
 
   const getShareMenuTitle = () => {
     if (hasSharedToday) {
       return 'Share this amazing story!';
     }
-    return 'Share & Earn 3 Stars! ⭐';
+    return 'Share & Earn 25 Stars! ⭐';
   };
 
   return (
@@ -265,8 +265,8 @@ function SocialSharing({ story, childProfile, onStarsEarned }) {
       <div className="share-dropdown">
         <button 
           onClick={() => setShowShareMenu(!showShareMenu)} 
-          className={`share-btn ${hasSharedToday ? 'shared' : 'earn-stars'}`}
-          title={hasSharedToday ? 'Share this story' : 'Share to earn 3 stars!'}
+          className="share-btn"
+          title={hasSharedToday ? 'Share this story' : 'Share to earn 25 stars!'}
         >
           {getShareButtonText()}
         </button>

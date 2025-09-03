@@ -478,9 +478,12 @@
 .story-text {
   font-size: 1.2rem;
   line-height: 1.8;
-  color: #444;
+  color: #2d3748; /* Darker text for better contrast */
   margin: 40px 0;
   overflow: auto; /* Clear floats */
+  background: white; /* Ensure white background */
+  padding: 20px;
+  border-radius: 10px;
 }
 
 .story-paragraph {

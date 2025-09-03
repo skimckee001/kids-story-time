@@ -426,6 +426,7 @@ body {
   transition: all 0.3s ease;
   font-family: inherit;
   background: white;
+  color: #2d3748; /* Ensure text is visible */
 }
 
 .form-group input:focus,
@@ -450,6 +451,12 @@ body {
   background-position: right 1rem center;
   background-size: 1.5em;
   padding-right: 3rem;
+}
+
+.form-select option {
+  color: #2d3748;
+  background: white;
+  padding: 8px;
 }
 
 /* Beta Banner */

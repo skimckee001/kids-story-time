@@ -1,0 +1,27 @@
+# Netlify Redirects Configuration
+# This file handles URL routing for the KidsStoryTime.ai site
+
+# Static page redirects (without .html extension)
+/pricing        /pricing-new.html       200
+/landing        /landing.html           200
+
+# Future pages (to be created)
+# /about          /about.html             200
+# /contact        /contact.html           200
+# /privacy        /privacy.html           200
+# /terms          /terms.html             200
+# /cookies        /cookies.html           200
+# /help           /help.html              200
+# /how-it-works   /how-it-works.html      200
+# /schools        /schools.html           200
+# /gift           /gift.html              200
+# /stories        /success-stories.html   200
+# /resources      /resources.html         200
+# /blog           /blog/index.html        200
+
+# API and function redirects
+/api/*          /.netlify/functions/:splat  200
+
+# SPA fallback - This must be last!
+# All unmatched routes go to the React app
+/*              /index.html             200
