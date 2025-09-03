@@ -145,6 +145,10 @@
   border-color: #4285f4;
 }
 
+.social-btn.google:hover:not(:disabled) .social-icon path {
+  fill: white !important;
+}
+
 .social-btn.apple {
   border-color: #000;
   color: #000;
@@ -157,9 +161,20 @@
   border-color: #000;
 }
 
+.social-btn.apple .social-icon path {
+  fill: #000;
+}
+
+.social-btn.apple:hover:not(:disabled) .social-icon path {
+  fill: white;
+}
+
 .social-icon {
-  font-size: 20px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* Divider */
