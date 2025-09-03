@@ -855,7 +855,7 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <div className="app app-container">
       {/* Onboarding Tooltips for First-Time Users */}
       {!user && <OnboardingTooltips onComplete={() => console.log('Onboarding completed')} />}
       
@@ -1538,24 +1538,15 @@ function App() {
             </div>
 
             {/* STEP 2: What's the story about? */}
-            <div className="story-step" style={{
-              background: 'white',
-              borderRadius: '12px',
-              padding: window.innerWidth <= 480 ? '16px' : '24px',
-              marginBottom: '20px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
-            }}>
-              <h3 style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                marginBottom: '20px',
-                fontSize: '18px',
-                color: '#333'
-              }}>
-                <span style={{fontSize: '24px'}}>✨</span>
-                Step 2: What's the story about?
-              </h3>
+            <div className="story-step" id="step2">
+              <div style={{ padding: window.innerWidth <= 480 ? '16px' : '24px' }}>
+                <header className="step-header">
+                  <span style={{fontSize: '24px'}}>✨</span>
+                  <h3 className="step-title">
+                    <span className="eyebrow">Step 2</span>
+                    Story idea
+                  </h3>
+                </header>
               
               {/* Story Prompt */}
               <div className="form-group">
@@ -1625,64 +1616,38 @@ function App() {
                 </button>
               </div>
               
-              {/* Theme Selection - Compact for mobile */}
+              {/* Theme Selection with Labels */}
               <div className="form-group" style={{marginBottom: 0}}>
                 <label>Choose themes (optional)</label>
-                <div className="theme-grid" style={{
-                  display: 'grid',
-                  gridTemplateColumns: window.innerWidth <= 480 ? 'repeat(4, 1fr)' : 'repeat(auto-fill, minmax(120px, 1fr))',
-                  gap: '6px'
-                }}>
+                <div className="theme-grid" role="group" aria-label="Choose themes">
                   {getAvailableThemes().slice(0, 8).map(theme => (
-                    <div
+                    <button
                       key={theme.id}
-                      className={`theme-option ${selectedThemes.includes(theme.id) ? 'selected' : ''}`}
+                      type="button"
+                      className={`theme-chip ${selectedThemes.includes(theme.id) ? 'selected' : ''}`}
+                      aria-pressed={selectedThemes.includes(theme.id)}
+                      data-theme={theme.id}
                       onClick={() => toggleTheme(theme.id)}
-                      style={{
-                        padding: window.innerWidth <= 480 ? '8px 4px' : '8px',
-                        border: selectedThemes.includes(theme.id) ? '2px solid #667eea' : '2px solid #e2e8f0',
-                        borderRadius: '8px',
-                        background: selectedThemes.includes(theme.id) ? 'linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1))' : 'white',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        flexDirection: window.innerWidth <= 480 ? 'row' : 'column',
-                        alignItems: 'center',
-                        gap: window.innerWidth <= 480 ? '4px' : '4px',
-                        transition: 'all 0.2s',
-                        justifyContent: 'center'
-                      }}
                     >
-                      <span className="theme-emoji" style={{fontSize: window.innerWidth <= 480 ? '20px' : '24px'}}>{theme.emoji}</span>
-                      <span className="theme-label" style={{
-                        fontSize: window.innerWidth <= 480 ? '10px' : '12px',
-                        textAlign: 'center',
-                        display: window.innerWidth <= 480 ? 'none' : 'block'
-                      }}>{theme.label}</span>
-                    </div>
+                      <span style={{fontSize: '18px'}}>{theme.emoji}</span>
+                      <span>{theme.label}</span>
+                    </button>
                   ))}
                 </div>
+              </div>
               </div>
             </div>
 
             {/* STEP 3: Choose your style */}
-            <div className="story-step" style={{
-              background: 'white',
-              borderRadius: '12px',
-              padding: window.innerWidth <= 480 ? '16px' : '24px',
-              marginBottom: '20px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
-            }}>
-              <h3 style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                marginBottom: '20px',
-                fontSize: '18px',
-                color: '#333'
-              }}>
-                <span style={{fontSize: '24px'}}>🎨</span>
-                Step 3: Choose your style
-              </h3>
+            <div className="story-step" id="step3">
+              <div style={{ padding: window.innerWidth <= 480 ? '16px' : '24px' }}>
+                <header className="step-header">
+                  <span style={{fontSize: '24px'}}>🎨</span>
+                  <h3 className="step-title">
+                    <span className="eyebrow">Step 3</span>
+                    Style options
+                  </h3>
+                </header>
               
               <div style={{
                 display: 'grid',
@@ -1745,6 +1710,7 @@ function App() {
                     ))}
                   </select>
                 </div>
+              </div>
               </div>
             </div>
 

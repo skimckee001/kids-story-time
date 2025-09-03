@@ -1,0 +1,283 @@
+/* Mobile-First CSS Fixes for iOS/Chrome */
+
+/* Global Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%; /* Prevent iOS text zoom quirks */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* One source of truth for mobile gutters (accounts for iPhone safe area) */
+:root {
+  --page-gutter: max(16px, env(safe-area-inset-left));
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+}
+
+/* Page container with proper gutters */
+.page {
+  padding-inline: var(--page-gutter);
+  padding-top: var(--safe-top);
+}
+
+/* Keep the main content centered and full-width on mobile */
+.container,
+.main-content,
+.story-container {
+  width: 100%;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+/* Remove stray inline padding/margins that make form blocks narrower */
+.section,
+.form-section,
+.step-card,
+.story-step {
+  margin-inline: 0;
+  padding-inline: 0;
+  width: 100%;
+}
+
+/* The inside of cards get padding, not the outer wrapper */
+.story-step {
+  background: white;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Headline + icon layout that doesn't steal width from title */
+.step-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.step-header h3 {
+  margin: 0;
+  line-height: 1.2;
+  font-size: clamp(18px, 5vw, 22px);
+}
+
+/* Stepper Navigation */
+.stepper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 12px 0 16px;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(118,75,162,0.05) 100%);
+  border-radius: 12px;
+}
+
+.stepper-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.stepper-item .dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #e5e7eb;
+  font-weight: 600;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.stepper-item[aria-current="step"] .dot,
+.stepper-item.active .dot {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-color: #667eea;
+}
+
+.stepper-item .label {
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Theme Grid with Labels */
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+@media (min-width: 480px) {
+  .theme-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .theme-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.theme-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px; /* iOS touch target */
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  background: white;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.theme-chip[aria-pressed="true"],
+.theme-chip.selected {
+  outline: 2px solid rgba(102, 126, 234, 0.6);
+  outline-offset: 0;
+  background: rgba(102, 126, 234, 0.08);
+}
+
+.theme-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.theme-chip span {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Form fields with proper sizing */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  min-height: 44px; /* iOS touch target */
+  padding: 10px 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px; /* Prevents zoom on iOS */
+  background: white;
+}
+
+/* Gender buttons row */
+.name-gender-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.name-input {
+  flex: 1;
+  min-width: 150px;
+}
+
+.gender-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* Checkbox with better visibility */
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #667eea;
+  cursor: pointer;
+}
+
+/* Quick Actions Bar responsive */
+.quick-actions-bar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(249,250,251,0.95) 100%);
+  border-radius: 12px;
+  margin-top: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+  .quick-actions-bar .action-btn span:not(.emoji) {
+    display: none; /* Show only emoji on mobile */
+  }
+  
+  .quick-actions-bar .action-btn {
+    padding: 10px 12px;
+    min-width: 44px;
+  }
+}
+
+/* Footer with safe area */
+.footer {
+  padding-bottom: calc(20px + var(--safe-bottom));
+}
+
+/* Prevent horizontal scroll */
+.app-container {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Step title optimization */
+.step-title {
+  margin: 0;
+}
+
+.step-title .eyebrow {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+/* Voice button positioning fix */
+.prompt-container {
+  position: relative;
+}
+
+.voice-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  min-width: 44px;
+  min-height: 44px;
+}

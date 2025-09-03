@@ -1,6 +1,7 @@
 /* Import unified theme variables */
 @import './styles/theme.css';
 @import './styles/typography.css';
+@import './styles/mobile-fixes.css';
 
 @tailwind base;
 @tailwind components;
