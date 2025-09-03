@@ -17,8 +17,8 @@
   - Ad-free experience
 
 ### Story Pro
-- **Product ID:** _TODO: Create in Stripe_
-- **Price ID:** `price_1S2Bdq0MYOtGjLFhBYSIU8L9` (temporary - needs update)
+- **Product ID:** `prod_Sy7tSlrclTh6K0`
+- **Price ID:** `price_1S2Bdq0MYOtGjLFhBYSIU8L9`
 - **Monthly Price:** $4.99
 - **Features:**
   - 10 stories per day (50/month)
@@ -29,8 +29,8 @@
   - Ad-free experience
 
 ### Family Plus
-- **Product ID:** _TODO: Create in Stripe_
-- **Price ID:** `price_1S2BgM0MYOtGjLFhlBjRzwaV` (temporary - needs update)
+- **Product ID:** `prod_Sy7whD8okJo5NO`
+- **Price ID:** `price_1S2BgM0MYOtGjLFhlBjRzwaV`
 - **Monthly Price:** $7.99
 - **Features:**
   - Unlimited stories
@@ -79,11 +79,11 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
 ## TODO
-1. Create Story Pro product in Stripe Dashboard
-2. Create Family Plus product in Stripe Dashboard
-3. Update price IDs in codebase once created
+1. ✅ Story Pro product created in Stripe Dashboard
+2. ✅ Family Plus product created in Stripe Dashboard
+3. ✅ All price IDs updated in codebase
 4. Configure webhook endpoint in Stripe Dashboard
-5. Test complete subscription flow
+5. Test complete subscription flow with live products
 
 ## Notes
 - All prices are in USD

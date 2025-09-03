@@ -47,8 +47,8 @@ export const SUBSCRIPTION_TIERS = {
     id: 'story-pro',
     name: 'Story Pro',
     price: 4.99,
-    priceId: 'price_1S2Bdq0MYOtGjLFhBYSIU8L9', // TODO: Update with actual Story Pro price ID
-    productId: null, // TODO: Add Story Pro product ID
+    priceId: 'price_1S2Bdq0MYOtGjLFhBYSIU8L9', // Story Pro price ID
+    productId: 'prod_Sy7tSlrclTh6K0', // Story Pro product ID
     features: [
       '10 stories per day (50/month)',
       '30 AI images per month',
@@ -99,8 +99,8 @@ export const SUBSCRIPTION_TIERS = {
     id: 'family-plus',
     name: 'Family Plus',
     price: 7.99,
-    priceId: 'price_1S2BgM0MYOtGjLFhlBjRzwaV', // TODO: Update with actual Family Plus price ID
-    productId: null, // TODO: Add Family Plus product ID
+    priceId: 'price_1S2BgM0MYOtGjLFhlBjRzwaV', // Family Plus price ID
+    productId: 'prod_Sy7whD8okJo5NO', // Family Plus product ID
     features: [
       'Unlimited stories',
       '250 AI images per month',
