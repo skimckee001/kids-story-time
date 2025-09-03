@@ -38,7 +38,10 @@ exports.handler = async (event, context) => {
             customPrompt = '',
             includeNameInStory = true,
             imageStyle = 'age-appropriate',
-            imagePrompt = ''
+            imagePrompt = '',
+            enhancedPrompt = null,
+            wordTarget = null,
+            contentGuidelines = null
         } = JSON.parse(event.body);
 
         // Validate required parameters
@@ -72,8 +75,13 @@ exports.handler = async (event, context) => {
             };
         }
 
-        // Build the story prompt (using the same logic as the frontend)
-        const prompt = buildStoryPrompt(childName, childAge, storyLength, theme, themes, gender, customPrompt, includeNameInStory);
+        // Use enhanced prompt if provided, otherwise build standard prompt
+        const prompt = enhancedPrompt || buildStoryPrompt(childName, childAge, storyLength, theme, themes, gender, customPrompt, includeNameInStory);
+        
+        // Choose model based on reading level complexity
+        const useGPT4 = ['fluent-reader', 'insightful-reader'].includes(childAge) && 
+                       ['extended', 'long-extended'].includes(storyLength);
+        const model = useGPT4 ? 'gpt-4' : 'gpt-3.5-turbo';
         
         // Call OpenAI API
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -83,11 +91,13 @@ exports.handler = async (event, context) => {
                 'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: 'gpt-3.5-turbo',
+                model: model,
                 messages: [
                     {
                         role: 'system',
-                        content: getSystemPromptForAge(childAge)
+                        content: enhancedPrompt ? 
+                            `You are an expert storyteller. Create stories exactly as specified in the prompt. CRITICAL: Follow word count requirements precisely.` :
+                            getSystemPromptForAge(childAge)
                     },
                     {
                         role: 'user',
@@ -95,7 +105,9 @@ exports.handler = async (event, context) => {
                     }
                 ],
                 max_tokens: getMaxTokensForLength(storyLength),
-                temperature: 0.8
+                temperature: 0.8,
+                presence_penalty: 0.3,
+                frequency_penalty: 0.3
             })
         });
 
@@ -135,7 +147,9 @@ exports.handler = async (event, context) => {
                         theme: themes.length > 0 ? themes.join(', ') : theme,
                         generatedAt: new Date().toISOString(),
                         type: 'ai-generated',
-                        model: 'gpt-3.5-turbo'
+                        model: model,
+                        wordCount: content.split(/\s+/).length,
+                        targetWords: wordTarget?.target || null
                     }
                 }
             })

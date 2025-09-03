@@ -19,6 +19,15 @@ import { getTierLimits, canGenerateStory, canUseAIIllustration, getUpgradeMessag
 import AuthenticationManager from './components/AuthenticationManager';
 import { useEnhancedAuth } from './hooks/useEnhancedAuth.jsx';
 import { initAllEnhancements } from './utils/stepperEnhancements';
+import { 
+  generateEnhancedPrompt, 
+  validateStoryOutput, 
+  getEnhancedImageStyle,
+  calculateReadingTime,
+  scoreStoryQuality,
+  WORD_COUNT_TARGETS,
+  CONTENT_GUIDELINES 
+} from './utils/storyEnhancements';
 import './App.original.css';
 import './styles/desktop-fixes.css';
 
@@ -514,22 +523,22 @@ function App() {
         ? 'http://localhost:9000/.netlify/functions/generate-story'
         : '/.netlify/functions/generate-story';
       
-      // Get the appropriate image style prompt
-      const selectedStyle = getImageStyles().find(s => s.id === imageStyle);
+      // Get the appropriate image style prompt using enhanced system
+      const recommendedStyle = getEnhancedImageStyle(readingLevel, selectedThemes);
+      const effectiveStyle = imageStyle === 'age-appropriate' ? recommendedStyle : imageStyle;
+      const selectedStyle = getImageStyles().find(s => s.id === effectiveStyle);
       let imagePrompt = selectedStyle?.prompt || '';
       
-      // If "age-appropriate" is selected, determine the best style based on age
+      // Enhanced age-specific image prompts
       if (imageStyle === 'age-appropriate') {
-        const isYounger = ['pre-reader', 'early-phonics', 'beginning-reader'].includes(readingLevel);
-        const isOlder = ['fluent-reader', 'insightful-reader'].includes(readingLevel);
-        
-        if (isYounger) {
-          imagePrompt = 'bright cartoon style, child-friendly, vibrant colors, simple shapes';
-        } else if (isOlder) {
-          imagePrompt = 'detailed illustration, semi-realistic, dynamic composition';
-        } else {
-          imagePrompt = 'classic children\'s book illustration, warm and inviting';
-        }
+        const stylePrompts = {
+          'cartoon': 'bright cartoon style, child-friendly, vibrant colors, simple shapes, cheerful',
+          'watercolor': 'soft watercolor painting, dreamy atmosphere, pastel colors, gentle brush strokes',
+          'storybook': 'classic children\'s book illustration, detailed, warm colors, inviting',
+          'realistic': 'semi-realistic digital art, detailed textures, dynamic lighting, cinematic',
+          'anime': 'anime/manga style, expressive characters, dynamic poses, detailed backgrounds'
+        };
+        imagePrompt = stylePrompts[recommendedStyle] || stylePrompts['storybook'];
       }
       
       const response = await fetch(apiUrl, {
@@ -549,13 +558,46 @@ function App() {
           includeNameInStory,
           subscriptionTier,
           imageStyle: imageStyle,
-          imagePrompt: imagePrompt
+          imagePrompt: imagePrompt,
+          // Enhanced parameters
+          enhancedPrompt: generateEnhancedPrompt({
+            childName,
+            genderSelection,
+            includeNameInStory,
+            readingLevel,
+            selectedThemes,
+            storyLength,
+            customPrompt
+          }),
+          wordTarget: WORD_COUNT_TARGETS[storyLength],
+          contentGuidelines: CONTENT_GUIDELINES[readingLevel]
         })
       });
 
       const data = await response.json();
       
       if (data.story) {
+        // Validate story quality
+        const validation = validateStoryOutput(data.story.content, storyLength, readingLevel);
+        const qualityScore = scoreStoryQuality(data.story.content, {
+          childName,
+          includeNameInStory,
+          readingLevel,
+          selectedThemes,
+          storyLength
+        });
+        
+        // Log quality metrics
+        console.log('Story Quality Metrics:', {
+          wordCount: validation.wordCount,
+          targetWords: WORD_COUNT_TARGETS[storyLength].target,
+          qualityGrade: qualityScore.grade,
+          issues: [...validation.issues, ...qualityScore.issues]
+        });
+        
+        // Calculate accurate reading time
+        const readingTime = calculateReadingTime(validation.wordCount, readingLevel);
+        
         // Set the current story and show the story display immediately
         const storyData = {
           title: data.story.title,
@@ -564,7 +606,13 @@ function App() {
           childName: childName,
           themes: selectedThemes,
           readingLevel: readingLevel,
-          metadata: data.story.metadata
+          metadata: {
+            ...data.story.metadata,
+            wordCount: validation.wordCount,
+            readingTime: readingTime.displayText,
+            qualityScore: qualityScore.score,
+            qualityGrade: qualityScore.grade
+          }
         };
         
         setCurrentStory(storyData);
