@@ -593,13 +593,13 @@ html {
 }
 
 .star {
-  font-size: 5rem;
+  font-size: 10rem;
   cursor: pointer;
   filter: grayscale(100%);
   transition: filter 0.3s ease, transform 0.3s ease;
   line-height: 1;
   display: inline-block;
-  padding: 5px;
+  padding: 10px;
   user-select: none;
 }
 
@@ -1032,7 +1032,7 @@ html {
   }
   
   .star {
-    font-size: 4.5rem;
+    font-size: 8rem;
   }
 
   .story-text {
@@ -1089,7 +1089,7 @@ html {
   }
   
   .star {
-    font-size: 4rem;
+    font-size: 6rem;
   }
 
   .story-text {

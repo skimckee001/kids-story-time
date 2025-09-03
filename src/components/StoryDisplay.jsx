@@ -598,7 +598,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
     if (!childProfile?.id || hasCompletedReading) return;
     
     // Award stars for completing the story
-    const starsEarned = 5; // 5 stars for reading completion (different from 10 for generation)
+    const starsEarned = 10; // 10 stars for reading completion
     const newTotal = addStarsToChild(childProfile.id, starsEarned, 'Finished reading a story');
     setLocalStarPoints(newTotal);
     
@@ -1212,7 +1212,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
 
 
           {/* Story Completion Button */}
-          {childProfile && !hasCompletedReading && (
+          {!hasCompletedReading && (
             <div className="story-completion" style={{
               textAlign: 'center',
               margin: '30px 0',
@@ -1265,7 +1265,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
             }}>
               <div style={{ fontSize: '60px', marginBottom: '20px' }}>🌟</div>
               <h2 style={{ color: '#ffa500', marginBottom: '10px' }}>Great Job!</h2>
-              <p style={{ fontSize: '20px', color: '#333' }}>You earned 5 stars!</p>
+              <p style={{ fontSize: '20px', color: '#333' }}>You earned 10 stars!</p>
               <p style={{ fontSize: '16px', color: '#666', marginTop: '10px' }}>Keep reading to earn more rewards!</p>
             </div>
           )}
@@ -1288,7 +1288,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
 
           {/* Rating */}
           <div className="story-rating">
-            <p>How did you like this story?</p>
+            <p>How would you rate this story?</p>
             <div className="star-rating">
               {[1, 2, 3, 4, 5].map((star) => (
                 <span
