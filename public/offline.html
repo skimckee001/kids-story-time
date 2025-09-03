@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Story Time - Offline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .offline-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+        
+        .offline-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, #FF6B9D, #4ECDC4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .offline-features {
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .offline-features h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .offline-features ul {
+            list-style: none;
+            text-align: left;
+        }
+        
+        .offline-features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            color: #555;
+        }
+        
+        .offline-features li:before {
+            content: "📖";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .retry-button {
+            display: inline-block;
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .retry-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .retry-button:active {
+            transform: translateY(0);
+        }
+        
+        .cloud-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            opacity: 0.1;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 100px;
+            opacity: 0.8;
+        }
+        
+        .cloud:before {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 100px;
+        }
+        
+        .cloud1 {
+            width: 100px;
+            height: 40px;
+            top: 20%;
+            animation: float 20s infinite;
+        }
+        
+        .cloud1:before {
+            width: 50px;
+            height: 50px;
+            top: -25px;
+            left: 10px;
+        }
+        
+        .cloud2 {
+            width: 80px;
+            height: 35px;
+            top: 60%;
+            animation: float 25s infinite;
+            animation-delay: 5s;
+        }
+        
+        .cloud2:before {
+            width: 60px;
+            height: 40px;
+            top: -20px;
+            right: 15px;
+        }
+        
+        @keyframes float {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(calc(100vw + 100px)); }
+        }
+        
+        @media (max-width: 480px) {
+            .offline-container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            p {
+                font-size: 16px;
+            }
+            
+            .offline-icon {
+                width: 100px;
+                height: 100px;
+                font-size: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cloud-animation">
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+    </div>
+    
+    <div class="offline-container">
+        <div class="offline-icon">
+            🌙
+        </div>
+        
+        <h1>You're Offline</h1>
+        
+        <p>
+            Oh no! It looks like you've lost your internet connection. 
+            But don't worry, your stories are waiting for you!
+        </p>
+        
+        <div class="offline-features">
+            <h2>While offline, you can:</h2>
+            <ul>
+                <li>Read previously downloaded stories</li>
+                <li>View your achievements and badges</li>
+                <li>Track your reading streak</li>
+                <li>Access your story library</li>
+            </ul>
+        </div>
+        
+        <button class="retry-button" onclick="window.location.reload()">
+            Try Again
+        </button>
+    </div>
+    
+    <script>
+        // Check for connection periodically
+        setInterval(() => {
+            if (navigator.onLine) {
+                window.location.reload();
+            }
+        }, 5000);
+        
+        // Reload on connection restore
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>
