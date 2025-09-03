@@ -22,62 +22,104 @@ export const getStripe = () => {
 export const SUBSCRIPTION_TIERS = {
   'reader-free': {
     id: 'reader-free',
-    name: 'Reader (Free)',
+    name: 'Infrequent Reader (Free)',
     price: 0,
     priceId: null, // No Stripe price ID for free tier
+    productId: null,
     features: [
-      'Basic story generation',
-      'Placeholder images',
-      '3 stories per day',
-      'Basic themes'
+      '3 stories per day (10/month)',
+      'Stock illustrations',
+      '1 AI image per month',
+      '1 narration per month',
+      'Watermarked PDFs',
+      'Last 2 stories only'
     ],
     limits: {
       storiesPerDay: 3,
-      imageQuality: 'placeholder',
+      storiesPerMonth: 10,
+      aiImagesPerMonth: 1,
+      narrationsPerMonth: 1,
+      imageQuality: 'stock',
       themes: ['adventure', 'fairytale', 'educational', 'bedtime']
     }
   },
-  'story-maker-basic': {
-    id: 'story-maker-basic',
-    name: 'Story Maker',
+  'story-pro': {
+    id: 'story-pro',
+    name: 'Story Pro',
     price: 4.99,
-    priceId: 'price_1S2Bdq0MYOtGjLFhBYSIU8L9', // Story Maker price ID
+    priceId: 'price_1S2Bdq0MYOtGjLFhBYSIU8L9', // TODO: Update with actual Story Pro price ID
+    productId: null, // TODO: Add Story Pro product ID
     features: [
-      'Enhanced story generation',
-      'AI-generated images',
-      '10 stories per day',
-      'All themes',
-      'Story library',
-      'Export to PDF',
+      '10 stories per day (50/month)',
+      '30 AI images per month',
+      '3 narrations per month',
+      '2 child profiles',
+      'Full library access',
+      'Non-watermarked PDFs',
       'Ad-free experience'
     ],
     limits: {
       storiesPerDay: 10,
+      storiesPerMonth: 50,
+      aiImagesPerMonth: 30,
+      narrationsPerMonth: 3,
       imageQuality: 'ai',
-      themes: 'all'
+      themes: 'all',
+      maxChildren: 2
+    }
+  },
+  'read-to-me-promax': {
+    id: 'read-to-me-promax',
+    name: 'Read to Me ProMax',
+    price: 6.99,
+    priceId: 'price_1S3E8k0MYOtGjLFhbQQ2EKzw', // Read to Me ProMax price ID
+    productId: 'prod_SzCXUDassA5zJi', // Read to Me ProMax product ID
+    features: [
+      '20 stories per day (100/month)',
+      '150 AI images per month',
+      '30 narrations per month',
+      '2 child profiles',
+      'Full library access',
+      'Audio downloads',
+      'Bedtime reminders & streaks',
+      'Non-watermarked PDFs',
+      'Ad-free experience'
+    ],
+    limits: {
+      storiesPerDay: 20,
+      storiesPerMonth: 100,
+      aiImagesPerMonth: 150,
+      narrationsPerMonth: 30,
+      imageQuality: 'ai',
+      themes: 'all',
+      maxChildren: 2
     }
   },
   'family-plus': {
     id: 'family-plus',
-    name: 'Family',
+    name: 'Family Plus',
     price: 7.99,
-    priceId: 'price_1S2BgM0MYOtGjLFhlBjRzwaV', // Family price ID
+    priceId: 'price_1S2BgM0MYOtGjLFhlBjRzwaV', // TODO: Update with actual Family Plus price ID
+    productId: null, // TODO: Add Family Plus product ID
     features: [
-      'Unlimited story generation',
-      'AI-generated images',
-      'Multiple child profiles',
-      'All themes',
-      'Story library',
-      'Export to PDF',
-      'Audio narration',
+      'Unlimited stories',
+      '250 AI images per month',
+      '50 narrations per month',
+      '4 child profiles',
+      'Full library access',
       'Priority support',
+      'Beta features access',
+      'Non-watermarked PDFs',
       'Ad-free experience'
     ],
     limits: {
       storiesPerDay: 999,
+      storiesPerMonth: 999,
+      aiImagesPerMonth: 250,
+      narrationsPerMonth: 50,
       imageQuality: 'ai',
       themes: 'all',
-      maxChildren: 10
+      maxChildren: 4
     }
   }
 };

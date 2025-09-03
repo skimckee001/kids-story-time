@@ -10,9 +10,9 @@ const supabase = createClient(
 
 // Map Stripe price IDs to subscription tiers
 const PRICE_TO_TIER = {
-  'price_premium_monthly': 'premium',
-  'price_family_monthly': 'family',
-  // Add your actual Stripe price IDs here
+  'price_1S2Bdq0MYOtGjLFhBYSIU8L9': 'story-pro', // Story Pro - TODO: Update with actual price ID
+  'price_1S3E8k0MYOtGjLFhbQQ2EKzw': 'read-to-me-promax', // Read to Me ProMax
+  'price_1S2BgM0MYOtGjLFhlBjRzwaV': 'family-plus', // Family Plus - TODO: Update with actual price ID
 };
 
 exports.handler = async (event) => {

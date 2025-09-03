@@ -129,7 +129,7 @@ function StripeTestComponent() {
             <h3>Test Checkout Flow:</h3>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               <button
-                onClick={() => testCheckout('story-maker-basic')}
+                onClick={() => testCheckout('story-pro')}
                 disabled={loading}
                 style={{
                   background: 'linear-gradient(135deg, #48c774, #3ec46d)',
@@ -141,7 +141,23 @@ function StripeTestComponent() {
                   fontSize: '14px'
                 }}
               >
-                Test Story Maker ($4.99)
+                Test Story Pro ($4.99)
+              </button>
+              
+              <button
+                onClick={() => testCheckout('read-to-me-promax')}
+                disabled={loading}
+                style={{
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  fontSize: '14px'
+                }}
+              >
+                Test Read to Me ProMax ($6.99)
               </button>
               
               <button
@@ -157,7 +173,7 @@ function StripeTestComponent() {
                   fontSize: '14px'
                 }}
               >
-                Test Family Plan ($7.99)
+                Test Family Plus ($7.99)
               </button>
             </div>
             

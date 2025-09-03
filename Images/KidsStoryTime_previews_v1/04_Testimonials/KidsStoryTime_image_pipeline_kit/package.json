@@ -1,0 +1,1 @@
+{"name":"kidsstorytime-image-pipeline","private":true,"type":"module","scripts":{"build:images":"node image-pipeline.js --in ./input --out ./public/assets --quality 80"},"dependencies":{"fast-glob":"^3.3.2","minimist":"^1.2.8","sharp":"^0.33.3"}}
