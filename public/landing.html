@@ -955,7 +955,15 @@
             }
             
             /* Before/After images on mobile - stack vertically */
+            .before-after-grid,
             div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+            
+            /* Challenge cards (3 tiles) on mobile - stack vertically */
+            .challenge-cards-grid,
+            div[style*="grid-template-columns: repeat(3, 1fr)"] {
                 grid-template-columns: 1fr !important;
                 gap: 20px !important;
             }

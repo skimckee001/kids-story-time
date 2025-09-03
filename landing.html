@@ -942,6 +942,13 @@
                 grid-template-columns: 1fr;
                 text-align: center;
             }
+            
+            /* Challenge cards (3 tiles) on mobile - stack vertically */
+            .challenge-cards-grid,
+            div[style*="grid-template-columns: repeat(3, 1fr)"] {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
 
             .hero-visual {
                 height: 300px;
