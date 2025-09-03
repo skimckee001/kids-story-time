@@ -863,7 +863,7 @@ function App() {
         {/* Header */}
         <header className="header-container">
           <div className="header-content">
-            <div className="header-left">
+            <div className="header-left" style={{ cursor: 'pointer' }} onClick={() => window.location.reload()}>
               <div className="logo-icon">
                 <span>📚</span>
               </div>
@@ -1331,15 +1331,16 @@ function App() {
             </div>
           )}
           
-          {/* Step Indicators */}
+          {/* Step Indicators - Responsive */}
           <div className="step-indicators" style={{
             display: 'flex',
             justifyContent: 'center',
-            gap: '40px',
-            marginBottom: '30px',
-            padding: '20px',
+            gap: window.innerWidth <= 480 ? '20px' : '40px',
+            marginBottom: '20px',
+            padding: window.innerWidth <= 480 ? '12px' : '20px',
             background: 'linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(118,75,162,0.05) 100%)',
-            borderRadius: '12px'
+            borderRadius: '12px',
+            flexWrap: window.innerWidth <= 480 ? 'nowrap' : 'nowrap'
           }}>
             {[
               { num: '1', label: 'Who?', icon: '👤' },
@@ -1349,22 +1350,26 @@ function App() {
               <div key={step.num} style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px'
+                gap: window.innerWidth <= 480 ? '8px' : '12px',
+                flex: window.innerWidth <= 480 ? '1' : 'initial'
               }}>
                 <div style={{
-                  width: '40px',
-                  height: '40px',
+                  width: window.innerWidth <= 480 ? '32px' : '40px',
+                  height: window.innerWidth <= 480 ? '32px' : '40px',
                   borderRadius: '50%',
                   background: 'linear-gradient(135deg, #667eea, #764ba2)',
                   color: 'white',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '20px'
+                  fontSize: window.innerWidth <= 480 ? '16px' : '20px',
+                  flexShrink: 0
                 }}>
                   {step.icon}
                 </div>
-                <div>
+                <div style={{
+                  display: window.innerWidth <= 480 ? 'none' : 'block'
+                }}>
                   <div style={{
                     fontSize: '11px',
                     color: '#999',
@@ -1386,7 +1391,7 @@ function App() {
             <div className="story-step" style={{
               background: 'white',
               borderRadius: '12px',
-              padding: '24px',
+              padding: window.innerWidth <= 480 ? '16px' : '24px',
               marginBottom: '20px',
               boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
             }}>
@@ -1405,7 +1410,7 @@ function App() {
               {/* Child's Name and Gender */}
               <div className="form-group">
                 <label htmlFor="childName">
-                  Child's Name
+                  Child's Name or Character Name
                   {selectedChildProfile && (
                     <span style={{ 
                       marginLeft: '10px', 
@@ -1483,13 +1488,22 @@ function App() {
                   cursor: 'pointer',
                   fontSize: '14px',
                   marginTop: '12px',
-                  color: '#666'
+                  color: '#333',
+                  background: 'rgba(255,255,255,0.8)',
+                  padding: '4px 8px',
+                  borderRadius: '4px'
                 }}>
                   <input
                     type="checkbox"
                     checked={includeNameInStory}
                     onChange={(e) => setIncludeNameInStory(e.target.checked)}
-                    style={{margin: 0, cursor: 'pointer'}}
+                    style={{
+                      margin: 0, 
+                      cursor: 'pointer',
+                      width: '16px',
+                      height: '16px',
+                      accentColor: '#667eea'
+                    }}
                   />
                   Include name as main character
                 </label>
@@ -1527,7 +1541,7 @@ function App() {
             <div className="story-step" style={{
               background: 'white',
               borderRadius: '12px',
-              padding: '24px',
+              padding: window.innerWidth <= 480 ? '16px' : '24px',
               marginBottom: '20px',
               boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
             }}>
@@ -1611,13 +1625,13 @@ function App() {
                 </button>
               </div>
               
-              {/* Theme Selection */}
+              {/* Theme Selection - Compact for mobile */}
               <div className="form-group" style={{marginBottom: 0}}>
                 <label>Choose themes (optional)</label>
                 <div className="theme-grid" style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
-                  gap: '8px'
+                  gridTemplateColumns: window.innerWidth <= 480 ? 'repeat(4, 1fr)' : 'repeat(auto-fill, minmax(120px, 1fr))',
+                  gap: '6px'
                 }}>
                   {getAvailableThemes().slice(0, 8).map(theme => (
                     <div
@@ -1625,20 +1639,25 @@ function App() {
                       className={`theme-option ${selectedThemes.includes(theme.id) ? 'selected' : ''}`}
                       onClick={() => toggleTheme(theme.id)}
                       style={{
-                        padding: '8px',
+                        padding: window.innerWidth <= 480 ? '8px 4px' : '8px',
                         border: selectedThemes.includes(theme.id) ? '2px solid #667eea' : '2px solid #e2e8f0',
                         borderRadius: '8px',
                         background: selectedThemes.includes(theme.id) ? 'linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1))' : 'white',
                         cursor: 'pointer',
                         display: 'flex',
-                        flexDirection: 'column',
+                        flexDirection: window.innerWidth <= 480 ? 'row' : 'column',
                         alignItems: 'center',
-                        gap: '4px',
-                        transition: 'all 0.2s'
+                        gap: window.innerWidth <= 480 ? '4px' : '4px',
+                        transition: 'all 0.2s',
+                        justifyContent: 'center'
                       }}
                     >
-                      <span className="theme-emoji" style={{fontSize: '24px'}}>{theme.emoji}</span>
-                      <span className="theme-label" style={{fontSize: '12px', textAlign: 'center'}}>{theme.label}</span>
+                      <span className="theme-emoji" style={{fontSize: window.innerWidth <= 480 ? '20px' : '24px'}}>{theme.emoji}</span>
+                      <span className="theme-label" style={{
+                        fontSize: window.innerWidth <= 480 ? '10px' : '12px',
+                        textAlign: 'center',
+                        display: window.innerWidth <= 480 ? 'none' : 'block'
+                      }}>{theme.label}</span>
                     </div>
                   ))}
                 </div>
@@ -1649,7 +1668,7 @@ function App() {
             <div className="story-step" style={{
               background: 'white',
               borderRadius: '12px',
-              padding: '24px',
+              padding: window.innerWidth <= 480 ? '16px' : '24px',
               marginBottom: '20px',
               boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
             }}>
@@ -1922,15 +1941,20 @@ function App() {
         })()}
 
         {/* Footer */}
-        <footer className="footer">
-          <p>
-            <a href="/pricing-new.html" target="_blank">Pricing</a> | 
-            <a href="/terms.html" target="_blank">Terms of Service</a> | 
-            <a href="/privacy.html" target="_blank">Privacy Policy</a> | 
-            <a href="mailto:support@kidsstorytime.ai">Contact Us</a>
+        <footer className="footer" style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          padding: '20px',
+          marginTop: '40px'
+        }}>
+          <p style={{ color: 'white' }}>
+            <a href="/pricing-new.html" target="_blank" style={{ color: 'white', textDecoration: 'underline' }}>Pricing</a> | 
+            <a href="/terms.html" target="_blank" style={{ color: 'white', textDecoration: 'underline' }}>Terms of Service</a> | 
+            <a href="/privacy.html" target="_blank" style={{ color: 'white', textDecoration: 'underline' }}>Privacy Policy</a> | 
+            <a href="mailto:support@kidsstorytime.ai" style={{ color: 'white', textDecoration: 'underline' }}>Contact Us</a>
           </p>
-          <p>&copy; 2025 Kids Story Time.</p>
-          <p>All rights reserved.</p>
+          <p style={{ color: 'white' }}>&copy; 2025 Kids Story Time.</p>
+          <p style={{ color: 'white' }}>All rights reserved.</p>
         </footer>
       </div>
 
