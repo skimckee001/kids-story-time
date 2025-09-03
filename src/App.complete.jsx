@@ -170,6 +170,16 @@ function App() {
   const [showUserContent, setShowUserContent] = useState(false);
   const { triggerCelebration, CelebrationComponent } = useCelebration();
 
+  // Load guest stars on mount if no user is logged in
+  useEffect(() => {
+    if (!user && !selectedChildProfile) {
+      const guestStars = localStorage.getItem('stars_guest');
+      if (guestStars) {
+        setStarPoints(parseInt(guestStars) || 0);
+      }
+    }
+  }, [user, selectedChildProfile]);
+
   useEffect(() => {
     // Click outside handler for dropdown menus
     const handleClickOutside = (event) => {
