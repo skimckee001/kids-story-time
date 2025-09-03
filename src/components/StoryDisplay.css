@@ -593,7 +593,7 @@ html {
 }
 
 .star {
-  font-size: 10rem;
+  font-size: 20rem !important;
   cursor: pointer;
   filter: grayscale(100%);
   transition: filter 0.3s ease, transform 0.3s ease;
@@ -1032,7 +1032,7 @@ html {
   }
   
   .star {
-    font-size: 8rem;
+    font-size: 16rem !important;
   }
 
   .story-text {
@@ -1089,7 +1089,7 @@ html {
   }
   
   .star {
-    font-size: 6rem;
+    font-size: 12rem !important;
   }
 
   .story-text {
