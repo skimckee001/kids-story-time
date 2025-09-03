@@ -3,8 +3,16 @@ import OpenAI from 'openai';
 // Inline config and prompts for Netlify function
 // (Netlify functions can't import from src directory)
 
+// In Netlify functions, use OPENAI_API_KEY without VITE_ prefix
+const apiKey = process.env.OPENAI_API_KEY;
+
+if (!apiKey) {
+  console.error('OPENAI_API_KEY not found in environment variables');
+  console.log('Available env vars:', Object.keys(process.env).filter(key => key.includes('OPENAI') || key.includes('API')));
+}
+
 const openai = new OpenAI({
-  apiKey: process.env.VITE_OPENAI_API_KEY,
+  apiKey: apiKey || process.env.VITE_OPENAI_API_KEY, // Fallback for local dev
 });
 
 // Story generation configuration
@@ -255,6 +263,22 @@ export async function handler(event) {
         body: JSON.stringify({ 
           error: 'V2 not enabled. Use legacy endpoint.',
           v2Enabled: false 
+        }),
+      };
+    }
+
+    // Check for API key
+    if (!apiKey) {
+      console.error('API key missing - cannot generate story');
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ 
+          error: 'Configuration error: API key not found',
+          debug: {
+            hasKey: false,
+            envVars: Object.keys(process.env).filter(key => key.includes('OPENAI') || key.includes('API'))
+          }
         }),
       };
     }
