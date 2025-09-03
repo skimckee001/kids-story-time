@@ -681,34 +681,34 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
     localStorage.setItem(`storyCompletions_${profileId}`, JSON.stringify(completions));
     
     // Check for achievements
-    checkReadingAchievements(completions.length);
+    checkReadingAchievements(completions.length, profileId);
   };
   
-  const checkReadingAchievements = (totalCompletions) => {
-    const achievements = JSON.parse(localStorage.getItem(`achievements_${childProfile.id}`) || '[]');
+  const checkReadingAchievements = (totalCompletions, profileId) => {
+    const achievements = JSON.parse(localStorage.getItem(`achievements_${profileId}`) || '[]');
     const newAchievements = [];
     
     // First story achievement
     if (totalCompletions === 1 && !achievements.includes('first_story')) {
       newAchievements.push('first_story');
-      addStarsToChild(childProfile.id, 15, 'Achievement: First Story!');
+      addStarsToChild(profileId, 15, 'Achievement: First Story!');
     }
     
     // 5 stories achievement
     if (totalCompletions === 5 && !achievements.includes('bookworm_5')) {
       newAchievements.push('bookworm_5');
-      addStarsToChild(childProfile.id, 20, 'Achievement: Read 5 Stories!');
+      addStarsToChild(profileId, 20, 'Achievement: Read 5 Stories!');
     }
     
     // 10 stories achievement
     if (totalCompletions === 10 && !achievements.includes('bookworm_10')) {
       newAchievements.push('bookworm_10');
-      addStarsToChild(childProfile.id, 30, 'Achievement: Read 10 Stories!');
+      addStarsToChild(profileId, 30, 'Achievement: Read 10 Stories!');
     }
     
     if (newAchievements.length > 0) {
       achievements.push(...newAchievements);
-      localStorage.setItem(`achievements_${childProfile.id}`, JSON.stringify(achievements));
+      localStorage.setItem(`achievements_${profileId}`, JSON.stringify(achievements));
     }
   };
 
