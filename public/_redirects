@@ -5,9 +5,9 @@
 /pricing        /pricing-new.html       200
 /landing        /landing.html           200
 
-# Future pages (to be created)
-# /about          /about.html             200
-# /contact        /contact.html           200
+# Static pages
+/about          /about.html             200
+/contact        /contact.html           200
 # /privacy        /privacy.html           200
 # /terms          /terms.html             200
 # /cookies        /cookies.html           200

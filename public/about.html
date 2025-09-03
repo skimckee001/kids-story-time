@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - KidsStoryTime.ai | Transform Bedtime into Adventure</title>
+    <meta name="description" content="Learn about KidsStoryTime.ai's mission to make bedtime magical for families worldwide. Founded by Brett, a dad who understands the bedtime struggle.">
+    
+    <!-- Open Graph tags -->
+    <meta property="og:title" content="About KidsStoryTime.ai - Making Bedtime Magical">
+    <meta property="og:description" content="Discover how we're transforming bedtime stories with AI-powered personalized adventures for your children.">
+    <meta property="og:image" content="/images/KidsStoryTime_previews_v1/08_Brand/App_Icon_1024.png">
+    <meta property="og:url" content="https://kidsstorytime.ai/about">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #2d3748;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: 40px;
+            border-radius: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .hero-section {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-section p {
+            font-size: 1.3rem;
+            color: #4a5568;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .content-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #2d3748;
+        }
+        
+        .content-section h3 {
+            font-size: 1.8rem;
+            margin: 30px 0 15px;
+            color: #667eea;
+        }
+        
+        .content-section p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+        
+        .founder-story {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            align-items: center;
+            margin: 40px 0;
+        }
+        
+        .founder-image {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .value-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .value-card .icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .value-card h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+        
+        .value-card p {
+            color: #4a5568;
+        }
+        
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: #4a5568;
+        }
+        
+        .team-section {
+            margin: 40px 0;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .team-member {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .team-member img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            object-fit: cover;
+        }
+        
+        .team-member h4 {
+            font-size: 1.2rem;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .team-member .role {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .team-member p {
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            padding: 60px;
+            text-align: center;
+            color: white;
+            margin: 40px 0;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .cta-section .cta-button {
+            background: white;
+            color: #667eea;
+            font-size: 1.1rem;
+            padding: 15px 40px;
+        }
+        
+        .footer {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: #4a5568;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #667eea;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-section,
+            .content-section {
+                padding: 30px;
+            }
+            
+            .founder-story {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .founder-image {
+                margin: 0 auto;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="/images/KidsStoryTime_previews_v1/08_Brand/App_Icon_1024.png" alt="KidsStoryTime.ai">
+                <span>KidsStoryTime.ai</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/pricing">Pricing</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+            <a href="/" class="cta-button">Start Creating Stories</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="hero-section">
+            <h1>Our Mission: Making Bedtime Magical</h1>
+            <p>We believe every child deserves to be the hero of their own story. KidsStoryTime.ai transforms bedtime from a battle into an adventure, creating personalized stories that spark imagination and strengthen family bonds.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>The Story Behind KidsStoryTime</h2>
+            
+            <div class="founder-story">
+                <div>
+                    <img src="/images/KidsStoryTime_previews_v1/04_Testimonials/Brett_Founder.png" alt="Brett, Founder of KidsStoryTime" class="founder-image">
+                </div>
+                <div>
+                    <h3>A Dad's Journey to Better Bedtimes</h3>
+                    <p>Hi, I'm Brett, founder of KidsStoryTime.ai and a dad who knows the nightly struggle all too well.</p>
+                    
+                    <p>Like many parents, I found myself exhausted at the end of each day, facing the daunting task of bedtime. My kids would resist, negotiate, and find every excuse to stay up "just five more minutes." Traditional books weren't holding their attention, and I was running out of energy to make up new stories every night.</p>
+                    
+                    <p>That's when I realized: what if technology could help create magical, personalized stories where my children were the heroes? Stories that would make them excited for bedtime instead of fighting it?</p>
+                    
+                    <p>After months of development and testing with families just like ours, KidsStoryTime.ai was born. Today, we're helping thousands of families transform their bedtime routines into cherished moments of connection and wonder.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Our Core Values</h2>
+            
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="icon">🛡️</div>
+                    <h4>Safety First</h4>
+                    <p>Every story is filtered for age-appropriate content. We're COPPA compliant and never sell your data.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="icon">✨</div>
+                    <h4>Spark Imagination</h4>
+                    <p>Stories that inspire creativity, problem-solving, and emotional growth in every child.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="icon">👨‍👩‍👧‍👦</div>
+                    <h4>Family Connection</h4>
+                    <p>Creating moments that bring families together and strengthen bonds through storytelling.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="icon">🎯</div>
+                    <h4>Personalization</h4>
+                    <p>Every child is unique, and their stories should be too. Tailored to interests, age, and reading level.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="icon">📚</div>
+                    <h4>Educational Value</h4>
+                    <p>Stories that teach important life lessons, values, and knowledge while entertaining.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="icon">🌍</div>
+                    <h4>Accessibility</h4>
+                    <p>Making magical stories available to all families, with free and affordable options.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>By the Numbers</h2>
+            
+            <div class="stats-section">
+                <div class="stat-item">
+                    <div class="stat-number">50,000+</div>
+                    <div class="stat-label">Happy Families</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">1M+</div>
+                    <div class="stat-label">Stories Created</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">4.9/5</div>
+                    <div class="stat-label">Parent Rating</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-number">30 sec</div>
+                    <div class="stat-label">To Create a Story</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>Our Commitment</h2>
+            
+            <h3>Privacy & Safety</h3>
+            <p>We take your family's privacy seriously. We're fully COPPA compliant, use bank-level encryption, and never sell or share your personal data. Every story generated is filtered through multiple safety checks to ensure age-appropriate content.</p>
+            
+            <h3>Continuous Innovation</h3>
+            <p>We're constantly improving our AI to create better stories, adding new features based on parent feedback, and expanding our library of themes and characters. Your input shapes the future of KidsStoryTime.</p>
+            
+            <h3>Supporting Parents</h3>
+            <p>We know parenting is hard. That's why we're more than just a story app – we're your partner in creating positive bedtime routines, fostering imagination, and building lasting memories with your children.</p>
+        </section>
+
+        <section class="content-section team-section">
+            <h2>Meet Our Team</h2>
+            <p style="text-align: center; margin-bottom: 30px;">Passionate parents and technologists working to make bedtime better for families everywhere.</p>
+            
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="/images/KidsStoryTime_previews_v1/04_Testimonials/Brett_Founder.png" alt="Brett">
+                    <h4>Brett</h4>
+                    <div class="role">Founder & CEO</div>
+                    <p>Dad of two, bedtime story enthusiast, and mission-driven entrepreneur.</p>
+                </div>
+                
+                <div class="team-member">
+                    <img src="/images/team-placeholder.png" alt="Team Member">
+                    <h4>Sarah Chen</h4>
+                    <div class="role">Head of Product</div>
+                    <p>Former teacher bringing educational expertise to every story.</p>
+                </div>
+                
+                <div class="team-member">
+                    <img src="/images/team-placeholder.png" alt="Team Member">
+                    <h4>Marcus Rodriguez</h4>
+                    <div class="role">Lead Developer</div>
+                    <p>AI specialist ensuring stories are magical and safe.</p>
+                </div>
+                
+                <div class="team-member">
+                    <img src="/images/team-placeholder.png" alt="Team Member">
+                    <h4>Emily Thompson</h4>
+                    <div class="role">Customer Success</div>
+                    <p>Mom of three, here to help your family succeed.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2>Ready to Transform Your Bedtime?</h2>
+            <p>Join thousands of families creating magical moments every night.</p>
+            <a href="/" class="cta-button">Start Your Free Story</a>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/about">About</a>
+                <a href="/pricing">Pricing</a>
+                <a href="/contact">Contact</a>
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+            </div>
+            <p style="color: #718096;">© 2025 KidsStoryTime.ai. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
