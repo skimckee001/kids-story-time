@@ -4,7 +4,7 @@ const { createClient } = require('@supabase/supabase-js');
 
 // Initialize Supabase client with service role key
 const supabase = createClient(
-  process.env.SUPABASE_URL,
+  process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
 

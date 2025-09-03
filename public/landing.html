@@ -2301,7 +2301,8 @@
                 <div style="text-align: center;">
                     <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&h=400&fit=crop" 
                          alt="Brett - Founder" 
-                         style="width: 300px; height: 300px; border-radius: 50%; box-shadow: 0 20px 40px rgba(255, 107, 157, 0.2);">
+                         style="width: 300px; height: 300px; border-radius: 50%; box-shadow: 0 20px 40px rgba(255, 107, 157, 0.2);"
+                         loading="lazy">
                     <h3 style="margin-top: 20px; color: #FF6B9D;">Brett</h3>
                     <p style="color: #4ECDC4;">Founder & Dad</p>
                 </div>
@@ -2343,7 +2344,8 @@
                 <div>
                     <img src="./images/Stay_Connected_Military_Family.png" 
                          alt="Military family staying connected through digital storytime" 
-                         style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                         style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"
+                         loading="lazy">
                 </div>
                 
                 <div>
@@ -2442,7 +2444,8 @@
                 <div>
                     <img src="./images/KidsStoryTime_previews_v1/09_Before_After/BeforeAfter_Split_v2_iPhone_Printout.png" 
                          alt="Digital and Print Stories Combined - iPhone and Printed Book" 
-                         style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                         style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"
+                         loading="lazy">
                     
                     <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: center;">
                         <p style="font-weight: 600; margin: 0;">
@@ -2890,6 +2893,72 @@
             button.addEventListener('click', () => {
                 // Redirect to main app
                 window.location.href = '/';
+            });
+        });
+    </script>
+
+    <!-- Progressive Image Loading Enhancement -->
+    <script>
+        // Intersection Observer for lazy loading with fade-in effect
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add fade-in animation style
+            const style = document.createElement('style');
+            style.textContent = `
+                img[loading="lazy"] {
+                    opacity: 0;
+                    transition: opacity 0.3s ease-in-out;
+                }
+                img[loading="lazy"].loaded {
+                    opacity: 1;
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Set up Intersection Observer for images
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver(function(entries, observer) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            // Add loaded class when image loads
+                            if (img.complete) {
+                                img.classList.add('loaded');
+                            } else {
+                                img.addEventListener('load', function() {
+                                    img.classList.add('loaded');
+                                });
+                            }
+                            observer.unobserve(img);
+                        }
+                    });
+                }, {
+                    rootMargin: '50px 0px', // Start loading 50px before entering viewport
+                    threshold: 0.01
+                });
+                
+                // Observe all lazy-loaded images
+                document.querySelectorAll('img[loading="lazy"]').forEach(function(img) {
+                    imageObserver.observe(img);
+                });
+            } else {
+                // Fallback for browsers that don't support Intersection Observer
+                document.querySelectorAll('img[loading="lazy"]').forEach(function(img) {
+                    img.classList.add('loaded');
+                });
+            }
+            
+            // Preload critical above-the-fold images
+            const criticalImages = [
+                './images/KidsStoryTime_previews_v1/08_Brand/App_Icon_1024.png',
+                './images/KidsStoryTime_previews_v1/01_Hero/03_Child_with_Tablet.png'
+            ];
+            
+            criticalImages.forEach(function(src) {
+                const link = document.createElement('link');
+                link.rel = 'preload';
+                link.as = 'image';
+                link.href = src;
+                document.head.appendChild(link);
             });
         });
     </script>

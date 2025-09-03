@@ -8,8 +8,11 @@
 # Static pages
 /about          /about.html             200
 /contact        /contact.html           200
-# /privacy        /privacy.html           200
-# /terms          /terms.html             200
+/privacy        /privacy.html           200
+/terms          /terms.html             200
+/test-checkout  /test-checkout.html     200
+/success        /success.html           200
+/mobile-test    /mobile-test.html       200
 # /cookies        /cookies.html           200
 # /help           /help.html              200
 # /how-it-works   /how-it-works.html      200

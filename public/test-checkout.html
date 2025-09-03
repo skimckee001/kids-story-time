@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Checkout Flow - KidsStoryTime.ai</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+        
+        .info-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .info-box h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .info-box p {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .test-cards {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .test-cards h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .card-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: #f7fafc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .card-number {
+            font-family: monospace;
+            font-weight: bold;
+            color: #4a5568;
+        }
+        
+        .card-type {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .price-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .price-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .price-card.popular {
+            border: 3px solid #667eea;
+            position: relative;
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .price-card h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            color: #718096;
+            font-weight: normal;
+        }
+        
+        .features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        
+        .features li {
+            padding: 10px 0;
+            color: #4a5568;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #48bb78;
+            font-weight: bold;
+        }
+        
+        .test-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .test-button:hover {
+            transform: scale(1.05);
+        }
+        
+        .test-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .status-success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .status-error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .status-info {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+        
+        .results-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .results-section h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+        
+        .result-item {
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .result-time {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .result-message {
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        .back-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: background 0.3s;
+        }
+        
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/pricing" class="back-link">← Back to Pricing</a>
+        
+        <h1>Checkout Flow Testing</h1>
+        
+        <div class="info-box">
+            <h2>⚠️ Test Mode Configuration</h2>
+            <p>This page is configured to test the Stripe checkout flow in <strong>TEST MODE</strong>.</p>
+            <p>You can safely test all three paid subscription tiers without any real charges.</p>
+            
+            <div class="test-cards">
+                <h3>Use these test card numbers:</h3>
+                <div class="card-item">
+                    <span class="card-number">4242 4242 4242 4242</span>
+                    <span class="card-type">Successful payment</span>
+                </div>
+                <div class="card-item">
+                    <span class="card-number">4000 0025 0000 3155</span>
+                    <span class="card-type">Requires 3D Secure</span>
+                </div>
+                <div class="card-item">
+                    <span class="card-number">4000 0000 0000 9995</span>
+                    <span class="card-type">Payment declined</span>
+                </div>
+                <p style="margin-top: 10px; color: #718096;">
+                    Use any future expiry date, any 3-digit CVC, and any 5-digit ZIP code.
+                </p>
+            </div>
+        </div>
+        
+        <div class="pricing-grid">
+            <!-- Story Pro -->
+            <div class="price-card">
+                <h3>Story Pro</h3>
+                <div class="price">$4.99 <span>/month</span></div>
+                <ul class="features">
+                    <li>10 stories per day (50/month)</li>
+                    <li>30 AI images per month</li>
+                    <li>3 narrations per month</li>
+                    <li>2 child profiles</li>
+                    <li>Full library access</li>
+                    <li>Non-watermarked PDFs</li>
+                </ul>
+                <button class="test-button" onclick="testCheckout('story-pro')" id="btn-story-pro">
+                    Test Story Pro Checkout
+                </button>
+                <div id="status-story-pro"></div>
+            </div>
+            
+            <!-- Read to Me ProMax -->
+            <div class="price-card popular">
+                <div class="popular-badge">MOST POPULAR</div>
+                <h3>Read to Me ProMax</h3>
+                <div class="price">$6.99 <span>/month</span></div>
+                <ul class="features">
+                    <li>20 stories per day (100/month)</li>
+                    <li>150 AI images per month</li>
+                    <li>30 narrations per month</li>
+                    <li>2 child profiles</li>
+                    <li>Audio downloads</li>
+                    <li>Bedtime reminders & streaks</li>
+                </ul>
+                <button class="test-button" onclick="testCheckout('read-to-me-promax')" id="btn-read-to-me-promax">
+                    Test Read to Me ProMax Checkout
+                </button>
+                <div id="status-read-to-me-promax"></div>
+            </div>
+            
+            <!-- Family Plus -->
+            <div class="price-card">
+                <h3>Family Plus</h3>
+                <div class="price">$7.99 <span>/month</span></div>
+                <ul class="features">
+                    <li>Unlimited stories</li>
+                    <li>250 AI images per month</li>
+                    <li>50 narrations per month</li>
+                    <li>4 child profiles</li>
+                    <li>Priority support</li>
+                    <li>Beta features access</li>
+                </ul>
+                <button class="test-button" onclick="testCheckout('family-plus')" id="btn-family-plus">
+                    Test Family Plus Checkout
+                </button>
+                <div id="status-family-plus"></div>
+            </div>
+        </div>
+        
+        <div class="results-section">
+            <h2>Test Results Log</h2>
+            <div id="test-results">
+                <p style="color: #718096;">No tests run yet. Click a button above to test the checkout flow.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        // Initialize Stripe with test key
+        const stripe = Stripe('pk_test_51RsK5a0MYOtGjLFhHQIFsu70fMh280B1WbipmKXQEYXWt0gQPKK2YvHuhIVfyGSRcVJ21orq3hdK6bCwT5vGU4VU00mskVtFVa');
+        
+        // Price IDs for each tier
+        const PRICE_IDS = {
+            'story-pro': 'price_1S2Bdq0MYOtGjLFhBYSIU8L9',
+            'read-to-me-promax': 'price_1S3E8k0MYOtGjLFhbQQ2EKzw',
+            'family-plus': 'price_1S2BgM0MYOtGjLFhlBjRzwaV'
+        };
+        
+        // Test checkout function
+        async function testCheckout(tier) {
+            const button = document.getElementById(`btn-${tier}`);
+            const statusDiv = document.getElementById(`status-${tier}`);
+            const resultsDiv = document.getElementById('test-results');
+            
+            // Clear previous status
+            statusDiv.innerHTML = '';
+            
+            // Disable button
+            button.disabled = true;
+            button.textContent = 'Testing...';
+            
+            // Add info status
+            statusDiv.innerHTML = '<div class="status-message status-info">Creating checkout session...</div>';
+            
+            try {
+                // Log start of test
+                addTestResult(`Starting checkout test for ${tier}...`);
+                
+                // Create checkout session
+                const response = await fetch('/.netlify/functions/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        priceId: PRICE_IDS[tier],
+                        userId: 'test-user-' + Date.now(),
+                        userEmail: 'test@kidsstorytime.ai',
+                        tier: tier
+                    })
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.details || 'Failed to create checkout session');
+                }
+                
+                const { sessionId } = await response.json();
+                
+                // Success message
+                statusDiv.innerHTML = '<div class="status-message status-success">✓ Checkout session created successfully!</div>';
+                addTestResult(`✓ ${tier}: Session created with ID: ${sessionId.substring(0, 20)}...`);
+                
+                // Ask if user wants to proceed to Stripe
+                setTimeout(() => {
+                    if (confirm(`Checkout session created successfully!\n\nWould you like to proceed to the Stripe checkout page?\n\nNote: This will open in test mode - no real charges will occur.`)) {
+                        addTestResult(`Redirecting to Stripe checkout for ${tier}...`);
+                        stripe.redirectToCheckout({ sessionId });
+                    } else {
+                        addTestResult(`User cancelled redirect for ${tier}. Test completed successfully.`);
+                    }
+                }, 500);
+                
+            } catch (error) {
+                console.error('Checkout test error:', error);
+                statusDiv.innerHTML = `<div class="status-message status-error">✗ Error: ${error.message}</div>`;
+                addTestResult(`✗ ${tier}: Error - ${error.message}`);
+            } finally {
+                // Re-enable button
+                button.disabled = false;
+                button.textContent = `Test ${formatTierName(tier)} Checkout`;
+            }
+        }
+        
+        // Format tier name for display
+        function formatTierName(tier) {
+            const names = {
+                'story-pro': 'Story Pro',
+                'read-to-me-promax': 'Read to Me ProMax',
+                'family-plus': 'Family Plus'
+            };
+            return names[tier] || tier;
+        }
+        
+        // Add result to test log
+        function addTestResult(message) {
+            const resultsDiv = document.getElementById('test-results');
+            const time = new Date().toLocaleTimeString();
+            
+            // Clear initial message if present
+            if (resultsDiv.innerHTML.includes('No tests run yet')) {
+                resultsDiv.innerHTML = '';
+            }
+            
+            // Add new result at the top
+            const resultHtml = `
+                <div class="result-item">
+                    <div class="result-time">${time}</div>
+                    <div class="result-message">${message}</div>
+                </div>
+            `;
+            resultsDiv.insertAdjacentHTML('afterbegin', resultHtml);
+        }
+        
+        // Check for return from Stripe
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('session_id');
+            
+            if (sessionId) {
+                addTestResult(`✓ Returned from Stripe checkout. Session ID: ${sessionId.substring(0, 20)}...`);
+                // In a real app, you would verify the session status here
+            }
+        });
+    </script>
+</body>
+</html>

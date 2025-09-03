@@ -3,238 +3,623 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - Kids Story Time</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#FF6B9D',
-                        secondary: '#4ECDC4',
-                        accent: '#FFE66D'
-                    }
-                }
+    <title>Privacy Policy - KidsStoryTime.ai | Your Family's Privacy Matters</title>
+    <meta name="description" content="KidsStoryTime.ai Privacy Policy. Learn how we protect your family's data, ensure COPPA compliance, and maintain your privacy.">
+    
+    <!-- Open Graph tags -->
+    <meta property="og:title" content="Privacy Policy - KidsStoryTime.ai">
+    <meta property="og:description" content="Your family's privacy is our priority. Learn how we protect your data.">
+    <meta property="og:image" content="/images/KidsStoryTime_previews_v1/08_Brand/App_Icon_1024.png">
+    <meta property="og:url" content="https://kidsstorytime.ai/privacy">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #2d3748;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo img {
+            height: 40px;
+            width: 40px;
+            border-radius: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .policy-header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .policy-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .last-updated {
+            color: #718096;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+        
+        .quick-summary {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        .quick-summary h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+        
+        .quick-summary ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .quick-summary li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .quick-summary li:before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+        }
+        
+        .policy-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .policy-section {
+            margin-bottom: 40px;
+        }
+        
+        .policy-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #2d3748;
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+        }
+        
+        .policy-section h3 {
+            font-size: 1.3rem;
+            margin: 20px 0 10px;
+            color: #4a5568;
+        }
+        
+        .policy-section p {
+            color: #4a5568;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        
+        .policy-section ul,
+        .policy-section ol {
+            margin: 15px 0;
+            padding-left: 30px;
+            color: #4a5568;
+        }
+        
+        .policy-section li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        
+        .highlight-box {
+            background: #f7fafc;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .highlight-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .contact-info {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .contact-info h3 {
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .contact-info a {
+            color: white;
+            font-weight: bold;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .footer {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: #4a5568;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #667eea;
+        }
+        
+        @media (max-width: 768px) {
+            .policy-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .policy-header,
+            .policy-content {
+                padding: 25px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 8px;
             }
         }
-    </script>
+    </style>
 </head>
-<body class="bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 min-h-screen">
-    <!-- Header -->
-    <header class="bg-white/80 backdrop-blur-sm sticky top-0 z-50 border-b border-purple-200">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-2">
-                    <div class="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
-                        <span class="text-white font-bold text-lg">=�</span>
-                    </div>
-                    <span class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                        Kids Story Time
-                    </span>
-                </div>
-                <a href="index.html" class="text-primary hover:text-primary/80 font-medium">
-                    � Back to App
-                </a>
-            </div>
-        </div>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">
+                <img src="/images/KidsStoryTime_previews_v1/08_Brand/App_Icon_1024.png" alt="KidsStoryTime.ai">
+                <span>KidsStoryTime.ai</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/pricing">Pricing</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+            <a href="/" class="cta-button">Start Creating Stories</a>
+        </nav>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-8">
-            <h1 class="text-4xl font-bold text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-8">
-                Privacy Policy
-            </h1>
-
-            <div class="prose prose-lg max-w-none">
-                <p class="text-gray-600 text-center mb-8">
-                    <strong>Effective Date:</strong> January 1, 2024<br>
-                    <strong>Last Updated:</strong> January 1, 2024
-                </p>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">1. Introduction</h2>
-                    <p class="text-gray-700 leading-relaxed">
-                        At Kids Story Time, we are committed to protecting your privacy and the privacy of your children. This Privacy Policy explains how we collect, use, and safeguard your information when you use our AI-powered children's story generation service. We comply with the Children's Online Privacy Protection Act (COPPA) and other applicable privacy laws.
-                    </p>
-                </section>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">2. Information We Collect</h2>
-                    
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">2.1 Personal Information</h3>
-                    <ul class="text-gray-700 leading-relaxed space-y-2 mb-4">
-                        <li>" Email address (for account creation and communication)</li>
-                        <li>" Display name or username</li>
-                        <li>" Child's age range (for age-appropriate content generation)</li>
-                        <li>" Payment information (processed securely through third-party providers)</li>
-                    </ul>
-
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">2.2 Content Information</h3>
-                    <ul class="text-gray-700 leading-relaxed space-y-2 mb-4">
-                        <li>" Story prompts and preferences you provide</li>
-                        <li>" Generated stories and customizations</li>
-                        <li>" Favorite stories and saved content</li>
-                    </ul>
-
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">2.3 Usage Information</h3>
-                    <ul class="text-gray-700 leading-relaxed space-y-2">
-                        <li>" Service usage patterns and preferences</li>
-                        <li>" Device information and browser type</li>
-                        <li>" IP address and general location data</li>
-                        <li>" Session duration and feature usage</li>
-                    </ul>
-                </section>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">3. How We Use Your Information</h2>
-                    <ul class="text-gray-700 leading-relaxed space-y-2">
-                        <li>" To provide and improve our story generation service</li>
-                        <li>" To personalize content based on age and preferences</li>
-                        <li>" To communicate with you about your account and service updates</li>
-                        <li>" To process payments and manage subscriptions</li>
-                        <li>" To ensure child safety and appropriate content</li>
-                        <li>" To analyze usage patterns for service improvement</li>
-                        <li>" To comply with legal obligations</li>
-                    </ul>
-                </section>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">4. Children's Privacy (COPPA Compliance)</h2>
-                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
-                        <p class="text-blue-800 font-semibold">We take children's privacy seriously and comply with COPPA regulations.</p>
-                    </div>
-                    <ul class="text-gray-700 leading-relaxed space-y-2">
-                        <li>" We do not knowingly collect personal information from children under 13</li>
-                        <li>" Parental consent is required for children under 13 to use our service</li>
-                        <li>" We do not share children's personal information with third parties</li>
-                        <li>" Parents can review, modify, or delete their child's information</li>
-                        <li>" We use information only to provide age-appropriate story content</li>
-                    </ul>
-                </section>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">5. Information Sharing and Disclosure</h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">We do NOT sell your personal information. We may share information only in these limited circumstances:</p>
-                    <ul class="text-gray-700 leading-relaxed space-y-2">
-                        <li>" <strong>Service Providers:</strong> Trusted third parties who help us operate our service (with strict privacy agreements)</li>
-                        <li>" <strong>Legal Requirements:</strong> When required by law or to protect rights and safety</li>
-                        <li>" <strong>Business Transfers:</strong> In the event of a merger or acquisition (with continued privacy protection)</li>
-                        <li>" <strong>Consent:</strong> When you explicitly consent to sharing</li>
-                    </ul>
-                </section>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">6. Data Security</h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">We implement industry-standard security measures to protect your information:</p>
-                    <ul class="text-gray-700 leading-relaxed space-y-2">
-                        <li>" Encryption of data in transit and at rest</li>
-                        <li>" Secure authentication and access controls</li>
-                        <li>" Regular security audits and monitoring</li>
-                        <li>" Limited access to personal information by authorized personnel only</li>
-                        <li>" Secure payment processing through certified providers</li>
-                    </ul>
-                </section>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">7. Your Rights and Choices</h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">You have the following rights regarding your information:</p>
-                    <ul class="text-gray-700 leading-relaxed space-y-2">
-                        <li>" <strong>Access:</strong> Request a copy of your personal information</li>
-                        <li>" <strong>Correction:</strong> Update or correct inaccurate information</li>
-                        <li>" <strong>Deletion:</strong> Request deletion of your personal information</li>
-                        <li>" <strong>Portability:</strong> Export your data in a machine-readable format</li>
-                        <li>" <strong>Opt-out:</strong> Unsubscribe from marketing communications</li>
-                        <li>" <strong>Account Deletion:</strong> Delete your account and associated data</li>
-                    </ul>
-                </section>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">8. Cookies and Tracking</h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">We use cookies and similar technologies to:</p>
-                    <ul class="text-gray-700 leading-relaxed space-y-2">
-                        <li>" Remember your preferences and settings</li>
-                        <li>" Maintain your login session</li>
-                        <li>" Analyze usage patterns (with anonymized data)</li>
-                        <li>" Improve service performance and user experience</li>
-                    </ul>
-                    <p class="text-gray-700 leading-relaxed mt-4">
-                        You can control cookie settings through your browser preferences.
-                    </p>
-                </section>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">9. Data Retention</h2>
-                    <ul class="text-gray-700 leading-relaxed space-y-2">
-                        <li>" Account information: Retained while your account is active</li>
-                        <li>" Generated stories: Retained until you delete them</li>
-                        <li>" Usage analytics: Anonymized and retained for service improvement</li>
-                        <li>" Payment information: Retained as required by law and for accounting purposes</li>
-                        <li>" Deleted data: Securely removed from our systems within 30 days</li>
-                    </ul>
-                </section>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">10. International Data Transfers</h2>
-                    <p class="text-gray-700 leading-relaxed">
-                        Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place to protect your privacy and comply with applicable data protection laws.
-                    </p>
-                </section>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">11. Third-Party Services</h2>
-                    <p class="text-gray-700 leading-relaxed">
-                        Our service may contain links to third-party websites or services. This Privacy Policy does not apply to those third parties. We encourage you to review their privacy policies before providing any information.
-                    </p>
-                </section>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">12. Changes to This Privacy Policy</h2>
-                    <p class="text-gray-700 leading-relaxed">
-                        We may update this Privacy Policy from time to time. We will notify you of any material changes via email or through our service. Your continued use of the service after such modifications constitutes acceptance of the updated Privacy Policy.
-                    </p>
-                </section>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">13. Contact Information</h2>
-                    <p class="text-gray-700 leading-relaxed mb-4">
-                        If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:
-                    </p>
-                    <div class="bg-gray-50 p-6 rounded-lg">
-                        <p class="text-gray-700">
-                            <strong>Email:</strong> privacy@kidsstorytime.ai<br>
-                            <strong>Data Protection Officer:</strong> dpo@kidsstorytime.ai<br>
-                            <strong>Address:</strong> Kids Story Time Privacy Team<br>
-                            123 Story Lane, Imagination City, IC 12345<br>
-                            <strong>Phone:</strong> +1 (555) 123-STORY
-                        </p>
-                    </div>
-                </section>
-
-                <section class="mb-8">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">14. Parental Rights</h2>
-                    <div class="bg-green-50 border-l-4 border-green-400 p-4">
-                        <p class="text-green-800 mb-2"><strong>For Parents and Guardians:</strong></p>
-                        <p class="text-green-700">
-                            You have the right to review, modify, or delete any personal information we have collected about your child. 
-                            To exercise these rights or if you have any concerns about your child's privacy, please contact us at 
-                            <a href="mailto:parents@kidsstorytime.ai" class="text-primary hover:underline">parents@kidsstorytime.ai</a>.
-                        </p>
-                    </div>
-                </section>
-            </div>
-
-            <!-- Footer -->
-            <div class="border-t border-gray-200 pt-8 mt-12">
-                <p class="text-center text-gray-600">
-                    � 2024 Kids Story Time. All rights reserved.
-                </p>
-                <div class="flex justify-center space-x-6 mt-4">
-                    <a href="terms.html" class="text-primary hover:underline">Terms of Service</a>
-                    <a href="index.html" class="text-primary hover:underline">Back to App</a>
-                </div>
+    <div class="container">
+        <div class="policy-header">
+            <h1>Privacy Policy</h1>
+            <div class="last-updated">Last Updated: September 3, 2025</div>
+            
+            <div class="quick-summary">
+                <h2>🛡️ Our Privacy Promise</h2>
+                <ul>
+                    <li>We NEVER sell your personal data</li>
+                    <li>We are fully COPPA compliant for children's privacy</li>
+                    <li>We use bank-level encryption to protect your information</li>
+                    <li>You can delete your account and data at any time</li>
+                    <li>We only collect what's necessary to provide our service</li>
+                </ul>
             </div>
         </div>
-    </main>
+
+        <div class="policy-content">
+            <section class="policy-section">
+                <h2>1. Introduction</h2>
+                <p>Welcome to KidsStoryTime.ai ("we," "our," or "us"). We understand that privacy is paramount, especially when it comes to children. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and services.</p>
+                
+                <p>By using KidsStoryTime.ai, you agree to the collection and use of information in accordance with this policy. If you disagree with any part of this privacy policy, please do not use our services.</p>
+            </section>
+
+            <section class="policy-section">
+                <h2>2. COPPA Compliance</h2>
+                <p>We comply with the Children's Online Privacy Protection Act (COPPA) and are committed to protecting the privacy of children under 13 years of age.</p>
+                
+                <div class="highlight-box">
+                    <h3>⚠️ Important for Parents</h3>
+                    <p>KidsStoryTime.ai is designed for use by parents and guardians. Children under 13 should not create accounts or use our services without parental supervision and consent.</p>
+                </div>
+                
+                <h3>Parental Consent</h3>
+                <ul>
+                    <li>We require parental consent before collecting any personal information from children</li>
+                    <li>Parents have full control over their children's profiles and data</li>
+                    <li>Parents can review, modify, or delete their children's information at any time</li>
+                    <li>We do not require children to provide more information than necessary</li>
+                </ul>
+            </section>
+
+            <section class="policy-section">
+                <h2>3. Information We Collect</h2>
+                
+                <h3>Information You Provide</h3>
+                <ul>
+                    <li><strong>Account Information:</strong> Email address, password, and subscription details</li>
+                    <li><strong>Child Profiles:</strong> First name, age, interests (no last names or identifying information)</li>
+                    <li><strong>Story Preferences:</strong> Themes, characters, and story settings you select</li>
+                    <li><strong>Payment Information:</strong> Processed securely through Stripe (we don't store credit card numbers)</li>
+                </ul>
+                
+                <h3>Information Automatically Collected</h3>
+                <ul>
+                    <li><strong>Usage Data:</strong> Stories created, features used, time spent in app</li>
+                    <li><strong>Device Information:</strong> Browser type, operating system, device type</li>
+                    <li><strong>Cookies:</strong> Session cookies for authentication and preferences</li>
+                    <li><strong>Analytics:</strong> Anonymous usage patterns to improve our service</li>
+                </ul>
+                
+                <h3>Information We DO NOT Collect</h3>
+                <ul>
+                    <li>Social Security numbers</li>
+                    <li>Precise geolocation data</li>
+                    <li>Biometric data</li>
+                    <li>Health or medical information</li>
+                    <li>Third-party social media data</li>
+                </ul>
+            </section>
+
+            <section class="policy-section">
+                <h2>4. How We Use Your Information</h2>
+                
+                <p>We use the collected information for the following purposes:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Purpose</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Provide Services</td>
+                            <td>Generate personalized stories, save libraries, track achievements</td>
+                        </tr>
+                        <tr>
+                            <td>Account Management</td>
+                            <td>Authentication, subscription management, customer support</td>
+                        </tr>
+                        <tr>
+                            <td>Improvement</td>
+                            <td>Enhance story quality, develop new features, fix bugs</td>
+                        </tr>
+                        <tr>
+                            <td>Communication</td>
+                            <td>Service updates, support responses, important notices</td>
+                        </tr>
+                        <tr>
+                            <td>Safety</td>
+                            <td>Content moderation, security monitoring, fraud prevention</td>
+                        </tr>
+                        <tr>
+                            <td>Legal Compliance</td>
+                            <td>Comply with applicable laws and regulations</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="policy-section">
+                <h2>5. Data Security</h2>
+                
+                <p>We implement industry-standard security measures to protect your information:</p>
+                
+                <ul>
+                    <li><strong>Encryption:</strong> All data transmissions use SSL/TLS encryption</li>
+                    <li><strong>Secure Storage:</strong> Data is stored on secure servers with restricted access</li>
+                    <li><strong>Access Controls:</strong> Employee access is limited and monitored</li>
+                    <li><strong>Regular Audits:</strong> Security protocols are regularly reviewed and updated</li>
+                    <li><strong>Password Protection:</strong> User passwords are hashed and salted</li>
+                    <li><strong>PCI Compliance:</strong> Payment processing meets PCI DSS standards</li>
+                </ul>
+                
+                <div class="highlight-box">
+                    <h3>🔒 Your Security Responsibilities</h3>
+                    <p>Please help us keep your account secure by:</p>
+                    <ul>
+                        <li>Using a strong, unique password</li>
+                        <li>Not sharing your login credentials</li>
+                        <li>Logging out when using shared devices</li>
+                        <li>Notifying us of any suspicious activity</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="policy-section">
+                <h2>6. Data Sharing and Disclosure</h2>
+                
+                <h3>We NEVER Sell Your Data</h3>
+                <p>We do not sell, trade, or rent your personal information to third parties.</p>
+                
+                <h3>Limited Sharing Scenarios</h3>
+                <p>We may share information only in these specific circumstances:</p>
+                
+                <ul>
+                    <li><strong>Service Providers:</strong> Trusted partners who help operate our service (e.g., Stripe for payments, AWS for hosting)</li>
+                    <li><strong>Legal Requirements:</strong> When required by law, court order, or government request</li>
+                    <li><strong>Safety:</strong> To protect the rights, property, or safety of our users</li>
+                    <li><strong>Business Transfers:</strong> In the event of a merger or acquisition (with notice to users)</li>
+                    <li><strong>With Consent:</strong> When you explicitly agree to share</li>
+                </ul>
+                
+                <p>All third-party service providers are contractually obligated to protect your information and use it only as directed by us.</p>
+            </section>
+
+            <section class="policy-section">
+                <h2>7. Your Rights and Choices</h2>
+                
+                <h3>You Have the Right To:</h3>
+                <ul>
+                    <li><strong>Access:</strong> Request a copy of your personal data</li>
+                    <li><strong>Correct:</strong> Update or correct inaccurate information</li>
+                    <li><strong>Delete:</strong> Request deletion of your account and data</li>
+                    <li><strong>Port:</strong> Receive your data in a portable format</li>
+                    <li><strong>Restrict:</strong> Limit how we process your information</li>
+                    <li><strong>Object:</strong> Opt-out of certain uses (like marketing)</li>
+                </ul>
+                
+                <h3>How to Exercise Your Rights</h3>
+                <p>You can manage your data through your account settings or contact us at <a href="mailto:privacy@kidsstorytime.ai">privacy@kidsstorytime.ai</a></p>
+                
+                <h3>Account Deletion</h3>
+                <p>You can delete your account at any time through account settings. Upon deletion:</p>
+                <ul>
+                    <li>Your personal information will be permanently deleted</li>
+                    <li>Story history and achievements will be removed</li>
+                    <li>Active subscriptions will be cancelled</li>
+                    <li>Some anonymized data may be retained for legal/analytical purposes</li>
+                </ul>
+            </section>
+
+            <section class="policy-section">
+                <h2>8. Cookies and Tracking</h2>
+                
+                <h3>Essential Cookies</h3>
+                <p>We use essential cookies for:</p>
+                <ul>
+                    <li>User authentication and security</li>
+                    <li>Remembering preferences and settings</li>
+                    <li>Maintaining shopping cart/subscription status</li>
+                </ul>
+                
+                <h3>Analytics Cookies</h3>
+                <p>With your consent, we use analytics cookies to:</p>
+                <ul>
+                    <li>Understand how users interact with our service</li>
+                    <li>Identify and fix technical issues</li>
+                    <li>Improve user experience</li>
+                </ul>
+                
+                <h3>Managing Cookies</h3>
+                <p>You can control cookies through your browser settings. Note that disabling cookies may affect functionality.</p>
+            </section>
+
+            <section class="policy-section">
+                <h2>9. International Data Transfers</h2>
+                <p>Our services are operated in the United States. If you access our services from outside the US, please be aware that your information may be transferred to, stored, and processed in the US where our servers are located.</p>
+                
+                <p>We ensure appropriate safeguards are in place to protect your information in accordance with this privacy policy.</p>
+            </section>
+
+            <section class="policy-section">
+                <h2>10. Data Retention</h2>
+                <p>We retain your information only as long as necessary to provide our services and fulfill the purposes outlined in this policy.</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data Type</th>
+                            <th>Retention Period</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Account Information</td>
+                            <td>Until account deletion</td>
+                        </tr>
+                        <tr>
+                            <td>Story Content</td>
+                            <td>Until manually deleted or account closed</td>
+                        </tr>
+                        <tr>
+                            <td>Payment Records</td>
+                            <td>7 years (legal requirement)</td>
+                        </tr>
+                        <tr>
+                            <td>Support Communications</td>
+                            <td>2 years</td>
+                        </tr>
+                        <tr>
+                            <td>Analytics Data</td>
+                            <td>26 months</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="policy-section">
+                <h2>11. California Privacy Rights</h2>
+                <p>California residents have additional rights under the California Consumer Privacy Act (CCPA):</p>
+                
+                <ul>
+                    <li>Right to know what personal information is collected</li>
+                    <li>Right to know if personal information is sold or disclosed</li>
+                    <li>Right to say no to the sale of personal information</li>
+                    <li>Right to equal service and price</li>
+                </ul>
+                
+                <p>To exercise these rights, contact us at <a href="mailto:privacy@kidsstorytime.ai">privacy@kidsstorytime.ai</a></p>
+            </section>
+
+            <section class="policy-section">
+                <h2>12. Changes to This Policy</h2>
+                <p>We may update this privacy policy from time to time. We will notify you of any material changes by:</p>
+                <ul>
+                    <li>Posting the new policy on this page</li>
+                    <li>Updating the "Last Updated" date</li>
+                    <li>Sending an email notification for significant changes</li>
+                </ul>
+                
+                <p>We encourage you to review this policy periodically for any changes.</p>
+            </section>
+
+            <div class="contact-info">
+                <h3>Questions About Our Privacy Policy?</h3>
+                <p>We're here to help! Contact our privacy team:</p>
+                <p>
+                    📧 Email: <a href="mailto:privacy@kidsstorytime.ai">privacy@kidsstorytime.ai</a><br>
+                    ✉️ Mail: KidsStoryTime.ai, Privacy Team<br>
+                    [Address to be provided]
+                </p>
+            </div>
+
+            <section class="policy-section">
+                <h2>13. Dispute Resolution</h2>
+                <p>Any disputes relating to this Privacy Policy will be resolved through binding arbitration in accordance with our Terms of Service.</p>
+            </section>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/about">About</a>
+                <a href="/pricing">Pricing</a>
+                <a href="/contact">Contact</a>
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+            </div>
+            <p style="color: #718096;">© 2025 KidsStoryTime.ai. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
