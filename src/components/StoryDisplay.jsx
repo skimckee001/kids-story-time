@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import AdSense from './AdSense';
+import AdSenseDebug from './AdSenseDebug';
 import { addStarsToChild } from './StarRewardsSystem';
 import SocialSharing from './SocialSharing';
 import CelebrationAnimation from './CelebrationAnimation';
@@ -1228,11 +1228,11 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                           fontSize: '14px',
                           padding: '20px'
                         }}>
-                          <AdSense 
+                          <AdSenseDebug 
                             adClient="ca-pub-1413183979906947"
                             adSlot="1977532623"
                             adFormat="auto"
-                            style={{ width: '100%', height: '100%' }}
+                            style={{ width: '100%', minHeight: '250px' }}
                           />
                           {/* Fallback text will only show if AdSense doesn't fill the space */}
                           <div style={{ position: 'absolute', zIndex: -1 }}>

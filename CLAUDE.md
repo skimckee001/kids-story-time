@@ -3,6 +3,9 @@
 ## ⚠️ CRITICAL: Read This First
 This file contains essential context for the KidsStoryTime.ai React project. **ALWAYS** read this file when starting a new session.
 
+## 🎨 CSS REQUIREMENT
+**For ANY CSS or styling work, you MUST consult CSS_STYLE_GUIDE.md first!** This ensures consistency across the application.
+
 ## 🚨 CORRECT DIRECTORY - USE ONLY THIS ONE
 **ACTIVE PROJECT:** `/Users/skimckee/Documents/Github/kids-story-time`
 - ✅ THIS IS THE ONLY DIRECTORY TO USE
@@ -219,6 +222,8 @@ When starting a new session:
 - **Pending Tasks**: TODO.md
 - **Deployment Guide**: DEPLOYMENT_GUIDE.md
 - **API Setup**: API-SETUP.md
+- **CSS Style Guide**: CSS_STYLE_GUIDE.md (⚠️ MUST CHECK for all CSS work)
+- **Test Accounts**: TEST_ACCOUNTS.md
 
 ## Contact for Issues
 - GitHub Repo: Check commits for recent changes

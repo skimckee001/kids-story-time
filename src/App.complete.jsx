@@ -529,10 +529,17 @@ function App() {
     setIsGenerating(true);
 
     try {
-      // Call the story generation API
+      // Check if V2 generation is enabled
+      const useV2 = import.meta.env.VITE_STORYGEN_V2_ENABLED === 'true' || 
+                    import.meta.env.VITE_STORYGEN_V2_ENABLED === 'TRUE';
+      
+      // Call the story generation API (v2 if enabled, v1 otherwise)
+      const endpoint = useV2 ? 'generate-story-v2' : 'generate-story';
       const apiUrl = window.location.hostname === 'localhost' 
-        ? 'http://localhost:9000/.netlify/functions/generate-story'
-        : '/.netlify/functions/generate-story';
+        ? `http://localhost:9000/.netlify/functions/${endpoint}`
+        : `/.netlify/functions/${endpoint}`;
+      
+      console.log(`Using story generation ${useV2 ? 'V2' : 'V1'} at ${apiUrl}`);
       
       // Get the appropriate image style prompt using enhanced system
       const recommendedStyle = getEnhancedImageStyle(readingLevel, selectedThemes);
@@ -563,6 +570,7 @@ function App() {
           storyLength: storyLength,
           theme: selectedThemes[0] || '',
           themes: selectedThemes,
+          interests: selectedThemes.join(' and '), // V2 uses 'interests' field
           gender: genderSelection.boy && genderSelection.girl ? 'both' : genderSelection.boy ? 'boy' : genderSelection.girl ? 'girl' : '',
           customPrompt,
           storyContext,
@@ -570,6 +578,7 @@ function App() {
           subscriptionTier,
           imageStyle: imageStyle,
           imagePrompt: imagePrompt,
+          useV2: useV2, // Tell the backend which version we want
           // Enhanced parameters
           enhancedPrompt: generateEnhancedPrompt({
             childName,
@@ -587,32 +596,60 @@ function App() {
 
       const data = await response.json();
       
-      if (data.story) {
-        // Validate story quality
-        const validation = validateStoryOutput(data.story.content, storyLength, readingLevel);
-        const qualityScore = scoreStoryQuality(data.story.content, {
-          childName,
-          includeNameInStory,
-          readingLevel,
-          selectedThemes,
-          storyLength
-        });
+      // Handle both v1 and v2 response formats
+      const storyContent = data.story?.content || data.story || '';
+      const storyTitle = data.story?.title || data.title || `${childName}'s Story`;
+      
+      if (storyContent) {
+        // Check if we have v2 metadata
+        if (data.metadata?.version === 'v2') {
+          console.log('V2 Story Generated:', {
+            quality: data.metadata.qualityScore,
+            accuracy: data.metadata.accuracy,
+            words: data.metadata.actualWords,
+            target: data.metadata.targetWords,
+            ageBand: data.metadata.ageBand
+          });
+        }
+        
+        // Validate story quality (for v1 or additional v2 validation)
+        const validation = validateStoryOutput(storyContent, storyLength, readingLevel);
+        const qualityScore = data.metadata?.qualityScore ? 
+          { 
+            score: data.metadata.qualityScore, 
+            grade: data.metadata.qualityScore >= 95 ? 'A+' : 
+                   data.metadata.qualityScore >= 90 ? 'A' :
+                   data.metadata.qualityScore >= 80 ? 'B' :
+                   data.metadata.qualityScore >= 70 ? 'C' : 'D',
+            issues: []
+          } :
+          scoreStoryQuality(storyContent, {
+            childName,
+            includeNameInStory,
+            readingLevel,
+            selectedThemes,
+            storyLength
+          });
         
         // Log quality metrics
         console.log('Story Quality Metrics:', {
-          wordCount: validation.wordCount,
-          targetWords: WORD_COUNT_TARGETS[storyLength].target,
+          wordCount: data.metadata?.actualWords || validation.wordCount,
+          targetWords: data.metadata?.targetWords || WORD_COUNT_TARGETS[storyLength].target,
           qualityGrade: qualityScore.grade,
+          version: data.metadata?.version || 'v1',
           issues: [...validation.issues, ...qualityScore.issues]
         });
         
         // Calculate accurate reading time
-        const readingTime = calculateReadingTime(validation.wordCount, readingLevel);
+        const readingTime = calculateReadingTime(
+          data.metadata?.actualWords || validation.wordCount, 
+          readingLevel
+        );
         
         // Set the current story and show the story display immediately
         const storyData = {
-          title: data.story.title,
-          content: data.story.content,
+          title: storyTitle,
+          content: storyContent,
           imageUrl: null,
           childName: childName,
           themes: selectedThemes,
