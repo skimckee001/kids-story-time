@@ -18,6 +18,7 @@ import UserGeneratedContent from './components/UserGeneratedContent';
 import { getTierLimits, canGenerateStory, canUseAIIllustration, getUpgradeMessage } from './utils/subscriptionTiers';
 import AuthenticationManager from './components/AuthenticationManager';
 import { useEnhancedAuth } from './hooks/useEnhancedAuth.jsx';
+import { initAllEnhancements } from './utils/stepperEnhancements';
 import './App.original.css';
 
 // Story length options matching the current HTML
@@ -271,6 +272,18 @@ function App() {
         }
       }
     }
+    
+    // Initialize iOS/mobile enhancements after DOM is ready
+    const timer = setTimeout(() => {
+      try {
+        const cleanup = initAllEnhancements();
+        return cleanup;
+      } catch (error) {
+        console.log('Enhancement initialization skipped:', error);
+      }
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [user]); // Add user as dependency so it updates when auth state changes
 
   const checkUser = async () => {
@@ -1619,7 +1632,12 @@ function App() {
               {/* Theme Selection with Labels */}
               <div className="form-group" style={{marginBottom: 0}}>
                 <label>Choose themes (optional)</label>
-                <div className="theme-grid" role="group" aria-label="Choose themes">
+                <p className="help" id="theme-help" style={{
+                  fontSize: '13px',
+                  opacity: 0.7,
+                  margin: '8px 0 4px'
+                }}>Choose up to 3 themes for your story</p>
+                <div className="theme-grid" role="group" aria-labelledby="theme-help">
                   {getAvailableThemes().slice(0, 8).map(theme => (
                     <button
                       key={theme.id}

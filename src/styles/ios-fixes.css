@@ -1,0 +1,273 @@
+/* iOS/Chrome Targeted Fixes - Production-Ready Patches */
+
+/* ============================================
+   1) Fix "Step" headings cut off at the top
+   ============================================ */
+
+/* A) Never clip the heading line box */
+.step-card,
+.step-card .card-inner,
+.step-header,
+.step-title,
+.story-step { 
+  overflow: visible !important; /* Critical for iOS */
+}
+
+/* B) Give the heading breathing room and safe line-height */
+.step-title {
+  margin-top: 0;                     /* Remove any negative margin */
+  padding-top: 2px;                  /* Tiny buffer for ascenders on iOS */
+  line-height: 1.25;                 /* Don't go tighter than ~1.2 */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* C) Move visual rounding/shadow to element that doesn't clip text */
+.step-card,
+.story-step {
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0,0,0,.06);
+  /* DO NOT set overflow: hidden here */
+}
+
+/* If you need to clip inside (for images), use a child wrapper */
+.step-card .clip-zone,
+.story-step .clip-zone {
+  border-radius: inherit;
+  overflow: clip;    /* iOS 16+; falls back to visible elsewhere */
+}
+
+/* D) Ensure inner padding isn't too tight at the top */
+.step-card .card-inner,
+.story-step > div:first-child { 
+  padding: 18px 16px 16px; 
+}
+
+/* E) Isolate emoji/icon so it can't affect line metrics */
+.step-icon {
+  display: inline-flex;
+  width: 28px; 
+  height: 28px;
+  align-items: center; 
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.step-icon > span,
+.step-header > span:first-child { 
+  font-size: 20px; 
+  line-height: 1; 
+}
+
+/* ============================================
+   2) Fix anchored scrolling
+   ============================================ */
+
+/* Add generous scroll margin to every step anchor */
+[id^="step"] {
+  scroll-margin-top: calc(var(--sticky-header, 56px) + 16px);
+}
+
+/* ============================================
+   3) Keep all step cards perfectly aligned
+   ============================================ */
+
+:root { 
+  --gutter: max(16px, env(safe-area-inset-left));
+  --radius: 16px;
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 20px;
+}
+
+.page { 
+  padding-inline: var(--gutter); 
+}
+
+.container { 
+  width: 100%; 
+  max-width: 720px; 
+  margin-inline: auto; 
+}
+
+.section, 
+.step-card,
+.story-step { 
+  width: 100%; 
+  margin-inline: 0; 
+}
+
+.step-card .card-inner,
+.story-step > div:first-child { 
+  padding-inline: 16px; 
+}
+
+/* ============================================
+   4) Desktop polish
+   ============================================ */
+
+@media (min-width: 960px) {
+  .builder {
+    display: grid;
+    grid-template-columns: 1fr 0.9fr;
+    gap: 24px;
+    align-items: start;
+  }
+  
+  .step-card .card-inner,
+  .story-step > div:first-child { 
+    padding: 20px; 
+  }
+  
+  .step-title { 
+    font-size: clamp(20px, 2vw, 28px); 
+    line-height: 1.25; 
+  }
+}
+
+/* ============================================
+   5) Stepper improvements
+   ============================================ */
+
+.stepper {
+  position: sticky; 
+  top: 0; 
+  z-index: 2;
+  background: linear-gradient(#fff, rgba(255,255,255,.85));
+  backdrop-filter: saturate(150%) blur(6px);
+  -webkit-backdrop-filter: saturate(150%) blur(6px);
+  padding: 8px 0;
+  margin-bottom: 16px;
+}
+
+.stepper a { 
+  min-height: 44px; /* iOS touch target */
+}
+
+.stepper-item[aria-current="step"] .dot {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+/* ============================================
+   6) Themes section improvements
+   ============================================ */
+
+.help { 
+  font-size: 13px; 
+  opacity: .7; 
+  margin: 8px 0 4px; 
+}
+
+.theme-grid { 
+  grid-template-columns: repeat(2, 1fr); 
+}
+
+@media (min-width: 600px) { 
+  .theme-grid { 
+    grid-template-columns: repeat(3, 1fr); 
+  } 
+}
+
+/* ============================================
+   7) Form semantics & accessibility
+   ============================================ */
+
+.visually-hidden {
+  position: absolute !important; 
+  width: 1px; 
+  height: 1px;
+  padding: 0; 
+  margin: -1px; 
+  overflow: hidden; 
+  clip: rect(0 0 0 0); 
+  border: 0;
+}
+
+/* Keep inputs at ≥16px font-size to prevent iOS zoom */
+input, 
+select, 
+textarea { 
+  font-size: 16px; 
+}
+
+/* ============================================
+   8) Micro-typography & spacing
+   ============================================ */
+
+.step-card,
+.story-step { 
+  border-radius: var(--radius); 
+}
+
+.step-title { 
+  margin-bottom: var(--space-2); 
+}
+
+.form-row + .form-row,
+.form-group + .form-group { 
+  margin-top: var(--space-3); 
+}
+
+.section + .section,
+.story-step + .story-step { 
+  margin-top: 28px; 
+}
+
+/* ============================================
+   9) Debug helpers (comment out in production)
+   ============================================ */
+
+/* 
+.debug-outline .page,
+.debug-outline .container,
+.debug-outline .section,
+.debug-outline .step-card,
+.debug-outline .story-step {
+  outline: 1px dashed rgba(255,0,0,.25);
+}
+*/
+
+/* ============================================
+   Additional iOS-specific fixes
+   ============================================ */
+
+/* Prevent iOS from applying its own button styles */
+button,
+input[type="button"],
+input[type="submit"] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Fix iOS tap highlight */
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Ensure smooth scrolling on iOS */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix iOS rubber-band scrolling issues */
+body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Revert body fix for desktop */
+@media (min-width: 769px) {
+  body {
+    position: static;
+  }
+}
