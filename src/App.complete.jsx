@@ -17,7 +17,7 @@ import ReferralProgram from './components/ReferralProgram';
 import UserGeneratedContent from './components/UserGeneratedContent';
 import { getTierLimits, canGenerateStory, canUseAIIllustration, getUpgradeMessage } from './utils/subscriptionTiers';
 import AuthenticationManager from './components/AuthenticationManager';
-import { useEnhancedAuth } from './hooks/useEnhancedAuth';
+import { useEnhancedAuth } from './hooks/useEnhancedAuth.jsx';
 import './App.original.css';
 
 // Story length options matching the current HTML
