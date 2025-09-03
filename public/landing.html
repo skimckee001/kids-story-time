@@ -460,7 +460,7 @@
         }
 
         .connection-image {
-            height: 300px;
+            height: 200px;
             background: linear-gradient(135deg, #FF6B9D 0%, #4ECDC4 100%);
             display: flex;
             align-items: center;
@@ -915,13 +915,8 @@
         /* Founder Story Responsive */
         @media (max-width: 768px) {
             .founder-story > div > div:last-child {
-                grid-template-columns: 1fr !important;
+                grid-template-columns: 1fr;
                 gap: 30px;
-            }
-            
-            /* Image should be on top on mobile */
-            .founder-story > div > div:last-child > div:first-child {
-                order: -1;
             }
         }
 
@@ -946,24 +941,6 @@
             .hero-content {
                 grid-template-columns: 1fr;
                 text-align: center;
-            }
-            
-            /* Hero logo and title on mobile */
-            .hero-text > div:first-child {
-                flex-direction: column !important;
-                text-align: center;
-                gap: 10px !important;
-            }
-            
-            .hero-text h1 {
-                font-size: 1.75rem !important;
-            }
-            
-            /* Before/After images on mobile - stack vertically */
-            .before-after-grid,
-            div[style*="grid-template-columns: 1fr 1fr"] {
-                grid-template-columns: 1fr !important;
-                gap: 20px !important;
             }
             
             /* Challenge cards (3 tiles) on mobile - stack vertically */
@@ -1145,10 +1122,7 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
-                        <img src="./images/KidsStoryTime_previews_v1/08_Brand/App_Icon_1024.png" alt="KidsStoryTime.ai" style="height: 80px; width: 80px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);" loading="eager">
-                        <h1 style="margin-bottom: 0;">Transform Bedtime Into Adventure Time – In 30 Seconds</h1>
-                    </div>
+                    <h1>Transform Bedtime Into Adventure Time – In 30 Seconds</h1>
                     <p>AI-powered personalized stories that make your child the hero. Join thousands of families creating magical moments every night.</p>
                     
                     <div class="hero-stats">
@@ -1177,8 +1151,25 @@
                 </div>
                 
                 <div class="hero-visual">
-                    <img src="./images/KidsStoryTime_previews_v1/01_Hero/03_Child_with_Tablet.png" alt="Child enjoying story on tablet" style="width: 100%; max-width: 500px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);" loading="lazy">
+                    <div class="floating-card story-preview">
+                        <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&h=300&fit=crop" alt="Dragon adventure story" loading="lazy">
+                        <h4>Emma's Dragon Adventure</h4>
+                        <p>A magical journey awaits...</p>
+                    </div>
+                    
+                    <div class="floating-card story-preview">
+                        <img src="https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=400&h=300&fit=crop" alt="Space adventure story" loading="lazy">
+                        <h4>Jake's Space Mission</h4>
+                        <p>To the stars and beyond...</p>
+                    </div>
+                    
+                    <div class="floating-card story-preview">
+                        <img src="https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?w=400&h=300&fit=crop" alt="Friendship story" loading="lazy">
+                        <h4>Lily's New Friend</h4>
+                        <p>Making friends is magical...</p>
+                    </div>
                 </div>
+            </div>
         </div>
     </section>
 
@@ -1224,7 +1215,7 @@
                         <span class="trust-value">Teacher</span>
                         <span class="trust-label">Approved</span>
                     </div>
-                    
+                </div>
             </div>
         </div>
     </section>
@@ -1245,12 +1236,6 @@
                 <div style="font-size: 3rem; margin-bottom: 20px;">🌙</div>
                 <h2 style="font-size: clamp(2rem, 4vw, 3rem); color: white; margin-bottom: 20px;">Make Bedtime Their Favorite Part of the Day</h2>
                 <p style="font-size: 1.25rem; color: #cbd5e1; max-width: 700px; margin: 0 auto;">Turn restless nights and storytime frustration into special moments your child can't wait for.</p>
-            </div>
-            
-            <!-- Before/After Visual -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 60px; max-width: 1000px; margin-left: auto; margin-right: auto;">
-                <img src="./images/KidsStoryTime_previews_v1/09_Before_After/BeforeAfter_Split_v1.png" alt="Before and After KidsStoryTime - Reading" style="width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);" loading="lazy">
-                <img src="./images/KidsStoryTime_previews_v1/09_Before_After/BeforeAfter_Split_v2_iPhone_Printout.png" alt="Before and After KidsStoryTime - Digital and Print" style="width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);" loading="lazy">
             </div>
             
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 80px;">
@@ -1362,21 +1347,21 @@
             <div class="steps-container">
                 <div class="step">
                     <div class="step-number">1</div>
-                    <img src="./images/KidsStoryTime_previews_v1/07_Characters/Child_Girl_Teal_Nightgown_Moon_Wand.png" alt="Choose Your Hero" style="width: 100%; height: 200px; object-fit: contain; object-position: top; background: linear-gradient(135deg, #FFE5EC 0%, #E3F9F6 100%); border-radius: 20px; margin-bottom: 20px;" loading="lazy">
+                    <div class="step-image" style="background-image: url('https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=300&h=200&fit=crop'); background-size: cover; background-position: center;"></div>
                     <h3>Choose Your Hero</h3>
                     <p>Enter your child's name, age, and interests to make them the star of the story</p>
                 </div>
                 
                 <div class="step">
                     <div class="step-number">2</div>
-                    <img src="./images/KidsStoryTime_previews_v1/02_Story_Themes/Space_Adventure_Theme.png" alt="Pick Your Adventure" style="width: 100%; height: 200px; object-fit: contain; background: #f0f9ff; border-radius: 20px; margin-bottom: 20px;" loading="lazy">
+                    <div class="step-image" style="background-image: url('https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=200&fit=crop'); background-size: cover; background-position: center;"></div>
                     <h3>Pick Your Adventure</h3>
                     <p>Select from dozens of themes or let AI surprise you with something magical</p>
                 </div>
                 
                 <div class="step">
                     <div class="step-number">3</div>
-                    <img src="./images/KidsStoryTime_previews_v1/01_Hero/02_Parent_Reading_to_Child.png" alt="Watch the Magic" style="width: 100%; height: 200px; object-fit: cover; border-radius: 20px; margin-bottom: 20px;" loading="lazy">
+                    <div class="step-image" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop'); background-size: cover; background-position: center;"></div>
                     <h3>Watch the Magic</h3>
                     <p>Your personalized story with illustrations appears in seconds, ready to read</p>
                 </div>
@@ -1399,69 +1384,52 @@
             </div>
             
             <div class="features-grid">
-                <div class="feature-card" style="background-image: url('./images/KidsStoryTime_previews_v1/03_Feature_Section/Hero_Child_Star.png'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
-                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
-                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
-                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Personalized Heroes</h3>
-                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Your child becomes the star of every story with their name and characteristics</p>
-                    </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background-image: url('https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=100&h=100&fit=crop'); background-size: cover; width: 60px; height: 60px;"></div>
+                    <h3>Personalized Heroes</h3>
+                    <p>Your child becomes the star of every story with their name and characteristics</p>
                 </div>
                 
-                <div class="feature-card" style="background-image: url('./images/KidsStoryTime_previews_v1/02_Story_Themes/Fantasy_Magic_Theme.png'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
-                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
-                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
-                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">AI Illustrations</h3>
-                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Unique, beautiful artwork generated for every single story</p>
-                    </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background-image: url('https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=100&h=100&fit=crop'); background-size: cover; width: 60px; height: 60px;"></div>
+                    <h3>AI Illustrations</h3>
+                    <p>Unique, beautiful artwork generated for every single story</p>
                 </div>
                 
-                <div class="feature-card" style="background-image: url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=400&h=300&fit=crop'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
-                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
-                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
-                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Voice Narration</h3>
-                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Professional storytelling voices bring stories to life (30/month)</p>
-                    </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background-image: url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=100&h=100&fit=crop'); background-size: cover; width: 60px; height: 60px;"></div>
+                    <h3>Voice Narration</h3>
+                    <p>Professional storytelling voices bring stories to life (30/month)</p>
                 </div>
                 
-                <div class="feature-card" style="background-image: url('./images/KidsStoryTime_previews_v1/02_Story_Themes/Educational_Theme.png'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
-                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
-                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
-                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Educational Themes</h3>
-                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Learn numbers, letters, values, and life lessons through adventure</p>
-                    </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background-image: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=100&h=100&fit=crop'); background-size: cover; width: 60px; height: 60px;"></div>
+                    <h3>Educational Themes</h3>
+                    <p>Learn numbers, letters, values, and life lessons through adventure</p>
                 </div>
                 
-                <div class="feature-card" style="background-image: url('./images/KidsStoryTime_previews_v1/06_Backgrounds/Outer_Space.png'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
-                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
-                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
-                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Bedtime Mode</h3>
-                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Calming stories with auto-timer to help kids wind down</p>
-                    </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background-image: url('https://images.unsplash.com/photo-1489710437720-ebb67ec84dd2?w=100&h=100&fit=crop'); background-size: cover; width: 60px; height: 60px;"></div>
+                    <h3>Bedtime Mode</h3>
+                    <p>Calming stories with auto-timer to help kids wind down</p>
                 </div>
                 
-                <div class="feature-card" style="background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
-                    <div style="position: absolute; inset: 0; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><polygon points="100,10 130,70 195,70 145,110 165,170 100,130 35,170 55,110 5,70 70,70" fill="gold" opacity="0.3"/></svg>'); background-size: 100px 100px; background-repeat: repeat; opacity: 0.3;"></div>
-                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
-                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
-                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Star Rewards</h3>
-                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Motivating achievement system that encourages daily reading</p>
-                    </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background-image: url('https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=100&h=100&fit=crop'); background-size: cover; width: 60px; height: 60px;"></div>
+                    <h3>Star Rewards</h3>
+                    <p>Motivating achievement system that encourages daily reading</p>
                 </div>
                 
-                <div class="feature-card" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
-                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
-                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
-                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Parent Dashboard</h3>
-                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Track reading progress, favorite themes, and milestones</p>
-                    </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=100&h=100&fit=crop'); background-size: cover; width: 60px; height: 60px;"></div>
+                    <h3>Parent Dashboard</h3>
+                    <p>Track reading progress, favorite themes, and milestones</p>
                 </div>
                 
-                <div class="feature-card" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop'); background-size: cover; background-position: center; position: relative; overflow: hidden; min-height: 280px; padding: 0;">
-                    <div style="background: linear-gradient(to top, rgba(20,15,40,0.95) 0%, rgba(20,15,40,0.7) 30%, rgba(20,15,40,0.3) 60%, transparent 100%); position: absolute; inset: 0;"></div>
-                    <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 30px;">
-                        <h3 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 10px;">Export & Share</h3>
-                        <p style="color: rgba(255,255,255,0.95); text-shadow: 1px 1px 2px rgba(0,0,0,0.5); margin: 0;">Download PDF books and audio files to keep forever</p>
-                    </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop'); background-size: cover; width: 60px; height: 60px;"></div>
+                    <h3>Export & Share</h3>
+                    <p>Download PDF books and audio files to keep forever</p>
                 </div>
                 
                 <div class="feature-card">
@@ -1854,7 +1822,7 @@
                         <div style="font-size: 2.5rem; font-weight: 700; color: #8B5CF6;">94%</div>
                         <p style="color: #636e72; margin-top: 5px;">Parents report improved habits</p>
                     </div>
-                    
+                </div>
             </div>
         </div>
     </section>
@@ -2121,7 +2089,7 @@
                             🎯 Try Creating Your First Printable Story
                         </button>
                     </div>
-                    
+                </div>
             </div>
         </div>
     </section>
@@ -2136,7 +2104,7 @@
             
             <div class="connection-grid">
                 <div class="connection-card">
-                    <div class="connection-image" style="background-image: url('./images/KidsStoryTime_previews_v1/10_Campaign_Portraits/Dads_Sons_Epic_Adventures_Portrait_short.png'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;"></div>
+                    <div class="connection-image" style="background-image: url('/images/KidsStoryTime_previews_v1/10_Campaign_Portraits/Dads_Sons_Epic_Adventures_Portrait_short.png'); background-size: cover; background-position: center;"></div>
                     <div class="connection-content">
                         <h3>Dads & Sons: Epic Adventures</h3>
                         <p>Action-packed stories featuring superheroes, sports champions, and brave explorers. Build confidence and courage together.</p>
@@ -2145,7 +2113,7 @@
                 </div>
                 
                 <div class="connection-card">
-                    <div class="connection-image" style="background-image: url('./images/KidsStoryTime_previews_v1/10_Campaign_Portraits/Moms_Daughters_Magical_Moments_Portrait_short.png'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;"></div>
+                    <div class="connection-image" style="background-image: url('/images/KidsStoryTime_previews_v1/10_Campaign_Portraits/Moms_Daughters_Magical_Moments_Portrait_short.png'); background-size: cover; background-position: center;"></div>
                     <div class="connection-content">
                         <h3>Moms & Daughters: Magical Moments</h3>
                         <p>Enchanting tales of friendship, creativity, and empowerment. Nurture imagination and self-belief together.</p>
@@ -2154,13 +2122,13 @@
                 </div>
                 
                 <div class="connection-card">
-                    <div class="connection-image" style="background-image: url('./images/KidsStoryTime_previews_v1/10_Campaign_Portraits/Grandparents_Legacy_Stories_Portrait.png'); background-size: 100% auto; background-position: center top; background-repeat: no-repeat;"></div>
+                    <div class="connection-image" style="background-image: url('https://images.unsplash.com/photo-1524638900500-8b01be20ec76?w=400&h=200&fit=crop'); background-size: cover; background-position: center;"></div>
                     <div class="connection-content">
                         <h3>Grandparents: Legacy Stories</h3>
                         <p>Share wisdom through timeless tales and family adventures. Pass down values and create lasting memories.</p>
                         <button class="btn btn-primary">Share Your Family's Story</button>
                     </div>
-                    
+                </div>
             </div>
         </div>
     </section>
@@ -2326,7 +2294,7 @@
                             "Every parent deserves to be the hero of bedtime without the pressure of being a master storyteller."
                         </p>
                     </div>
-                    
+                </div>
             </div>
         </div>
     </section>
@@ -2341,8 +2309,8 @@
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 60px;">
                 <div>
-                    <img src="./images/Stay_Connected_Military_Family.png" 
-                         alt="Military family staying connected through digital storytime" 
+                    <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=600&h=400&fit=crop" 
+                         alt="Remote Reading" 
                          style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
                 </div>
                 
@@ -2440,8 +2408,8 @@
                 </div>
                 
                 <div>
-                    <img src="./images/KidsStoryTime_previews_v1/09_Before_After/BeforeAfter_Split_v2_iPhone_Printout.png" 
-                         alt="Digital and Print Stories Combined - iPhone and Printed Book" 
+                    <img src="https://images.unsplash.com/photo-1600298881883-e157d7b2dee4?w=600&h=400&fit=crop" 
+                         alt="Parent reading printed story to child" 
                          style="width: 100%; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
                     
                     <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 20px; border-radius: 15px; margin-top: 20px; text-align: center;">
@@ -2450,7 +2418,7 @@
                         </p>
                         <p style="margin: 10px 0 0; opacity: 0.9;">- Emma, Mom of two</p>
                     </div>
-                    
+                </div>
             </div>
         </div>
     </section>
@@ -2531,56 +2499,209 @@
     </section>
 
     <!-- Pricing -->
-    <section class="pricing">
+    <section class="pricing" style="background: linear-gradient(135deg, #f0f4f8 0%, #e8ecf1 100%); padding: 100px 0;">
         <div class="container">
             <div class="section-header">
-                <h2>Choose Your Adventure Level</h2>
-                <p>Start free, upgrade when you're ready</p>
+                <h2 style="font-size: 3rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Plans That Grow With Your Family</h2>
+                <p style="font-size: 1.25rem; color: #64748b;">Choose the perfect plan for your storytelling journey</p>
             </div>
             
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <h3>Reader</h3>
-                    <div class="price">FREE<span>/forever</span></div>
-                    <ul class="pricing-features">
-                        <li><span class="check-icon">✓</span> 3 stories per day</li>
-                        <li><span class="check-icon">✓</span> Basic themes</li>
-                        <li><span class="check-icon">✓</span> 1 child profile</li>
-                        <li><span class="check-icon">✓</span> 1 AI image/month</li>
-                        <li><span class="check-icon">✓</span> 1 narration/month</li>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 60px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                <!-- Infrequent Reader (Free) -->
+                <div style="background: white; border-radius: 20px; padding: 35px; text-align: center; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s;">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #64748b, #94a3b8); margin: 0 auto 20px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                        📖
+                    </div>
+                    <h3 style="font-size: 1.5rem; color: #64748b; margin-bottom: 5px;">Infrequent Reader</h3>
+                    <p style="font-size: 0.875rem; color: #94a3b8; font-style: italic; margin-bottom: 20px;">For occasional storytimes</p>
+                    <div style="font-size: 2.5rem; font-weight: 700; color: #64748b; margin-bottom: 5px;">FREE</div>
+                    <p style="color: #94a3b8; font-size: 0.875rem; margin-bottom: 25px;">forever</p>
+                    
+                    <div style="background: #f3f4f6; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 0.875rem;">
+                        <strong>Limits:</strong> 3 stories/day • 10/month<br>
+                        <strong>Includes:</strong> 1 AI image & narration/month
+                    </div>
+                    
+                    <ul style="list-style: none; padding: 0; margin: 0 0 25px 0; text-align: left;">
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span>3 stories per day</span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span>Stock illustrations</span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start; background: #fef3c7; padding: 5px; border-radius: 5px; margin-left: -5px; margin-right: -5px;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span>1 AI illustration/month</span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start; background: #fef3c7; padding: 5px; border-radius: 5px; margin-left: -5px; margin-right: -5px;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span>1 narration/month</span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start; opacity: 0.5;">
+                            <span style="color: #ef4444; margin-right: 10px;">⚠️</span>
+                            <span>Light, kid-safe ads</span>
+                        </li>
                     </ul>
-                    <button class="btn btn-secondary">Start Free</button>
+                    <button onclick="window.location.href='/?plan=reader'" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #cbd5e1, #94a3b8); color: white; border: none; border-radius: 10px; font-size: 0.875rem; font-weight: 700; cursor: pointer; text-transform: uppercase;">Start Free</button>
                 </div>
                 
-                <div class="pricing-card popular">
-                    <span class="popular-badge">Most Popular</span>
-                    <h3>Family</h3>
-                    <div class="price">$7.99<span>/month</span></div>
-                    <ul class="pricing-features">
-                        <li><span class="check-icon">✓</span> 20 stories per day</li>
-                        <li><span class="check-icon">✓</span> All themes unlocked</li>
-                        <li><span class="check-icon">✓</span> 5 child profiles</li>
-                        <li><span class="check-icon">✓</span> Unlimited AI images</li>
-                        <li><span class="check-icon">✓</span> 30 narrations/month</li>
-                        <li><span class="check-icon">✓</span> Bedtime mode</li>
-                        <li><span class="check-icon">✓</span> Export PDFs</li>
+                <!-- Story Pro -->
+                <div style="background: white; border-radius: 20px; padding: 35px; text-align: center; position: relative; box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15); transform: scale(1.05); border: 3px solid #3b82f6;">
+                    <span style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #3b82f6, #60a5fa); color: white; padding: 6px 20px; border-radius: 20px; font-size: 0.875rem; font-weight: 600;">Most Popular</span>
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #3b82f6, #60a5fa); margin: 0 auto 20px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                        ✨
+                    </div>
+                    <h3 style="font-size: 1.5rem; color: #3b82f6; margin-bottom: 5px;">Story Pro</h3>
+                    <p style="font-size: 0.875rem; color: #94a3b8; font-style: italic; margin-bottom: 20px;">For regular story creators</p>
+                    <div style="font-size: 2.5rem; font-weight: 700; color: #3b82f6; margin-bottom: 5px;">$4.99</div>
+                    <p style="color: #94a3b8; font-size: 0.875rem; margin-bottom: 25px;">per month</p>
+                    
+                    <div style="background: #f3f4f6; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 0.875rem;">
+                        <strong>Limits:</strong> 10 stories/day • 50/month<br>
+                        <strong>AI Features:</strong> 30 images • 3 narrations/month
+                    </div>
+                    
+                    <ul style="list-style: none; padding: 0; margin: 0 0 25px 0; text-align: left;">
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span><strong>10 stories per day</strong></span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span>Full library access</span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start; background: #fef3c7; padding: 5px; border-radius: 5px; margin-left: -5px; margin-right: -5px;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span>30 AI illustrations/month</span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start; background: #fef3c7; padding: 5px; border-radius: 5px; margin-left: -5px; margin-right: -5px;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span>3 Voice Narrations/month</span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span>2 child profiles</span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span><strong>Ad-free experience</strong></span>
+                        </li>
                     </ul>
-                    <button class="btn btn-primary">Start Free Trial</button>
-                    <p style="margin-top: 10px; color: var(--text-light); font-size: 0.875rem;">First month FREE!</p>
+                    <button onclick="window.location.href='/?plan=story-pro'" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #3b82f6, #60a5fa); color: white; border: none; border-radius: 10px; font-size: 0.875rem; font-weight: 700; cursor: pointer; text-transform: uppercase;">Get Started</button>
                 </div>
                 
-                <div class="pricing-card">
-                    <h3>Story Maker</h3>
-                    <div class="price">$4.99<span>/month</span></div>
-                    <ul class="pricing-features">
-                        <li><span class="check-icon">✓</span> 10 stories per day</li>
-                        <li><span class="check-icon">✓</span> Most themes</li>
-                        <li><span class="check-icon">✓</span> 2 child profiles</li>
-                        <li><span class="check-icon">✓</span> 30 AI images/month</li>
-                        <li><span class="check-icon">✓</span> 10 narrations/month</li>
+                <!-- Read to Me ProMax -->
+                <div style="background: white; border-radius: 20px; padding: 35px; text-align: center; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s;">
+                    <span style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: white; padding: 6px 20px; border-radius: 20px; font-size: 0.875rem; font-weight: 600;">Best Value</span>
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #8b5cf6, #a78bfa); margin: 0 auto 20px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                        🎧
+                    </div>
+                    <h3 style="font-size: 1.5rem; color: #8b5cf6; margin-bottom: 5px;">Read to Me ProMax</h3>
+                    <p style="font-size: 0.875rem; color: #94a3b8; font-style: italic; margin-bottom: 20px;">For narrated story fans</p>
+                    <div style="font-size: 2.5rem; font-weight: 700; color: #8b5cf6; margin-bottom: 5px;">$6.99</div>
+                    <p style="color: #94a3b8; font-size: 0.875rem; margin-bottom: 25px;">per month</p>
+                    
+                    <div style="background: #f3f4f6; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 0.875rem;">
+                        <strong>Limits:</strong> 20 stories/day • 100/month<br>
+                        <strong>AI Features:</strong> 150 images • <span style="background: yellow;">30 narrations</span>/month
+                    </div>
+                    
+                    <ul style="list-style: none; padding: 0; margin: 0 0 25px 0; text-align: left;">
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span><strong>20 stories per day</strong></span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start; background: #fef3c7; padding: 5px; border-radius: 5px; margin-left: -5px; margin-right: -5px;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span><strong>150 AI illustrations/month</strong></span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start; background: #fef3c7; padding: 5px; border-radius: 5px; margin-left: -5px; margin-right: -5px;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span><strong>30 Voice Narrations/month</strong></span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span>2 child profiles</span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span>Audio downloads</span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span><strong>Ad-free experience</strong></span>
+                        </li>
                     </ul>
-                    <button class="btn btn-secondary">Start Free Trial</button>
+                    <button onclick="window.location.href='/?plan=read-to-me-promax'" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: white; border: none; border-radius: 10px; font-size: 0.875rem; font-weight: 700; cursor: pointer; text-transform: uppercase;">Perfect for Audio</button>
                 </div>
+                
+                <!-- Family Plus -->
+                <div style="background: white; border-radius: 20px; padding: 35px; text-align: center; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s;">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #8b5cf6, #a78bfa); margin: 0 auto 20px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                        🌈
+                    </div>
+                    <h3 style="font-size: 1.5rem; color: #8b5cf6; margin-bottom: 5px;">Family Plus</h3>
+                    <p style="font-size: 0.875rem; color: #94a3b8; font-style: italic; margin-bottom: 20px;">Share with the whole family</p>
+                    <div style="font-size: 2.5rem; font-weight: 700; color: #8b5cf6; margin-bottom: 5px;">$7.99</div>
+                    <p style="color: #94a3b8; font-size: 0.875rem; margin-bottom: 25px;">per month</p>
+                    
+                    <div style="background: #f3f4f6; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 0.875rem;">
+                        <strong>Limits:</strong> 20 stories/day • 120/month<br>
+                        <strong>AI Features:</strong> 150 images • 40 narrations/month
+                    </div>
+                    
+                    <ul style="list-style: none; padding: 0; margin: 0 0 25px 0; text-align: left;">
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span><strong>20 stories per day</strong></span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start; background: #fef3c7; padding: 5px; border-radius: 5px; margin-left: -5px; margin-right: -5px;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span><strong>150 AI illustrations/month</strong></span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start; background: #fef3c7; padding: 5px; border-radius: 5px; margin-left: -5px; margin-right: -5px;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span><strong>40 Voice Narrations/month</strong></span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span><strong>5 child profiles</strong></span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span>Audio downloads</span>
+                        </li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: start;">
+                            <span style="color: #10b981; margin-right: 10px;">✓</span>
+                            <span><strong>Ad-free experience</strong></span>
+                        </li>
+                    </ul>
+                    <button onclick="window.location.href='/?plan=family-plus'" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: white; border: none; border-radius: 10px; font-size: 0.875rem; font-weight: 700; cursor: pointer; text-transform: uppercase;">Best for Families</button>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 50px; padding: 30px; background: rgba(139, 92, 246, 0.1); border-radius: 20px;">
+                <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <div style="background: rgba(255, 255, 255, 0.8); padding: 8px 16px; border-radius: 20px; font-size: 0.875rem;">
+                        🔒 SSL Secured
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.8); padding: 8px 16px; border-radius: 20px; font-size: 0.875rem;">
+                        💳 Secure Payment
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.8); padding: 8px 16px; border-radius: 20px; font-size: 0.875rem;">
+                        ✅ 30-Day Guarantee
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.8); padding: 8px 16px; border-radius: 20px; font-size: 0.875rem;">
+                        🚫 Cancel Anytime
+                    </div>
+                </div>
+                <p style="color: #64748b; font-size: 0.875rem;">Questions? Email support@kidsstorytime.ai</p>
+                <p style="margin-top: 15px; color: #94a3b8; font-size: 0.75rem;">
+                    All plans include our commitment to child safety and age-appropriate content<br>
+                    Payment processing secured by Stripe • Your data is never sold
+                </p>
             </div>
         </div>
     </section>
@@ -2700,7 +2821,7 @@
                     <div class="faq-answer">
                         <p>Of course! You can cancel your subscription anytime with no questions asked. You'll continue to have access until the end of your billing period.</p>
                     </div>
-                    
+                </div>
             </div>
         </div>
     </section>
