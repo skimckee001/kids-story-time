@@ -6,8 +6,7 @@ export const WORD_COUNT_TARGETS = {
   'short': { min: 300, target: 375, max: 450 },      // 2-3 minutes
   'medium': { min: 625, target: 750, max: 875 },     // 5-7 minutes  
   'long': { min: 1250, target: 1500, max: 1750 },    // 10-15 minutes
-  'extended': { min: 2000, target: 2500, max: 3000 }, // 20 minutes
-  'long-extended': { min: 3000, target: 3750, max: 4500 } // 30 minutes
+  'extended': { min: 2000, target: 2500, max: 3000 } // 20 minutes
 };
 
 // Enhanced content guidelines by reading level
