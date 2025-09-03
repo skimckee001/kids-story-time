@@ -1,0 +1,101 @@
+/* Desktop View Fixes */
+
+/* Consistent story step styling */
+.story-step {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 16px;
+  max-width: 100%;
+}
+
+/* Reduce padding on desktop for less white space */
+@media (min-width: 481px) {
+  .story-step > div {
+    padding: 20px !important;
+  }
+}
+
+/* Step header spacing reduction */
+.step-header {
+  margin-bottom: 12px !important;
+}
+
+/* Better alignment for form groups in grid */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+}
+
+/* Custom checkbox styling for better visibility */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #667eea;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+
+input[type="checkbox"]:checked {
+  background: #667eea;
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Theme grid - show more themes */
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* Ensure dropdowns align properly in grid layout */
+.story-step .form-select {
+  width: 100%;
+  height: 42px; /* Consistent height */
+}
+
+/* Align grid items to top */
+.story-step > div > div[style*="grid"] {
+  align-items: start !important;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .story-step > div {
+    padding: 16px !important;
+  }
+  
+  .theme-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+}
+
+/* Reduce excessive margins */
+.help {
+  margin: 4px 0 8px !important;
+}
+
+/* Consistent spacing for all step content */
+.story-step .form-group:last-child {
+  margin-bottom: 0;
+}

@@ -20,6 +20,7 @@ import AuthenticationManager from './components/AuthenticationManager';
 import { useEnhancedAuth } from './hooks/useEnhancedAuth.jsx';
 import { initAllEnhancements } from './utils/stepperEnhancements';
 import './App.original.css';
+import './styles/desktop-fixes.css';
 
 // Story length options matching the current HTML
 const STORY_LENGTHS = [
@@ -1402,7 +1403,7 @@ function App() {
           <form onSubmit={handleGenerateStory}>
             {/* STEP 1: Who is this story for? */}
             <div className="story-step" id="step1">
-              <div style={{ padding: window.innerWidth <= 480 ? '16px' : '24px' }}>
+              <div style={{ padding: window.innerWidth <= 480 ? '16px' : '20px' }}>
                 <header className="step-header">
                   <span style={{fontSize: '24px'}}>👤</span>
                   <h3 className="step-title">
@@ -1544,7 +1545,7 @@ function App() {
 
             {/* STEP 2: What's the story about? */}
             <div className="story-step" id="step2">
-              <div style={{ padding: window.innerWidth <= 480 ? '16px' : '24px' }}>
+              <div style={{ padding: window.innerWidth <= 480 ? '16px' : '20px' }}>
                 <header className="step-header">
                   <span style={{fontSize: '24px'}}>✨</span>
                   <h3 className="step-title">
@@ -1630,7 +1631,7 @@ function App() {
                   margin: '8px 0 4px'
                 }}>Choose up to 3 themes for your story</p>
                 <div className="theme-grid" role="group" aria-labelledby="theme-help">
-                  {getAvailableThemes().slice(0, 8).map(theme => (
+                  {getAvailableThemes().slice(0, 12).map(theme => (
                     <button
                       key={theme.id}
                       type="button"
@@ -1650,7 +1651,7 @@ function App() {
 
             {/* STEP 3: Choose your style */}
             <div className="story-step" id="step3">
-              <div style={{ padding: window.innerWidth <= 480 ? '16px' : '24px' }}>
+              <div style={{ padding: window.innerWidth <= 480 ? '16px' : '20px' }}>
                 <header className="step-header">
                   <span style={{fontSize: '24px'}}>🎨</span>
                   <h3 className="step-title">
@@ -1662,11 +1663,12 @@ function App() {
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: window.innerWidth <= 768 ? '1fr' : '1fr 1fr',
-                gap: '16px'
+                gap: '16px',
+                alignItems: 'start'
               }}>
                 {/* Story Length */}
-                <div className="form-group" style={{marginBottom: 0}}>
-                  <label htmlFor="storyLength">
+                <div className="form-group" style={{marginBottom: 0, display: 'flex', flexDirection: 'column'}}>
+                  <label htmlFor="storyLength" style={{marginBottom: '8px'}}>
                     <span style={{fontSize: '20px', marginRight: '8px'}}>⏱️</span>
                     Story Length
                   </label>
@@ -1694,8 +1696,8 @@ function App() {
                 </div>
                 
                 {/* Illustration Style */}
-                <div className="form-group" style={{marginBottom: 0}}>
-                  <label htmlFor="imageStyle">
+                <div className="form-group" style={{marginBottom: 0, display: 'flex', flexDirection: 'column'}}>
+                  <label htmlFor="imageStyle" style={{marginBottom: '8px'}}>
                     <span style={{fontSize: '20px', marginRight: '8px'}}>🎭</span>
                     Illustration Style
                   </label>
