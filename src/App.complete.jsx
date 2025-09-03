@@ -747,7 +747,24 @@ function App() {
           })
           .catch(error => {
             console.error('Image generation failed:', error);
+            // Fallback to a stock image on error
+            const fallbackSeed = Math.floor(Math.random() * 1000);
+            const fallbackImageUrl = `https://picsum.photos/seed/${fallbackSeed}/1024/1024`;
+            console.log('Using fallback image:', fallbackImageUrl);
+            setCurrentStory(prev => ({
+              ...prev,
+              imageUrl: fallbackImageUrl
+            }));
           });
+        } else {
+          // For free tier users, add a stock image
+          console.log('Free tier user, adding stock image');
+          const stockSeed = data.story.title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+          const stockImageUrl = `https://picsum.photos/seed/${stockSeed}/1024/1024`;
+          setCurrentStory(prev => ({
+            ...prev,
+            imageUrl: stockImageUrl
+          }));
         }
         
         // Update usage counters

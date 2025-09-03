@@ -1305,7 +1305,13 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
           {/* Footer Actions */}
           <div className="story-footer">
             <button onClick={onBack} className="new-story-btn">
-              ✨ Create Another Story
+              ✨ Create New Story
+            </button>
+            <button 
+              onClick={() => window.location.href = '/pricing-new.html'} 
+              className="upgrade-pro-btn"
+            >
+              ⭐ Upgrade to Pro
             </button>
             <button 
               onClick={onShowLibrary || onBack} 
