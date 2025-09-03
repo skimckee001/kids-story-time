@@ -49,6 +49,7 @@ body {
   background: linear-gradient(135deg, rgba(230, 235, 255, 0.95), rgba(240, 230, 255, 0.95));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  max-width: 100%;
   padding: 20px;
   border-radius: 15px;
   -webkit-border-radius: 15px;
@@ -364,7 +365,7 @@ body {
   border: 2px solid rgba(102, 126, 234, 0.3);
   padding: 40px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  max-width: 900px;
+  max-width: 100%;
   margin: 0 auto;
   position: relative;
   z-index: 1;

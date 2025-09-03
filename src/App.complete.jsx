@@ -1305,7 +1305,11 @@ function App() {
         )}
 
         {/* Main Form */}
-        <div className="main-content">
+        <div className="main-content" style={{
+          maxWidth: '100%',
+          width: '100%',
+          boxSizing: 'border-box'
+        }}>
           {/* Reading Streak Display - TEMPORARILY HIDDEN */}
           {/* {selectedChildProfile && (
             <>
@@ -1629,6 +1633,8 @@ function App() {
                   onClick={() => alert('Story Tips:\n\n• Be specific about the setting\n• Include your child\'s interests\n• Add a lesson or moral\n• Mention favorite characters\n• The more detail, the better!')}
                   style={{
                     marginTop: '8px',
+                    marginLeft: '0',
+                    padding: '0',
                     background: 'none',
                     border: 'none',
                     color: '#667eea',
@@ -1636,7 +1642,8 @@ function App() {
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '4px'
+                    gap: '4px',
+                    textAlign: 'left'
                   }}
                 >
                   💡 Tips for great stories
@@ -1799,9 +1806,10 @@ function App() {
             background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
             borderRadius: '12px',
             border: '2px solid #667eea',
-            maxWidth: '900px',
-            margin: '20px auto 0',
-            width: '100%'
+            boxSizing: 'border-box',
+            maxWidth: '100%',
+            width: '100%',
+            margin: '20px auto 0'
           }}>
             <div style={{ textAlign: 'center' }}>
               <h3 style={{ 

@@ -97,7 +97,7 @@
   padding: 16px;
 }
 
-/* Social Sign In Buttons - Stack on mobile for better visibility */
+/* Social Sign In Buttons - Always stacked for better visibility */
 .social-signin {
   display: flex;
   flex-direction: column;
@@ -121,18 +121,6 @@
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
-}
-
-/* Desktop layout - social buttons side by side */
-@media (min-width: 480px) {
-  .social-signin {
-    flex-direction: row;
-  }
-  
-  .social-btn {
-    flex: 1;
-    width: auto;
-  }
 }
 
 .social-btn:hover:not(:disabled) {
