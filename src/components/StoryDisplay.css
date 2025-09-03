@@ -429,7 +429,7 @@ html {
 }
 
 .story-title {
-  font-size: clamp(2.5rem, 5vw, 4rem) !important;
+  font-size: clamp(2rem, 5vw, 3.2rem) !important;
   color: var(--ink);
   text-align: center;
   margin: 0 0 40px;
@@ -1024,7 +1024,7 @@ html {
   }
 
   .story-title {
-    font-size: 2.5rem !important;
+    font-size: 2.2rem !important;
   }
   
   .star-rating {
@@ -1085,7 +1085,7 @@ html {
   }
 
   .story-title {
-    font-size: 2rem !important;
+    font-size: 1.8rem !important;
   }
   
   .star {
