@@ -917,7 +917,14 @@ function App() {
         onShowProfileManager={() => setShowProfileManager(true)}
         bedtimeModeActive={bedtimeModeActive}
         onToggleBedtime={setBedtimeModeActive}
-        onStarsUpdate={(newTotal) => setStarPoints(newTotal)}
+        onStarsUpdate={(newTotal) => {
+          console.log('App.complete - onStarsUpdate called with:', newTotal);
+          setStarPoints(newTotal);
+          // Also update localStorage for the current profile
+          const profileId = selectedChildProfile?.id || 'guest';
+          localStorage.setItem(`stars_${profileId}`, newTotal.toString());
+          console.log('Updated stars for profile:', profileId, 'to:', newTotal);
+        }}
         onBack={() => {
           setShowStory(false);
           setCurrentStory(null);
