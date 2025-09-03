@@ -16,6 +16,8 @@ import CommunityAchievements from './components/CommunityAchievements';
 import ReferralProgram from './components/ReferralProgram';
 import UserGeneratedContent from './components/UserGeneratedContent';
 import { getTierLimits, canGenerateStory, canUseAIIllustration, getUpgradeMessage } from './utils/subscriptionTiers';
+import AuthenticationManager from './components/AuthenticationManager';
+import { useEnhancedAuth } from './hooks/useEnhancedAuth';
 import './App.original.css';
 
 // Story length options matching the current HTML
@@ -130,8 +132,8 @@ function App() {
   
   // UI state
   const [isGenerating, setIsGenerating] = useState(false);
-  const [showAuth, setShowAuth] = useState(false);
-  const [user, setUser] = useState(null);
+  // Replace old auth state with new enhanced auth hook
+  const { user, authModal, openAuthModal, closeAuthModal, handleAuthSuccess } = useEnhancedAuth();
   const [subscriptionTier, setSubscriptionTier] = useState('try-now'); // Updated tier system
   const [showLibrary, setShowLibrary] = useState(false);
   const [showProfileManager, setShowProfileManager] = useState(false);
@@ -160,19 +162,58 @@ function App() {
   useEffect(() => {
     // Click outside handler for dropdown menus
     const handleClickOutside = (event) => {
-      if (!event.target.closest('.more-menu-container')) {
+      // Check if click is outside more menu
+      if (showMoreMenu && !event.target.closest('.more-menu-container')) {
         setShowMoreMenu(false);
       }
-      if (!event.target.closest('.user-menu-container')) {
+      // Check if click is outside user menu
+      if (showUserMenu && !event.target.closest('.user-menu-container')) {
         setShowUserMenu(false);
       }
     };
     
+    // Add listener when either menu is open
     if (showMoreMenu || showUserMenu) {
-      document.addEventListener('click', handleClickOutside);
+      // Use setTimeout to avoid immediate close on open
+      setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+      }, 0);
+      
       return () => document.removeEventListener('click', handleClickOutside);
     }
   }, [showMoreMenu, showUserMenu]);
+  
+  const getNextUpgradeTier = (currentTier) => {
+    const tierProgression = {
+      'try-now': { 
+        name: 'Story Pro', price: '$4.99/month',
+        features: ['✓ 10 stories per day', '✓ 30 AI images per month', '✓ 3 narrations per month',
+                   '✓ 2 child profiles', '✓ Full library access', '✓ Non-watermarked PDFs'],
+        highlight: ['✓ 30 AI images per month']
+      },
+      'reader-free': { 
+        name: 'Story Pro', price: '$4.99/month',
+        features: ['✓ 10 stories per day', '✓ 30 AI images per month', '✓ 3 narrations per month',
+                   '✓ 2 child profiles', '✓ Full library access', '✓ Non-watermarked PDFs'],
+        highlight: ['✓ 30 AI images per month']
+      },
+      'story-pro': { 
+        name: 'Read to Me ProMax', price: '$6.99/month',
+        features: ['✓ 20 stories per day', '✓ 150 AI images per month', '✓ 30 narrations per month',
+                   '✓ 2 child profiles', '✓ Audio downloads', '✓ Bedtime reminders & streaks', '✓ Non-watermarked PDFs'],
+        highlight: ['✓ 150 AI images per month', '✓ 30 narrations per month']
+      },
+      'read-to-me-promax': { 
+        name: 'Family Plus', price: '$7.99/month',
+        features: ['✓ Unlimited stories', '✓ 250 AI images per month', '✓ 50 narrations per month',
+                   '✓ 4 child profiles', '✓ Priority support', '✓ Beta features access', '✓ Non-watermarked PDFs'],
+        highlight: ['✓ 4 child profiles', '✓ Unlimited stories', '✓ 50 narrations per month']
+      },
+      'family-plus': null,
+      'family': null
+    };
+    return tierProgression[currentTier] || tierProgression['reader-free'];
+  };
   
   // Theme colors are now consistent - reading level only affects content
   // The reading level dropdown still controls which themes are available
@@ -230,11 +271,21 @@ function App() {
         }
       }
     }
-  }, []);
+  }, [user]); // Add user as dependency so it updates when auth state changes
 
   const checkUser = async () => {
     try {
-      // Check for mock user in localStorage (for testing)
+      // First check if we have a user from the auth hook
+      if (user) {
+        // User is already authenticated via useEnhancedAuth hook
+        const tier = user.tier || 'reader-free';
+        setSubscriptionTier(tier);
+        const limits = getTierLimits(tier, user);
+        setStoriesRemaining(limits.dailyStories);
+        return;
+      }
+      
+      // Check for mock user in localStorage (for testing only)
       const mockUser = localStorage.getItem('mockUser');
       if (mockUser) {
         const userData = JSON.parse(mockUser);
@@ -257,7 +308,8 @@ function App() {
           localStorage.setItem('mockUser', JSON.stringify(userData));
         }
         
-        setUser(userData);
+        // For mock users, we'll manually update subscription tier
+        // but not override the auth hook's user state
         const tier = userData.tier || 'reader-free';
         setSubscriptionTier(tier);
         const limits = getTierLimits(tier, userData);
@@ -265,14 +317,16 @@ function App() {
         return;
       }
 
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUser(user);
-        // Check subscription status
+      // User from auth hook will handle real authentication
+      // Check subscription status if we have an authenticated user
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (authUser) {
+        // Don't call setUser here - let the auth hook manage it
+        // Just check subscription status
         const { data: profile } = await supabase
           .from('profiles')
           .select('subscription_tier, daily_stories_count')
-          .eq('id', user.id)
+          .eq('id', authUser.id)
           .single();
         
         if (profile) {
@@ -417,7 +471,7 @@ function App() {
   const handleLogout = async () => {
     localStorage.removeItem('mockUser');
     await supabase.auth.signOut();
-    setUser(null);
+    // The useEnhancedAuth hook will handle user state update
     setSubscriptionTier('free');
     setStoriesRemaining(1);
     setSelectedChildProfile(null);
@@ -789,7 +843,7 @@ function App() {
           setShowLibrary(true);
         }}
         onShowAuth={() => {
-          setShowAuth(true);
+          openAuthModal();
         }}
         onSave={() => {
           console.log('Story saved');
@@ -817,7 +871,26 @@ function App() {
                 KidsStoryTime<span className="logo-domain">.ai</span>
               </div>
             </div>
-            {user && (
+            {/* Show login button if no user, otherwise show user menu */}
+            {!user ? (
+              <button 
+                className="header-btn login-btn"
+                onClick={openAuthModal}
+                style={{
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Sign In
+              </button>
+            ) : (
               <div className="header-right" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 {/* Bedtime Mode Toggle */}
                 <button
@@ -847,12 +920,18 @@ function App() {
                 <div className="user-menu-container" style={{ position: 'relative' }}>
                   <button 
                     className="header-btn user-profile-btn"
-                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowUserMenu(!showUserMenu);
+                      console.log('Profile clicked, showUserMenu:', !showUserMenu);
+                    }}
                     title="Account menu"
                     style={{
-                      background: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
+                      background: showUserMenu 
+                        ? 'linear-gradient(135deg, #7c3aed 0%, #9333ea 100%)'
+                        : 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
                       color: 'white',
-                      border: 'none',
+                      border: showUserMenu ? '2px solid #9333ea' : 'none',
                       padding: '6px 10px',
                       display: 'flex',
                       alignItems: 'center',
@@ -862,7 +941,9 @@ function App() {
                       width: '36px',
                       height: '36px',
                       transition: 'all 0.3s ease',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      transform: showUserMenu ? 'scale(1.1)' : 'scale(1)',
+                      boxShadow: showUserMenu ? '0 4px 12px rgba(139, 92, 246, 0.4)' : 'none'
                     }}
                   >
                     👤
@@ -877,8 +958,9 @@ function App() {
                       borderRadius: '12px',
                       boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
                       minWidth: '220px',
-                      zIndex: 1000,
-                      overflow: 'hidden'
+                      zIndex: 10000,
+                      overflow: 'hidden',
+                      animation: 'slideDown 0.2s ease-out'
                     }}>
                       <button 
                         onClick={() => { setShowDashboard(true); setShowUserMenu(false); }}
@@ -1091,7 +1173,7 @@ function App() {
                   {(subscriptionTier === 'reader-free' || subscriptionTier === 'story-maker-basic') && storiesRemaining <= 1 && (
                     <button 
                       className="header-btn trial-btn"
-                      onClick={() => setShowAuth(true)}
+                      onClick={() => openAuthModal()}
                     >
                       ⭐ Upgrade to Story Maker
                       <div className="trial-tooltip">
@@ -1105,7 +1187,7 @@ function App() {
                   {/* Show gamification elements for non-logged-in users (at 0) */}
                   <button 
                     className="header-btn"
-                    onClick={() => setShowAuth(true)}
+                    onClick={() => openAuthModal()}
                     title="Create an account to start earning stars!"
                     style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600', opacity: 0.7}}
                   >
@@ -1115,7 +1197,7 @@ function App() {
                   
                   <button 
                     className="header-btn"
-                    onClick={() => setShowAuth(true)}
+                    onClick={() => openAuthModal()}
                     title="Sign up to unlock badges!"
                     style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600', opacity: 0.7}}
                   >
@@ -1138,13 +1220,13 @@ function App() {
             <div className="account-buttons">
               <button 
                 className="account-btn signup-btn"
-                onClick={() => setShowAuth(true)}
+                onClick={() => openAuthModal()}
               >
                 Create Free Account
               </button>
               <button 
                 className="account-btn login-btn"
-                onClick={() => setShowAuth(true)}
+                onClick={() => openAuthModal()}
               >
                 Login
               </button>
@@ -1432,7 +1514,10 @@ function App() {
         </div>
 
         {/* Upgrade Section - Separate Box */}
-        {(!user || (subscriptionTier !== 'family-plus' && subscriptionTier !== 'family')) && (
+        {/* Show upgrade section only if there's a next tier available */}
+        {(() => {
+          const nextTier = getNextUpgradeTier(subscriptionTier);
+          return (!user || nextTier) && (
           <div className="main-content" style={{
             marginTop: '20px',
             padding: window.innerWidth <= 480 ? '16px' : window.innerWidth <= 768 ? '20px' : '24px',
@@ -1450,14 +1535,14 @@ function App() {
                 marginBottom: '16px',
                 color: '#333'
               }}>
-                {!user ? '🎉 Create Your Free Account' : '🌈 Upgrade to Family Plan'}
+                {!user ? '🎉 Create Your Free Account' : `🌟 Upgrade to ${nextTier?.name || 'Premium'}`}
               </h3>
               
               {!user ? (
                 <>
                   <button
                     type="button"
-                    onClick={() => setShowAuth(true)}
+                    onClick={() => openAuthModal()}
                     style={{
                       width: '100%',
                       maxWidth: '400px',
@@ -1491,7 +1576,7 @@ function App() {
                     </ul>
                   </div>
                 </>
-              ) : (
+              ) : nextTier ? (
                 <>
                   <p style={{ 
                     fontSize: '14px', 
@@ -1500,7 +1585,7 @@ function App() {
                     fontWeight: '600',
                     marginBottom: '15px'
                   }}>
-                    🎁 Perfect for families
+                    🎁 {nextTier.price} - Next level benefits
                   </p>
                   
                   <ul style={{ 
@@ -1511,40 +1596,22 @@ function App() {
                     lineHeight: '2',
                     marginBottom: '20px'
                   }}>
-                    <li>✓ 20 stories per day</li>
-                    <li>
-                      <span style={{ 
-                        backgroundColor: '#fef3c7', 
-                        padding: '3px 8px', 
-                        borderRadius: '4px',
-                        fontWeight: 'bold'
-                      }}>
-                        ✓ 5 child profiles
-                      </span>
-                    </li>
-                    <li>
-                      <span style={{ 
-                        backgroundColor: '#fef3c7', 
-                        padding: '3px 8px', 
-                        borderRadius: '4px',
-                        fontWeight: 'bold'
-                      }}>
-                        ✓ Unlimited AI illustrations*
-                      </span>
-                    </li>
-                    <li>
-                      <span style={{ 
-                        backgroundColor: '#fef3c7', 
-                        padding: '2px 6px',
-                        borderRadius: '4px',
-                        fontWeight: 'bold'
-                      }}>
-                        ✓ 30 Voice Narrations/month
-                      </span>
-                    </li>
-                    <li>✓ Bedtime reminders & streaks</li>
-                    <li>✓ Audio downloads</li>
-                    <li>✓ Non-watermarked PDFs</li>
+                    {nextTier.features.map((feature, index) => (
+                      <li key={index}>
+                        {nextTier.highlight?.includes(feature) ? (
+                          <span style={{ 
+                            backgroundColor: '#fef3c7', 
+                            padding: '3px 8px', 
+                            borderRadius: '4px',
+                            fontWeight: 'bold'
+                          }}>
+                            {feature}
+                          </span>
+                        ) : (
+                          feature
+                        )}
+                      </li>
+                    ))}
                   </ul>
                   
                   <button
@@ -1566,7 +1633,7 @@ function App() {
                     onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
                     onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
                   >
-                    Upgrade to Family Plan
+                    Upgrade to {nextTier.name}
                   </button>
                   
                   <p style={{ 
@@ -1582,10 +1649,29 @@ function App() {
                     </a>
                   </p>
                 </>
+              ) : (
+                /* User is at highest tier - show achievement message */
+                <div style={{ textAlign: 'center' }}>
+                  <p style={{ 
+                    fontSize: '16px', 
+                    color: '#48bb78',
+                    fontWeight: '600',
+                    marginBottom: '10px'
+                  }}>
+                    🏆 You have the ultimate plan!
+                  </p>
+                  <p style={{ 
+                    fontSize: '14px', 
+                    color: '#666'
+                  }}>
+                    Enjoy unlimited stories and all premium features with Family Plus
+                  </p>
+                </div>
               )}
             </div>
           </div>
-        )}
+        );
+        })()}
 
         {/* Footer */}
         <footer className="footer">
@@ -1608,15 +1694,14 @@ function App() {
         onDeactivate={() => setBedtimeModeActive(false)}
       />
 
-      {/* Auth Modal */}
-      {showAuth && (
-        <AuthModal 
-          onClose={() => setShowAuth(false)}
-          onSuccess={(user) => {
-            setUser(user);
-            setShowAuth(false);
+      {/* Authentication Manager - New Enhanced Auth System */}
+      {authModal && (
+        <AuthenticationManager 
+          onAuthSuccess={(user) => {
+            handleAuthSuccess(user);
             checkUser();
           }}
+          onClose={closeAuthModal}
         />
       )}
 
@@ -1921,148 +2006,6 @@ function BedtimeModeModal({ isActive, onClose, onActivate, onDeactivate }) {
   );
 }
 
-// Auth Modal Component
-function AuthModal({ onClose, onSuccess }) {
-  const [isLogin, setIsLogin] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [childName, setChildName] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    try {
-      if (isLogin) {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        onSuccess(data.user);
-      } else {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              child_name: childName,
-            }
-          }
-        });
-        if (error) throw error;
-        onSuccess(data.user);
-      }
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="auth-modal" onClick={onClose}>
-      <div className="auth-content" onClick={(e) => e.stopPropagation()}>
-        <button className="auth-close" onClick={onClose}>×</button>
-        <h2 className="auth-title">{isLogin ? 'Welcome Back!' : 'Create Your Free Account'}</h2>
-        
-        {error && <div className="auth-error">{error}</div>}
-        
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="auth-input"
-          />
-          <input
-            type="password"
-            placeholder="Password (min 6 characters)"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            minLength="6"
-            required
-            className="auth-input"
-          />
-          {!isLogin && (
-            <input
-              type="text"
-              placeholder="Child's name"
-              value={childName}
-              onChange={(e) => setChildName(e.target.value)}
-              required
-              className="auth-input"
-            />
-          )}
-          <button type="submit" className="auth-submit" disabled={loading}>
-            {loading ? 'Please wait...' : (isLogin ? 'Login' : 'Create Account')}
-          </button>
-        </form>
-
-        <div className="auth-switch">
-          {isLogin ? "Don't have an account? " : "Already have an account? "}
-          <button onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? 'Sign up' : 'Login'}
-          </button>
-        </div>
-
-        {/* Quick Test Logins */}
-        <div className="auth-divider">or</div>
-        <div className="test-logins">
-          <button 
-            className="test-login-btn test-free"
-            onClick={() => {
-              const mockUser = {
-                id: 'test-free',
-                email: 'test-free@kidsstorytime.ai',
-                tier: 'reader-free'
-              };
-              localStorage.setItem('mockUser', JSON.stringify(mockUser));
-              onSuccess(mockUser);
-            }}
-            disabled={loading}
-          >
-            Test Free
-          </button>
-          <button 
-            className="test-login-btn test-premium"
-            onClick={() => {
-              const mockUser = {
-                id: 'test-premium',
-                email: 'test-premium@kidsstorytime.ai',
-                tier: 'story-maker-basic'  // Story Maker Basic tier with AI images
-              };
-              localStorage.setItem('mockUser', JSON.stringify(mockUser));
-              onSuccess(mockUser);
-            }}
-            disabled={loading}
-          >
-            Test Premium (Story Maker)
-          </button>
-          <button 
-            className="test-login-btn test-family"
-            onClick={() => {
-              const mockUser = {
-                id: 'test-family',
-                email: 'test-family@kidsstorytime.ai',
-                tier: 'family-plus'
-              };
-              localStorage.setItem('mockUser', JSON.stringify(mockUser));
-              onSuccess(mockUser);
-            }}
-            disabled={loading}
-          >
-            Test Family
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+// Old AuthModal component removed - now using AuthenticationManager
 
 export default App;
