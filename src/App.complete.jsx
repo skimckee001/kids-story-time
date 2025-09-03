@@ -15,6 +15,7 @@ import StripeTestComponent from './components/StripeTestComponent';
 import CommunityAchievements from './components/CommunityAchievements';
 import ReferralProgram from './components/ReferralProgram';
 import UserGeneratedContent from './components/UserGeneratedContent';
+import DevTestPanel from './components/DevTestPanel';
 import { getTierLimits, canGenerateStory, canUseAIIllustration, getUpgradeMessage } from './utils/subscriptionTiers';
 import AuthenticationManager from './components/AuthenticationManager';
 import { useEnhancedAuth } from './hooks/useEnhancedAuth.jsx';
@@ -2371,6 +2372,12 @@ function BedtimeModeModal({ isActive, onClose, onActivate, onDeactivate }) {
           <li>Dimmed interface</li>
         </ul>
       </div>
+      
+      {/* Developer Test Panel - Only shows in development */}
+      <DevTestPanel 
+        currentTier={subscriptionTier}
+        onTierChange={(tier) => setSubscriptionTier(tier)}
+      />
     </div>
   );
 }
