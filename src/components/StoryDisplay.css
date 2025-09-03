@@ -407,32 +407,39 @@ html {
 }
 
 .story-card {
-  background: var(--card);
+  background: #ffffff !important;
   border-radius: var(--radius);
   padding: clamp(30px, 5vw, 50px);
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
   overflow: visible;
-  transition: none;
+  transition: none !important;
+  transform: none !important;
+  will-change: auto !important;
 }
 
 /* Remove ALL hover transforms */
-.story-card:hover {
-  transform: none;
+.story-card:hover,
+.story-card:focus,
+.story-card:active {
+  transform: none !important;
+  box-shadow: var(--shadow) !important;
+  background: #ffffff !important;
+  transition: none !important;
 }
 
 .story-title {
-  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-size: clamp(3.5rem, 8vw, 6rem) !important;
   color: var(--ink);
   text-align: center;
-  margin: 0 0 30px;
+  margin: 0 0 40px;
   padding-top: 2px;
   font-weight: 700;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  line-height: 1.25;
+  line-height: 1.2;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   overflow: visible;
@@ -573,13 +580,13 @@ html {
 .star-rating {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
+  gap: 10px;
+  margin-top: 20px;
   padding: 10px;
 }
 
 .star {
-  font-size: 5rem;
+  font-size: 4rem;
   cursor: pointer;
   filter: grayscale(100%);
   transition: filter 0.3s ease;
@@ -589,11 +596,18 @@ html {
 
 .star:hover {
   filter: grayscale(0%);
-  transform: none;
+  transform: scale(1.1);
 }
 
 .star.active {
   filter: grayscale(0%);
+  animation: sparkle 0.5s ease;
+}
+
+@keyframes sparkle {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.2) rotate(180deg); }
+  100% { transform: scale(1) rotate(360deg); }
 }
 
 /* =========================
@@ -1001,15 +1015,15 @@ html {
   }
 
   .story-title {
-    font-size: 3.5rem;
+    font-size: 4rem !important;
   }
   
   .star-rating {
-    gap: 10px;
+    gap: 8px;
   }
   
   .star {
-    font-size: 4rem;
+    font-size: 3.5rem;
   }
 
   .story-text {
@@ -1062,11 +1076,11 @@ html {
   }
 
   .story-title {
-    font-size: 3rem;
+    font-size: 3.5rem !important;
   }
   
   .star {
-    font-size: 3.5rem;
+    font-size: 3rem;
   }
 
   .story-text {
