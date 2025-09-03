@@ -1402,9 +1402,16 @@ function App() {
           
           <form onSubmit={handleGenerateStory}>
             {/* STEP 1: Who is this story for? */}
-            <div className="story-step" id="step1">
+            <div className="story-step" id="step1" style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+              marginBottom: '16px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}>
               <div style={{ padding: window.innerWidth <= 480 ? '16px' : '20px' }}>
-                <header className="step-header">
+                <header className="step-header" style={{marginBottom: '12px'}}>
                   <span style={{fontSize: '24px'}}>👤</span>
                   <h3 className="step-title">
                     <span className="eyebrow">Step 1</span>
@@ -1505,9 +1512,16 @@ function App() {
                     style={{
                       margin: 0, 
                       cursor: 'pointer',
-                      width: '16px',
-                      height: '16px',
-                      accentColor: '#667eea'
+                      width: '18px',
+                      height: '18px',
+                      accentColor: '#667eea',
+                      WebkitAppearance: 'none',
+                      appearance: 'none',
+                      backgroundColor: includeNameInStory ? '#667eea' : 'white',
+                      border: '2px solid #667eea',
+                      borderRadius: '4px',
+                      position: 'relative',
+                      flexShrink: 0
                     }}
                   />
                   Include name as main character
@@ -1544,9 +1558,16 @@ function App() {
             </div>
 
             {/* STEP 2: What's the story about? */}
-            <div className="story-step" id="step2">
+            <div className="story-step" id="step2" style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+              marginBottom: '16px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}>
               <div style={{ padding: window.innerWidth <= 480 ? '16px' : '20px' }}>
-                <header className="step-header">
+                <header className="step-header" style={{marginBottom: '12px'}}>
                   <span style={{fontSize: '24px'}}>✨</span>
                   <h3 className="step-title">
                     <span className="eyebrow">Step 2</span>
@@ -1650,9 +1671,16 @@ function App() {
             </div>
 
             {/* STEP 3: Choose your style */}
-            <div className="story-step" id="step3">
+            <div className="story-step" id="step3" style={{
+              backgroundColor: 'white',
+              borderRadius: '12px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+              marginBottom: '16px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}>
               <div style={{ padding: window.innerWidth <= 480 ? '16px' : '20px' }}>
-                <header className="step-header">
+                <header className="step-header" style={{marginBottom: '12px'}}>
                   <span style={{fontSize: '24px'}}>🎨</span>
                   <h3 className="step-title">
                     <span className="eyebrow">Step 3</span>
@@ -1661,14 +1689,14 @@ function App() {
                 </header>
               
               <div style={{
-                display: 'grid',
-                gridTemplateColumns: window.innerWidth <= 768 ? '1fr' : '1fr 1fr',
+                display: 'flex',
+                flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
                 gap: '16px',
-                alignItems: 'start'
+                alignItems: 'flex-start'
               }}>
                 {/* Story Length */}
-                <div className="form-group" style={{marginBottom: 0, display: 'flex', flexDirection: 'column'}}>
-                  <label htmlFor="storyLength" style={{marginBottom: '8px'}}>
+                <div className="form-group" style={{marginBottom: 0, display: 'flex', flexDirection: 'column', flex: '1 1 0', minWidth: 0}}>
+                  <label htmlFor="storyLength" style={{marginBottom: '8px', display: 'block'}}>
                     <span style={{fontSize: '20px', marginRight: '8px'}}>⏱️</span>
                     Story Length
                   </label>
@@ -1684,7 +1712,8 @@ function App() {
                       border: '2px solid #e2e8f0',
                       borderRadius: '8px',
                       fontSize: '14px',
-                      background: 'white'
+                      background: 'white',
+                      height: '42px'
                     }}
                   >
                     {STORY_LENGTHS.map(length => (
@@ -1696,8 +1725,8 @@ function App() {
                 </div>
                 
                 {/* Illustration Style */}
-                <div className="form-group" style={{marginBottom: 0, display: 'flex', flexDirection: 'column'}}>
-                  <label htmlFor="imageStyle" style={{marginBottom: '8px'}}>
+                <div className="form-group" style={{marginBottom: 0, display: 'flex', flexDirection: 'column', flex: '1 1 0', minWidth: 0}}>
+                  <label htmlFor="imageStyle" style={{marginBottom: '8px', display: 'block'}}>
                     <span style={{fontSize: '20px', marginRight: '8px'}}>🎭</span>
                     Illustration Style
                   </label>
@@ -1712,7 +1741,8 @@ function App() {
                       border: '2px solid #e2e8f0',
                       borderRadius: '8px',
                       fontSize: '14px',
-                      background: 'white'
+                      background: 'white',
+                      height: '42px'
                     }}
                   >
                     {getImageStyles().map(style => (
