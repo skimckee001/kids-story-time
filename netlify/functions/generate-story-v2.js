@@ -271,15 +271,16 @@ export async function handler(event) {
     const ageBand = getAgeBand(childAge);
     
     // Ensure storyLength is valid, default to medium if not
-    if (!storygenConfig.lengths[storyLength]) {
-      console.warn(`Invalid story length '${storyLength}', defaulting to 'medium'`);
-      storyLength = 'medium';
+    let validatedLength = storyLength;
+    if (!storygenConfig.lengths[validatedLength]) {
+      console.warn(`Invalid story length '${validatedLength}', defaulting to 'medium'`);
+      validatedLength = 'medium';
     }
     
-    const targetWords = storygenConfig.lengths[storyLength].words;
+    const targetWords = storygenConfig.lengths[validatedLength].words;
     const tolerance = storygenConfig.tolerance.target;
     
-    console.log(`Target word count for '${storyLength}': ${targetWords} words`);
+    console.log(`Target word count for '${validatedLength}': ${targetWords} words`);
 
     // Track metrics
     const metrics = {
@@ -343,10 +344,10 @@ export async function handler(event) {
         { role: 'user', content: draftPrompt }
       ],
       temperature: storygenConfig.api.temperature.draft,
-      max_tokens: maxTokensForLength[storyLength] || storygenConfig.api.maxTokens.draft,
+      max_tokens: maxTokensForLength[validatedLength] || storygenConfig.api.maxTokens.draft,
     });
     
-    console.log(`Draft generation using ${maxTokensForLength[storyLength]} max tokens for ${storyLength} story`);
+    console.log(`Draft generation using ${maxTokensForLength[validatedLength]} max tokens for ${validatedLength} story`);
 
     let storyText = draftResponse.choices[0].message.content;
     let wordCount = countWords(storyText);
