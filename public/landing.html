@@ -915,8 +915,13 @@
         /* Founder Story Responsive */
         @media (max-width: 768px) {
             .founder-story > div > div:last-child {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
                 gap: 30px;
+            }
+            
+            /* Image should be on top on mobile */
+            .founder-story > div > div:last-child > div:first-child {
+                order: -1;
             }
         }
 
