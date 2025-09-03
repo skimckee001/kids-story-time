@@ -90,8 +90,8 @@ const storygenConfig = {
     },
     maxTokens: {
       plan: 500,
-      draft: 3000,
-      fix: 1000
+      draft: 4000,  // Increased to handle 2000-word stories
+      fix: 2000     // Increased for fixing longer stories
     }
   },
   
@@ -171,18 +171,29 @@ Return JSON with:
 function getDraftPrompt(plan, age, targetWords) {
   const band = getAgeBand(age);
   
-  return `Write a ${targetWords}-word story based on this plan:
+  // Calculate approximate words per paragraph for guidance
+  const paragraphCount = plan.paragraphCount || Math.ceil(targetWords / 125);
+  const wordsPerParagraph = Math.floor(targetWords / paragraphCount);
+  
+  return `Write a story that is EXACTLY ${targetWords} words long.
+
+Plan to follow:
 ${JSON.stringify(plan, null, 2)}
 
-Age: ${age} (${band})
+Requirements:
+- Age: ${age} years old (${band} level)
+- EXACT word count: ${targetWords} words (CRITICAL - count as you write!)
+- Paragraphs: ${paragraphCount} (approximately ${wordsPerParagraph} words each)
+- Vocabulary: Age-appropriate for ${age}-year-old
+- Structure: Include all plot beats from the plan
 
-CRITICAL: Must be EXACTLY ${targetWords} words.
-- Use age-appropriate vocabulary
-- Write ${plan.paragraphCount || 8} paragraphs
-- Each paragraph 2-5 sentences
-- Include all plot beats
+IMPORTANT: You MUST reach exactly ${targetWords} words. Current GPT models tend to write too short, so make sure to:
+1. Add descriptive details
+2. Include character thoughts and feelings  
+3. Expand on actions and settings
+4. Count words as you write to ensure you reach ${targetWords}
 
-Write ONLY the story text, no titles or notes.`;
+Write ONLY the story text with paragraphs separated by blank lines. No titles, no notes, no word count.`;
 }
 
 // Generate fix length prompt
@@ -251,13 +262,24 @@ export async function handler(event) {
     console.log('Starting V2 story generation:', {
       age: childAge,
       length: storyLength,
-      interests
+      interests,
+      availableLengths: Object.keys(storygenConfig.lengths),
+      requestedLength: storyLength
     });
 
     // Get configuration for this age
     const ageBand = getAgeBand(childAge);
+    
+    // Ensure storyLength is valid, default to medium if not
+    if (!storygenConfig.lengths[storyLength]) {
+      console.warn(`Invalid story length '${storyLength}', defaulting to 'medium'`);
+      storyLength = 'medium';
+    }
+    
     const targetWords = storygenConfig.lengths[storyLength].words;
     const tolerance = storygenConfig.tolerance.target;
+    
+    console.log(`Target word count for '${storyLength}': ${targetWords} words`);
 
     // Track metrics
     const metrics = {
@@ -305,15 +327,26 @@ export async function handler(event) {
     metrics.modelsUsed.push(draftModel);
     
     const draftPrompt = getDraftPrompt(plan, childAge, targetWords);
+    
+    // Use higher max_tokens for longer stories
+    const maxTokensForLength = {
+      'short': 700,     // ~350 words needs ~500 tokens + buffer
+      'medium': 1500,   // ~900 words needs ~1200 tokens + buffer
+      'long': 2200,     // ~1400 words needs ~1900 tokens + buffer  
+      'extended': 3500  // ~2000 words needs ~2700 tokens + buffer
+    };
+    
     const draftResponse = await openai.chat.completions.create({
       model: draftModel,
       messages: [
-        { role: 'system', content: 'You are an expert children\'s story writer.' },
+        { role: 'system', content: 'You are an expert children\'s story writer who always writes stories of the exact requested length.' },
         { role: 'user', content: draftPrompt }
       ],
       temperature: storygenConfig.api.temperature.draft,
-      max_tokens: storygenConfig.api.maxTokens.draft,
+      max_tokens: maxTokensForLength[storyLength] || storygenConfig.api.maxTokens.draft,
     });
+    
+    console.log(`Draft generation using ${maxTokensForLength[storyLength]} max tokens for ${storyLength} story`);
 
     let storyText = draftResponse.choices[0].message.content;
     let wordCount = countWords(storyText);
