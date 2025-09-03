@@ -162,7 +162,15 @@ git diff
 # Commit with descriptive message
 git add .
 git commit -m "feat: description of change"
-git push
+
+# IMPORTANT: Always push immediately after committing
+git push origin main
+```
+
+### ⚠️ IMPORTANT GIT RULE
+**ALWAYS push changes immediately after committing.** Never leave commits unpushed. Each commit should be followed by:
+```bash
+git push origin main
 ```
 
 ## Testing Checklist
