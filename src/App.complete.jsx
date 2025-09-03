@@ -1401,24 +1401,15 @@ function App() {
           
           <form onSubmit={handleGenerateStory}>
             {/* STEP 1: Who is this story for? */}
-            <div className="story-step" style={{
-              background: 'white',
-              borderRadius: '12px',
-              padding: window.innerWidth <= 480 ? '16px' : '24px',
-              marginBottom: '20px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
-            }}>
-              <h3 style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                marginBottom: '20px',
-                fontSize: '18px',
-                color: '#333'
-              }}>
-                <span style={{fontSize: '24px'}}>👤</span>
-                Step 1: Who is this story for?
-              </h3>
+            <div className="story-step" id="step1">
+              <div style={{ padding: window.innerWidth <= 480 ? '16px' : '24px' }}>
+                <header className="step-header">
+                  <span style={{fontSize: '24px'}}>👤</span>
+                  <h3 className="step-title">
+                    <span className="eyebrow">Step 1</span>
+                    Who is this for?
+                  </h3>
+                </header>
               
               {/* Child's Name and Gender */}
               <div className="form-group">
@@ -1547,6 +1538,7 @@ function App() {
                   <option value="fluent-reader">Fluent Reader (ages 8–13)</option>
                   <option value="insightful-reader">Insightful Reader (ages 10–16+)</option>
                 </select>
+              </div>
               </div>
             </div>
 
