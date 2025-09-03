@@ -1,0 +1,405 @@
+/* iPhone Responsiveness Optimizations - Touch Targets & Usability */
+/* Following Apple Human Interface Guidelines - Minimum 44x44px touch targets */
+
+/* ============================================
+   1. GLOBAL TOUCH TARGET OPTIMIZATIONS
+   ============================================ */
+
+/* Ensure ALL interactive elements meet 44x44px minimum */
+button,
+a,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.btn,
+.button,
+[role="button"],
+.clickable {
+  min-height: 44px;
+  min-width: 44px;
+  -webkit-tap-highlight-color: rgba(139, 92, 246, 0.2); /* Purple tap highlight */
+}
+
+/* Ensure proper padding for touch targets */
+button,
+.btn,
+.button,
+[role="button"] {
+  padding: 12px 16px;
+  touch-action: manipulation; /* Prevent double-tap zoom */
+}
+
+/* Small buttons need extra padding */
+.btn-sm,
+.button-small {
+  padding: 10px 12px;
+  min-height: 44px;
+}
+
+/* Icon-only buttons */
+.btn-icon,
+.icon-button {
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================
+   2. FORM INPUT OPTIMIZATIONS
+   ============================================ */
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="search"],
+input[type="url"],
+textarea,
+select {
+  min-height: 48px;
+  padding: 12px;
+  font-size: 16px; /* Prevents zoom on focus in iOS */
+  border-radius: 8px;
+  -webkit-appearance: none; /* Remove iOS default styling */
+}
+
+/* Ensure proper spacing between form elements */
+.form-group,
+.input-group {
+  margin-bottom: 20px;
+}
+
+/* Select dropdowns need larger tap areas */
+select {
+  padding-right: 40px; /* Space for dropdown arrow */
+  background-size: 20px;
+  background-position: right 12px center;
+}
+
+/* Checkbox and radio button improvements */
+input[type="checkbox"],
+input[type="radio"] {
+  width: 24px;
+  height: 24px;
+  margin: 10px;
+}
+
+/* Label tap areas for checkboxes/radios */
+label:has(input[type="checkbox"]),
+label:has(input[type="radio"]) {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+/* ============================================
+   3. NAVIGATION TOUCH TARGETS
+   ============================================ */
+
+/* Navigation menu items */
+.nav-item,
+.menu-item,
+nav a,
+nav button {
+  min-height: 44px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+}
+
+/* Mobile hamburger menu */
+.hamburger-menu,
+.menu-toggle {
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+}
+
+/* Dropdown menu items */
+.dropdown-item,
+.dropdown-menu a,
+.dropdown-menu button {
+  min-height: 44px;
+  padding: 12px 20px;
+}
+
+/* Close buttons */
+.close-button,
+.btn-close,
+[aria-label="Close"] {
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+}
+
+/* ============================================
+   4. CARD AND LIST TOUCH TARGETS
+   ============================================ */
+
+/* Story cards and interactive cards */
+.story-card,
+.card-clickable,
+.list-item-clickable {
+  min-height: 60px;
+  padding: 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(139, 92, 246, 0.1);
+}
+
+/* FAQ accordion toggles */
+.accordion-toggle,
+.faq-question,
+.collapsible-header {
+  min-height: 48px;
+  padding: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ============================================
+   5. VISUAL FEEDBACK FOR TOUCH
+   ============================================ */
+
+/* Active states for better touch feedback */
+button:active,
+.btn:active,
+a:active,
+[role="button"]:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+  transition: all 0.1s ease;
+}
+
+/* Hover effects adapted for touch */
+@media (hover: none) and (pointer: coarse) {
+  button:active,
+  .btn:active {
+    background-color: rgba(139, 92, 246, 0.1);
+  }
+}
+
+/* ============================================
+   6. TEXT READABILITY
+   ============================================ */
+
+/* Base font size for readability */
+body {
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+}
+
+/* Minimum font sizes for different elements */
+p, li, td {
+  font-size: max(16px, 1rem);
+}
+
+h1 { font-size: max(32px, 2rem); }
+h2 { font-size: max(28px, 1.75rem); }
+h3 { font-size: max(24px, 1.5rem); }
+h4 { font-size: max(20px, 1.25rem); }
+h5 { font-size: max(18px, 1.125rem); }
+h6 { font-size: max(16px, 1rem); }
+
+/* Support for iOS Dynamic Type */
+@supports (font: -apple-system-body) {
+  body {
+    font: -apple-system-body;
+  }
+}
+
+/* ============================================
+   7. iOS-SPECIFIC FIXES
+   ============================================ */
+
+/* Smooth scrolling for iOS */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix sticky elements */
+.sticky,
+[position="sticky"] {
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 10;
+}
+
+/* Prevent callout on long press */
+* {
+  -webkit-touch-callout: none;
+}
+
+/* Allow text selection where needed */
+.selectable,
+p,
+span,
+.story-content {
+  -webkit-touch-callout: default;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Fix viewport issues */
+@viewport {
+  width: device-width;
+  zoom: 1.0;
+}
+
+/* ============================================
+   8. SPACING FOR THUMB REACH
+   ============================================ */
+
+/* Bottom navigation spacing for thumb reach */
+.bottom-nav,
+.tab-bar {
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+/* Primary action buttons in thumb zone */
+.primary-action,
+.cta-button {
+  position: fixed;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}
+
+/* ============================================
+   9. RESPONSIVE BREAKPOINTS FOR iPHONE
+   ============================================ */
+
+/* iPhone SE (375px) */
+@media only screen and (max-width: 375px) {
+  .container {
+    padding: 15px;
+  }
+  
+  button,
+  .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+/* iPhone 12 Mini (360px width in points) */
+@media only screen and (max-width: 390px) {
+  .header {
+    padding: 12px;
+  }
+  
+  .nav-item {
+    padding: 10px 12px;
+  }
+}
+
+/* iPhone 14 Pro (393px) */
+@media only screen and (max-width: 393px) {
+  .story-card {
+    padding: 12px;
+  }
+}
+
+/* iPhone 14 Pro Max (430px) */
+@media only screen and (max-width: 430px) {
+  .content {
+    padding: 16px;
+  }
+}
+
+/* ============================================
+   10. PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Hardware acceleration for smooth scrolling */
+.scrollable {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* ============================================
+   11. LOADING STATE OPTIMIZATIONS
+   ============================================ */
+
+/* Skeleton screens for better perceived performance */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ============================================
+   12. ACCESSIBILITY IMPROVEMENTS
+   ============================================ */
+
+/* Focus styles for keyboard navigation */
+*:focus-visible {
+  outline: 3px solid #8b5cf6;
+  outline-offset: 2px;
+}
+
+/* Skip navigation link */
+.skip-nav {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  padding: 8px;
+  z-index: 100;
+}
+
+.skip-nav:focus {
+  top: 0;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  button,
+  .btn {
+    border: 2px solid currentColor;
+  }
+}
+
+/* ============================================
+   13. LANDSCAPE ORIENTATION FIXES
+   ============================================ */
+
+@media only screen and (orientation: landscape) and (max-height: 500px) {
+  .header {
+    position: relative;
+    padding: 8px;
+  }
+  
+  .hero-section {
+    min-height: auto;
+    padding: 20px;
+  }
+  
+  .modal {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
