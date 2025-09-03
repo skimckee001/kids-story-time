@@ -157,7 +157,7 @@ body {
 .header-btn:hover {
   background: #f8f9ff;
   border-color: #667eea;
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
 }
 
@@ -247,7 +247,7 @@ body {
 }
 
 .library-btn:hover {
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
@@ -343,7 +343,7 @@ body {
 }
 
 .signup-btn:hover {
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
@@ -625,7 +625,7 @@ body {
 
 .voice-btn:hover {
   background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-  transform: scale(1.05);
+  /* transform: scale(1.05); */
 }
 
 .voice-btn.recording {
@@ -768,7 +768,7 @@ body {
 }
 
 .feedback-btn:hover {
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
@@ -828,7 +828,7 @@ body {
 
 .theme-option:hover {
   border-color: #667eea;
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
 }
 
@@ -907,7 +907,7 @@ body {
 }
 
 .generate-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
 }
 
@@ -1053,7 +1053,7 @@ body {
 }
 
 .auth-submit:hover {
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
@@ -1134,7 +1134,7 @@ body {
 }
 
 .test-login-btn:hover {
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   opacity: 0.9;
 }
 
@@ -1188,7 +1188,7 @@ body {
 }
 
 .get-started-btn:hover {
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
 }
 
@@ -1272,7 +1272,7 @@ body {
 }
 
 .star-bank:hover, .star-display.clickable:hover {
-  transform: translateY(-2px) scale(1.02);
+  /* transform: translateY(-2px) scale(1.02); */
   box-shadow: 0 4px 12px rgba(255, 193, 7, 0.5);
   background: linear-gradient(135deg, #ffdb00, #ffc107);
 }
@@ -1317,7 +1317,7 @@ body {
 }
 
 .trophy-room:hover, .achievement-btn:hover {
-  transform: translateY(-2px) scale(1.02);
+  /* transform: translateY(-2px) scale(1.02); */
   box-shadow: 0 4px 12px rgba(155, 89, 182, 0.5);
   background: linear-gradient(135deg, #a569bd, #9b59b6);
 }
