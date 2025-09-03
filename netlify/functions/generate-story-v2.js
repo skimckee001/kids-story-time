@@ -223,6 +223,8 @@ ${text}`;
  * Two-pass generation with quality control
  */
 export async function handler(event) {
+  console.log('Generate-story-v2 function called');
+  
   // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -243,6 +245,7 @@ export async function handler(event) {
   }
 
   try {
+    console.log('Parsing request body...');
     const { 
       childAge, 
       interests, 
