@@ -277,8 +277,10 @@ function AuthenticationManager({ onAuthSuccess, onClose }) {
             {authMode === 'signup' && '✨ Create Your Account'}
             {authMode === 'magic-link' && '🔗 Magic Link Sign In'}
           </h2>
-          <button className="close-btn" onClick={onClose}>×</button>
+          <button className="close-btn" onClick={onClose} aria-label="Close">×</button>
         </div>
+        
+        <div className="auth-body">
 
         {/* Quick Sign In Options (for returning users) */}
         {authMode === 'signin' && showPasswordless && (
@@ -308,25 +310,27 @@ function AuthenticationManager({ onAuthSuccess, onClose }) {
           </div>
         )}
 
-        {/* Social Sign In */}
-        <div className="social-signin">
-          <button 
-            className="social-btn google"
-            onClick={() => handleSocialSignIn('google')}
-            disabled={loading}
-          >
-            <span className="social-icon">🔍</span>
-            Continue with Google
-          </button>
-          <button 
-            className="social-btn apple"
-            onClick={() => handleSocialSignIn('apple')}
-            disabled={loading}
-          >
-            <span className="social-icon">🍎</span>
-            Continue with Apple
-          </button>
-        </div>
+          {/* Social Sign In */}
+          <div className="social-signin">
+            <button 
+              className="social-btn google"
+              onClick={() => handleSocialSignIn('google')}
+              disabled={loading}
+              type="button"
+            >
+              <span className="social-icon">🔍</span>
+              <span><span className="btn-text-prefix">Continue with</span> Google</span>
+            </button>
+            <button 
+              className="social-btn apple"
+              onClick={() => handleSocialSignIn('apple')}
+              disabled={loading}
+              type="button"
+            >
+              <span className="social-icon">🍎</span>
+              <span><span className="btn-text-prefix">Continue with</span> Apple</span>
+            </button>
+          </div>
 
         <div className="divider">
           <span>or</span>
@@ -482,10 +486,11 @@ function AuthenticationManager({ onAuthSuccess, onClose }) {
           )}
         </div>
 
-        {/* Bedtime Mode Tip */}
-        <div className="bedtime-tip">
-          <p>💡 <strong>Pro Tip:</strong> Enable "Remember this device" for quick access during bedtime routines!</p>
-        </div>
+          {/* Bedtime Mode Tip */}
+          <div className="bedtime-tip">
+            <p>💡 <strong>Pro Tip:</strong> Enable "Remember this device" for quick access during bedtime routines!</p>
+          </div>
+        </div> {/* End auth-body */}
       </div>
     </div>
   );
