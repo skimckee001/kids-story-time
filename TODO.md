@@ -98,6 +98,124 @@
 - [x] Added FAQ accordion and final CTA
 - [x] Fixed deployment configuration for /landing.html
 
+## 🚨 URGENT - iPhone Responsiveness Improvements (HIGH PRIORITY)
+
+### Can Be Done Immediately
+
+#### 1. Optimize Touch Targets (HIGH PRIORITY)
+- [ ] Audit all buttons to ensure 44x44px minimum touch targets
+- [ ] Add CSS padding to buttons below 44x44px (`padding: 12px; min-width: 44px; min-height: 44px;`)
+- [ ] Test on iPhone SE 2022 (4.7-inch) for touch accuracy
+- [ ] Fix navigation menu items touch areas
+- [ ] Update FAQ toggle buttons for better touch targets
+
+#### 2. Enhance Text Readability (MEDIUM PRIORITY)
+- [ ] Set base font size to minimum 16px for body text
+- [ ] Use relative units (rem, vw) for all font sizes
+- [ ] Add CSS media queries for Dynamic Type support
+- [ ] Fix text truncation in narrow containers with `text-overflow: ellipsis`
+- [ ] Test readability on Retina displays (iPhone 14 Pro)
+
+#### 3. Optimize Interactive Elements for Touch (HIGH PRIORITY)
+- [ ] Ensure all input fields have min-height: 48px
+- [ ] Add sufficient spacing between form elements
+- [ ] Implement visual feedback for touch interactions (:active states)
+- [ ] Fix form elements to prevent accidental zoom on focus
+- [ ] Update dropdowns with larger tap areas
+
+#### 4. Simplify Mobile Navigation (MEDIUM PRIORITY)
+- [ ] Implement sticky hamburger menu with `position: sticky`
+- [ ] Limit top-level menu items to 5-7 items
+- [ ] Ensure menu fonts are at least 16px
+- [ ] Test navigation on iPhone 12 Mini for one-handed operation
+- [ ] Add high-contrast colors (WCAG 2.1 AA compliance)
+
+#### 5. Fix iOS-Specific CSS Issues (HIGH PRIORITY)
+- [ ] Add -webkit- prefixes for Safari compatibility
+- [ ] Fix sticky element quirks with `-webkit-overflow-scrolling: touch`
+- [ ] Resolve viewport scaling issues
+- [ ] Test and fix border-radius rendering (already partially done)
+- [ ] Ensure smooth scrolling works properly
+
+### Needs Backend/Infrastructure Work
+
+#### Performance Optimizations (HIGH PRIORITY)
+- [ ] **Image Optimization**:
+  - [ ] Convert images to WebP/AVIF formats
+  - [ ] Implement responsive images with srcset
+  - [ ] Set up image CDN for optimization
+- [ ] **Asset Optimization**:
+  - [ ] Minify CSS, JS, HTML with build tools
+  - [ ] Implement service workers for caching
+  - [ ] Enable lazy loading for images
+- [ ] **Performance Goals**:
+  - [ ] Achieve First Contentful Paint < 2 seconds
+  - [ ] Test on iPhone XR with Lighthouse
+
+#### Enhance Accessibility for iOS (MEDIUM PRIORITY)
+- [ ] Add ARIA attributes for VoiceOver support
+- [ ] Add descriptive alt text for all images
+- [ ] Test with VoiceOver on iOS 18
+- [ ] Verify WCAG 2.1 contrast requirements
+- [ ] Support iOS Dynamic Type fully
+
+#### Media Optimization (MEDIUM PRIORITY)
+- [ ] Compress audio files to under 5MB
+- [ ] Plan adaptive streaming (HLS) for future video content
+- [ ] Test media playback on iPhone Safari
+- [ ] Implement responsive image serving
+
+#### Offline Mode Enhancement (MEDIUM PRIORITY)
+- [ ] Implement service worker for offline access
+- [ ] Add "Download for Offline" button with progress bar
+- [ ] Cache story PDFs and audio files
+- [ ] Test offline functionality on iPhone Safari
+
+### Needs Design/UX Work
+
+#### Parent Dashboard Mobile Redesign (MEDIUM PRIORITY)
+- [ ] Create single-column layout for mobile
+- [ ] Design collapsible sections/tabs
+- [ ] Prioritize key features for mobile view
+- [ ] Test on iPhone 12 Mini
+
+### Testing & Monitoring Tasks
+
+#### Cross-Device Testing (HIGH PRIORITY)
+- [ ] Test on iPhone SE (2022), 4.7-inch
+- [ ] Test on iPhone 12 Mini, 5.4-inch
+- [ ] Test on iPhone 14 Pro, 6.1-inch
+- [ ] Test on iPhone 16 Pro Max, 6.9-inch
+- [ ] Test with iOS 17 and iOS 18
+- [ ] Test under simulated 4G conditions
+
+#### User Feedback Collection (LOW PRIORITY)
+- [ ] Add mobile feedback form
+- [ ] Monitor social media for mobile issues
+- [ ] Create mobile-specific analytics tracking
+- [ ] Prioritize fixes based on user reports
+
+### Should NOT Be Done / Already Handled
+
+#### Already Completed
+- ✅ Border-radius iOS fixes (done Sept 2)
+- ✅ Mobile padding optimizations (done Sept 2)
+- ✅ Basic responsive design (exists)
+- ✅ Theme button overflow fixes (done Sept 2)
+
+#### Not Applicable Yet
+- ❌ Video Stories optimization (feature doesn't exist yet)
+- ❌ Extensive offline mode (needs PWA infrastructure first)
+- ❌ HLS streaming setup (no video content yet)
+
+### Tasks Requiring External Tools/Services
+
+#### Needs Third-Party Services
+- [ ] BrowserStack subscription for device testing
+- [ ] Image CDN setup (Cloudinary, Imgix, etc.)
+- [ ] Workbox for service worker management
+- [ ] Safari Developer Account for testing
+
 ## 🚨 CRITICAL - NEW PRICING IMPLEMENTATION TASKS (September 2025)
 
 ### Stripe & Payment Infrastructure
