@@ -2136,7 +2136,7 @@ function App() {
       {/* Achievement System Modal */}
       {showAchievements && (
         <AchievementSystem
-          childProfile={selectedChildProfile}
+          childProfile={selectedChildProfile || { id: 'guest', name: 'Guest' }}
           onClose={() => setShowAchievements(false)}
         />
       )}
@@ -2152,7 +2152,7 @@ function App() {
               ×
             </button>
             <StarRewardsSystem
-              childProfile={selectedChildProfile}
+              childProfile={selectedChildProfile || { id: 'guest', name: 'Guest' }}
               stars={starPoints}
               setStars={setStarPoints}
               onClose={() => setShowRewards(false)}
