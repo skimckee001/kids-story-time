@@ -93,13 +93,13 @@ function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth,
             </>
           ) : (
             <>
-              <div className="star-display" title="Create an account to start earning stars!" style={{ cursor: 'help' }}>
+              <div className="star-display clickable" onClick={onShowRewards || (() => alert('Sign up to start collecting rewards!'))} style={{ cursor: 'pointer' }}>
                 <span className="star-icon">⭐</span>
-                <span className="star-count">0</span>
+                <span className="star-count">{starPoints || 0}</span>
               </div>
               <button 
                 className="header-btn"
-                onClick={onShowAuth}
+                onClick={onShowAchievements || (() => alert('Sign up to track your achievements!'))}
                 title="Sign up to unlock achievements"
                 style={{background: 'linear-gradient(135deg, #ffd700, #ffa500)', color: 'white', border: 'none', flex: '0 0 auto'}}
               >
@@ -107,7 +107,7 @@ function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth,
               </button>
               <button 
                 className="header-btn"
-                onClick={onShowAuth}
+                onClick={onShowLibrary || (() => alert('Sign up to save your stories!'))}
                 style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto'}}
               >
                 📚 Library

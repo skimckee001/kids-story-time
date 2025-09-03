@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import AdSense from './AdSense';
 import { addStarsToChild } from './StarRewardsSystem';
 import SocialSharing from './SocialSharing';
+import CelebrationAnimation from './CelebrationAnimation';
 import './StoryDisplay.css';
 import '../App.original.css';
 
@@ -24,8 +25,11 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
   const [storyStartTime, setStoryStartTime] = useState(null);
   const [hasCompletedReading, setHasCompletedReading] = useState(false);
   const [showCompletionReward, setShowCompletionReward] = useState(false);
+  const [celebrationType, setCelebrationType] = useState(null);
+  const [celebrationMessage, setCelebrationMessage] = useState('');
   const [localStarPoints, setLocalStarPoints] = useState(starPoints);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showBadgeNotification, setShowBadgeNotification] = useState(false);
   
   // Click outside handler for dropdown menu
   useEffect(() => {
@@ -595,25 +599,54 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
   };
   
   const handleMarkAsComplete = () => {
-    if (!childProfile?.id || hasCompletedReading) return;
+    if (hasCompletedReading) return;
     
     // Award stars for completing the story
     const starsEarned = 10; // 10 stars for reading completion
-    const newTotal = addStarsToChild(childProfile.id, starsEarned, 'Finished reading a story');
+    
+    // For non-signed-in users, use a default guest profile
+    const profileId = childProfile?.id || 'guest';
+    const newTotal = addStarsToChild(profileId, starsEarned, 'Finished reading a story');
     setLocalStarPoints(newTotal);
+    
+    // Trigger star update in parent component
+    if (onStarsUpdate) {
+      onStarsUpdate(newTotal);
+    }
     
     // Mark as completed for today
     const today = new Date().toDateString();
-    const completedKey = `completed_${childProfile.id}_${story?.id || 'unknown'}_${today}`;
+    const completedKey = `completed_${profileId}_${story?.id || 'unknown'}_${today}`;
     localStorage.setItem(completedKey, 'true');
     setHasCompletedReading(true);
     
-    // Show completion reward animation
+    // Show completion celebration with confetti
+    setCelebrationType('confetti');
+    setCelebrationMessage(`Amazing! You earned ${starsEarned} stars!`);
     setShowCompletionReward(true);
-    setTimeout(() => setShowCompletionReward(false), 3000);
+    
+    // Check if this is their first story (for achievement)
+    const guestAchievements = JSON.parse(localStorage.getItem('guestAchievements') || '{}');
+    if (!guestAchievements.firstStory) {
+      guestAchievements.firstStory = true;
+      localStorage.setItem('guestAchievements', JSON.stringify(guestAchievements));
+      
+      // Show badge notification after confetti
+      setTimeout(() => {
+        setCelebrationType('achievement');
+        setCelebrationMessage('First Story Reader');
+        setShowBadgeNotification(true);
+      }, 5000);
+    }
+    
+    setTimeout(() => {
+      setShowCompletionReward(false);
+      setCelebrationType(null);
+      setShowBadgeNotification(false);
+    }, 8000);
     
     // Update reading streak
-    const streakData = JSON.parse(localStorage.getItem(`readingStreak_${childProfile.id}`) || '{}');
+    const streakData = JSON.parse(localStorage.getItem(`readingStreak_${profileId}`) || '{}');
     const lastRead = streakData.lastRead ? new Date(streakData.lastRead).toDateString() : null;
     const todayStr = new Date().toDateString();
     
@@ -632,17 +665,17 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
       
       streakData.lastRead = new Date().toISOString();
       streakData.longest = Math.max(streakData.longest || 0, streakData.current);
-      localStorage.setItem(`readingStreak_${childProfile.id}`, JSON.stringify(streakData));
+      localStorage.setItem(`readingStreak_${profileId}`, JSON.stringify(streakData));
     }
     
     // Track completion for achievements
-    const completions = JSON.parse(localStorage.getItem(`storyCompletions_${childProfile.id}`) || '[]');
+    const completions = JSON.parse(localStorage.getItem(`storyCompletions_${profileId}`) || '[]');
     completions.push({
       storyId: story?.id,
       title: story?.title,
       completedAt: new Date().toISOString()
     });
-    localStorage.setItem(`storyCompletions_${childProfile.id}`, JSON.stringify(completions));
+    localStorage.setItem(`storyCompletions_${profileId}`, JSON.stringify(completions));
     
     // Check for achievements
     checkReadingAchievements(completions.length);
@@ -1248,26 +1281,20 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
             </div>
           )}
           
-          {/* Completion Reward Animation */}
-          {showCompletionReward && (
-            <div style={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              background: 'white',
-              padding: '30px',
-              borderRadius: '20px',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-              zIndex: 9999,
-              textAlign: 'center',
-              animation: 'bounceIn 0.5s ease'
-            }}>
-              <div style={{ fontSize: '60px', marginBottom: '20px' }}>🌟</div>
-              <h2 style={{ color: '#ffa500', marginBottom: '10px' }}>Great Job!</h2>
-              <p style={{ fontSize: '20px', color: '#333' }}>You earned 10 stars!</p>
-              <p style={{ fontSize: '16px', color: '#666', marginTop: '10px' }}>Keep reading to earn more rewards!</p>
-            </div>
+          {/* Celebration Animation */}
+          {showCompletionReward && celebrationType && (
+            <CelebrationAnimation
+              type={celebrationType}
+              message={celebrationMessage}
+              onComplete={() => {
+                if (celebrationType === 'confetti' && showBadgeNotification) {
+                  // Already handled in handleMarkAsComplete
+                } else {
+                  setShowCompletionReward(false);
+                  setCelebrationType(null);
+                }
+              }}
+            />
           )}
           
           {/* Show completion status if already completed */}

@@ -907,6 +907,7 @@ function App() {
         onShowProfileManager={() => setShowProfileManager(true)}
         bedtimeModeActive={bedtimeModeActive}
         onToggleBedtime={setBedtimeModeActive}
+        onStarsUpdate={(newTotal) => setStarPoints(newTotal)}
         onBack={() => {
           setShowStory(false);
           setCurrentStory(null);
