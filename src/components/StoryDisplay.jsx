@@ -1151,26 +1151,45 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                           </div>
                         ) : subscriptionTier === 'reader-free' || subscriptionTier === 'reader' || subscriptionTier === 'free' || subscriptionTier === 'try-now' || !user ? (
                           // For free tier users, show image with watermark
-                          <div className="story-image-wrapper watermarked">
+                          <div style={{ width: '100%', position: 'relative', backgroundColor: '#f5f5f5', borderRadius: '15px', overflow: 'hidden' }}>
                             {story.imageUrl ? (
-                              <img 
-                                src={story.imageUrl} 
-                                alt={story.title}
-                                className="story-main-image stock-image"
-                                style={{ position: 'relative' }}
-                                onLoad={(e) => {
-                                  console.log('Image loaded successfully:', e.target.src.substring(0, 100));
-                                }}
-                                onError={(e) => {
-                                  console.error('Image failed to load. URL type:', e.target.src.substring(0, 30));
-                                  // If image fails to load, try a fallback
-                                  if (!e.target.dataset.retried) {
-                                    e.target.dataset.retried = 'true';
+                              <>
+                                {console.log('Rendering image with URL:', story.imageUrl.substring(0, 100))}
+                                <img 
+                                  src={story.imageUrl} 
+                                  alt={story.title}
+                                  style={{ 
+                                    width: '100%', 
+                                    height: 'auto', 
+                                    display: 'block',
+                                    minHeight: '200px',
+                                    backgroundColor: '#e0e0e0'
+                                  }}
+                                  onLoad={(e) => {
+                                    console.log('Image loaded successfully');
+                                    e.target.style.backgroundColor = 'transparent';
+                                  }}
+                                  onError={(e) => {
+                                    console.error('Image failed to load');
+                                    // Fallback to placeholder
                                     const seed = Math.floor(Math.random() * 1000);
-                                    e.target.src = `https://picsum.photos/seed/${seed}/1024/1024`;
-                                  }
-                                }}
-                              />
+                                    e.target.src = `https://picsum.photos/seed/${seed}/256/256`;
+                                  }}
+                                />
+                                <div style={{
+                                  position: 'absolute',
+                                  bottom: '10px',
+                                  right: '10px',
+                                  background: 'rgba(255, 255, 255, 0.9)',
+                                  color: '#667eea',
+                                  padding: '6px 12px',
+                                  borderRadius: '8px',
+                                  fontSize: '12px',
+                                  fontWeight: '600',
+                                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                                }}>
+                                  KidsStoryTime.ai
+                                </div>
                             ) : (
                               <div className="story-image-placeholder">
                                 <div className="image-loading">
