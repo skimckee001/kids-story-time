@@ -599,14 +599,16 @@ function App() {
       const storyTitle = data.story?.title || data.title || `${childName}'s Story`;
       
       if (storyContent) {
-        // Check if we have v2 metadata
-        if (data.metadata?.version === 'v2') {
+        // Check if we have v2 metadata (includes v2, v2-fast, v2-simple, etc)
+        if (data.metadata?.version && data.metadata.version.startsWith('v2')) {
           console.log('V2 Story Generated:', {
-            quality: data.metadata.qualityScore,
+            version: data.metadata.version,
+            quality: data.metadata.qualityScore || data.metadata.qualityGrade,
             accuracy: data.metadata.accuracy,
             words: data.metadata.actualWords,
             target: data.metadata.targetWords,
-            ageBand: data.metadata.ageBand
+            ageBand: data.metadata.ageBand,
+            model: data.metadata.model
           });
         }
         
@@ -805,7 +807,7 @@ function App() {
         } else {
           // For free tier users, add a stock image
           console.log('Free tier user, adding stock image');
-          const stockSeed = data.story.title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+          const stockSeed = storyTitle.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
           const stockImageUrl = `https://picsum.photos/seed/${stockSeed}/1024/1024`;
           setCurrentStory(prev => ({
             ...prev,

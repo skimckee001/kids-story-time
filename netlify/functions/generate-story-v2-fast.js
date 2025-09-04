@@ -69,29 +69,34 @@ exports.handler = async (event) => {
     const storyTheme = themes.length > 0 ? themes.join(' and ') : interests;
     
     // Create a focused prompt for exact word count
-    const prompt = `Write a children's story that is EXACTLY ${targetWords} words long.
+    const prompt = `You MUST write exactly ${targetWords} words. This is CRITICAL.
 
+STORY REQUIREMENTS:
 ${characterDesc}.
 Theme: ${storyTheme}
 ${customPrompt ? `Additional details: ${customPrompt}` : ''}
 
-CRITICAL REQUIREMENTS:
-1. The story MUST be EXACTLY ${targetWords} words (count every word!)
-2. Age-appropriate for a ${childAge}-year-old reader
-3. Clear beginning, middle, and end
-4. Engaging and fun to read
-5. Include vivid descriptions to reach the word count
-6. Add character thoughts, feelings, and dialogue
-7. Expand scenes with sensory details
+LENGTH REQUIREMENT - THIS IS MANDATORY:
+Write EXACTLY ${targetWords} words. Not approximately, not "about" - EXACTLY ${targetWords} words.
 
-To ensure you reach ${targetWords} words:
-- Aim for ${Math.floor(targetWords / 100)} paragraphs of about 100 words each
-- Add descriptive language and details
-- Include character interactions and dialogue
-- DO NOT write a short story and then pad it
-- Build a complete narrative that naturally fills ${targetWords} words
+For a ${targetWords}-word story, you need:
+- ${Math.floor(targetWords / 100)} paragraphs of approximately 100 words each
+- If ${targetWords} words feels too long, that's correct - make it that long anyway
+- Add detailed descriptions of settings, characters, actions
+- Include dialogue and character thoughts
+- Expand every scene with sensory details (sights, sounds, smells, feelings)
+- Describe character emotions and reactions in detail
 
-Write ONLY the story text. No title, no word count, no notes.`;
+IMPORTANT: Most AI models write stories that are TOO SHORT. To combat this:
+- After every paragraph, count your words so far
+- If you're behind pace, add more detail to the next paragraph
+- A ${targetWords}-word story should feel substantial and complete
+- This is a ${Math.round(targetWords/150)}-${Math.round(targetWords/100)} minute read-aloud story
+
+Age level: ${childAge} years old
+Style: Engaging, descriptive, age-appropriate
+
+Begin the story now and write EXACTLY ${targetWords} words:`;
 
     console.log(`Calling ${model} for ${targetWords} word story...`);
     
