@@ -779,8 +779,8 @@ function App() {
             },
             body: JSON.stringify({
               prompt: storyImagePrompt,
-              style: imageStyle === 'realistic' ? 'photorealistic' : 'illustration',
-              mood: imageStyle === 'realistic' ? 'natural' : 'cheerful',
+              style: imageStyle || 'cartoon',  // Default to cartoon for free tier
+              mood: 'cheerful',
               tier: apiTier
             })
           })
@@ -788,7 +788,11 @@ function App() {
             if (response.ok) {
               return response.json();
             }
-            throw new Error('Image generation failed');
+            console.error('Image generation failed with status:', response.status);
+            return response.text().then(text => {
+              console.error('Error response:', text);
+              throw new Error(`Image generation failed: ${response.status}`);
+            });
           })
           .then(imageData => {
             console.log('Image generation response:', imageData);
