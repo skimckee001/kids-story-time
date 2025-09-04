@@ -1,135 +1,172 @@
 import { useState } from 'react';
-import { supabase } from '../lib/supabase';
 
-function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth, onLogout, onShowAchievements, onLogoClick, onShowRewards, isLibraryPage = false }) {
-  const [showMoreMenu, setShowMoreMenu] = useState(false);
+function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth, onShowAchievements, onLogoClick, onShowRewards, isLibraryPage = false }) {
   return (
-    <header className="header-container" style={{display: 'flex', flexDirection: 'column', gap: '0'}}>
-      {/* Logo Line */}
-      <div className="header-content" style={{padding: '0', marginBottom: '10px'}}>
-        <div className="header-left" onClick={onLogoClick} style={{ cursor: 'pointer', margin: '0 auto' }}>
-          <div className="logo-icon">
-            <span>📚</span>
+    <>
+      {/* Main header container - matches homepage */}
+      <header className="header-container">
+        <div className="header-content">
+          <div className="header-left" style={{ cursor: 'pointer' }} onClick={onLogoClick}>
+            <div className="logo-icon">
+              <span>📚</span>
+            </div>
+            <div className="logo-text">
+              KidsStoryTime<span className="logo-domain">.ai</span>
+            </div>
           </div>
-          <div className="logo-text">
-            KidsStoryTime<span className="logo-domain">.ai</span>
-          </div>
-        </div>
-      </div>
-      
-      {/* Tagline Line */}
-      <div className="tagline" style={{textAlign: 'center', marginBottom: '10px'}}>Join thousands of families creating magical bedtime moments</div>
-      
-      {/* Launch Special Banner */}
-      <div className="beta-banner" style={{marginBottom: '15px'}}>
-        <div className="beta-title">🎉 LAUNCH SPECIAL - First Month FREE on All Plans!</div>
-        <div className="beta-subtitle">Try our Story Maker or Family plans risk-free for 30 days</div>
-      </div>
-      
-      {/* Navigation Bar */}
-      <div className="header-content" style={{padding: '0'}}>
-        <div className="header-right" style={{width: '100%', justifyContent: 'center', flexWrap: 'wrap', gap: '10px', minHeight: 'auto'}}>
-          {user ? (
-            <>
-              {/* Star Display - Always visible for motivation */}
-              <button 
-                className="star-display clickable"
-                onClick={onShowRewards || (() => {})}
-                title="Click to open rewards shop"
-              >
-                <span className="star-icon">⭐</span>
-                <span className="star-count">{starPoints || 0}</span>
-              </button>
-              
-              {/* Primary Gamification Actions */}
-              <button 
-                className="header-btn"
-                onClick={onShowAchievements || (() => {})}
-                title="View achievements"
-                style={{background: 'linear-gradient(135deg, #ffd700, #ffa500)', color: 'white', border: 'none', flex: '0 0 auto'}}
-              >
-                🏆 Achievements
-              </button>
-              
-              <button 
-                className="header-btn"
-                onClick={isLibraryPage ? () => window.open('/pricing-new.html', '_blank') : onShowLibrary}
-                style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto'}}
-              >
-                {isLibraryPage ? '💎 Plans' : '📚 Library'}
-              </button>
-              
-              {/* More Menu Dropdown */}
-              <div className="more-menu-container">
-                <button 
-                  className="header-btn more-btn"
-                  onClick={() => setShowMoreMenu(!showMoreMenu)}
-                >
-                  ⋯ More
-                </button>
-                {showMoreMenu && (
-                  <div className="dropdown-menu">
-                    <button onClick={() => { window.open('/pricing-new.html', '_blank'); setShowMoreMenu(false); }}>
-                      💰 View Plans
-                    </button>
-                    {onLogout && (
-                      <button onClick={() => { onLogout(); setShowMoreMenu(false); }}>
-                        🚪 Logout
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-              {(subscriptionTier === 'reader-free' || subscriptionTier === 'story-maker-basic' || subscriptionTier === 'reader' || subscriptionTier === 'basic') && (
-                <button className="header-btn trial-btn" onClick={onShowAuth}>
-                  ⭐ Upgrade {subscriptionTier === 'reader-free' || subscriptionTier === 'reader' ? 'to Story Maker' : 'to Family'}
-                  <div className="trial-tooltip">
-                    {subscriptionTier === 'reader-free' || subscriptionTier === 'reader' ? 
-                      '10 stories/day + AI images • $4.99/month' : 
-                      '20 stories/day + Unlimited AI • $7.99/month'}
-                  </div>
-                </button>
-              )}
-            </>
+          {/* Show login button if no user */}
+          {!user ? (
+            <button 
+              className="header-btn login-btn"
+              onClick={onShowAuth}
+              style={{
+                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '20px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              Sign In
+            </button>
           ) : (
-            <>
-              <div className="star-display clickable" onClick={onShowRewards || (() => alert('Sign up to start collecting rewards!'))} style={{ cursor: 'pointer' }}>
-                <span className="star-icon">⭐</span>
-                <span className="star-count">{starPoints || 0}</span>
-              </div>
-              <button 
-                className="header-btn"
-                onClick={onShowAchievements || (() => alert('Sign up to track your achievements!'))}
-                title="Sign up to unlock achievements"
-                style={{background: 'linear-gradient(135deg, #ffd700, #ffa500)', color: 'white', border: 'none', flex: '0 0 auto'}}
-              >
-                🏆 Achievements
-              </button>
-              <button 
-                className="header-btn"
-                onClick={onShowLibrary || (() => alert('Sign up to save your stories!'))}
-                style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto'}}
-              >
-                📚 Library
-              </button>
-              <button 
-                className="header-btn"
-                onClick={() => window.open('/pricing-new.html', '_blank')}
-                style={{flex: '0 0 auto'}}
-              >
-                💰 Plans
-              </button>
-              <button className="header-btn trial-btn" onClick={onShowAuth}>
-                ✨ Create Your First Story
-                <div className="trial-tooltip">
-                  Try it free! No signup required
-                </div>
-              </button>
-            </>
+            <button 
+              className="header-btn login-btn"
+              onClick={onShowAuth}
+              style={{
+                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '20px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              Sign In
+            </button>
           )}
         </div>
+      </header>
+
+      {/* Tagline */}
+      <div className="tagline" style={{textAlign: 'center', marginBottom: '20px'}}>
+        Join thousands of families creating magical bedtime moments
       </div>
-    </header>
+
+      {/* Launch Special Banner */}
+      <div className="beta-banner" style={{marginBottom: '20px'}}>
+        <div className="beta-title">🎉 LAUNCH SPECIAL - First Month FREE on All Plans!</div>
+      </div>
+
+      {/* Navigation buttons */}
+      <div className="header-navigation" style={{
+        display: 'flex',
+        justifyContent: 'center',
+        gap: '15px',
+        marginBottom: '30px',
+        flexWrap: 'wrap'
+      }}>
+        {/* Stars button */}
+        <button 
+          className="nav-pill"
+          onClick={onShowRewards}
+          style={{
+            padding: '12px 24px',
+            background: 'linear-gradient(135deg, #ffa500, #ffb347)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '25px',
+            fontSize: '16px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            boxShadow: '0 4px 15px rgba(255, 165, 0, 0.3)',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 6px 20px rgba(255, 165, 0, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = '0 4px 15px rgba(255, 165, 0, 0.3)';
+          }}
+        >
+          ⭐ {starPoints || 0} Stars
+        </button>
+
+        {/* Badges/Achievements button */}
+        <button 
+          className="nav-pill"
+          onClick={onShowAchievements}
+          style={{
+            padding: '12px 24px',
+            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '25px',
+            fontSize: '16px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.3)';
+          }}
+        >
+          🏆 1/48 Badges
+        </button>
+
+        {/* Library/Plans button */}
+        <button 
+          className="nav-pill"
+          onClick={isLibraryPage ? () => window.open('/pricing-new.html', '_blank') : onShowLibrary}
+          style={{
+            padding: '12px 24px',
+            background: 'linear-gradient(135deg, #10b981, #059669)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '25px',
+            fontSize: '16px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            boxShadow: '0 4px 15px rgba(16, 185, 129, 0.3)',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = '0 4px 15px rgba(16, 185, 129, 0.3)';
+          }}
+        >
+          {isLibraryPage ? '💎 Plans' : '📚 Library'}
+        </button>
+      </div>
+    </>
   );
 }
 
