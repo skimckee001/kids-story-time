@@ -802,11 +802,17 @@ function App() {
           })
           .then(imageData => {
             console.log('Image generation response:', imageData);
-            if (imageData.url || (imageData.success && imageData.url)) {
-              const imageUrl = imageData.url;
+            // Check for URL in response (handle both direct URL and success object)
+            const imageUrl = imageData.url || (imageData.success && imageData.url);
+            
+            if (imageUrl) {
               console.log('Setting image URL:', imageUrl);
               // Update the story with the image URL
               setCurrentStory(prev => {
+                if (!prev) {
+                  console.error('No previous story state!');
+                  return prev;
+                }
                 const updatedStory = {
                   ...prev,
                   imageUrl: imageUrl
@@ -818,6 +824,15 @@ function App() {
                 }
                 return updatedStory;
               });
+              
+              // Also try a direct update as a backup
+              setTimeout(() => {
+                setCurrentStory(prev => ({
+                  ...prev,
+                  imageUrl: imageUrl
+                }));
+                console.log('Backup image URL set');
+              }, 100);
             } else {
               console.warn('No URL in image response:', imageData);
             }
