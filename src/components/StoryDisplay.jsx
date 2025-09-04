@@ -1126,7 +1126,31 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                       {paragraph}
                     </p>
                     {/* Show image or upgrade button after first paragraph */}
-                    {index === 0 && (
+                    {index === 0 && story.imageUrl && (
+                      <div style={{
+                        width: '300px',
+                        height: '300px',
+                        float: 'right',
+                        margin: '0 0 20px 20px',
+                        backgroundColor: '#f0f0f0',
+                        borderRadius: '10px',
+                        overflow: 'hidden'
+                      }}>
+                        <img 
+                          src={story.imageUrl}
+                          alt="Story illustration"
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                          }}
+                          onLoad={() => console.log('Image loaded!')}
+                          onError={() => console.log('Image failed to load')}
+                        />
+                      </div>
+                    )}
+                    {/* Original image display logic - temporarily disabled for testing */}
+                    {false && index === 0 && (
                       <div className="story-image-float">
                         {(subscriptionTier === 'plus' || subscriptionTier === 'premium' || subscriptionTier === 'family' || subscriptionTier === 'basic' ||
                           subscriptionTier === 'family-plus' || subscriptionTier === 'story-maker-basic' || subscriptionTier === 'movie-director-premium') ? (

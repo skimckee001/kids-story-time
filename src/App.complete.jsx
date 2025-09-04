@@ -740,19 +740,18 @@ function App() {
         }
         
         // Generate image based on tier limits
-        // Free tier and paid tiers both get AI images now (free tier gets dall-e-2)
-        const canGenerateAI = canUseAIIllustration(subscriptionTier, aiIllustrationsUsed, user) || 
-                              subscriptionTier === 'reader-free' || 
-                              subscriptionTier === 'free' ||
-                              subscriptionTier === 'try-now';
-        console.log('Can generate AI check:', {
-          canGenerateAI,
+        // ALWAYS generate AI images for all tiers - just use different models
+        // Free tier gets dall-e-2 (256x256), paid tiers get dall-e-3 (1024x1024)
+        const alwaysGenerateAI = true; // Force AI generation for ALL tiers
+        
+        console.log('AI Image Generation:', {
           subscriptionTier,
           aiIllustrationsUsed,
           hasUser: !!user,
-          canUseAIResult: canUseAIIllustration(subscriptionTier, aiIllustrationsUsed, user)
+          willGenerate: alwaysGenerateAI
         });
-        if (canGenerateAI) {
+        
+        if (alwaysGenerateAI) {
           console.log('Generating AI illustration for tier:', subscriptionTier);
           // Only count against limit for non-free tiers
           if (subscriptionTier !== 'reader-free' && subscriptionTier !== 'free' && subscriptionTier !== 'try-now') {
