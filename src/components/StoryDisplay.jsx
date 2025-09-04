@@ -1126,6 +1126,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                       {paragraph}
                     </p>
                     {/* Show image or upgrade button after first paragraph */}
+                    {console.log('Image display check:', { index, hasImageUrl: !!story.imageUrl, imageUrl: story.imageUrl?.substring(0, 100) })}
                     {index === 0 && story.imageUrl && (
                       <div style={{
                         width: '300px',
@@ -1134,8 +1135,10 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                         margin: '0 0 20px 20px',
                         backgroundColor: '#f0f0f0',
                         borderRadius: '10px',
-                        overflow: 'hidden'
+                        overflow: 'hidden',
+                        border: '2px solid red' // Add red border to make it visible
                       }}>
+                        <div style={{ padding: '10px', color: 'red' }}>Image Loading...</div>
                         <img 
                           src={story.imageUrl}
                           alt="Story illustration"
