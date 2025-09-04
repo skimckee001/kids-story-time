@@ -8,7 +8,7 @@ import './StoryDisplay.css';
 import '../App.original.css';
 
 function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, subscriptionTier, starPoints, childProfile, onShowAchievements, onShowRewards, onShowDashboard, onShowProfileManager, bedtimeModeActive, onToggleBedtime, onStarsUpdate }) {
-  console.log('StoryDisplay received:', { story, subscriptionTier, hasImageUrl: !!story?.imageUrl });
+  // console.log('StoryDisplay received:', { story, subscriptionTier, hasImageUrl: !!story?.imageUrl });
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [rating, setRating] = useState(0);
