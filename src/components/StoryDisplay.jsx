@@ -1173,32 +1173,6 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
               </div>
             )}
             
-            {/* AdSense Ad - Show after image for free tier users */}
-            {(subscriptionTier === 'try-now' || subscriptionTier === 'reader-free' || subscriptionTier === 'reader' || subscriptionTier === 'free' || !user) && (
-              <div className="ad-container" style={{ 
-                margin: '20px 0', 
-                padding: '15px',
-                background: '#f8f8f8',
-                border: '1px solid #e0e0e0',
-                borderRadius: '10px'
-              }}>
-                <div className="ad-label" style={{ 
-                  fontSize: '11px', 
-                  color: '#999', 
-                  marginBottom: '10px',
-                  textAlign: 'center',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px'
-                }}>Advertisement</div>
-                <AdSenseDebug 
-                  adClient="ca-pub-1413183979906947"
-                  adSlot="1977532623"
-                  adFormat="auto"
-                  style={{ width: '100%', minHeight: '90px', maxHeight: '250px' }}
-                />
-              </div>
-            )}
-            
             {/* Story Text */}
             <div className="story-text">
               {story.content.split('\n\n').map((paragraph, index, array) => {
@@ -1301,6 +1275,41 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
               })}
             </div>
 
+          {/* AdSense Ad - Show after story for free tier users */}
+          {(subscriptionTier === 'try-now' || subscriptionTier === 'reader-free' || subscriptionTier === 'reader' || subscriptionTier === 'free' || !user) && (
+            <div className="ad-container" style={{ 
+              margin: '40px auto', 
+              padding: '20px',
+              background: '#f9f9f9',
+              border: '1px solid #e5e5e5',
+              borderRadius: '12px',
+              maxWidth: '728px',
+              textAlign: 'center'
+            }}>
+              <div className="ad-label" style={{ 
+                fontSize: '11px', 
+                color: '#999', 
+                marginBottom: '12px',
+                textAlign: 'center',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px',
+                fontWeight: '500'
+              }}>Advertisement</div>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '90px'
+              }}>
+                <AdSenseDebug 
+                  adClient="ca-pub-1413183979906947"
+                  adSlot="1977532623"
+                  adFormat="auto"
+                  style={{ display: 'inline-block', width: '100%', maxWidth: '728px', minHeight: '90px' }}
+                />
+              </div>
+            </div>
+          )}
 
           {/* Story Completion Button */}
           {!hasCompletedReading && (

@@ -72,7 +72,7 @@ function AdSenseDebug({ adClient, adSlot, adFormat = 'auto', style = {} }) {
         data-ad-slot={adSlot}
         data-ad-format={adFormat}
         data-full-width-responsive="true"
-        data-ad-test={isDev ? "on" : undefined}
+        {...(isDev ? { 'data-ad-test': 'on' } : {})}
       />
       
       {/* Debug overlay */}
