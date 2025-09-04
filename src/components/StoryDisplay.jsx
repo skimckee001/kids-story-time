@@ -1190,6 +1190,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                                 }}>
                                   KidsStoryTime.ai
                                 </div>
+                              </>
                             ) : (
                               <div className="story-image-placeholder">
                                 <div className="image-loading">
