@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import AdSenseDebug from './AdSenseDebug';
 import { addStarsToChild } from './StarRewardsSystem';
 import SocialSharing from './SocialSharing';
 import CelebrationAnimation from './CelebrationAnimation';
@@ -8,7 +7,6 @@ import './StoryDisplay.css';
 import '../App.original.css';
 
 function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, subscriptionTier, starPoints, childProfile, onShowAchievements, onShowRewards, onShowDashboard, onShowProfileManager, bedtimeModeActive, onToggleBedtime, onStarsUpdate }) {
-  console.log('StoryDisplay received:', { story, subscriptionTier, hasImageUrl: !!story?.imageUrl, imageUrl: story?.imageUrl });
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [rating, setRating] = useState(0);
@@ -30,6 +28,16 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
   const [localStarPoints, setLocalStarPoints] = useState(starPoints);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showBadgeNotification, setShowBadgeNotification] = useState(false);
+  
+  // Log only when inputs actually change
+  useEffect(() => {
+    console.log('StoryDisplay mounted/updated:', {
+      storyId: story?.id,
+      subscriptionTier,
+      hasImageUrl: !!story?.imageUrl,
+      imageUrlPreview: story?.imageUrl ? story.imageUrl.substring(0, 50) + '...' : null
+    });
+  }, [story?.id, subscriptionTier, story?.imageUrl]);
   
   // Click outside handler for dropdown menu
   useEffect(() => {
@@ -1275,42 +1283,6 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
               })}
             </div>
 
-          {/* AdSense Ad - Show after story for free tier users */}
-          {(subscriptionTier === 'try-now' || subscriptionTier === 'reader-free' || subscriptionTier === 'reader' || subscriptionTier === 'free' || !user) && (
-            <div className="ad-container" style={{ 
-              margin: '40px auto', 
-              padding: '20px',
-              background: '#f9f9f9',
-              border: '1px solid #e5e5e5',
-              borderRadius: '12px',
-              maxWidth: '728px',
-              textAlign: 'center'
-            }}>
-              <div className="ad-label" style={{ 
-                fontSize: '11px', 
-                color: '#999', 
-                marginBottom: '12px',
-                textAlign: 'center',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                fontWeight: '500'
-              }}>Advertisement</div>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '90px'
-              }}>
-                <AdSenseDebug 
-                  adClient="ca-pub-1413183979906947"
-                  adSlot="1977532623"
-                  adFormat="auto"
-                  style={{ display: 'inline-block', width: '100%', maxWidth: '728px', minHeight: '90px' }}
-                />
-              </div>
-            </div>
-          )}
-
           {/* Story Completion Button */}
           {!hasCompletedReading && (
             <div className="story-completion" style={{
@@ -1443,4 +1415,15 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
   );
 }
 
-export default StoryDisplay;
+// Memoize the component to prevent unnecessary re-renders
+export default memo(StoryDisplay, (prevProps, nextProps) => {
+  return (
+    prevProps.story?.id === nextProps.story?.id &&
+    prevProps.story?.imageUrl === nextProps.story?.imageUrl &&
+    prevProps.subscriptionTier === nextProps.subscriptionTier &&
+    prevProps.user?.id === nextProps.user?.id &&
+    prevProps.starPoints === nextProps.starPoints &&
+    prevProps.childProfile?.id === nextProps.childProfile?.id &&
+    prevProps.bedtimeModeActive === nextProps.bedtimeModeActive
+  );
+});
