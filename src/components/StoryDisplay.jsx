@@ -1153,44 +1153,24 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                           // For free tier users, show image with watermark
                           <div className="story-image-wrapper watermarked">
                             {story.imageUrl ? (
-                              <>
-                                <img 
-                                  src={story.imageUrl} 
-                                  alt={story.title}
-                                  className="story-main-image stock-image"
-                                  style={{ position: 'relative' }}
-                                  onError={(e) => {
-                                    console.error('Image failed to load:', e.target.src);
-                                    // If image fails to load, try a fallback
-                                    if (!e.target.dataset.retried) {
-                                      e.target.dataset.retried = 'true';
-                                      const seed = Math.floor(Math.random() * 1000);
-                                      e.target.src = `https://picsum.photos/seed/${seed}/1024/1024`;
-                                    }
-                                  }}
-                                />
-                                <div className="ai-image-upgrade">
-                                  {localStorage.getItem('aiImageTried') ? (
-                                    <button 
-                                      className="ai-upgrade-btn"
-                                      onClick={() => window.location.href = '/pricing-new.html'}
-                                    >
-                                      ✨ Upgrade for AI Images
-                                    </button>
-                                  ) : (
-                                    <button 
-                                      className="ai-try-btn"
-                                      onClick={() => {
-                                        localStorage.setItem('aiImageTried', 'true');
-                                        // TODO: Trigger AI image generation for free trial
-                                        alert('Free AI trial coming soon! For now, enjoy this stock image.');
-                                      }}
-                                    >
-                                      ✨ Try AI Image (1 Free)
-                                    </button>
-                                  )}
-                                </div>
-                              </>
+                              <img 
+                                src={story.imageUrl} 
+                                alt={story.title}
+                                className="story-main-image stock-image"
+                                style={{ position: 'relative' }}
+                                onLoad={(e) => {
+                                  console.log('Image loaded successfully:', e.target.src.substring(0, 100));
+                                }}
+                                onError={(e) => {
+                                  console.error('Image failed to load. URL type:', e.target.src.substring(0, 30));
+                                  // If image fails to load, try a fallback
+                                  if (!e.target.dataset.retried) {
+                                    e.target.dataset.retried = 'true';
+                                    const seed = Math.floor(Math.random() * 1000);
+                                    e.target.src = `https://picsum.photos/seed/${seed}/1024/1024`;
+                                  }
+                                }}
+                              />
                             ) : (
                               <div className="story-image-placeholder">
                                 <div className="image-loading">
