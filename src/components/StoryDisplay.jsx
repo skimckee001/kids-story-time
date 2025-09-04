@@ -1173,6 +1173,32 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
               </div>
             )}
             
+            {/* AdSense Ad - Show after image for free tier users */}
+            {(subscriptionTier === 'try-now' || subscriptionTier === 'reader-free' || subscriptionTier === 'reader' || subscriptionTier === 'free' || !user) && (
+              <div className="ad-container" style={{ 
+                margin: '20px 0', 
+                padding: '15px',
+                background: '#f8f8f8',
+                border: '1px solid #e0e0e0',
+                borderRadius: '10px'
+              }}>
+                <div className="ad-label" style={{ 
+                  fontSize: '11px', 
+                  color: '#999', 
+                  marginBottom: '10px',
+                  textAlign: 'center',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>Advertisement</div>
+                <AdSenseDebug 
+                  adClient="ca-pub-1413183979906947"
+                  adSlot="1977532623"
+                  adFormat="auto"
+                  style={{ width: '100%', minHeight: '90px', maxHeight: '250px' }}
+                />
+              </div>
+            )}
+            
             {/* Story Text */}
             <div className="story-text">
               {story.content.split('\n\n').map((paragraph, index, array) => {
@@ -1268,36 +1294,6 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                             </button>
                           </div>
                         )}
-                      </div>
-                    )}
-                    {/* Show ad at midpoint (only for free tier users and non-logged-in users) */}
-                    {index === midpoint - 1 && (subscriptionTier === 'try-now' || subscriptionTier === 'reader-free' || subscriptionTier === 'reader' || subscriptionTier === 'free' || !user) && (
-                      <div className="ad-container story-inline-ad">
-                        <div className="ad-label">Advertisement</div>
-                        <div style={{ 
-                          minHeight: '90px', 
-                          maxHeight: '250px',
-                          background: '#f8f8f8',
-                          border: '1px solid #e0e0e0',
-                          borderRadius: '8px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: '#999',
-                          fontSize: '14px',
-                          padding: '20px'
-                        }}>
-                          <AdSenseDebug 
-                            adClient="ca-pub-1413183979906947"
-                            adSlot="1977532623"
-                            adFormat="auto"
-                            style={{ width: '100%', minHeight: '250px' }}
-                          />
-                          {/* Fallback text will only show if AdSense doesn't fill the space */}
-                          <div style={{ position: 'absolute', zIndex: -1 }}>
-                            Ads support our free stories
-                          </div>
-                        </div>
                       </div>
                     )}
                   </div>
