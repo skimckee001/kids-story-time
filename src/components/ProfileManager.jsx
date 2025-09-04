@@ -291,7 +291,7 @@ function ProfileManager({ onClose, onProfileSelect, user }) {
                     
                     {profile.favorite_items?.length > 0 && (
                       <div className="profile-favorite-items">
-                        <p className="favorite-items-label">Favorite things:</p>
+                        <p className="favorite-items-label">Favorite story topics:</p>
                         <div className="favorite-items-list">
                           {profile.favorite_items.map((item, index) => (
                             <span key={index} className="favorite-item-badge">
@@ -435,7 +435,7 @@ function ProfileManager({ onClose, onProfileSelect, user }) {
               </div>
 
               <div className="form-group">
-                <label>Favorite Things (Currently: {formData.favorite_items?.length || 0} items)</label>
+                <label>Favorite Story Topics (Currently: {formData.favorite_items?.length || 0} items)</label>
                 <div className="favorite-items">
                   {formData.favorite_items && formData.favorite_items.length > 0 && formData.favorite_items.map((item, index) => (
                     <span key={`${item}-${index}`} className="item-badge">
@@ -453,7 +453,7 @@ function ProfileManager({ onClose, onProfileSelect, user }) {
                   <input
                     id="favorite-item-input"
                     type="text"
-                    placeholder="Add favorite (toy, place, character, person...)"
+                    placeholder="Add favorite topic (dinosaurs, space, princess...)"
                     style={{ flex: 1 }}
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
@@ -484,7 +484,7 @@ function ProfileManager({ onClose, onProfileSelect, user }) {
                       cursor: 'pointer'
                     }}
                   >
-                    Add
+                    Add Topic
                   </button>
                 </div>
               </div>

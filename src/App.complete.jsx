@@ -243,7 +243,7 @@ function App() {
         highlight: ['✓ 30 AI images per month']
       },
       'story-pro': { 
-        name: 'Read to Me ProMax', price: '$6.99/month',
+        name: 'Read to Me Pro-Max', price: '$6.99/month',
         features: ['✓ 20 stories per day', '✓ 150 AI images per month', '✓ 30 narrations per month',
                    '✓ 2 child profiles', '✓ Audio downloads', '✓ Bedtime reminders & streaks', '✓ Non-watermarked PDFs'],
         highlight: ['✓ 150 AI images per month', '✓ 30 narrations per month']
@@ -255,7 +255,14 @@ function App() {
         highlight: ['✓ 4 child profiles', '✓ Unlimited stories', '✓ 50 narrations per month']
       },
       'family-plus': null,
-      'family': null
+      'family': null,
+      'story-maker-basic': { 
+        name: 'Read to Me Pro-Max', price: '$6.99/month',
+        features: ['✓ 20 stories per day', '✓ 150 AI images per month', '✓ 30 narrations per month',
+                   '✓ 2 child profiles', '✓ Audio downloads', '✓ Bedtime reminders & streaks', '✓ Non-watermarked PDFs'],
+        highlight: ['✓ 150 AI images per month', '✓ 30 narrations per month']
+      },
+      'movie-director-premium': null
     };
     return tierProgression[currentTier] || tierProgression['reader-free'];
   };
@@ -439,7 +446,12 @@ function App() {
     // Free tier gets only cartoon style
     const isFreeTier = !user || subscriptionTier === 'try-now' || subscriptionTier === 'free' || subscriptionTier === 'reader-free';
     
-    if (isFreeTier) {
+    // Story Pro and above get all styles
+    const isPaidTier = subscriptionTier === 'story-pro' || subscriptionTier === 'story-maker-basic' || 
+                       subscriptionTier === 'read-to-me-promax' || subscriptionTier === 'family-plus' ||
+                       subscriptionTier === 'movie-director-premium' || subscriptionTier === 'family';
+    
+    if (!isPaidTier) {
       return [
         {
           id: 'cartoon',
@@ -2546,7 +2558,7 @@ function UsageDisplay({ user, subscriptionTier, storiesRemaining, monthlyStories
         fontWeight: '600',
         color: '#333'
       }}>
-        📊 Your Plan Usage
+        📈 Your Plan Usage
       </div>
       
       <div style={{
@@ -2611,11 +2623,11 @@ function UsageDisplay({ user, subscriptionTier, storiesRemaining, monthlyStories
               AI Images
             </div>
             <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#333' }}>
-              {aiIllustrations.remaining === 'unlimited' ? '∞' : `${aiIllustrations.remaining} left`}
+              {aiIllustrations.remaining === 'unlimited' ? '∞' : `${aiIllustrations.remaining || 0} left`}
             </div>
             {aiIllustrations.limit !== 'unlimited' && (
               <div style={{ fontSize: '11px', color: '#999' }}>
-                {aiIllustrations.used}/{aiIllustrations.limit} this month
+                {aiIllustrations.used || 0}/{aiIllustrations.limit} this month
               </div>
             )}
           </div>
@@ -2634,11 +2646,11 @@ function UsageDisplay({ user, subscriptionTier, storiesRemaining, monthlyStories
               Voice Narrations
             </div>
             <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#333' }}>
-              {narrations.remaining === 'unlimited' ? '∞' : `${narrations.remaining} left`}
+              {narrations.remaining === 'unlimited' ? '∞' : `${narrations.remaining || 0} left`}
             </div>
             {narrations.limit !== 'unlimited' && (
               <div style={{ fontSize: '11px', color: '#999' }}>
-                {narrations.used}/{narrations.limit} this month
+                {narrations.used || 0}/{narrations.limit} this month
               </div>
             )}
           </div>

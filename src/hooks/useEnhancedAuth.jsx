@@ -12,14 +12,31 @@ export const useEnhancedAuth = () => {
   const [quickLoginAvailable, setQuickLoginAvailable] = useState(false);
 
   useEffect(() => {
+    // Check for mock user first (for dev/testing)
+    const mockUserData = localStorage.getItem('mockUser');
+    if (mockUserData) {
+      try {
+        const mockUser = JSON.parse(mockUserData);
+        setUser(mockUser);
+        setLoading(false);
+        return;
+      } catch (e) {
+        console.error('Invalid mock user data:', e);
+      }
+    }
+    
     // Check current session
     checkCurrentSession();
     
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        setUser(session?.user ?? null);
-        setLoading(false);
+        // Don't override mock user with null session
+        const hasMockUser = localStorage.getItem('mockUser');
+        if (!hasMockUser) {
+          setUser(session?.user ?? null);
+          setLoading(false);
+        }
         
         if (event === 'SIGNED_IN' && session?.user) {
           // Track successful login
@@ -38,8 +55,26 @@ export const useEnhancedAuth = () => {
         }
       }
     );
+    
+    // Listen for storage events (for mock user changes)
+    const handleStorageChange = () => {
+      const mockUserData = localStorage.getItem('mockUser');
+      if (mockUserData) {
+        try {
+          const mockUser = JSON.parse(mockUserData);
+          setUser(mockUser);
+        } catch (e) {
+          console.error('Invalid mock user data:', e);
+        }
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const checkCurrentSession = async () => {
