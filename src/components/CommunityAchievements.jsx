@@ -481,3 +481,4 @@ function CommunityAchievements({ childProfile, onClose, onStarsEarned }) {
 }
 
 export default CommunityAchievements;
+

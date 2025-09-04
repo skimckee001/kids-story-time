@@ -494,3 +494,4 @@ function UserGeneratedContent({ childProfile, user, onClose, onStarsEarned }) {
 }
 
 export default UserGeneratedContent;
+

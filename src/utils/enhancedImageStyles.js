@@ -277,3 +277,4 @@ export function getStyleRecommendations(age, themes = []) {
   
   return recommendations;
 }
+

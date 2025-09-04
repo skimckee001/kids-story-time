@@ -417,3 +417,4 @@ function cleanStoryContent(storyText) {
         .trim()
         .replace(/\n{3,}/g, '\n\n');
 }
+

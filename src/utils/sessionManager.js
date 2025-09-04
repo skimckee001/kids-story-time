@@ -321,3 +321,4 @@ export const useSessionPersistence = () => {
     getBedtimePreferences: sessionManager.getBedtimePreferences.bind(sessionManager)
   };
 };
+
