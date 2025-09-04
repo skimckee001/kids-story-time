@@ -20,6 +20,7 @@ import { getTierLimits, canGenerateStory, canUseAIIllustration, getUpgradeMessag
 import AuthenticationManager from './components/AuthenticationManager';
 import { useEnhancedAuth } from './hooks/useEnhancedAuth.jsx';
 import { initAllEnhancements } from './utils/stepperEnhancements';
+import { usageTracker } from './utils/usageTracker';
 import { 
   generateEnhancedPrompt, 
   validateStoryOutput, 
@@ -180,6 +181,28 @@ function App() {
       }
     }
   }, [user, selectedChildProfile]);
+
+  // Load usage stats when user changes
+  useEffect(() => {
+    if (user) {
+      loadUserUsageStats();
+    }
+  }, [user]);
+
+  const loadUserUsageStats = async () => {
+    if (!user) return;
+    
+    try {
+      const usage = await usageTracker.loadUsageStats(user.id);
+      if (usage) {
+        setMonthlyStoriesUsed(usage.stories_used || 0);
+        setAiIllustrationsUsed(usage.ai_illustrations_used || 0);
+        setNarrationsUsed(usage.narrations_used || 0);
+      }
+    } catch (error) {
+      console.error('Error loading usage stats:', error);
+    }
+  };
 
   useEffect(() => {
     // Click outside handler for dropdown menus
@@ -535,11 +558,21 @@ function App() {
       return;
     }
 
-    // Check story generation limits
-    const tierLimits = getTierLimits(subscriptionTier, user);
-    if (!canGenerateStory(subscriptionTier, tierLimits.dailyStories - storiesRemaining, monthlyStoriesUsed, user)) {
-      alert(getUpgradeMessage(user ? subscriptionTier : 'try-now', 'stories'));
-      return;
+    // Enhanced tier enforcement using usage tracker
+    if (user) {
+      const canGenerate = await usageTracker.canPerformAction(user.id, subscriptionTier, 'generate_story');
+      if (!canGenerate) {
+        const message = usageTracker.getUpgradeMessage(subscriptionTier, 'story', 'story generation');
+        alert(message);
+        return;
+      }
+    } else {
+      // For anonymous users, use simple local storage check
+      const tierLimits = getTierLimits(subscriptionTier, user);
+      if (!canGenerateStory(subscriptionTier, tierLimits.dailyStories - storiesRemaining, monthlyStoriesUsed, user)) {
+        alert(getUpgradeMessage(user ? subscriptionTier : 'try-now', 'stories'));
+        return;
+      }
     }
 
     setIsGenerating(true);
@@ -859,9 +892,20 @@ function App() {
           }));
         }
         
-        // Update usage counters
+        // Update usage counters and track in database
         setStoriesRemaining(prev => Math.max(0, prev - 1));
-        setMonthlyStoriesUsed(prev => prev + 1);
+        const newMonthlyUsed = monthlyStoriesUsed + 1;
+        setMonthlyStoriesUsed(newMonthlyUsed);
+        
+        // Track usage in database for logged-in users
+        if (user) {
+          await usageTracker.incrementUsage(user.id, 'story', 1);
+          
+          // Also track AI illustration usage if generated
+          if (alwaysGenerateAI && (subscriptionTier !== 'reader-free' && subscriptionTier !== 'free' && subscriptionTier !== 'try-now')) {
+            await usageTracker.incrementUsage(user.id, 'ai_illustration', 1);
+          }
+        }
         
         // Award star points
         setStarPoints(prev => prev + 1);
@@ -1936,23 +1980,16 @@ function App() {
                !user ? '✨ Create Story! ✨' : '✨ Generate Story! ✨'}
             </button>
             
-            {/* Plan Status */}
+            {/* Enhanced Plan Status with Usage Tracking */}
             {user && (
-              <div style={{
-                textAlign: 'center',
-                marginTop: '12px',
-                fontSize: '14px',
-                color: '#666'
-              }}>
-                {subscriptionTier === 'try-now' ? 
-                  <>Try Now: {storiesRemaining} story remaining today</> :
-                 subscriptionTier === 'reader-free' ? 
-                  <>Reader Plan: {storiesRemaining} stories remaining today</> :
-                 subscriptionTier === 'family-plus' ?
-                  <>Family Plan: {storiesRemaining} stories remaining today</> :
-                  <>Premium Plan: Unlimited stories</>
-                }
-              </div>
+              <UsageDisplay 
+                user={user}
+                subscriptionTier={subscriptionTier}
+                storiesRemaining={storiesRemaining}
+                monthlyStoriesUsed={monthlyStoriesUsed}
+                aiIllustrationsUsed={aiIllustrationsUsed}
+                narrationsUsed={narrationsUsed}
+              />
             )}
 
           </form>
@@ -2232,22 +2269,12 @@ function App() {
 
       {/* Star Rewards System Modal */}
       {showRewards && (
-        <div className="auth-modal">
-          <div className="auth-content" style={{ maxWidth: '900px' }}>
-            <button 
-              className="auth-close" 
-              onClick={() => setShowRewards(false)}
-            >
-              ×
-            </button>
-            <StarRewardsSystem
-              childProfile={selectedChildProfile || { id: 'guest', name: 'Guest' }}
-              stars={starPoints}
-              setStars={setStarPoints}
-              onClose={() => setShowRewards(false)}
-            />
-          </div>
-        </div>
+        <StarRewardsSystem
+          childProfile={selectedChildProfile || { id: 'guest', name: 'Guest' }}
+          stars={starPoints}
+          setStars={setStarPoints}
+          onClose={() => setShowRewards(false)}
+        />
       )}
 
       {/* Parent Dashboard Modal */}
@@ -2459,6 +2486,179 @@ function BedtimeModeModal({ isActive, onClose, onActivate, onDeactivate }) {
         currentTier={subscriptionTier}
         onTierChange={(tier) => setSubscriptionTier(tier)}
       />
+    </div>
+  );
+}
+
+// Usage Display Component
+function UsageDisplay({ user, subscriptionTier, storiesRemaining, monthlyStoriesUsed, aiIllustrationsUsed, narrationsUsed }) {
+  const [usageSummary, setUsageSummary] = useState(null);
+  
+  useEffect(() => {
+    if (user) {
+      loadUsageSummary();
+    }
+  }, [user, subscriptionTier, monthlyStoriesUsed, aiIllustrationsUsed, narrationsUsed]);
+  
+  const loadUsageSummary = async () => {
+    try {
+      const summary = await usageTracker.getUsageSummary(user.id, subscriptionTier);
+      setUsageSummary(summary);
+    } catch (error) {
+      console.error('Error loading usage summary:', error);
+    }
+  };
+  
+  if (!usageSummary) {
+    return (
+      <div style={{
+        textAlign: 'center',
+        marginTop: '12px',
+        fontSize: '14px',
+        color: '#666'
+      }}>
+        {subscriptionTier === 'try-now' ? 
+          <>Try Now: {storiesRemaining} story remaining today</> :
+         subscriptionTier === 'reader-free' ? 
+          <>Reader Plan: {storiesRemaining} stories remaining today</> :
+         subscriptionTier === 'family-plus' ?
+          <>Family Plan: {storiesRemaining} stories remaining today</> :
+          <>Premium Plan: Unlimited stories</>
+        }
+      </div>
+    );
+  }
+  
+  const { dailyStories, monthlyStories, aiIllustrations, narrations } = usageSummary;
+  
+  return (
+    <div style={{
+      marginTop: '16px',
+      padding: '16px',
+      background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
+      borderRadius: '12px',
+      border: '1px solid #e2e8f0'
+    }}>
+      <div style={{
+        textAlign: 'center',
+        marginBottom: '12px',
+        fontSize: '16px',
+        fontWeight: '600',
+        color: '#333'
+      }}>
+        📊 Your Plan Usage
+      </div>
+      
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: window.innerWidth <= 768 ? '1fr' : 'repeat(auto-fit, minmax(180px, 1fr))',
+        gap: '12px'
+      }}>
+        {/* Daily Stories */}
+        <div style={{
+          background: 'white',
+          padding: '10px',
+          borderRadius: '8px',
+          border: '1px solid #e2e8f0',
+          textAlign: 'center'
+        }}>
+          <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+            Stories Today
+          </div>
+          <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#333' }}>
+            {dailyStories.remaining === 'unlimited' ? '∞' : `${dailyStories.remaining} left`}
+          </div>
+          {dailyStories.limit !== 'unlimited' && (
+            <div style={{ fontSize: '11px', color: '#999' }}>
+              {dailyStories.used}/{dailyStories.limit} used
+            </div>
+          )}
+        </div>
+        
+        {/* Monthly Stories */}
+        {monthlyStories.limit !== null && (
+          <div style={{
+            background: 'white',
+            padding: '10px',
+            borderRadius: '8px',
+            border: '1px solid #e2e8f0',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+              Stories This Month
+            </div>
+            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#333' }}>
+              {monthlyStories.remaining === 'unlimited' ? '∞' : `${monthlyStories.remaining} left`}
+            </div>
+            {monthlyStories.limit !== 'unlimited' && (
+              <div style={{ fontSize: '11px', color: '#999' }}>
+                {monthlyStories.used}/{monthlyStories.limit} used
+              </div>
+            )}
+          </div>
+        )}
+        
+        {/* AI Illustrations */}
+        {aiIllustrations.limit > 0 && (
+          <div style={{
+            background: 'white',
+            padding: '10px',
+            borderRadius: '8px',
+            border: '1px solid #e2e8f0',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+              AI Images
+            </div>
+            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#333' }}>
+              {aiIllustrations.remaining === 'unlimited' ? '∞' : `${aiIllustrations.remaining} left`}
+            </div>
+            {aiIllustrations.limit !== 'unlimited' && (
+              <div style={{ fontSize: '11px', color: '#999' }}>
+                {aiIllustrations.used}/{aiIllustrations.limit} this month
+              </div>
+            )}
+          </div>
+        )}
+        
+        {/* Narrations */}
+        {narrations.limit > 0 && (
+          <div style={{
+            background: 'white',
+            padding: '10px',
+            borderRadius: '8px',
+            border: '1px solid #e2e8f0',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+              Voice Narrations
+            </div>
+            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#333' }}>
+              {narrations.remaining === 'unlimited' ? '∞' : `${narrations.remaining} left`}
+            </div>
+            {narrations.limit !== 'unlimited' && (
+              <div style={{ fontSize: '11px', color: '#999' }}>
+                {narrations.used}/{narrations.limit} this month
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+      
+      {/* Plan Name */}
+      <div style={{
+        textAlign: 'center',
+        marginTop: '12px',
+        fontSize: '13px',
+        color: '#666',
+        fontStyle: 'italic'
+      }}>
+        {subscriptionTier === 'reader-free' ? 'Reader (Free) Plan' :
+         subscriptionTier === 'story-pro' ? 'Story Pro Plan' :
+         subscriptionTier === 'read-to-me-promax' ? 'Read to Me ProMax Plan' :
+         subscriptionTier === 'family-plus' ? 'Family Plus Plan' :
+         'Current Plan'}
+      </div>
     </div>
   );
 }
