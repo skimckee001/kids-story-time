@@ -1116,39 +1116,6 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
             {/* Title */}
             <h1 className="story-title">{story.title}</h1>
             
-            {/* Debug: Show image directly if it exists */}
-            {story.imageUrl && (
-              <div style={{
-                width: '100%',
-                maxWidth: '400px',
-                margin: '20px auto',
-                padding: '10px',
-                backgroundColor: '#ffcccc',
-                border: '3px solid red',
-                borderRadius: '10px'
-              }}>
-                <p style={{ color: 'red', fontWeight: 'bold', textAlign: 'center' }}>
-                  DEBUG: Image URL exists (length: {story.imageUrl.length} chars)
-                </p>
-                <img 
-                  src={story.imageUrl}
-                  alt="Debug image test"
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    display: 'block',
-                    border: '2px solid blue'
-                  }}
-                  onLoad={() => console.log('DEBUG IMAGE LOADED!')}
-                  onError={(e) => {
-                    console.error('DEBUG IMAGE FAILED!', e);
-                    // Try fallback
-                    e.target.src = 'https://picsum.photos/300/300';
-                  }}
-                />
-              </div>
-            )}
-            
             {/* Story Text with Image */}
             <div className="story-text">
               {story.content.split('\n\n').map((paragraph, index, array) => {
@@ -1158,34 +1125,24 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                     <p className="story-paragraph">
                       {paragraph}
                     </p>
-                    {/* Show image or upgrade button after first paragraph */}
-                    {console.log('Image display check:', { index, hasImageUrl: !!story.imageUrl, imageUrl: story.imageUrl?.substring(0, 100) })}
+                    {/* Show image after first paragraph */}
                     {index === 0 && story.imageUrl && (
-                      <div style={{
-                        width: '300px',
-                        height: '300px',
-                        float: 'right',
-                        margin: '0 0 20px 20px',
-                        backgroundColor: '#f0f0f0',
-                        borderRadius: '10px',
-                        overflow: 'hidden',
-                        border: '2px solid red' // Add red border to make it visible
-                      }}>
-                        <div style={{ padding: '10px', color: 'red' }}>Image Loading...</div>
-                        <img 
-                          src={story.imageUrl}
-                          alt="Story illustration"
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover'
-                          }}
-                          onLoad={() => console.log('Image loaded!')}
-                          onError={() => console.log('Image failed to load')}
-                        />
+                      <div className="story-image-float">
+                        <div className="story-image-wrapper watermarked">
+                          <img 
+                            src={story.imageUrl}
+                            alt={story.title}
+                            className="story-main-image"
+                            onLoad={() => console.log('Story image loaded')}
+                            onError={(e) => {
+                              console.error('Story image failed to load');
+                              e.target.src = 'https://picsum.photos/400/300';
+                            }}
+                          />
+                        </div>
                       </div>
                     )}
-                    {/* Original image display logic - temporarily disabled for testing */}
+                    {/* Original complex display logic - disabled */}
                     {false && index === 0 && (
                       <div className="story-image-float">
                         {(subscriptionTier === 'plus' || subscriptionTier === 'premium' || subscriptionTier === 'family' || subscriptionTier === 'basic' ||
