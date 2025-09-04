@@ -225,8 +225,14 @@ function StoryLibrary({ onBack }) {
         <div className="library-title-section">
           <h1>My Story Library</h1>
           <div className="library-stats">
-            <span>{stories.length} {stories.length === 1 ? 'Story' : 'Stories'}</span>
-            <span>{children.length} {children.length === 1 ? 'Child' : 'Children'}</span>
+            <div className="library-stat">
+              <span className="library-stat-icon">📚</span>
+              <span className="library-stat-text">{stories.length} {stories.length === 1 ? 'Story' : 'Stories'}</span>
+            </div>
+            <div className="library-stat">
+              <span className="library-stat-icon">👶</span>
+              <span className="library-stat-text">{children.length} {children.length === 1 ? 'Child' : 'Children'}</span>
+            </div>
           </div>
         </div>
 
@@ -408,19 +414,23 @@ function StoryCard({ story, onRead, onDelete, onToggleFavorite }) {
         </div>
         
         <div className="story-card-meta">
-          <span className="meta-item">
-            <span className="meta-icon">👤</span>
-            {story.child_name || 'Unknown'}
-          </span>
+          {story.child_name && story.child_name !== 'Unknown' && (
+            <span className="meta-item">
+              <span className="meta-icon">👤</span>
+              {story.child_name}
+            </span>
+          )}
           <span className="meta-item">
             <span className="meta-icon">📅</span>
             {formatDate(story.created_at)}
           </span>
         </div>
         
-        <p className="story-card-preview">
-          {story.content?.substring(0, 150)}...
-        </p>
+        {story.content && (
+          <p className="story-card-preview">
+            {story.content.substring(0, 150)}{story.content.length > 150 ? '...' : ''}
+          </p>
+        )}
         
         <div className="story-card-actions">
           <button onClick={onRead} className="read-btn">
