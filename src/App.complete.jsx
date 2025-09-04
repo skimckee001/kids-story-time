@@ -532,8 +532,9 @@ function App() {
                     import.meta.env.VITE_STORYGEN_V2_ENABLED === 'TRUE';
       
       // Call the story generation API (v2 if enabled, v1 otherwise)
-      // Temporarily using simplified v2 for debugging
-      const endpoint = useV2 ? 'generate-story-v2-simple' : 'generate-story';
+      // Temporarily falling back to v1 while debugging v2
+      const endpoint = useV2 ? 'generate-story' : 'generate-story';
+      // const endpoint = useV2 ? 'generate-story-v2-simple' : 'generate-story';
       const apiUrl = window.location.hostname === 'localhost' 
         ? `http://localhost:9000/.netlify/functions/${endpoint}`
         : `/.netlify/functions/${endpoint}`;
