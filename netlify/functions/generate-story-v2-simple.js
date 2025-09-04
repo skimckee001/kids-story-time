@@ -1,7 +1,7 @@
 // Simplified v2 story generation for testing
 import OpenAI from 'openai';
 
-export async function handler(event) {
+async function handler(event) {
   console.log('Generate-story-v2-simple function called - v1.1');
   
   const headers = {
@@ -112,4 +112,5 @@ Write ONLY the story text, no titles or notes.`;
   }
 }
 
-export default { handler };
+// CommonJS export for Netlify
+exports.handler = handler;

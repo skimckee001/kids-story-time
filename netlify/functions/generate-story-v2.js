@@ -222,7 +222,7 @@ ${text}`;
  * Enhanced Story Generation v2
  * Two-pass generation with quality control
  */
-export async function handler(event) {
+async function handler(event) {
   console.log('Generate-story-v2 function called');
   
   // CORS headers
@@ -666,4 +666,5 @@ function calculateCost(modelsUsed) {
   return Math.round(totalCents * 100); // Convert to cents
 }
 
-export default { handler };
+// CommonJS export for Netlify
+exports.handler = handler;
