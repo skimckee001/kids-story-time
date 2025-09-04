@@ -184,7 +184,8 @@ async function generateAIImage(prompt, style, mood, tier) {
                 model: model,
                 prompt: cleanPrompt,
                 n: 1,
-                size: size
+                size: size,
+                response_format: 'b64_json'  // Request base64 to avoid CORS issues
             };
             
             // Only dall-e-3 supports quality and style parameters
@@ -207,8 +208,9 @@ async function generateAIImage(prompt, style, mood, tier) {
             if (response.ok) {
                 const data = await response.json();
                 if (data.data && data.data[0]) {
-                    // Return URL as-is, watermark is handled by CSS on client side
-                    const imageUrl = data.data[0].url;
+                    // Convert base64 to data URL to avoid CORS issues
+                    const base64Image = data.data[0].b64_json;
+                    const imageUrl = `data:image/png;base64,${base64Image}`;
                     return imageUrl;
                 }
             }
