@@ -740,13 +740,20 @@ function App() {
         }
         
         // Generate image based on tier limits
-        const canGenerateAI = canUseAIIllustration(subscriptionTier, aiIllustrationsUsed, user);
+        // Free tier and paid tiers both get AI images now (free tier gets dall-e-2)
+        const canGenerateAI = canUseAIIllustration(subscriptionTier, aiIllustrationsUsed, user) || 
+                              subscriptionTier === 'reader-free' || 
+                              subscriptionTier === 'free' ||
+                              subscriptionTier === 'try-now';
         if (canGenerateAI) {
           console.log('Generating AI illustration for tier:', subscriptionTier);
-          setAiIllustrationsUsed(prev => prev + 1);
+          // Only count against limit for non-free tiers
+          if (subscriptionTier !== 'reader-free' && subscriptionTier !== 'free' && subscriptionTier !== 'try-now') {
+            setAiIllustrationsUsed(prev => prev + 1);
+          }
           
           const imageApiUrl = window.location.hostname === 'localhost'
-            ? 'http://localhost:9000/.netlify/functions/generate-image'
+            ? 'http://localhost:8888/.netlify/functions/generate-image'
             : '/.netlify/functions/generate-image';
           
           const selectedThemeLabels = selectedThemes
@@ -759,14 +766,8 @@ function App() {
             `${data.story.title}. ${imagePrompt}. ${selectedThemeLabels} theme` :
             `${data.story.title}. Child-friendly, colorful illustration. ${selectedThemeLabels} theme`;
           
-          // Determine API tier - include old tier names for compatibility
-          const apiTier = (subscriptionTier === 'family-plus' || 
-                          subscriptionTier === 'story-maker-basic' || 
-                          subscriptionTier === 'movie-director-premium' ||
-                          subscriptionTier === 'premium' ||  // Old premium tier
-                          subscriptionTier === 'plus' ||     // Old plus tier
-                          subscriptionTier === 'basic' ||    // Old basic tier
-                          subscriptionTier === 'family') ? 'ai-enabled' : 'standard';
+          // Pass actual subscription tier to API for proper tier-based generation
+          const apiTier = subscriptionTier || 'free';
           
           console.log('Sending to API with tier:', apiTier, 'from subscription tier:', subscriptionTier);
           
