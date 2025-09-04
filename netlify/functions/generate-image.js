@@ -175,7 +175,10 @@ async function generateAIImage(prompt, style, mood, tier) {
             // Determine model and size based on tier (passed from parent function)
             const isPaidTier = enhancedPrompt.includes('__PAID__');
             const model = isPaidTier ? 'dall-e-3' : 'dall-e-2';
-            const size = isPaidTier ? '1024x1024' : '256x256';
+            // Use landscape format for better display
+            // dall-e-2 supports: 256x256, 512x512, 1024x1024
+            // dall-e-3 supports: 1024x1024, 1024x1792, 1792x1024
+            const size = isPaidTier ? '1792x1024' : '512x512'; // Use square for dall-e-2 (will be cropped to 16:9)
             
             // Remove tier marker from prompt
             const cleanPrompt = enhancedPrompt.replace('__PAID__', '').trim();

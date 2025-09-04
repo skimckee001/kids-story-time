@@ -1116,7 +1116,64 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
             {/* Title */}
             <h1 className="story-title">{story.title}</h1>
             
-            {/* Story Text with Image */}
+            {/* Story Image - Landscape format at top */}
+            {story.imageUrl && (
+              <div style={{
+                width: '100%',
+                maxWidth: '100%',
+                margin: '20px 0 30px 0',
+                position: 'relative',
+                borderRadius: '15px',
+                overflow: 'hidden',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)'
+              }}>
+                <div style={{
+                  position: 'relative',
+                  width: '100%',
+                  paddingBottom: '56.25%', // 16:9 aspect ratio
+                  backgroundColor: '#f0f0f0'
+                }}>
+                  <img 
+                    src={story.imageUrl}
+                    alt={story.title}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      borderRadius: '15px'
+                    }}
+                    onLoad={() => console.log('Story image loaded successfully')}
+                    onError={(e) => {
+                      console.error('Story image failed to load, using fallback');
+                      e.target.src = 'https://picsum.photos/800/450';
+                    }}
+                  />
+                  {/* Watermark for free tier */}
+                  {(subscriptionTier === 'try-now' || subscriptionTier === 'reader-free' || subscriptionTier === 'free' || !user) && (
+                    <div style={{
+                      position: 'absolute',
+                      bottom: '15px',
+                      right: '15px',
+                      background: 'rgba(255, 255, 255, 0.95)',
+                      color: '#667eea',
+                      padding: '8px 16px',
+                      borderRadius: '10px',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+                      zIndex: 10
+                    }}>
+                      KidsStoryTime.ai
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            {/* Story Text */}
             <div className="story-text">
               {story.content.split('\n\n').map((paragraph, index, array) => {
                 const midpoint = Math.floor(array.length / 2);
@@ -1125,23 +1182,6 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                     <p className="story-paragraph">
                       {paragraph}
                     </p>
-                    {/* Show image after first paragraph */}
-                    {index === 0 && story.imageUrl && (
-                      <div className="story-image-float">
-                        <div className="story-image-wrapper watermarked">
-                          <img 
-                            src={story.imageUrl}
-                            alt={story.title}
-                            className="story-main-image"
-                            onLoad={() => console.log('Story image loaded')}
-                            onError={(e) => {
-                              console.error('Story image failed to load');
-                              e.target.src = 'https://picsum.photos/400/300';
-                            }}
-                          />
-                        </div>
-                      </div>
-                    )}
                     {/* Original complex display logic - disabled */}
                     {false && index === 0 && (
                       <div className="story-image-float">
