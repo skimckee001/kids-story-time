@@ -13,6 +13,13 @@
 [functions]
   directory = "netlify/functions"
 
+# Dev settings
+[dev]
+  command = "npm run dev"
+  targetPort = 3000
+  functionsPort = 8888
+  autoLaunch = false
+
 # Redirect non-www to www (since www is the primary domain)
 [[redirects]]
   from = "https://kidsstorytime.ai/*"
