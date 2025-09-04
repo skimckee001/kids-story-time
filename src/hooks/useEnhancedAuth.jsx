@@ -44,6 +44,15 @@ export const useEnhancedAuth = () => {
 
   const checkCurrentSession = async () => {
     try {
+      // First check for mock user (for testing)
+      const mockUser = localStorage.getItem('mockUser');
+      if (mockUser) {
+        const userData = JSON.parse(mockUser);
+        setUser(userData);
+        setLoading(false);
+        return;
+      }
+      
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
       
