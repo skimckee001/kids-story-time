@@ -73,14 +73,16 @@ exports.handler = async (event, context) => {
             tier === 'movie-director-premium' || tier === 'plus' || 
             tier === 'premium' || tier === 'basic') {
             // AI-enabled tiers: Use AI image generation (Replicate or OpenAI)
-            imageUrl = await generateAIImage(prompt, style, mood);
+            imageUrl = await generateAIImage(prompt, style, mood, tier);
             imageData.isAI = true;
-        } else if (tier === 'standard' || tier === 'reader-free') {
-            // Standard tier: Stock images if available
-            imageUrl = await generateStockImage(prompt, style, mood);
-            imageData.isStock = true;
+        } else if (tier === 'standard' || tier === 'reader-free' || tier === 'try-now' || tier === 'free') {
+            // Free/Standard tier: Use low-cost dall-e-2 with 256x256
+            // Pass tier to generateAIImage which will use dall-e-2 for non-paid tiers
+            imageUrl = await generateAIImage(prompt, style, mood, tier);
+            imageData.isAI = true;
+            imageData.lowRes = true;
         } else {
-            // Default/try-now tier: Basic placeholder images
+            // Fallback: Basic placeholder images
             imageUrl = await generatePlaceholderImage(prompt, style, mood);
             imageData.isPlaceholder = true;
         }
@@ -108,10 +110,15 @@ exports.handler = async (event, context) => {
     }
 };
 
-// AI Image Generation (using Replicate or Hugging Face)
-async function generateAIImage(prompt, style, mood) {
-    const enhancedPrompt = enhancePrompt(prompt, style, mood);
-    console.log('Generating AI image with prompt:', enhancedPrompt.substring(0, 100));
+// AI Image Generation (using Replicate or OpenAI with tier-based settings)
+async function generateAIImage(prompt, style, mood, tier) {
+    // Add tier marker to prompt for downstream processing
+    const isPaidTier = ['ai-enabled', 'pro', 'family-plus', 'story-maker-basic', 
+                        'movie-director-premium', 'plus', 'premium', 'basic'].includes(tier);
+    
+    const tierMarker = isPaidTier ? '__PAID__' : '';
+    const enhancedPrompt = enhancePrompt(prompt, style, mood) + ' ' + tierMarker;
+    console.log(`Generating AI image for ${tier} tier with prompt:`, enhancedPrompt.substring(0, 100));
     
     // Option 1: Replicate API (Stable Diffusion)
     if (process.env.REPLICATE_API_TOKEN) {
@@ -162,29 +169,51 @@ async function generateAIImage(prompt, style, mood) {
         console.log('Replicate API token not configured');
     }
 
-    // Option 2: OpenAI DALL-E API
+    // Option 2: OpenAI DALL-E API (tier-based configuration)
     if (process.env.OPENAI_API_KEY) {
         try {
+            // Determine model and size based on tier (passed from parent function)
+            const isPaidTier = enhancedPrompt.includes('__PAID__');
+            const model = isPaidTier ? 'dall-e-3' : 'dall-e-2';
+            const size = isPaidTier ? '1024x1024' : '256x256';
+            
+            // Remove tier marker from prompt
+            const cleanPrompt = enhancedPrompt.replace('__PAID__', '').trim();
+            
+            const requestBody = {
+                model: model,
+                prompt: cleanPrompt,
+                n: 1,
+                size: size
+            };
+            
+            // Only dall-e-3 supports quality and style parameters
+            if (model === 'dall-e-3') {
+                requestBody.quality = 'standard';
+                requestBody.style = style === 'cartoon' ? 'vivid' : 'natural';
+            }
+            
+            console.log(`Using ${model} with ${size} resolution for image generation`);
+            
             const response = await fetch('https://api.openai.com/v1/images/generations', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    model: 'dall-e-3',
-                    prompt: enhancedPrompt,
-                    n: 1,
-                    size: '1024x1024',
-                    quality: 'standard',
-                    style: style === 'cartoon' ? 'vivid' : 'natural'
-                })
+                body: JSON.stringify(requestBody)
             });
 
             if (response.ok) {
                 const data = await response.json();
                 if (data.data && data.data[0]) {
-                    return data.data[0].url;
+                    // Add watermark info for free tier (handled client-side)
+                    const imageUrl = data.data[0].url;
+                    if (!isPaidTier) {
+                        // Return with metadata for client to add watermark
+                        return `${imageUrl}?watermark=true`;
+                    }
+                    return imageUrl;
                 }
             }
         } catch (error) {
