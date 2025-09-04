@@ -168,8 +168,8 @@
   font-size: 1rem;
   transition: all 0.3s ease;
   font-family: inherit;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
+  background: linear-gradient(135deg, #667eea, #764ba2) !important;
+  color: white !important;
   cursor: pointer;
   height: 46px;
   font-weight: 600;
@@ -177,7 +177,7 @@
 }
 
 .filter-select:hover {
-  background: linear-gradient(135deg, #5a67d8, #6b46c1);
+  background: linear-gradient(135deg, #5a67d8, #6b46c1) !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
@@ -185,6 +185,12 @@
 .filter-select:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+/* Override any option styling */
+.filter-select option {
+  background: #667eea;
+  color: white;
 }
 
 /* Stories Container */
