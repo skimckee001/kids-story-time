@@ -745,6 +745,13 @@ function App() {
                               subscriptionTier === 'reader-free' || 
                               subscriptionTier === 'free' ||
                               subscriptionTier === 'try-now';
+        console.log('Can generate AI check:', {
+          canGenerateAI,
+          subscriptionTier,
+          aiIllustrationsUsed,
+          hasUser: !!user,
+          canUseAIResult: canUseAIIllustration(subscriptionTier, aiIllustrationsUsed, user)
+        });
         if (canGenerateAI) {
           console.log('Generating AI illustration for tier:', subscriptionTier);
           // Only count against limit for non-free tiers
