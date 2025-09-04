@@ -320,13 +320,14 @@ function getGenericCharacterName(gender, childAge) {
 
 function getMaxTokensForLength(length) {
     // Adjusted token limits for proper word counts (1 token ≈ 0.75 words)
+    // Max 4096 for GPT-3.5-turbo completion tokens
     const tokenLimits = {
         short: 600,      // ~450 words
         medium: 1400,    // ~1050 words
-        long: 3000,      // ~2250 words
-        extended: 5300,  // ~4000 words
-        'long-extended': 3500,
-        'extra-long': 4500
+        long: 2500,      // ~1875 words
+        extended: 4000,  // ~3000 words (near model limit)
+        'long-extended': 4096,  // Model max
+        'extra-long': 4096      // Model max
     };
     return tokenLimits[length] || tokenLimits.medium;
 }
