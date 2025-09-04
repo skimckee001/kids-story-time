@@ -76,34 +76,40 @@ exports.handler = async (event) => {
     const storyTheme = themes.length > 0 ? themes.join(' and ') : interests;
     
     // Create a focused prompt for exact word count
-    const prompt = `You MUST write exactly ${adjustedTargetWords} words. This is CRITICAL.
+    const prompt = `CRITICAL INSTRUCTION: Write a story that is EXACTLY ${adjustedTargetWords} words long. Not shorter, not longer - EXACTLY ${adjustedTargetWords} words.
 
 STORY REQUIREMENTS:
 ${characterDesc}.
 Theme: ${storyTheme}
 ${customPrompt ? `Additional details: ${customPrompt}` : ''}
 
-LENGTH REQUIREMENT - THIS IS MANDATORY:
-Write EXACTLY ${adjustedTargetWords} words. Not approximately, not "about" - EXACTLY ${adjustedTargetWords} words.
+WORD COUNT ENFORCEMENT:
+• TARGET: ${adjustedTargetWords} words EXACTLY
+• Write ${Math.floor(adjustedTargetWords / 100)} paragraphs of ~100 words each
+• After EVERY paragraph, mentally count your total words
+• If you're at paragraph 5 of 20, you should have ~500 words
+• DO NOT STOP until you reach ${adjustedTargetWords} words
+• DO NOT GO OVER ${adjustedTargetWords} words
 
-For a ${adjustedTargetWords}-word story, you need:
-- ${Math.floor(adjustedTargetWords / 100)} paragraphs of approximately 100 words each
-- If ${adjustedTargetWords} words feels too long, that's correct - make it that long anyway
-- Add detailed descriptions of settings, characters, actions
-- Include dialogue and character thoughts
-- Expand every scene with sensory details (sights, sounds, smells, feelings)
-- Describe character emotions and reactions in detail
+TECHNIQUES TO REACH ${adjustedTargetWords} WORDS:
+• Describe settings in rich detail (colors, textures, sounds, smells)
+• Show character emotions through actions and internal thoughts
+• Include meaningful dialogue between characters
+• Add sensory descriptions to every scene
+• Expand action sequences with step-by-step detail
+• Describe character appearances and mannerisms
+• Include atmospheric details (weather, time of day, ambient sounds)
 
-IMPORTANT: Most AI models write stories that are TOO SHORT. To combat this:
-- After every paragraph, count your words so far
-- If you're behind pace, add more detail to the next paragraph
-- A ${adjustedTargetWords}-word story should feel substantial and complete
-- This is a ${Math.round(adjustedTargetWords/150)}-${Math.round(adjustedTargetWords/100)} minute read-aloud story
+PACING GUIDE:
+• Opening (${Math.floor(adjustedTargetWords * 0.15)} words): Set the scene, introduce character
+• Rising action (${Math.floor(adjustedTargetWords * 0.35)} words): Build the adventure/conflict
+• Climax (${Math.floor(adjustedTargetWords * 0.30)} words): Peak excitement/challenge
+• Resolution (${Math.floor(adjustedTargetWords * 0.20)} words): Solve problem, conclude story
 
-Age level: ${childAge} years old
+Reading level: ${childAge}
 Style: Engaging, descriptive, age-appropriate
 
-Begin the story now and write EXACTLY ${adjustedTargetWords} words:`;
+NOW WRITE EXACTLY ${adjustedTargetWords} WORDS:`;
 
     console.log(`Calling ${model} for ${adjustedTargetWords} word story (requested: ${targetWords})...`);
     
@@ -117,12 +123,12 @@ Begin the story now and write EXACTLY ${adjustedTargetWords} words:`;
       messages: [
         { 
           role: 'system', 
-          content: `You are an expert children's story writer who ALWAYS writes stories of the EXACT requested length. You count words carefully as you write.`
+          content: `You are an expert children's story writer. Your MOST IMPORTANT SKILL is writing stories of EXACTLY the requested word count. You NEVER write shorter stories. If asked for 1875 words, you write EXACTLY 1875 words - not 1500, not 1600, but EXACTLY 1875. You count words meticulously as you write and always hit the exact target.`
         },
         { role: 'user', content: prompt }
       ],
       max_tokens: maxTokens,
-      temperature: 0.8
+      temperature: 0.7  // Lower temperature for more consistent output
     });
 
     const story = completion.choices[0].message.content;
