@@ -230,8 +230,8 @@ function StoryLibrary({ onBack }) {
               <span className="library-stat-text">{stories.length} {stories.length === 1 ? 'Story' : 'Stories'}</span>
             </div>
             <div className="library-stat">
-              <span className="library-stat-icon">👶</span>
-              <span className="library-stat-text">{children.length} {children.length === 1 ? 'Child' : 'Children'}</span>
+              <span className="library-stat-icon">👥</span>
+              <span className="library-stat-text">{children.length} {children.length === 1 ? 'Profile' : 'Profiles'}</span>
             </div>
           </div>
         </div>

@@ -163,7 +163,7 @@ function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth,
             e.target.style.boxShadow = '0 4px 15px rgba(16, 185, 129, 0.3)';
           }}
         >
-          {isLibraryPage ? '💎 Plans' : '📚 Library'}
+          {isLibraryPage ? '💳 Plans' : '📚 Library'}
         </button>
       </div>
     </>
