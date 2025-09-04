@@ -217,12 +217,8 @@ function StoryLibrary({ onBack }) {
         onShowAchievements={() => setShowAchievements(true)}
         onShowRewards={() => setShowRewards(true)}
         onLogoClick={onBack}
+        isLibraryPage={true}
       />
-      
-      {/* Reading Streak Section - Outside container for full width */}
-      {currentChildProfile && (
-        <ReadingStreak childProfile={currentChildProfile} />
-      )}
       
       <div className="library-container">
         {/* Library Title Section */}
@@ -364,20 +360,39 @@ function StoryCard({ story, onRead, onDelete, onToggleFavorite }) {
     return themeEmojis[theme?.toLowerCase()] || '📖';
   };
 
+  // Generate a fallback gradient based on story title
+  const getGradient = (title) => {
+    const gradients = [
+      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+      'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+      'linear-gradient(135deg, #30cfd0 0%, #330867 100%)'
+    ];
+    const index = (title || '').charCodeAt(0) % gradients.length;
+    return gradients[index] || gradients[0];
+  };
+
   return (
     <div className="story-card">
       {/* Story Image */}
-      {story.image_url && (
-        <div className="story-card-image">
+      <div className="story-card-image" style={!story.image_url ? { background: getGradient(story.title) } : {}}>
+        {story.image_url ? (
           <img 
             src={story.image_url} 
             alt={story.title}
             onError={(e) => {
               e.target.style.display = 'none';
+              e.target.parentElement.style.background = getGradient(story.title);
             }}
           />
-        </div>
-      )}
+        ) : (
+          <div className="story-card-placeholder">
+            <span className="placeholder-emoji">📚</span>
+          </div>
+        )}
+      </div>
       
       {/* Story Content */}
       <div className="story-card-content">
@@ -397,12 +412,6 @@ function StoryCard({ story, onRead, onDelete, onToggleFavorite }) {
             <span className="meta-icon">👤</span>
             {story.child_name || 'Unknown'}
           </span>
-          {story.theme && (
-            <span className="meta-item">
-              <span className="meta-icon">{getThemeEmoji(story.theme)}</span>
-              {story.theme}
-            </span>
-          )}
           <span className="meta-item">
             <span className="meta-icon">📅</span>
             {formatDate(story.created_at)}

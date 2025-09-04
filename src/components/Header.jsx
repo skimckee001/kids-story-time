@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 
-function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth, onLogout, onShowAchievements, onLogoClick, onShowRewards }) {
+function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth, onLogout, onShowAchievements, onLogoClick, onShowRewards, isLibraryPage = false }) {
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   return (
     <header className="header-container" style={{display: 'flex', flexDirection: 'column', gap: '0'}}>
@@ -53,10 +53,10 @@ function Header({ user, subscriptionTier, starPoints, onShowLibrary, onShowAuth,
               
               <button 
                 className="header-btn"
-                onClick={onShowLibrary}
+                onClick={isLibraryPage ? () => window.open('/pricing-new.html', '_blank') : onShowLibrary}
                 style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto'}}
               >
-                📚 Library
+                {isLibraryPage ? '💎 Plans' : '📚 Library'}
               </button>
               
               {/* More Menu Dropdown */}
