@@ -2,7 +2,7 @@
 import OpenAI from 'openai';
 
 export async function handler(event) {
-  console.log('Generate-story-v2-simple function called');
+  console.log('Generate-story-v2-simple function called - v1.1');
   
   const headers = {
     'Access-Control-Allow-Origin': '*',
