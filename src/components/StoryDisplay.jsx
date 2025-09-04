@@ -8,7 +8,7 @@ import './StoryDisplay.css';
 import '../App.original.css';
 
 function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, subscriptionTier, starPoints, childProfile, onShowAchievements, onShowRewards, onShowDashboard, onShowProfileManager, bedtimeModeActive, onToggleBedtime, onStarsUpdate }) {
-  // console.log('StoryDisplay received:', { story, subscriptionTier, hasImageUrl: !!story?.imageUrl });
+  console.log('StoryDisplay received:', { story, subscriptionTier, hasImageUrl: !!story?.imageUrl, imageUrl: story?.imageUrl });
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [rating, setRating] = useState(0);
@@ -1155,11 +1155,12 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                             {story.imageUrl ? (
                               <>
                                 <img 
-                                  src={story.imageUrl.replace('?watermark=true', '')} 
+                                  src={story.imageUrl} 
                                   alt={story.title}
                                   className="story-main-image stock-image"
                                   style={{ position: 'relative' }}
                                   onError={(e) => {
+                                    console.error('Image failed to load:', e.target.src);
                                     // If image fails to load, try a fallback
                                     if (!e.target.dataset.retried) {
                                       e.target.dataset.retried = 'true';

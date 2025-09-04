@@ -207,12 +207,8 @@ async function generateAIImage(prompt, style, mood, tier) {
             if (response.ok) {
                 const data = await response.json();
                 if (data.data && data.data[0]) {
-                    // Add watermark info for free tier (handled client-side)
+                    // Return URL as-is, watermark is handled by CSS on client side
                     const imageUrl = data.data[0].url;
-                    if (!isPaidTier) {
-                        // Return with metadata for client to add watermark
-                        return `${imageUrl}?watermark=true`;
-                    }
                     return imageUrl;
                 }
             }
