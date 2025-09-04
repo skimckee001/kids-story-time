@@ -59,8 +59,13 @@ exports.handler = async (event) => {
     
     const targetWords = wordTargets[storyLength] || 900;
     
-    // Choose model based on age (simpler approach)
-    const model = childAge >= 10 ? 'gpt-4' : 'gpt-3.5-turbo';
+    // For now, stick with GPT-3.5-turbo for all stories
+    // GPT-4 has lower completion token limits than GPT-3.5
+    // For stories over 2500 words, we'll need to adjust expectations
+    const model = 'gpt-3.5-turbo';
+    
+    // Adjust target for very long stories to fit within token limits
+    const adjustedTargetWords = targetWords > 2500 ? 2500 : targetWords;
     
     // Build the main character description
     const characterDesc = includeNameInStory 
@@ -71,7 +76,7 @@ exports.handler = async (event) => {
     const storyTheme = themes.length > 0 ? themes.join(' and ') : interests;
     
     // Create a focused prompt for exact word count
-    const prompt = `You MUST write exactly ${targetWords} words. This is CRITICAL.
+    const prompt = `You MUST write exactly ${adjustedTargetWords} words. This is CRITICAL.
 
 STORY REQUIREMENTS:
 ${characterDesc}.
@@ -79,11 +84,11 @@ Theme: ${storyTheme}
 ${customPrompt ? `Additional details: ${customPrompt}` : ''}
 
 LENGTH REQUIREMENT - THIS IS MANDATORY:
-Write EXACTLY ${targetWords} words. Not approximately, not "about" - EXACTLY ${targetWords} words.
+Write EXACTLY ${adjustedTargetWords} words. Not approximately, not "about" - EXACTLY ${adjustedTargetWords} words.
 
-For a ${targetWords}-word story, you need:
-- ${Math.floor(targetWords / 100)} paragraphs of approximately 100 words each
-- If ${targetWords} words feels too long, that's correct - make it that long anyway
+For a ${adjustedTargetWords}-word story, you need:
+- ${Math.floor(adjustedTargetWords / 100)} paragraphs of approximately 100 words each
+- If ${adjustedTargetWords} words feels too long, that's correct - make it that long anyway
 - Add detailed descriptions of settings, characters, actions
 - Include dialogue and character thoughts
 - Expand every scene with sensory details (sights, sounds, smells, feelings)
@@ -92,20 +97,20 @@ For a ${targetWords}-word story, you need:
 IMPORTANT: Most AI models write stories that are TOO SHORT. To combat this:
 - After every paragraph, count your words so far
 - If you're behind pace, add more detail to the next paragraph
-- A ${targetWords}-word story should feel substantial and complete
-- This is a ${Math.round(targetWords/150)}-${Math.round(targetWords/100)} minute read-aloud story
+- A ${adjustedTargetWords}-word story should feel substantial and complete
+- This is a ${Math.round(adjustedTargetWords/150)}-${Math.round(adjustedTargetWords/100)} minute read-aloud story
 
 Age level: ${childAge} years old
 Style: Engaging, descriptive, age-appropriate
 
-Begin the story now and write EXACTLY ${targetWords} words:`;
+Begin the story now and write EXACTLY ${adjustedTargetWords} words:`;
 
-    console.log(`Calling ${model} for ${targetWords} word story...`);
+    console.log(`Calling ${model} for ${adjustedTargetWords} word story (requested: ${targetWords})...`);
     
     // Calculate appropriate max_tokens 
     // Use 1.5x multiplier for safety (accounts for variations in tokenization)
-    // Remove the 4000 cap to allow longer stories
-    const maxTokens = Math.floor(targetWords * 1.5);
+    // Cap at 4096 for GPT-3.5-turbo model limit
+    const maxTokens = Math.min(4096, Math.floor(adjustedTargetWords * 1.5));
     
     const completion = await openai.chat.completions.create({
       model: model,
