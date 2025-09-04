@@ -1,12 +1,14 @@
 // Enhanced Story Generation System for KidsStoryTime.ai
 // This module provides age-appropriate, length-accurate story generation
 
-// Word count targets by story length
+// Word count targets by story length (150 words per minute reading speed)
 export const WORD_COUNT_TARGETS = {
-  'short': { min: 300, target: 375, max: 450 },      // 2-3 minutes
-  'medium': { min: 625, target: 750, max: 875 },     // 5-7 minutes  
-  'long': { min: 1250, target: 1500, max: 1750 },    // 10-15 minutes
-  'extended': { min: 2000, target: 2500, max: 3000 } // 20 minutes
+  'short': { min: 300, target: 375, max: 450 },          // 2-3 minutes
+  'medium': { min: 750, target: 900, max: 1050 },        // 5-7 minutes  
+  'long': { min: 1500, target: 1875, max: 2250 },        // 10-15 minutes
+  'extended': { min: 2500, target: 3000, max: 3500 },    // 20-25 minutes
+  'long-extended': { min: 3500, target: 4000, max: 4500 }, // 25-30 minutes
+  'extra-long': { min: 4500, target: 5250, max: 6000 }     // 35-40 minutes
 };
 
 // Enhanced content guidelines by reading level

@@ -37,7 +37,9 @@ const STORY_LENGTHS = [
   { id: 'short', label: 'Short (2-3 minutes)' },
   { id: 'medium', label: 'Medium (5-7 minutes)' },
   { id: 'long', label: 'Long (10-15 minutes)' },
-  { id: 'extended', label: 'Extended (20 minutes)' }
+  { id: 'extended', label: 'Extended (20-25 minutes)' },
+  { id: 'long-extended', label: 'Very Long (25-30 minutes)' },
+  { id: 'extra-long', label: 'Extra Long (35-40 minutes)' }
 ];
 
 // Dynamic themes based on reading level - expanded with popular topics

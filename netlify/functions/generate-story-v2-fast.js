@@ -47,12 +47,14 @@ exports.handler = async (event) => {
     // Initialize OpenAI
     const openai = new OpenAI({ apiKey });
 
-    // Exact word targets for each length
+    // Exact word targets for each length (150 words per minute reading speed)
     const wordTargets = {
-      'short': 350,      // 2-3 minutes
-      'medium': 900,     // 5-7 minutes  
-      'long': 1400,      // 8-10 minutes
-      'extended': 2000   // 12-15 minutes
+      'short': 375,      // 2-3 minutes (2.5 min avg)
+      'medium': 900,     // 5-7 minutes (6 min avg)
+      'long': 1875,      // 10-15 minutes (12.5 min avg)
+      'extended': 3000,  // 20-25 minutes (20 min avg)
+      'long-extended': 4000,  // 25-30 minutes
+      'extra-long': 5250      // 35-40 minutes
     };
     
     const targetWords = wordTargets[storyLength] || 900;
@@ -100,8 +102,10 @@ Begin the story now and write EXACTLY ${targetWords} words:`;
 
     console.log(`Calling ${model} for ${targetWords} word story...`);
     
-    // Calculate appropriate max_tokens (words * 1.4 for token estimate)
-    const maxTokens = Math.min(4000, Math.floor(targetWords * 1.4));
+    // Calculate appropriate max_tokens 
+    // Use 1.5x multiplier for safety (accounts for variations in tokenization)
+    // Remove the 4000 cap to allow longer stories
+    const maxTokens = Math.floor(targetWords * 1.5);
     
     const completion = await openai.chat.completions.create({
       model: model,

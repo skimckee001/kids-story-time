@@ -191,7 +191,7 @@ function getLengthSpecification(storyLength) {
             maxWords: 450,
             targetWords: 375,
             readingTime: '2-3 minutes',
-            tokenLimit: 700,
+            tokenLimit: 600,  // 1.6x multiplier for safety
             paragraphs: '4-6 paragraphs'
         },
         'medium': {
@@ -199,7 +199,7 @@ function getLengthSpecification(storyLength) {
             maxWords: 1050,
             targetWords: 900,
             readingTime: '5-7 minutes',
-            tokenLimit: 1500,
+            tokenLimit: 1500,  // 1.67x multiplier
             paragraphs: '8-12 paragraphs'
         },
         'long': {
@@ -207,7 +207,7 @@ function getLengthSpecification(storyLength) {
             maxWords: 2250,
             targetWords: 1875,
             readingTime: '10-15 minutes',
-            tokenLimit: 3200,
+            tokenLimit: 3000,  // 1.6x multiplier (was way too low at 3200 for 1875 words)
             paragraphs: '15-20 paragraphs'
         },
         'extended': {
@@ -215,7 +215,7 @@ function getLengthSpecification(storyLength) {
             maxWords: 3500,
             targetWords: 3000,
             readingTime: '20-25 minutes',
-            tokenLimit: 4500,
+            tokenLimit: 4800,  // 1.6x multiplier
             paragraphs: '20-25 paragraphs'
         },
         'long-extended': {
@@ -223,7 +223,7 @@ function getLengthSpecification(storyLength) {
             maxWords: 4500,
             targetWords: 4000,
             readingTime: '30-35 minutes',
-            tokenLimit: 5500,
+            tokenLimit: 6400,  // 1.6x multiplier
             paragraphs: '25-30 paragraphs'
         },
         'extra-long': {
@@ -231,7 +231,7 @@ function getLengthSpecification(storyLength) {
             maxWords: 6000,
             targetWords: 5250,
             readingTime: '40-45 minutes',
-            tokenLimit: 7000,
+            tokenLimit: 8400,  // 1.6x multiplier
             paragraphs: '30-35 paragraphs'
         }
     };
