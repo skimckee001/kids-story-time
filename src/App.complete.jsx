@@ -413,7 +413,23 @@ function App() {
   };
   
   const getImageStyles = () => {
-    // Determine age-appropriate styles based on reading level
+    // Free tier gets only cartoon style
+    const isFreeTier = !user || subscriptionTier === 'try-now' || subscriptionTier === 'free' || subscriptionTier === 'reader-free';
+    
+    if (isFreeTier) {
+      return [
+        {
+          id: 'cartoon',
+          label: 'Cartoon Fun (Free)',
+          icon: '🎨',
+          description: 'Colorful & playful',
+          prompt: 'bright cartoon style, child-friendly, vibrant colors',
+          ageRange: [3, 16]
+        }
+      ];
+    }
+    
+    // Paid tiers get all styles based on reading level
     const isYounger = ['pre-reader', 'early-phonics', 'beginning-reader'].includes(readingLevel);
     const isOlder = ['fluent-reader', 'insightful-reader'].includes(readingLevel);
     

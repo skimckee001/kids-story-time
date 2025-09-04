@@ -1149,15 +1149,16 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                               </div>
                             )}
                           </div>
-                        ) : subscriptionTier === 'reader-free' || subscriptionTier === 'reader' || subscriptionTier === 'free' ? (
-                          // For free tier users, show stock image with AI upgrade button
-                          <div className="story-image-wrapper">
+                        ) : subscriptionTier === 'reader-free' || subscriptionTier === 'reader' || subscriptionTier === 'free' || subscriptionTier === 'try-now' || !user ? (
+                          // For free tier users, show image with watermark
+                          <div className="story-image-wrapper watermarked">
                             {story.imageUrl ? (
                               <>
                                 <img 
-                                  src={story.imageUrl} 
+                                  src={story.imageUrl.replace('?watermark=true', '')} 
                                   alt={story.title}
                                   className="story-main-image stock-image"
+                                  style={{ position: 'relative' }}
                                   onError={(e) => {
                                     // If image fails to load, try a fallback
                                     if (!e.target.dataset.retried) {

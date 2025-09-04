@@ -485,6 +485,23 @@ html {
   border-radius: 15px;
 }
 
+/* Watermark for free tier */
+.story-image-wrapper.watermarked::after {
+  content: 'KidsStoryTime.ai';
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  pointer-events: none;
+}
+
 .story-main-image {
   width: 100%;
   height: 100%;
