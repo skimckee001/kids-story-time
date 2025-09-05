@@ -215,12 +215,30 @@ function App() {
   const loadUserUsageStats = async () => {
     if (!user) return;
     
+    // For test users, don't overwrite local state from database
+    const isTestUser = user?.id?.startsWith('test-') || 
+                      !import.meta.env.VITE_SUPABASE_URL || 
+                      import.meta.env.VITE_SUPABASE_URL.includes('dummy');
+    
+    if (isTestUser) {
+      // Keep the current local state for test users
+      return;
+    }
+    
     try {
       const usage = await usageTracker.loadUsageStats(user.id);
       if (usage) {
-        setMonthlyStoriesUsed(usage.stories_used || 0);
-        setAiIllustrationsUsed(usage.ai_illustrations_used || 0);
-        setNarrationsUsed(usage.narrations_used || 0);
+        // Only update if current values are 0 (initial load)
+        // This prevents resetting after story generation
+        if (monthlyStoriesUsed === 0) {
+          setMonthlyStoriesUsed(usage.stories_used || 0);
+        }
+        if (aiIllustrationsUsed === 0) {
+          setAiIllustrationsUsed(usage.ai_illustrations_used || 0);
+        }
+        if (narrationsUsed === 0) {
+          setNarrationsUsed(usage.narrations_used || 0);
+        }
       }
     } catch (error) {
       console.error('Error loading usage stats:', error);
@@ -1147,17 +1165,20 @@ function App() {
 
   const saveStoryToLibrary = async (storyData) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
+      // For test users or local dev, save to localStorage
+      const isTestUser = user?.id?.startsWith('test-') || 
+                        !import.meta.env.VITE_SUPABASE_URL || 
+                        import.meta.env.VITE_SUPABASE_URL.includes('dummy');
+      
       const saveData = {
+        id: crypto.randomUUID(),
         title: storyData.title,
         content: storyData.content,
-        child_name: storyData.childName,
+        child_name: storyData.childName || storyData.child_name,
         theme: storyData.themes?.join(', ') || '',
-        image_url: storyData.imageUrl,
-        user_id: user.id,
-        reading_level: storyData.readingLevel,
+        image_url: storyData.imageUrl || storyData.image_url,
+        user_id: user?.id || 'guest',
+        reading_level: storyData.readingLevel || storyData.reading_level,
         metadata: storyData.metadata || {},
         created_at: new Date().toISOString()
       };
@@ -1165,12 +1186,32 @@ function App() {
       console.log('Saving story to library with data:', {
         title: saveData.title,
         hasContent: !!saveData.content,
-        hasImageUrl: !!saveData.image_url
+        hasImageUrl: !!saveData.image_url,
+        isTestUser
       });
+
+      if (isTestUser) {
+        // Save to localStorage for test users
+        const libraryStories = JSON.parse(localStorage.getItem('libraryStories') || '[]');
+        libraryStories.unshift(saveData); // Add to beginning
+        localStorage.setItem('libraryStories', JSON.stringify(libraryStories));
+        console.log('Story saved to localStorage library');
+        
+        // Store the saved story ID for later image update
+        setCurrentStory(prev => ({
+          ...prev,
+          savedId: saveData.id
+        }));
+        return;
+      }
+
+      // For real users, save to Supabase
+      const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+      if (!supabaseUser) return;
 
       const { data, error } = await supabase
         .from('stories')
-        .insert(saveData)
+        .insert({ ...saveData, user_id: supabaseUser.id })
         .select()
         .single();
 
@@ -1210,6 +1251,8 @@ function App() {
   if (showLibrary) {
     return (
       <StoryLibrary
+        user={user}
+        subscriptionTier={subscriptionTier}
         onBack={() => setShowLibrary(false)}
       />
     );
@@ -1258,8 +1301,7 @@ function App() {
         }}
         onSave={() => {
           logger.debug('Story saved');
-          // Award extra star for saving
-          setStarPoints(prev => prev + 1);
+          // No extra stars for saving - stars are only awarded when generating stories
         }}
       />
     );

@@ -7,7 +7,7 @@ import ReadingStreak from './ReadingStreak';
 import StarRewardsSystem from './StarRewardsSystem';
 import './StoryLibrary.css';
 
-function StoryLibrary({ onBack }) {
+function StoryLibrary({ user: propUser, subscriptionTier: propTier, onBack }) {
   const [loading, setLoading] = useState(true);
   const [stories, setStories] = useState([]);
   const [selectedStory, setSelectedStory] = useState(null);
@@ -19,24 +19,15 @@ function StoryLibrary({ onBack }) {
   const [showRewards, setShowRewards] = useState(false);
   const [starPoints, setStarPoints] = useState(0);
   const [currentChildProfile, setCurrentChildProfile] = useState(null);
-  const [user, setUser] = useState(null);
-  const [subscriptionTier, setSubscriptionTier] = useState('reader');
+  
+  // Use props if provided, otherwise check locally
+  const user = propUser;
+  const subscriptionTier = propTier || 'reader-free';
 
   useEffect(() => {
     loadStories();
     loadStarsAndProfile();
-    checkUser();
   }, []);
-  
-  const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      setUser(user);
-      // Get subscription tier from localStorage or default
-      const tier = localStorage.getItem('subscriptionTier') || 'reader-free';
-      setSubscriptionTier(tier);
-    }
-  };
 
   useEffect(() => {
     // Load children profiles when component mounts
@@ -99,13 +90,24 @@ function StoryLibrary({ onBack }) {
   const loadStories = async () => {
     setLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        // Try to load from localStorage for testing
-        const localStories = localStorage.getItem('stories');
-        if (localStories) {
-          setStories(JSON.parse(localStories));
+      // Check if this is a test user or no real Supabase connection
+      const isTestUser = user?.id?.startsWith('test-') || 
+                        !import.meta.env.VITE_SUPABASE_URL || 
+                        import.meta.env.VITE_SUPABASE_URL.includes('dummy');
+      
+      if (isTestUser || !user) {
+        // Load from localStorage for test users
+        const libraryStories = localStorage.getItem('libraryStories');
+        const legacyStories = localStorage.getItem('stories'); // Also check old key
+        
+        let allStories = [];
+        if (libraryStories) {
+          allStories = JSON.parse(libraryStories);
+        } else if (legacyStories) {
+          allStories = JSON.parse(legacyStories);
         }
+        
+        setStories(allStories);
         setLoading(false);
         return;
       }
