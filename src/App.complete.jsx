@@ -701,7 +701,9 @@ function App() {
           content: mockData.story.content,
           themes: selectedThemes,
           child_name: childName,
+          childName: childName, // Add both formats
           reading_level: readingLevel,
+          readingLevel: readingLevel, // Add both formats
           image_url: mockData.imageUrl,
           imageUrl: mockData.imageUrl, // Add both formats for compatibility
           images: mockData.images || [mockData.imageUrl], // Include multiple images
@@ -866,13 +868,18 @@ function App() {
         );
         
         // Set the current story and show the story display immediately
+        const storyId = crypto.randomUUID();
         const storyData = {
+          id: storyId,
           title: storyTitle,
           content: storyContent,
           imageUrl: null,
+          image_url: null, // Include both formats
           childName: childName,
+          child_name: childName, // Include both formats
           themes: selectedThemes,
           readingLevel: readingLevel,
+          reading_level: readingLevel, // Include both formats
           metadata: {
             ...data.story.metadata,
             wordCount: validation.wordCount,
@@ -882,7 +889,7 @@ function App() {
           }
         };
         
-        setCurrentStory(storyData);
+        setCurrentStory({ ...storyData, savedId: storyId });
         setShowStory(true);
         
         // Award stars for completing a story
@@ -1016,11 +1023,12 @@ function App() {
                 }
                 const updatedStory = {
                   ...prev,
-                  imageUrl: imageUrl
+                  imageUrl: imageUrl,
+                  image_url: imageUrl // Update both formats
                 };
                 console.log('Updated story with image:', updatedStory);
-                // Update saved story with image URL
-                if (user && prev.savedId) {
+                // Update saved story with image URL (for both real and test users)
+                if (prev.savedId) {
                   updateSavedStoryImage(prev.savedId, imageUrl);
                 }
                 return updatedStory;
@@ -1030,7 +1038,8 @@ function App() {
               setTimeout(() => {
                 setCurrentStory(prev => ({
                   ...prev,
-                  imageUrl: imageUrl
+                  imageUrl: imageUrl,
+                  image_url: imageUrl // Update both formats
                 }));
                 console.log('Backup image URL set');
               }, 100);
@@ -1044,20 +1053,36 @@ function App() {
             const fallbackSeed = Math.floor(Math.random() * 1000);
             const fallbackImageUrl = `https://picsum.photos/seed/${fallbackSeed}/1024/1024`;
             console.log('Using fallback image:', fallbackImageUrl);
-            setCurrentStory(prev => ({
-              ...prev,
-              imageUrl: fallbackImageUrl
-            }));
+            setCurrentStory(prev => {
+              const updated = {
+                ...prev,
+                imageUrl: fallbackImageUrl,
+                image_url: fallbackImageUrl // Update both formats
+              };
+              // Update saved story with fallback image
+              if (prev?.savedId) {
+                updateSavedStoryImage(prev.savedId, fallbackImageUrl);
+              }
+              return updated;
+            });
           });
         } else {
           // For free tier users, add a stock image
           console.log('Free tier user, adding stock image');
           const stockSeed = storyTitle.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
           const stockImageUrl = `https://picsum.photos/seed/${stockSeed}/1024/1024`;
-          setCurrentStory(prev => ({
-            ...prev,
-            imageUrl: stockImageUrl
-          }));
+          setCurrentStory(prev => {
+            const updated = {
+              ...prev,
+              imageUrl: stockImageUrl,
+              image_url: stockImageUrl // Update both formats
+            };
+            // Update saved story with stock image
+            if (prev?.savedId) {
+              updateSavedStoryImage(prev.savedId, stockImageUrl);
+            }
+            return updated;
+          });
         }
         
         // Update usage counters and track in database
@@ -1098,7 +1123,9 @@ function App() {
             content: mockData.story.content,
             themes: selectedThemes,
             child_name: childName,
+            childName: childName, // Add both formats
             reading_level: readingLevel,
+            readingLevel: readingLevel, // Add both formats
             image_url: mockData.imageUrl,
             imageUrl: mockData.imageUrl, // Add both formats for compatibility
             images: mockData.images || [mockData.imageUrl], // Include multiple images
@@ -1197,6 +1224,8 @@ function App() {
         title: saveData.title,
         hasContent: !!saveData.content,
         hasImageUrl: !!saveData.image_url,
+        imageUrl: saveData.image_url,
+        allImages: saveData.images,
         isTestUser
       });
 

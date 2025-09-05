@@ -107,6 +107,14 @@ function StoryLibrary({ user: propUser, subscriptionTier: propTier, onBack }) {
           allStories = JSON.parse(legacyStories);
         }
         
+        console.log('Loaded stories from localStorage:', allStories.map(s => ({
+          title: s.title,
+          hasImageUrl: !!s.image_url,
+          imageUrl: s.image_url,
+          hasImageUrlCamel: !!s.imageUrl,
+          imageUrlCamel: s.imageUrl
+        })));
+        
         setStories(allStories);
         setLoading(false);
         return;
@@ -386,6 +394,13 @@ function StoryCard({ story, onRead, onDelete, onToggleFavorite }) {
     return gradients[index] || gradients[0];
   };
 
+  // Debug log
+  console.log('StoryCard rendering:', {
+    title: story.title,
+    hasImageUrl: !!story.image_url,
+    imageUrl: story.image_url
+  });
+  
   return (
     <div className="story-card">
       {/* Story Image */}
