@@ -21,11 +21,25 @@ const DevTestPanel = ({ onTierChange, currentTier }) => {
       color: '#10b981'
     },
     {
+      tier: 'story-pro',
+      name: 'Story Pro',
+      email: 'storypro@test.com',
+      description: '10 stories/day + 30 AI images',
+      color: '#06b6d4'
+    },
+    {
       tier: 'story-maker-basic',
       name: 'Story Maker',
       email: 'basic@test.com',
       description: '10 stories/day + AI images',
       color: '#3b82f6'
+    },
+    {
+      tier: 'read-to-me-promax',
+      name: 'Read to Me Pro-Max',
+      email: 'promax@test.com',
+      description: '20 stories/day + 150 AI images + 30 narrations',
+      color: '#a855f7'
     },
     {
       tier: 'movie-director-premium',
@@ -58,9 +72,9 @@ const DevTestPanel = ({ onTierChange, currentTier }) => {
                   localStorage.getItem('devMode') === 'true';
     setShowPanel(isDev);
     
-    // Check for keyboard shortcut (Ctrl+Shift+D) to toggle dev mode
+    // Check for keyboard shortcut (Ctrl+Shift+D or Cmd+Shift+D) to toggle dev mode
     const handleKeyPress = (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
         const currentDevMode = localStorage.getItem('devMode') === 'true';
         localStorage.setItem('devMode', (!currentDevMode).toString());
         window.location.reload();
