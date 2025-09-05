@@ -161,7 +161,8 @@ function AchievementSystem({ childProfile, onClose, onGoalComplete }) {
     const achievements = getFilteredAchievements();
     const total = achievements.length;
     const unlocked = achievements.filter(a => unlockedAchievements.includes(a.id)).length;
-    return { unlocked, total, percentage: Math.round((unlocked / total) * 100) };
+    const percentage = total > 0 ? Math.round((unlocked / total) * 100) : 0;
+    return { unlocked, total, percentage };
   };
 
   const progress = getProgress();
@@ -171,7 +172,7 @@ function AchievementSystem({ childProfile, onClose, onGoalComplete }) {
     <div className="achievement-system">
       <div className="achievement-content">
         <div className="achievement-header">
-          <h2>🏆 Achievements & Goals</h2>
+          <h2>🏆 Badges and Goals</h2>
           <button className="close-btn" onClick={onClose} style={{position: 'absolute', right: '20px', top: '20px'}}>✕</button>
         </div>
         
@@ -240,9 +241,9 @@ function AchievementSystem({ childProfile, onClose, onGoalComplete }) {
             <div className="stat-card">
               <span className="stat-value">{progress.percentage}%</span>
               <span className="stat-label">
-                {selectedCategory === 'all' ? 'All Complete' : 
-                 selectedCategory === 'completed' ? 'Showing Completed' :
-                 selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1) + ' Complete'}
+                {selectedCategory === 'all' ? 'Overall Progress' : 
+                 selectedCategory === 'completed' ? `${progress.unlocked} Earned` :
+                 selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1) + ' Progress'}
               </span>
             </div>
           </div>

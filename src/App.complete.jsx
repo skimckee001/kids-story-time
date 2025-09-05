@@ -228,6 +228,58 @@ function App() {
     }
   }, [showMoreMenu, showUserMenu]);
   
+  const handleStripeUpgrade = async (tier) => {
+    // Price IDs for Stripe (these should be from your Stripe dashboard)
+    const priceIds = {
+      'story-pro': 'price_story_pro_monthly', // $4.99
+      'read-to-me-promax': 'price_read_to_me_monthly', // $6.99
+      'family-plus': 'price_family_plus_monthly' // $7.99
+    };
+    
+    const tierMap = {
+      'Story Pro': 'story-pro',
+      'Read to Me Pro-Max': 'read-to-me-promax',
+      'Family Plus': 'family-plus'
+    };
+    
+    const targetTier = tierMap[tier] || 'story-pro';
+    const priceId = priceIds[targetTier];
+    
+    if (!user) {
+      // Need to sign up first
+      openAuthModal();
+      return;
+    }
+    
+    try {
+      // For localhost testing, just show an alert
+      if (window.location.hostname === 'localhost') {
+        alert(`Stripe checkout would open for ${tier} (${targetTier})\nPrice ID: ${priceId}\n\nNote: Stripe checkout requires Netlify functions to be running.`);
+        return;
+      }
+      
+      // Call the Stripe checkout function
+      const response = await fetch('/.netlify/functions/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          priceId,
+          userId: user.id,
+          userEmail: user.email,
+          tier: targetTier
+        })
+      });
+      
+      const { url } = await response.json();
+      if (url) {
+        window.location.href = url;
+      }
+    } catch (error) {
+      console.error('Stripe checkout error:', error);
+      alert('Unable to open checkout. Please try again.');
+    }
+  };
+  
   const getNextUpgradeTier = (currentTier) => {
     const tierProgression = {
       'try-now': { 
@@ -1440,7 +1492,7 @@ function App() {
                 onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
               >
                 <span style={{fontSize: '18px'}}>🏆</span>
-                <span>{achievementCount || 0}/48 Badges</span>
+                <span>{achievementCount || 0}/20 Badges</span>
               </button>
               
               {/* Library */}
@@ -2111,7 +2163,7 @@ function App() {
                   
                   <button
                     type="button"
-                    onClick={() => window.location.href = '/pricing-new.html'}
+                    onClick={() => handleStripeUpgrade(nextTier.name)}
                     style={{
                       padding: '14px 40px',
                       background: 'linear-gradient(135deg, #667eea, #764ba2)',
