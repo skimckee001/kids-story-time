@@ -231,7 +231,11 @@ function StoryLibrary({ onBack }) {
             </div>
             <div className="library-stat">
               <span className="library-stat-icon">👥</span>
-              <span className="library-stat-text">{children.length} {children.length === 1 ? 'Profile' : 'Profiles'}</span>
+              <span className="library-stat-text">
+                {children.length === 1 
+                  ? `Profile 1: ${children[0].name || 'Unnamed'}` 
+                  : `${children.length} Profiles`}
+              </span>
             </div>
           </div>
         </div>

@@ -1380,7 +1380,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
               ⭐ Upgrade to Pro
             </button>
             <button 
-              onClick={onShowLibrary || onBack} 
+              onClick={onShowLibrary ? onShowLibrary : onBack} 
               className="library-btn"
             >
               📚 My Library
