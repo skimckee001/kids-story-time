@@ -3,6 +3,13 @@
 ## ⚠️ CRITICAL: Read This First
 This file contains essential context for the KidsStoryTime.ai React project. **ALWAYS** read this file when starting a new session.
 
+## 🖥️ DEVELOPMENT ENVIRONMENT
+**Operating System:** macOS (Mac)
+**Keyboard Shortcuts:** Always use Mac shortcuts (Cmd instead of Ctrl)
+- Open DevTools: **Cmd+Option+I** (NOT F12)
+- Hard Refresh: **Cmd+Shift+R**
+- Clear Cache: **Cmd+Shift+Delete**
+
 ## 🎨 CSS REQUIREMENT
 **For ANY CSS or styling work, you MUST consult CSS_STYLE_GUIDE.md first!** This ensures consistency across the application.
 
