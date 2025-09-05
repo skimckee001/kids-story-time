@@ -150,6 +150,7 @@ function App() {
   const [subscriptionTier, setSubscriptionTier] = useState('try-now'); // Updated tier system
   const [showLibrary, setShowLibrary] = useState(false);
   const [showProfileManager, setShowProfileManager] = useState(false);
+  const [profileManagerCreateMode, setProfileManagerCreateMode] = useState(false);
   const [currentStory, setCurrentStory] = useState(null);
   const [showStory, setShowStory] = useState(false);
   const [storiesRemaining, setStoriesRemaining] = useState(1);
@@ -882,7 +883,7 @@ function App() {
             },
             body: JSON.stringify({
               prompt: storyImagePrompt,
-              style: imageStyle || 'cartoon',  // Default to cartoon for free tier
+              style: effectiveStyle || imageStyle || 'cartoon',  // Use the computed effective style
               mood: 'cheerful',
               tier: apiTier
             })
@@ -1523,7 +1524,7 @@ function App() {
               </button>
               
               {/* Upgrade prompt if needed */}
-              {(subscriptionTier === 'reader-free' || subscriptionTier === 'story-maker-basic') && storiesRemaining <= 1 && (
+              {(subscriptionTier === 'reader-free' || subscriptionTier === 'story-maker-basic' || subscriptionTier === 'story-pro') && storiesRemaining <= 1 && (
                 <button 
                   className="action-btn upgrade-btn"
                   onClick={() => openAuthModal()}
@@ -1547,7 +1548,7 @@ function App() {
                   onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                 >
                   <span style={{fontSize: '18px'}}>✨</span>
-                  <span>Upgrade Plan</span>
+                  <span>Upgrade to {getNextUpgradeTier(subscriptionTier)?.name || 'Premium'}</span>
                 </button>
               )}
             </div>
@@ -1603,7 +1604,10 @@ function App() {
               </p>
               <button
                 type="button"
-                onClick={() => setShowProfileManager(true)}
+                onClick={() => {
+                  setProfileManagerCreateMode(true);
+                  setShowProfileManager(true);
+                }}
                 style={{
                   background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                   color: 'white',
@@ -1697,14 +1701,19 @@ function App() {
               {/* Child's Name and Gender */}
               <div className="form-group">
                 <label htmlFor="childName">
-                  Child's Name or Character Name
+                  Child's name (or character story is about)
                   {selectedChildProfile && (
-                    <span style={{ 
-                      marginLeft: '10px', 
-                      fontSize: '13px', 
-                      fontWeight: 'normal',
-                      color: '#667eea'
-                    }}>
+                    <span 
+                      onClick={() => setShowProfileManager(true)}
+                      style={{ 
+                        marginLeft: '10px', 
+                        fontSize: '13px', 
+                        fontWeight: 'normal',
+                        color: '#667eea',
+                        cursor: 'pointer',
+                        textDecoration: 'underline'
+                      }}
+                    >
                       (Profile: {selectedChildProfile.name})
                     </span>
                   )}
@@ -2260,7 +2269,11 @@ function App() {
       {/* Profile Manager Modal */}
       {showProfileManager && (
         <ProfileManager
-          onClose={() => setShowProfileManager(false)}
+          startInCreateMode={profileManagerCreateMode}
+          onClose={() => {
+            setShowProfileManager(false);
+            setProfileManagerCreateMode(false);
+          }}
           onProfileSelect={(profile) => {
             setSelectedChildProfile(profile);
             // Auto-populate form with profile data
@@ -2593,7 +2606,12 @@ function UsageDisplay({ user, subscriptionTier, storiesRemaining, monthlyStories
     );
   }
   
-  const { dailyStories, monthlyStories, aiIllustrations, narrations } = usageSummary;
+  const { 
+    dailyStories = { remaining: 0, used: 0, limit: 0 }, 
+    monthlyStories = { remaining: 0, used: 0, limit: null }, 
+    aiIllustrations = { remaining: 0, used: 0, limit: null }, 
+    narrations = { remaining: 0, used: 0, limit: null }
+  } = usageSummary;
   
   return (
     <div style={{
@@ -2717,9 +2735,14 @@ function UsageDisplay({ user, subscriptionTier, storiesRemaining, monthlyStories
         color: '#666',
         fontStyle: 'italic'
       }}>
-        {subscriptionTier === 'reader-free' ? 'Reader (Free) Plan' :
+        {subscriptionTier === 'try-now' ? 'Try Now (Free)' :
+         subscriptionTier === 'reader-free' ? 'Reader (Free) Plan' :
+         subscriptionTier === 'reader' ? 'Reader Plan' :
          subscriptionTier === 'story-pro' ? 'Story Pro Plan' :
-         subscriptionTier === 'read-to-me-promax' ? 'Read to Me ProMax Plan' :
+         subscriptionTier === 'story-maker-basic' ? 'Story Maker Basic' :
+         subscriptionTier === 'read-to-me-promax' ? 'Read to Me Pro-Max Plan' :
+         subscriptionTier === 'movie-director-premium' ? 'Movie Director Premium' :
+         subscriptionTier === 'family' ? 'Family Plan' :
          subscriptionTier === 'family-plus' ? 'Family Plus Plan' :
          'Current Plan'}
       </div>

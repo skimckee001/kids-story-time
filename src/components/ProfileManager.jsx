@@ -24,10 +24,10 @@ const FAVORITE_THEMES = [
   { value: 'bedtime', label: 'Bedtime', emoji: '🌙' }
 ];
 
-function ProfileManager({ onClose, onProfileSelect, user }) {
+function ProfileManager({ onClose, onProfileSelect, user, startInCreateMode = false }) {
   const [profiles, setProfiles] = useState([]);
   const [selectedProfile, setSelectedProfile] = useState(null);
-  const [isCreating, setIsCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(startInCreateMode);
   const [editingProfile, setEditingProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   
