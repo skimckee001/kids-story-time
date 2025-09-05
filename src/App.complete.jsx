@@ -2236,14 +2236,14 @@ function App() {
           padding: '20px',
           marginTop: '40px'
         }}>
-          <p style={{ color: 'white' }}>
-            <a href="/pricing-new.html" target="_blank" style={{ color: 'white', textDecoration: 'underline' }}>Pricing</a> | 
-            <a href="/terms.html" target="_blank" style={{ color: 'white', textDecoration: 'underline' }}>Terms of Service</a> | 
-            <a href="/privacy.html" target="_blank" style={{ color: 'white', textDecoration: 'underline' }}>Privacy Policy</a> | 
-            <a href="mailto:support@kidsstorytime.ai" style={{ color: 'white', textDecoration: 'underline' }}>Contact Us</a>
+          <p style={{ color: 'white', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
+            <a href="/pricing-new.html" target="_blank" style={{ color: 'white', textDecoration: 'underline', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>Pricing</a> | 
+            <a href="/terms.html" target="_blank" style={{ color: 'white', textDecoration: 'underline', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>Terms of Service</a> | 
+            <a href="/privacy.html" target="_blank" style={{ color: 'white', textDecoration: 'underline', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>Privacy Policy</a> | 
+            <a href="mailto:support@kidsstorytime.ai" style={{ color: 'white', textDecoration: 'underline', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>Contact Us</a>
           </p>
-          <p style={{ color: 'white' }}>&copy; 2025 Kids Story Time.</p>
-          <p style={{ color: 'white' }}>All rights reserved.</p>
+          <p style={{ color: 'white', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>&copy; 2025 Kids Story Time.</p>
+          <p style={{ color: 'white', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>All rights reserved.</p>
         </footer>
       </div>
 

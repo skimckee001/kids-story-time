@@ -378,8 +378,18 @@ function ProfileManager({ onClose, onProfileSelect, user, startInCreateMode = fa
                 />
               </div>
 
+              <div className="form-group checkbox-group">
+                <input
+                  type="checkbox"
+                  id="include-name"
+                  checked={formData.include_name_in_stories}
+                  onChange={(e) => setFormData({...formData, include_name_in_stories: e.target.checked})}
+                />
+                <label htmlFor="include-name">Include child's name in stories</label>
+              </div>
+
               <div className="form-group">
-                <label>Storytime Gender</label>
+                <label>Stories favor gender</label>
                 <select
                   value={formData.gender}
                   onChange={(e) => setFormData({...formData, gender: e.target.value})}
@@ -403,23 +413,13 @@ function ProfileManager({ onClose, onProfileSelect, user, startInCreateMode = fa
                   ))}
                 </select>
               </div>
-
-              <div className="form-group checkbox-group">
-                <input
-                  type="checkbox"
-                  id="include-name"
-                  checked={formData.include_name_in_stories}
-                  onChange={(e) => setFormData({...formData, include_name_in_stories: e.target.checked})}
-                />
-                <label htmlFor="include-name">Include child's name in stories</label>
-              </div>
             </div>
 
             <div className="form-section">
               <h4>Preferences</h4>
               
               <div className="form-group">
-                <label>Favorite Story Topics</label>
+                <label>Favorite Story Themes</label>
                 <div className="themes-grid">
                   {FAVORITE_THEMES.map(theme => (
                     <button
@@ -435,7 +435,7 @@ function ProfileManager({ onClose, onProfileSelect, user, startInCreateMode = fa
               </div>
 
               <div className="form-group">
-                <label>Favorite Story Topics (Currently: {formData.favorite_items?.length || 0} items)</label>
+                <label>Favorite Story Topics</label>
                 <div className="favorite-items">
                   {formData.favorite_items && formData.favorite_items.length > 0 && formData.favorite_items.map((item, index) => (
                     <span key={`${item}-${index}`} className="item-badge">

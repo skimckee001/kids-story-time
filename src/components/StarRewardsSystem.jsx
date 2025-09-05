@@ -39,13 +39,15 @@ const REWARDS = [
 
 function StarRewardsSystem({ childProfile, stars, setStars, onClose }) {
   const [ownedRewards, setOwnedRewards] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('owned');
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [selectedReward, setSelectedReward] = useState(null);
   const [purchaseMessage, setPurchaseMessage] = useState('');
 
   useEffect(() => {
     loadOwnedRewards();
+    // Reset to My Rewards tab when profile changes
+    setSelectedCategory('owned');
   }, [childProfile]);
 
   const loadOwnedRewards = () => {
@@ -179,12 +181,6 @@ function StarRewardsSystem({ childProfile, stars, setStars, onClose }) {
         {/* Category Filters */}
         <div className="rewards-filters">
           <button 
-            className={selectedCategory === 'all' ? 'active' : ''}
-            onClick={() => setSelectedCategory('all')}
-          >
-            All ({getCategoryCount('all')})
-          </button>
-          <button 
             className={selectedCategory === 'owned' ? 'active' : ''}
             onClick={() => setSelectedCategory('owned')}
           >
@@ -219,6 +215,12 @@ function StarRewardsSystem({ childProfile, stars, setStars, onClose }) {
             onClick={() => setSelectedCategory('powers')}
           >
             Powers
+          </button>
+          <button 
+            className={selectedCategory === 'all' ? 'active' : ''}
+            onClick={() => setSelectedCategory('all')}
+          >
+            All ({getCategoryCount('all')})
           </button>
         </div>
 
