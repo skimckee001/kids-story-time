@@ -1144,6 +1144,7 @@ function App() {
           setStoryContext('');
         }}
         onShowLibrary={() => {
+          console.log('Library button clicked - navigating to library');
           setShowStory(false);
           setShowLibrary(true);
         }}
@@ -1808,6 +1809,8 @@ function App() {
                 }}>
                   <input
                     type="checkbox"
+                    id="includeNameInStory"
+                    name="includeNameInStory"
                     checked={includeNameInStory}
                     onChange={(e) => setIncludeNameInStory(e.target.checked)}
                     style={{
@@ -2536,10 +2539,12 @@ function BedtimeModeModal({ isActive, onClose, onActivate, onDeactivate }) {
       )}
       
       <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px' }}>
+        <label htmlFor="bedtimeTimer" style={{ display: 'block', marginBottom: '8px', fontSize: '14px' }}>
           Set Timer (minutes):
         </label>
         <select
+          id="bedtimeTimer"
+          name="bedtimeTimer"
           value={timer}
           onChange={(e) => setTimer(Number(e.target.value))}
           style={{

@@ -951,7 +951,12 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                   
                   <button 
                     className="header-btn"
-                    onClick={() => onShowLibrary && onShowLibrary()}
+                    onClick={() => {
+                      console.log('StoryDisplay: Library button clicked, onShowLibrary exists:', !!onShowLibrary);
+                      if (onShowLibrary) {
+                        onShowLibrary();
+                      }
+                    }}
                     style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
                   >
                     <span style={{fontSize: '16px', marginRight: '6px'}}>📚</span>
@@ -1391,7 +1396,12 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
               ⭐ Upgrade to Pro
             </button>
             <button 
-              onClick={onShowLibrary ? onShowLibrary : onBack} 
+              onClick={() => {
+                console.log('StoryDisplay (bottom): Library button clicked, onShowLibrary exists:', !!onShowLibrary);
+                if (onShowLibrary) {
+                  onShowLibrary();
+                }
+              }} 
               className="library-btn"
             >
               📚 My Library
