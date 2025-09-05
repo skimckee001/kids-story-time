@@ -132,21 +132,23 @@ const THEMES_BY_LEVEL = {
 };
 
 function App() {
-  // Form state
-  const [childName, setChildName] = useState('');
-  const [genderSelection, setGenderSelection] = useState({ boy: true, girl: true });
-  const [includeNameInStory, setIncludeNameInStory] = useState(true);
-  const [readingLevel, setReadingLevel] = useState('early-phonics');
-  const [selectedThemes, setSelectedThemes] = useState([]);
-  const [storyLength, setStoryLength] = useState('medium');
-  const [customPrompt, setCustomPrompt] = useState('');
-  const [storyContext, setStoryContext] = useState('');
-  const [imageStyle, setImageStyle] = useState('age-appropriate');
-  
-  // UI state
-  const [isGenerating, setIsGenerating] = useState(false);
-  // Replace old auth state with new enhanced auth hook
-  const { user, authModal, openAuthModal, closeAuthModal, handleAuthSuccess } = useEnhancedAuth();
+  // Add try-catch for mobile debugging
+  try {
+    // Form state
+    const [childName, setChildName] = useState('');
+    const [genderSelection, setGenderSelection] = useState({ boy: true, girl: true });
+    const [includeNameInStory, setIncludeNameInStory] = useState(true);
+    const [readingLevel, setReadingLevel] = useState('early-phonics');
+    const [selectedThemes, setSelectedThemes] = useState([]);
+    const [storyLength, setStoryLength] = useState('medium');
+    const [customPrompt, setCustomPrompt] = useState('');
+    const [storyContext, setStoryContext] = useState('');
+    const [imageStyle, setImageStyle] = useState('age-appropriate');
+    
+    // UI state
+    const [isGenerating, setIsGenerating] = useState(false);
+    // Replace old auth state with new enhanced auth hook
+    const { user, authModal, openAuthModal, closeAuthModal, handleAuthSuccess } = useEnhancedAuth();
   const [subscriptionTier, setSubscriptionTier] = useState('try-now'); // Updated tier system
   const [showLibrary, setShowLibrary] = useState(false);
   const [showProfileManager, setShowProfileManager] = useState(false);
@@ -2770,6 +2772,17 @@ function UsageDisplay({ user, subscriptionTier, storiesRemaining, monthlyStories
       </div>
     </div>
   );
+  } catch (error) {
+    // Log error for mobile debugging
+    console.error('App initialization error:', error);
+    return (
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <h2>An error occurred</h2>
+        <p>Error: {error.message}</p>
+        <p>Please refresh the page or contact support.</p>
+      </div>
+    );
+  }
 }
 
 // Old AuthModal component removed - now using AuthenticationManager

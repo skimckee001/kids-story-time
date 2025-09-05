@@ -320,10 +320,10 @@ h6 {
   will-change: transform;
 }
 
-/* Fix border-radius rendering on iOS */
-* {
+/* Fix border-radius rendering on iOS - disabled as it can cause blank screens */
+/* * {
   -webkit-mask-image: -webkit-radial-gradient(white, black);
-}
+} */
 
 .rounded,
 [class*="rounded-"] {
