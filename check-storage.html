@@ -1,0 +1,23 @@
+<\!DOCTYPE html>
+<html>
+<head><title>Check LocalStorage</title></head>
+<body>
+<h1>LocalStorage Debug</h1>
+<pre id="output"></pre>
+<script>
+const libraryStories = localStorage.getItem('libraryStories');
+const stories = localStorage.getItem('stories');
+
+const output = {
+  libraryStories: libraryStories ? JSON.parse(libraryStories) : null,
+  stories: stories ? JSON.parse(stories) : null
+};
+
+document.getElementById('output').textContent = JSON.stringify(output, null, 2);
+
+// Also log to console for inspection
+console.log('Library Stories:', output.libraryStories);
+console.log('Stories:', output.stories);
+</script>
+</body>
+</html>

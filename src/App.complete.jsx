@@ -906,10 +906,8 @@ function App() {
           }
         }
         
-        // Auto-save story for logged-in users
-        if (user) {
-          saveStoryToLibrary(storyData);
-        }
+        // Auto-save story to library (for both logged in and test users)
+        saveStoryToLibrary(storyData);
         
         // Save to localStorage for achievement tracking
         const existingStories = JSON.parse(localStorage.getItem('stories') || '[]');
@@ -1028,8 +1026,8 @@ function App() {
                 };
                 console.log('Updated story with image:', updatedStory);
                 // Update saved story with image URL (for both real and test users)
-                if (prev.savedId) {
-                  updateSavedStoryImage(prev.savedId, imageUrl);
+                if (prev.savedId || prev.id) {
+                  updateSavedStoryImage(prev.savedId || prev.id, imageUrl);
                 }
                 return updatedStory;
               });
@@ -1060,8 +1058,8 @@ function App() {
                 image_url: fallbackImageUrl // Update both formats
               };
               // Update saved story with fallback image
-              if (prev?.savedId) {
-                updateSavedStoryImage(prev.savedId, fallbackImageUrl);
+              if (prev?.savedId || prev?.id) {
+                updateSavedStoryImage(prev.savedId || prev.id, fallbackImageUrl);
               }
               return updated;
             });
@@ -1078,8 +1076,8 @@ function App() {
               image_url: stockImageUrl // Update both formats
             };
             // Update saved story with stock image
-            if (prev?.savedId) {
-              updateSavedStoryImage(prev.savedId, stockImageUrl);
+            if (prev?.savedId || prev?.id) {
+              updateSavedStoryImage(prev.savedId || prev.id, stockImageUrl);
             }
             return updated;
           });
@@ -1221,6 +1219,7 @@ function App() {
       };
       
       console.log('Saving story to library with data:', {
+        id: saveData.id,
         title: saveData.title,
         hasContent: !!saveData.content,
         hasImageUrl: !!saveData.image_url,
@@ -1270,22 +1269,31 @@ function App() {
   };
 
   const updateSavedStoryImage = async (storyId, imageUrl) => {
+    console.log('updateSavedStoryImage called:', { storyId, imageUrl });
     try {
       // Check if this is a test user or local dev
       const isTestUser = user?.id?.startsWith('test-') || 
                         !import.meta.env.VITE_SUPABASE_URL || 
                         import.meta.env.VITE_SUPABASE_URL.includes('dummy');
       
-      if (isTestUser) {
+      if (isTestUser || !user) {
         // Update localStorage story
         const libraryStories = JSON.parse(localStorage.getItem('libraryStories') || '[]');
+        console.log('Current library stories:', libraryStories.length);
         const storyIndex = libraryStories.findIndex(s => s.id === storyId);
+        console.log('Found story at index:', storyIndex);
         
         if (storyIndex !== -1) {
           libraryStories[storyIndex].image_url = imageUrl;
           libraryStories[storyIndex].imageUrl = imageUrl; // Store both formats
           localStorage.setItem('libraryStories', JSON.stringify(libraryStories));
-          console.log('Story image updated in localStorage library');
+          console.log('Story image updated in localStorage library:', {
+            storyId,
+            imageUrl,
+            updatedStory: libraryStories[storyIndex]
+          });
+        } else {
+          console.warn('Story not found in library for image update:', storyId);
         }
         return;
       }
