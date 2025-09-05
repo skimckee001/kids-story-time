@@ -7,12 +7,17 @@ let stripePromise = null;
 
 export const getStripe = () => {
   if (!stripePromise) {
-    // Use test key directly for now, can switch to env variable later
-    const publicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY || 'pk_test_51RsK5a0MYOtGjLFhHQIFsu70fMh280B1WbipmKXQEYXWt0gQPKK2YvHuhIVfyGSRcVJ21orq3hdK6bCwT5vGU4VU00mskVtFVa';
+    const publicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+    
     if (!publicKey) {
-      console.error('Missing Stripe public key. Please set VITE_STRIPE_PUBLIC_KEY');
-      return null;
+      throw new Error('Missing Stripe public key. Please set VITE_STRIPE_PUBLIC_KEY in your environment variables.');
     }
+    
+    // Warn if using test key in production
+    if (!import.meta.env.DEV && publicKey.startsWith('pk_test_')) {
+      console.error('WARNING: Using test Stripe key in production environment!');
+    }
+    
     stripePromise = loadStripe(publicKey);
   }
   return stripePromise;

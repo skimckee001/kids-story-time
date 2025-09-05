@@ -20,6 +20,18 @@ export class UsageTracker {
   async loadUsageStats(userId) {
     if (!userId) return null;
 
+    // Skip API calls for test/dummy users in development
+    if (userId?.startsWith('test-') || !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL.includes('dummy')) {
+      const { month, year } = this.getCurrentPeriod();
+      return {
+        stories_used: 0,
+        ai_illustrations_used: 0,
+        narrations_used: 0,
+        month,
+        year
+      };
+    }
+
     const cacheKey = `${userId}_${this.getCurrentPeriod().month}_${this.getCurrentPeriod().year}`;
     
     // Check cache first
@@ -63,6 +75,11 @@ export class UsageTracker {
   // Update usage stats in database
   async updateUsageStats(userId, updates) {
     if (!userId) return false;
+
+    // Skip API calls for test/dummy users in development
+    if (userId?.startsWith('test-') || !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL.includes('dummy')) {
+      return true; // Pretend it succeeded
+    }
 
     try {
       const { month, year } = this.getCurrentPeriod();
@@ -140,6 +157,11 @@ export class UsageTracker {
   // Get today's story count for daily limits
   async getTodayStoryCount(userId) {
     if (!userId) return 0;
+
+    // Skip API calls for test/dummy users in development
+    if (userId?.startsWith('test-') || !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL.includes('dummy')) {
+      return 0;
+    }
 
     try {
       const today = new Date().toISOString().split('T')[0];

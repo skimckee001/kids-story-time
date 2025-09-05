@@ -36,9 +36,12 @@
   [headers.values]
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
-    X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    # Force HTTPS and enable HSTS
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    # Basic Content Security Policy (can be tightened based on needs)
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co https://api.stripe.com https://api.openai.com wss://*.supabase.co; frame-src 'self' https://js.stripe.com https://checkout.stripe.com;"
 
 # Headers for proper MIME types - CRITICAL FOR REACT APP
 # Without these, you'll get white screen with MIME type errors

@@ -3,15 +3,91 @@ import { createClient } from '@supabase/supabase-js';
 
 // Get configuration from environment variables
 // These are public keys required for client-side use
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://dummy.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'dummy-key';
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase configuration. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.');
+// Check if we're using dummy/test credentials
+const isDummySupabase = supabaseUrl.includes('dummy') || supabaseAnonKey === 'dummy-key';
+
+if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+  console.warn('Missing Supabase configuration. Using mock client for development.');
 }
 
-// Create Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Create mock Supabase client for development when using dummy credentials
+const createMockClient = () => {
+  const mockData = {
+    profiles: new Map(),
+    children: new Map(),
+    stories: new Map(),
+    subscriptions: new Map()
+  };
+
+  return {
+    auth: {
+      signUp: async () => ({ data: { user: { id: 'test-user', email: 'test@example.com' } }, error: null }),
+      signInWithPassword: async () => ({ data: { user: { id: 'test-user', email: 'test@example.com' } }, error: null }),
+      signOut: async () => ({ error: null }),
+      getUser: async () => ({ data: { user: null }, error: null }),
+      getSession: async () => ({ data: { session: null }, error: null }),
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } })
+    },
+    from: (table) => ({
+      select: () => ({
+        eq: () => ({
+          single: async () => ({ data: null, error: { code: 'PGRST116' } }),
+          order: () => ({ 
+            data: [], 
+            error: null,
+            limit: () => ({ data: [], error: null })
+          })
+        }),
+        gte: () => ({
+          lt: () => ({ data: [], error: null, count: 0 })
+        }),
+        single: async () => ({ data: null, error: { code: 'PGRST116' } }),
+        order: () => ({
+          limit: async () => ({ data: [], error: null })
+        }),
+        limit: async () => ({ data: [], error: null })
+      }),
+      insert: () => ({
+        select: () => ({
+          single: async () => ({ data: { id: 'mock-id' }, error: null })
+        })
+      }),
+      update: () => ({
+        eq: () => ({
+          select: () => ({
+            single: async () => ({ data: { id: 'mock-id' }, error: null })
+          })
+        })
+      }),
+      upsert: () => ({
+        select: () => ({
+          single: async () => ({ data: { id: 'mock-id' }, error: null })
+        })
+      }),
+      delete: () => ({
+        eq: async () => ({ error: null })
+      })
+    }),
+    storage: {
+      from: () => ({
+        upload: async () => ({ data: { path: 'mock-path' }, error: null }),
+        getPublicUrl: () => ({ data: { publicUrl: 'https://via.placeholder.com/300' } }),
+        remove: async () => ({ error: null })
+      })
+    },
+    channel: () => ({
+      on: function() { return this; },
+      subscribe: () => ({ unsubscribe: () => {} })
+    }),
+    removeChannel: () => {}
+  };
+};
+
+// Create Supabase client (use mock if dummy credentials)
+export const supabase = isDummySupabase ? createMockClient() : createClient(supabaseUrl, supabaseAnonKey);
 
 // Auth helpers
 export const auth = {
@@ -44,14 +120,22 @@ export const auth = {
 
   // Get current user
   async getUser() {
-    const { data: { user } } = await supabase.auth.getUser();
-    return user;
+    const result = await supabase.auth.getUser();
+    // Handle both real and mock client response formats
+    if (result.data && typeof result.data === 'object' && 'user' in result.data) {
+      return result.data.user;
+    }
+    return null;
   },
 
   // Get session
   async getSession() {
-    const { data: { session } } = await supabase.auth.getSession();
-    return session;
+    const result = await supabase.auth.getSession();
+    // Handle both real and mock client response formats
+    if (result.data && typeof result.data === 'object' && 'session' in result.data) {
+      return result.data.session;
+    }
+    return null;
   },
 
   // Listen to auth changes

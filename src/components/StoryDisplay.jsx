@@ -1209,8 +1209,7 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                     {/* Original complex display logic - disabled */}
                     {false && index === 0 && (
                       <div className="story-image-float">
-                        {(subscriptionTier === 'plus' || subscriptionTier === 'premium' || subscriptionTier === 'family' || subscriptionTier === 'basic' ||
-                          subscriptionTier === 'family-plus' || subscriptionTier === 'story-maker-basic' || subscriptionTier === 'movie-director-premium') ? (
+                        {(subscriptionTier === 'story-pro' || subscriptionTier === 'read-to-me-promax' || subscriptionTier === 'family-plus') ? (
                           <div className="story-image-wrapper">
                             {story.imageUrl ? (
                               <img 

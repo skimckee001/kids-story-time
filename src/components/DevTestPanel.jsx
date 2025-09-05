@@ -4,80 +4,49 @@ const DevTestPanel = ({ onTierChange, currentTier }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
 
-  // Test accounts for different tiers
+  // Test accounts for different tiers (aligned with pricing page)
   const testAccounts = [
     {
       tier: 'try-now',
       name: 'Guest User',
       email: 'guest@test.com',
-      description: 'No account, 1 story to try',
+      description: '1 story trial, no account needed',
       color: '#9ca3af'
     },
     {
       tier: 'reader-free',
-      name: 'Free Reader',
+      name: 'Infrequent Reader',
       email: 'free@test.com',
-      description: '1 story/day, no AI images',
+      description: 'FREE - 3 stories/day, 10/month',
       color: '#10b981'
     },
     {
       tier: 'story-pro',
       name: 'Story Pro',
       email: 'storypro@test.com',
-      description: '10 stories/day + 30 AI images',
-      color: '#06b6d4'
-    },
-    {
-      tier: 'story-maker-basic',
-      name: 'Story Maker',
-      email: 'basic@test.com',
-      description: '10 stories/day + AI images',
+      description: '$4.99 - 10 stories/day + 30 AI images',
       color: '#3b82f6'
     },
     {
       tier: 'read-to-me-promax',
-      name: 'Read to Me Pro-Max',
+      name: 'Read to Me ProMax',
       email: 'promax@test.com',
-      description: '20 stories/day + 150 AI images + 30 narrations',
+      description: '$6.99 - 20 stories/day + narration',
       color: '#a855f7'
-    },
-    {
-      tier: 'movie-director-premium',
-      name: 'Movie Director',
-      email: 'premium@test.com',
-      description: '20 stories/day + Voice + All features',
-      color: '#8b5cf6'
-    },
-    {
-      tier: 'family',
-      name: 'Family Plan',
-      email: 'family@test.com',
-      description: 'Unlimited profiles, 20 stories/day',
-      color: '#ec4899'
     },
     {
       tier: 'family-plus',
       name: 'Family Plus',
       email: 'familyplus@test.com',
-      description: 'Everything unlimited + Priority',
+      description: '$7.99 - Unlimited + 4 profiles',
       color: '#f59e0b'
     }
   ];
 
-  // Show in development mode or with ?dev=true parameter
+  // Only show in development builds - no production backdoors
   useEffect(() => {
-    const isDev = window.location.hostname === 'localhost' || 
-                  window.location.hostname === '127.0.0.1' ||
-                  window.location.search.includes('dev=true') ||
-                  localStorage.getItem('devMode') === 'true';
-    
-    console.log('DevTestPanel check:', {
-      hostname: window.location.hostname,
-      search: window.location.search,
-      devMode: localStorage.getItem('devMode'),
-      isDev: isDev
-    });
-    
+    // ONLY check build-time flag, ignore URL params and localStorage in production
+    const isDev = import.meta.env.DEV;
     setShowPanel(isDev);
     
     // Check for keyboard shortcut (Ctrl+Shift+D or Cmd+Shift+D) to toggle dev mode
@@ -121,28 +90,9 @@ const DevTestPanel = ({ onTierChange, currentTier }) => {
     window.location.reload();
   };
 
-  // Always show if explicitly enabled via localStorage or URL
+  // Don't render anything in production
   if (!showPanel) {
-    // Add a hidden enabler div that can be clicked to activate
-    return (
-      <div
-        onClick={() => {
-          localStorage.setItem('devMode', 'true');
-          window.location.reload();
-        }}
-        style={{
-          position: 'fixed',
-          bottom: '10px',
-          right: '10px',
-          width: '20px',
-          height: '20px',
-          opacity: 0,
-          cursor: 'pointer',
-          zIndex: 9999
-        }}
-        title="Click to enable dev mode"
-      />
-    );
+    return null;
   }
 
   return (

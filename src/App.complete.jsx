@@ -21,6 +21,8 @@ import AuthenticationManager from './components/AuthenticationManager';
 import { useEnhancedAuth } from './hooks/useEnhancedAuth.jsx';
 import { initAllEnhancements } from './utils/stepperEnhancements';
 import { usageTracker } from './utils/usageTracker';
+import logger from './utils/logger';
+import { generateMockStoryWithDelay, shouldUseMockGenerator } from './utils/mockStoryGenerator';
 import { 
   generateEnhancedPrompt, 
   validateStoryOutput, 
@@ -132,8 +134,6 @@ const THEMES_BY_LEVEL = {
 };
 
 function App() {
-  // Add try-catch for mobile debugging
-  try {
     // Form state
     const [childName, setChildName] = useState('');
     const [genderSelection, setGenderSelection] = useState({ boy: true, girl: true });
@@ -169,11 +169,31 @@ function App() {
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [achievementCount, setAchievementCount] = useState(0);
+  const [isDevMode, setIsDevMode] = useState(false);
   const [showStripeTest, setShowStripeTest] = useState(false);
   const [showCommunityAchievements, setShowCommunityAchievements] = useState(false);
   const [showReferralProgram, setShowReferralProgram] = useState(false);
   const [showUserContent, setShowUserContent] = useState(false);
+  const [showTierTester, setShowTierTester] = useState(false);
   const { triggerCelebration, CelebrationComponent } = useCelebration();
+
+  // Check for dev mode
+  useEffect(() => {
+    const checkDevMode = () => {
+      // Only use build-time flag for production safety
+      const isDev = import.meta.env.DEV;
+      logger.debug('Dev mode check:', {
+        buildTimeFlag: import.meta.env.DEV,
+        isDev
+      });
+      setIsDevMode(isDev);
+    };
+    
+    checkDevMode();
+    // Re-check on navigation
+    window.addEventListener('popstate', checkDevMode);
+    return () => window.removeEventListener('popstate', checkDevMode);
+  }, []);
 
   // Load guest stars on mount if no user is logged in
   useEffect(() => {
@@ -385,7 +405,7 @@ function App() {
         const cleanup = initAllEnhancements();
         return cleanup;
       } catch (error) {
-        console.log('Enhancement initialization skipped:', error);
+        logger.debug('Enhancement initialization skipped:', error);
       }
     }, 100);
     
@@ -645,6 +665,53 @@ function App() {
     setIsGenerating(true);
 
     try {
+      // Check if we should use mock generator for local testing
+      if (shouldUseMockGenerator()) {
+        logger.info('Using mock story generator for local testing');
+        const mockData = await generateMockStoryWithDelay({
+          childName: childName || 'Child',
+          themes: selectedThemes,
+          gender: genderSelection.boy && genderSelection.girl ? 'both' : genderSelection.boy ? 'boy' : genderSelection.girl ? 'girl' : 'neutral',
+          readingLevel,
+          storyLength
+        });
+        
+        // Format mock data to match expected structure
+        const storyData = {
+          id: crypto.randomUUID(),
+          title: mockData.story.title,
+          content: mockData.story.content,
+          themes: selectedThemes,
+          child_name: childName,
+          reading_level: readingLevel,
+          image_url: mockData.imageUrl,
+          image_prompt: mockData.imagePrompt,
+          created_at: new Date().toISOString(),
+          is_demo: true
+        };
+        
+        setCurrentStory(storyData);
+        setShowStory(true);
+        
+        // Award stars for mock story
+        const newStarPoints = starPoints + 1;
+        setStarPoints(newStarPoints);
+        if (selectedChildProfile) {
+          localStorage.setItem(`stars_${selectedChildProfile.id}`, newStarPoints.toString());
+        }
+        
+        // Update usage for mock
+        setStoriesRemaining(prev => Math.max(0, prev - 1));
+        setMonthlyStoriesUsed(prev => prev + 1);
+        
+        // Trigger celebrations
+        setTimeout(() => triggerCelebration('story'), 500);
+        setTimeout(() => triggerCelebration('stars', `+1 Star!`), 2000);
+        
+        logger.info('Mock story generated successfully');
+        return;
+      }
+      
       // Check if V2 generation is enabled
       const useV2 = import.meta.env.VITE_STORYGEN_V2_ENABLED === 'true' || 
                     import.meta.env.VITE_STORYGEN_V2_ENABLED === 'TRUE';
@@ -655,7 +722,7 @@ function App() {
         ? `http://localhost:8888/.netlify/functions/${endpoint}`
         : `/.netlify/functions/${endpoint}`;
       
-      console.log(`Using story generation ${useV2 ? 'V2' : 'V1'} at ${apiUrl}`);
+      logger.info(`Using story generation ${useV2 ? 'V2' : 'V1'} at ${apiUrl}`);
       
       // Get the appropriate image style prompt using enhanced system
       const recommendedStyle = getEnhancedImageStyle(readingLevel, selectedThemes);
@@ -716,7 +783,7 @@ function App() {
       const storyContent = data.story?.content || data.story || '';
       const storyTitle = data.story?.title || data.title || `${childName}'s Story`;
       
-      console.log('Story generation response:', {
+      logger.debug('Story generation response:', {
         hasTitle: !!storyTitle,
         title: storyTitle,
         hasContent: !!storyContent,
@@ -730,7 +797,7 @@ function App() {
       if (storyContent) {
         // Check if we have v2 metadata (includes v2, v2-fast, v2-simple, etc)
         if (data.metadata?.version && data.metadata.version.startsWith('v2')) {
-          console.log('V2 Story Generated:', {
+          logger.info('V2 Story Generated:', {
             version: data.metadata.version,
             quality: data.metadata.qualityScore || data.metadata.qualityGrade,
             accuracy: data.metadata.accuracy,
@@ -761,7 +828,7 @@ function App() {
           });
         
         // Log quality metrics
-        console.log('Story Quality Metrics:', {
+        logger.debug('Story Quality Metrics:', {
           wordCount: data.metadata?.actualWords || validation.wordCount,
           targetWords: data.metadata?.targetWords || WORD_COUNT_TARGETS[storyLength].target,
           qualityGrade: qualityScore.grade,
@@ -798,7 +865,7 @@ function App() {
         // Award stars for completing a story
         if (selectedChildProfile?.id) {
           const newTotal = addStarsToChild(selectedChildProfile.id, 10, 'Completed a story');
-          console.log(`Awarded 10 stars! New total: ${newTotal}`);
+          logger.info(`Awarded 10 stars! New total: ${newTotal}`);
           
           // Trigger celebration animation
           triggerCelebration('stars', 'You earned 10 stars!');
@@ -855,7 +922,7 @@ function App() {
         // Free tier gets dall-e-2 (256x256), paid tiers get dall-e-3 (1024x1024)
         const alwaysGenerateAI = true; // Force AI generation for ALL tiers
         
-        console.log('AI Image Generation:', {
+        logger.debug('AI Image Generation:', {
           subscriptionTier,
           aiIllustrationsUsed,
           hasUser: !!user,
@@ -863,7 +930,7 @@ function App() {
         });
         
         if (alwaysGenerateAI) {
-          console.log('Generating AI illustration for tier:', subscriptionTier);
+          logger.debug('Generating AI illustration for tier:', subscriptionTier);
           // Only count against limit for non-free tiers
           if (subscriptionTier !== 'reader-free' && subscriptionTier !== 'free' && subscriptionTier !== 'try-now') {
             setAiIllustrationsUsed(prev => prev + 1);
@@ -886,7 +953,7 @@ function App() {
           // Pass actual subscription tier to API for proper tier-based generation
           const apiTier = subscriptionTier || 'free';
           
-          console.log('Sending to API with tier:', apiTier, 'from subscription tier:', subscriptionTier);
+          logger.debug('Sending to API with tier:', apiTier, 'from subscription tier:', subscriptionTier);
           
           // Fire off image generation without awaiting
           fetch(imageApiUrl, {
@@ -912,7 +979,7 @@ function App() {
             });
           })
           .then(imageData => {
-            console.log('Image generation response:', imageData);
+            logger.debug('Image generation response:', imageData);
             // Check for URL in response (handle both direct URL and success object)
             const imageUrl = imageData.url || (imageData.success && imageData.url);
             
@@ -990,7 +1057,39 @@ function App() {
       }
     } catch (error) {
       console.error('Error generating story:', error);
-      alert('Failed to generate story. Please try again.');
+      if (error.message?.includes('VITE_OPENAI_API_KEY')) {
+        alert('Story generation requires API configuration. Using mock generator for testing.');
+        // Fallback to mock generator
+        try {
+          const mockData = await generateMockStoryWithDelay({
+            childName: childName || 'Child',
+            themes: selectedThemes,
+            gender: genderSelection.boy && genderSelection.girl ? 'both' : genderSelection.boy ? 'boy' : genderSelection.girl ? 'girl' : 'neutral',
+            readingLevel,
+            storyLength
+          });
+          
+          const storyData = {
+            id: crypto.randomUUID(),
+            title: mockData.story.title,
+            content: mockData.story.content,
+            themes: selectedThemes,
+            child_name: childName,
+            reading_level: readingLevel,
+            image_url: mockData.imageUrl,
+            created_at: new Date().toISOString(),
+            is_demo: true
+          };
+          
+          setCurrentStory(storyData);
+          setShowStory(true);
+          setStarPoints(prev => prev + 1);
+        } catch (mockError) {
+          alert('Failed to generate story. Please try again.');
+        }
+      } else {
+        alert('Failed to generate story. Please try again.');
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -1128,12 +1227,12 @@ function App() {
         bedtimeModeActive={bedtimeModeActive}
         onToggleBedtime={setBedtimeModeActive}
         onStarsUpdate={(newTotal) => {
-          console.log('App.complete - onStarsUpdate called with:', newTotal);
+          logger.debug('App.complete - onStarsUpdate called with:', newTotal);
           setStarPoints(newTotal);
           // Also update localStorage for the current profile
           const profileId = selectedChildProfile?.id || 'guest';
           localStorage.setItem(`stars_${profileId}`, newTotal.toString());
-          console.log('Updated stars for profile:', profileId, 'to:', newTotal);
+          logger.debug('Updated stars for profile:', profileId, 'to:', newTotal);
         }}
         onBack={() => {
           setShowStory(false);
@@ -1146,7 +1245,7 @@ function App() {
           setStoryContext('');
         }}
         onShowLibrary={() => {
-          console.log('Library button clicked - navigating to library');
+          logger.debug('Library button clicked - navigating to library');
           setShowStory(false);
           setShowLibrary(true);
         }}
@@ -1154,7 +1253,7 @@ function App() {
           openAuthModal();
         }}
         onSave={() => {
-          console.log('Story saved');
+          logger.debug('Story saved');
           // Award extra star for saving
           setStarPoints(prev => prev + 1);
         }}
@@ -1164,8 +1263,28 @@ function App() {
 
   return (
     <div className="app app-container">
+      {/* Mock Mode Indicator for Local Development */}
+      {shouldUseMockGenerator() && (
+        <div style={{
+          position: 'fixed',
+          top: '10px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: 'linear-gradient(135deg, #667eea, #764ba2)',
+          color: 'white',
+          padding: '8px 20px',
+          borderRadius: '20px',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          zIndex: 10000,
+          boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
+        }}>
+          🧪 Mock Mode - Stories generated locally for testing
+        </div>
+      )}
+      
       {/* Onboarding Tooltips for First-Time Users */}
-      {!user && <OnboardingTooltips onComplete={() => console.log('Onboarding completed')} />}
+      {!user && <OnboardingTooltips onComplete={() => logger.info('Onboarding completed')} />}
       
       <div className="container">
         {/* Header */}
@@ -2430,6 +2549,143 @@ function App() {
       {/* Celebration Animations */}
       {CelebrationComponent}
       
+      {/* Tier Testing Modal (Development Only) */}
+      {showTierTester && (
+        <>
+          {/* Background Overlay */}
+          <div 
+            onClick={() => setShowTierTester(false)}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(0,0,0,0.5)',
+              zIndex: 99999
+            }}
+          />
+          
+          {/* Modal */}
+          <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          background: 'white',
+          borderRadius: '20px',
+          padding: '30px',
+          boxShadow: '0 10px 40px rgba(0,0,0,0.3)',
+          zIndex: 100000,
+          maxWidth: '400px',
+          width: '90%'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '20px'
+          }}>
+            <h2 style={{ margin: 0, color: '#333', fontSize: '24px' }}>
+              💎 Test Subscription Tiers
+            </h2>
+            <button
+              onClick={() => setShowTierTester(false)}
+              style={{
+                background: 'none',
+                border: 'none',
+                fontSize: '24px',
+                cursor: 'pointer',
+                color: '#666'
+              }}
+            >
+              ✕
+            </button>
+          </div>
+          
+          <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>
+            Click a tier to instantly switch (dev mode only)
+          </p>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {[
+              { id: 'try-now', name: 'Try Now (Guest)', color: '#9ca3af', desc: '1 story trial, no account needed' },
+              { id: 'reader-free', name: 'Infrequent Reader', color: '#10b981', desc: 'FREE - 3 stories/day, 10/month' },
+              { id: 'story-pro', name: 'Story Pro', color: '#3b82f6', desc: '$4.99 - 10 stories/day + 30 AI images' },
+              { id: 'read-to-me-promax', name: 'Read to Me ProMax', color: '#a855f7', desc: '$6.99 - 20 stories/day + narration' },
+              { id: 'family-plus', name: 'Family Plus', color: '#f59e0b', desc: '$7.99 - Unlimited + 4 profiles' }
+            ].map((tier) => (
+              <button
+                key={tier.id}
+                onClick={() => {
+                  setSubscriptionTier(tier.id);
+                  localStorage.setItem('subscriptionTier', tier.id);
+                  
+                  // Create mock user for this tier
+                  const mockUser = {
+                    id: `test-${tier.id}`,
+                    email: `${tier.id}@test.com`,
+                    tier: tier.id
+                  };
+                  localStorage.setItem('mockUser', JSON.stringify(mockUser));
+                  
+                  logger.info(`Switched to tier: ${tier.name}`);
+                  setShowTierTester(false);
+                  
+                  // Reset usage counters for testing
+                  const limits = getTierLimits(tier.id, mockUser);
+                  setStoriesRemaining(limits.dailyStories);
+                  setMonthlyStoriesUsed(0);
+                  setAiIllustrationsUsed(0);
+                  setNarrationsUsed(0);
+                }}
+                style={{
+                  padding: '12px',
+                  background: subscriptionTier === tier.id 
+                    ? `linear-gradient(135deg, ${tier.color}, ${tier.color}dd)`
+                    : 'white',
+                  color: subscriptionTier === tier.id ? 'white' : '#333',
+                  border: `2px solid ${tier.color}`,
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  if (subscriptionTier !== tier.id) {
+                    e.target.style.background = `${tier.color}20`;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (subscriptionTier !== tier.id) {
+                    e.target.style.background = 'white';
+                  }
+                }}
+              >
+                <div style={{ fontWeight: '600', marginBottom: '4px' }}>
+                  {tier.name}
+                </div>
+                <div style={{ fontSize: '12px', opacity: 0.9 }}>
+                  {tier.desc}
+                </div>
+              </button>
+            ))}
+          </div>
+          
+          <div style={{
+            marginTop: '20px',
+            padding: '10px',
+            background: '#fef3c7',
+            borderRadius: '8px',
+            fontSize: '12px',
+            color: '#92400e'
+          }}>
+            ⚠️ Dev Mode Only - Changes are temporary
+          </div>
+        </div>
+        </>
+      )}
+      
       {/* Stripe Test Component (Development Only) */}
       {showStripeTest && (
         <div id="stripe-test-component">
@@ -2456,6 +2712,40 @@ function App() {
           }}
         >
           🧪 Test Stripe
+        </button>
+      )}
+      
+      {/* Tier Testing Button - Development only */}
+      {import.meta.env.DEV && (
+        <button
+          onClick={() => {
+            logger.debug('Tier testing button clicked!');
+            setShowTierTester(true);
+          }}
+          style={{
+            position: 'fixed',
+            bottom: '90px',
+            right: '20px',
+            width: '60px',
+            height: '60px',
+            borderRadius: '50%',
+            background: '#8b5cf6',
+            color: 'white',
+            border: '3px solid #fff',
+            boxShadow: '0 8px 30px rgba(139, 92, 246, 0.6)',
+            cursor: 'pointer',
+            zIndex: 99999,
+            fontSize: '28px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'transform 0.3s ease'
+          }}
+          onMouseEnter={(e) => e.target.style.transform = 'scale(1.15)'}
+          onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+          title="Test Subscription Tiers"
+        >
+          💎
         </button>
       )}
     </div>
@@ -2772,17 +3062,6 @@ function UsageDisplay({ user, subscriptionTier, storiesRemaining, monthlyStories
       </div>
     </div>
   );
-  } catch (error) {
-    // Log error for mobile debugging
-    console.error('App initialization error:', error);
-    return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
-        <h2>An error occurred</h2>
-        <p>Error: {error.message}</p>
-        <p>Please refresh the page or contact support.</p>
-      </div>
-    );
-  }
 }
 
 // Old AuthModal component removed - now using AuthenticationManager
