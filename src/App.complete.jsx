@@ -1202,6 +1202,7 @@ function App() {
                         !import.meta.env.VITE_SUPABASE_URL || 
                         import.meta.env.VITE_SUPABASE_URL.includes('dummy');
       
+      const imageUrl = storyData.imageUrl || storyData.image_url;
       const saveData = {
         id: storyData.id || crypto.randomUUID(),
         title: storyData.title,
@@ -1209,7 +1210,8 @@ function App() {
         child_name: storyData.childName || storyData.child_name,
         theme: Array.isArray(storyData.themes) ? storyData.themes.join(', ') : (storyData.theme || ''),
         themes: storyData.themes || [],
-        image_url: storyData.imageUrl || storyData.image_url,
+        image_url: imageUrl,  // Save as snake_case
+        imageUrl: imageUrl,   // Also save as camelCase for compatibility
         images: storyData.images || [],
         user_id: user?.id || 'guest',
         reading_level: storyData.readingLevel || storyData.reading_level,

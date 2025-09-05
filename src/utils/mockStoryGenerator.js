@@ -42,41 +42,41 @@ const imageStyles = [
   'digital art, colorful, child-friendly, whimsical'
 ];
 
-// Mock images - using various placeholder services for better reliability
+// Mock images - using Unsplash and Picsum for reliable placeholder images
 const mockImages = {
   adventure: [
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=800&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800&h=600&fit=crop',
-    'https://via.placeholder.com/800x600/4A90E2/FFFFFF?text=Adventure+Story',
-    'https://via.placeholder.com/800x600/7B68EE/FFFFFF?text=Magical+Journey'
+    'https://picsum.photos/seed/adventure1/800/600',
+    'https://picsum.photos/seed/adventure2/800/600',
+    'https://picsum.photos/seed/adventure3/800/600',
+    'https://picsum.photos/seed/adventure4/800/600',
+    'https://picsum.photos/seed/adventure5/800/600'
   ],
   fairytale: [
-    'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?w=800&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=800&h=600&fit=crop',
-    'https://via.placeholder.com/800x600/FF69B4/FFFFFF?text=Fairy+Tale',
-    'https://via.placeholder.com/800x600/DA70D6/FFFFFF?text=Magic+Kingdom'
+    'https://picsum.photos/seed/fairytale1/800/600',
+    'https://picsum.photos/seed/fairytale2/800/600',
+    'https://picsum.photos/seed/fairytale3/800/600',
+    'https://picsum.photos/seed/fairytale4/800/600',
+    'https://picsum.photos/seed/fairytale5/800/600'
   ],
   educational: [
-    'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1581078426770-6d336e5de7bf?w=800&h=600&fit=crop',
-    'https://via.placeholder.com/800x600/32CD32/FFFFFF?text=Learning+Fun',
-    'https://via.placeholder.com/800x600/20B2AA/FFFFFF?text=Educational'
+    'https://picsum.photos/seed/educational1/800/600',
+    'https://picsum.photos/seed/educational2/800/600',
+    'https://picsum.photos/seed/educational3/800/600',
+    'https://picsum.photos/seed/educational4/800/600',
+    'https://picsum.photos/seed/educational5/800/600'
   ],
   bedtime: [
-    'https://images.unsplash.com/photo-1489710020360-66e504159b43?w=800&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1444212477490-ca407925329e?w=800&h=600&fit=crop',
-    'https://images.unsplash.com/photo-1495001258031-d1b407bc1776?w=800&h=600&fit=crop',
-    'https://via.placeholder.com/800x600/6495ED/FFFFFF?text=Sweet+Dreams',
-    'https://via.placeholder.com/800x600/9370DB/FFFFFF?text=Bedtime+Story'
+    'https://picsum.photos/seed/bedtime1/800/600',
+    'https://picsum.photos/seed/bedtime2/800/600',
+    'https://picsum.photos/seed/bedtime3/800/600',
+    'https://picsum.photos/seed/bedtime4/800/600',
+    'https://picsum.photos/seed/bedtime5/800/600'
   ],
   default: [
-    'https://via.placeholder.com/800x600/8A2BE2/FFFFFF?text=Story+Image+1',
-    'https://via.placeholder.com/800x600/5F9EA0/FFFFFF?text=Story+Image+2',
-    'https://via.placeholder.com/800x600/6495ED/FFFFFF?text=Story+Image+3',
-    'https://via.placeholder.com/800x600/4682B4/FFFFFF?text=Story+Image+4'
+    'https://picsum.photos/seed/story1/800/600',
+    'https://picsum.photos/seed/story2/800/600',
+    'https://picsum.photos/seed/story3/800/600',
+    'https://picsum.photos/seed/story4/800/600'
   ]
 };
 

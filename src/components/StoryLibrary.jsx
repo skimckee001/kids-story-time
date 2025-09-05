@@ -5,6 +5,7 @@ import StoryDisplay from './StoryDisplay';
 import AchievementSystem from './AchievementSystem';
 import ReadingStreak from './ReadingStreak';
 import StarRewardsSystem from './StarRewardsSystem';
+import { generateFallbackImage } from '../utils/fallbackImage';
 import './StoryLibrary.css';
 
 function StoryLibrary({ user: propUser, subscriptionTier: propTier, onBack }) {
@@ -106,6 +107,14 @@ function StoryLibrary({ user: propUser, subscriptionTier: propTier, onBack }) {
         } else if (legacyStories) {
           allStories = JSON.parse(legacyStories);
         }
+        
+        // Normalize image properties for consistent access
+        allStories = allStories.map(story => ({
+          ...story,
+          // Ensure we have image_url for consistency
+          image_url: story.image_url || story.imageUrl,
+          imageUrl: story.imageUrl || story.image_url
+        }));
         
         console.log('Loaded stories from localStorage:', allStories.map(s => ({
           title: s.title,
@@ -394,31 +403,35 @@ function StoryCard({ story, onRead, onDelete, onToggleFavorite }) {
     return gradients[index] || gradients[0];
   };
 
+  // Handle both snake_case and camelCase properties
+  const imageUrl = story.image_url || story.imageUrl;
+  
+  // Get theme for fallback
+  const theme = Array.isArray(story.themes) ? story.themes[0] : (story.theme || 'default');
+  
+  // Generate fallback image
+  const fallbackImage = generateFallbackImage(story.title || 'Story', theme);
+  
   // Debug log
   console.log('StoryCard rendering:', {
     title: story.title,
-    hasImageUrl: !!story.image_url,
-    imageUrl: story.image_url
+    hasImageUrl: !!imageUrl,
+    imageUrl: imageUrl,
+    theme: theme
   });
   
   return (
     <div className="story-card">
       {/* Story Image */}
-      <div className="story-card-image" style={!story.image_url ? { background: getGradient(story.title) } : {}}>
-        {story.image_url ? (
-          <img 
-            src={story.image_url} 
-            alt={story.title}
-            onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.parentElement.style.background = getGradient(story.title);
-            }}
-          />
-        ) : (
-          <div className="story-card-placeholder">
-            <span className="placeholder-emoji">📚</span>
-          </div>
-        )}
+      <div className="story-card-image">
+        <img 
+          src={imageUrl || fallbackImage} 
+          alt={story.title}
+          onError={(e) => {
+            console.log('Image failed to load, using fallback:', imageUrl);
+            e.target.src = fallbackImage;
+          }}
+        />
       </div>
       
       {/* Story Content */}
