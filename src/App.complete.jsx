@@ -714,6 +714,17 @@ function App() {
       const storyContent = data.story?.content || data.story || '';
       const storyTitle = data.story?.title || data.title || `${childName}'s Story`;
       
+      console.log('Story generation response:', {
+        hasTitle: !!storyTitle,
+        title: storyTitle,
+        hasContent: !!storyContent,
+        responseStructure: {
+          hasStoryObject: !!data.story,
+          hasStoryTitle: !!data.story?.title,
+          hasDataTitle: !!data.title
+        }
+      });
+      
       if (storyContent) {
         // Check if we have v2 metadata (includes v2, v2-fast, v2-simple, etc)
         if (data.metadata?.version && data.metadata.version.startsWith('v2')) {
@@ -1045,6 +1056,12 @@ function App() {
         metadata: storyData.metadata || {},
         created_at: new Date().toISOString()
       };
+      
+      console.log('Saving story to library with data:', {
+        title: saveData.title,
+        hasContent: !!saveData.content,
+        hasImageUrl: !!saveData.image_url
+      });
 
       const { data, error } = await supabase
         .from('stories')

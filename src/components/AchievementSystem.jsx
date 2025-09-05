@@ -180,6 +180,7 @@ function AchievementSystem({ childProfile, onClose, onGoalComplete }) {
         <div className="achievement-tabs" style={{
           display: 'flex',
           gap: '10px',
+          marginTop: '20px',
           marginBottom: '20px',
           borderBottom: '2px solid #e0e0e0',
           paddingBottom: '10px'

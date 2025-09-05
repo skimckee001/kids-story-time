@@ -951,11 +951,22 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
                   
                   <button 
                     className="header-btn"
-                    onClick={onBack}
+                    onClick={() => onShowLibrary && onShowLibrary()}
                     style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
                   >
                     <span style={{fontSize: '16px', marginRight: '6px'}}>📚</span>
                     <span>Library</span>
+                  </button>
+                  
+                  {/* Pricing/Plans button */}
+                  <button 
+                    className="header-btn"
+                    onClick={() => window.open('/pricing-new.html', '_blank')}
+                    title="View pricing plans"
+                    style={{background: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)', color: 'white', border: 'none', flex: '0 0 auto', padding: '8px 16px', fontSize: '14px', fontWeight: '600'}}
+                  >
+                    <span style={{fontSize: '16px', marginRight: '6px'}}>💳</span>
+                    <span>Plans</span>
                   </button>
                 </>
               ) : (
