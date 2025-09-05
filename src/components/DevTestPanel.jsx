@@ -70,6 +70,14 @@ const DevTestPanel = ({ onTierChange, currentTier }) => {
                   window.location.hostname === '127.0.0.1' ||
                   window.location.search.includes('dev=true') ||
                   localStorage.getItem('devMode') === 'true';
+    
+    console.log('DevTestPanel check:', {
+      hostname: window.location.hostname,
+      search: window.location.search,
+      devMode: localStorage.getItem('devMode'),
+      isDev: isDev
+    });
+    
     setShowPanel(isDev);
     
     // Check for keyboard shortcut (Ctrl+Shift+D or Cmd+Shift+D) to toggle dev mode
@@ -113,7 +121,29 @@ const DevTestPanel = ({ onTierChange, currentTier }) => {
     window.location.reload();
   };
 
-  if (!showPanel) return null;
+  // Always show if explicitly enabled via localStorage or URL
+  if (!showPanel) {
+    // Add a hidden enabler div that can be clicked to activate
+    return (
+      <div
+        onClick={() => {
+          localStorage.setItem('devMode', 'true');
+          window.location.reload();
+        }}
+        style={{
+          position: 'fixed',
+          bottom: '10px',
+          right: '10px',
+          width: '20px',
+          height: '20px',
+          opacity: 0,
+          cursor: 'pointer',
+          zIndex: 9999
+        }}
+        title="Click to enable dev mode"
+      />
+    );
+  }
 
   return (
     <>
