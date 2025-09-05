@@ -713,6 +713,9 @@ function App() {
         setCurrentStory(storyData);
         setShowStory(true);
         
+        // Save mock story to library
+        saveStoryToLibrary(storyData);
+        
         // Award stars for mock story
         const newStarPoints = starPoints + 1;
         setStarPoints(newStarPoints);
@@ -1105,6 +1108,10 @@ function App() {
           
           setCurrentStory(storyData);
           setShowStory(true);
+          
+          // Save fallback mock story to library
+          saveStoryToLibrary(storyData);
+          
           setStarPoints(prev => prev + 1);
         } catch (mockError) {
           alert('Failed to generate story. Please try again.');
@@ -1171,16 +1178,19 @@ function App() {
                         import.meta.env.VITE_SUPABASE_URL.includes('dummy');
       
       const saveData = {
-        id: crypto.randomUUID(),
+        id: storyData.id || crypto.randomUUID(),
         title: storyData.title,
         content: storyData.content,
         child_name: storyData.childName || storyData.child_name,
-        theme: storyData.themes?.join(', ') || '',
+        theme: Array.isArray(storyData.themes) ? storyData.themes.join(', ') : (storyData.theme || ''),
+        themes: storyData.themes || [],
         image_url: storyData.imageUrl || storyData.image_url,
+        images: storyData.images || [],
         user_id: user?.id || 'guest',
         reading_level: storyData.readingLevel || storyData.reading_level,
         metadata: storyData.metadata || {},
-        created_at: new Date().toISOString()
+        created_at: storyData.created_at || new Date().toISOString(),
+        is_demo: storyData.is_demo || false
       };
       
       console.log('Saving story to library with data:', {
@@ -2932,13 +2942,52 @@ function UsageDisplay({ user, subscriptionTier, storiesRemaining, monthlyStories
   const [usageSummary, setUsageSummary] = useState(null);
   
   useEffect(() => {
-    if (user) {
+    if (user || subscriptionTier === 'try-now') {
       loadUsageSummary();
     }
-  }, [user, subscriptionTier, monthlyStoriesUsed, aiIllustrationsUsed, narrationsUsed]);
+  }, [user, subscriptionTier, storiesRemaining, monthlyStoriesUsed, aiIllustrationsUsed, narrationsUsed]);
   
   const loadUsageSummary = async () => {
     try {
+      // For test users, use the passed props directly
+      const isTestUser = user?.id?.startsWith('test-') || 
+                        !import.meta.env.VITE_SUPABASE_URL || 
+                        import.meta.env.VITE_SUPABASE_URL.includes('dummy');
+      
+      if (isTestUser) {
+        // Calculate usage from props for test users
+        const limits = getTierLimits(subscriptionTier, user);
+        const dailyUsed = limits.dailyStories - storiesRemaining;
+        
+        setUsageSummary({
+          dailyStories: { 
+            used: dailyUsed, 
+            limit: limits.dailyStories,
+            remaining: storiesRemaining
+          },
+          monthlyStories: { 
+            used: monthlyStoriesUsed, 
+            limit: limits.monthlyStories,
+            remaining: limits.monthlyStories === 'unlimited' ? 'unlimited' : 
+                      Math.max(0, limits.monthlyStories - monthlyStoriesUsed)
+          },
+          aiIllustrations: { 
+            used: aiIllustrationsUsed, 
+            limit: limits.aiIllustrations,
+            remaining: limits.aiIllustrations === 'unlimited' ? 'unlimited' : 
+                      Math.max(0, limits.aiIllustrations - aiIllustrationsUsed)
+          },
+          narrations: { 
+            used: narrationsUsed, 
+            limit: limits.narrations,
+            remaining: limits.narrations === 'unlimited' ? 'unlimited' : 
+                      Math.max(0, limits.narrations - narrationsUsed)
+          }
+        });
+        return;
+      }
+      
+      // For real users, load from database
       const summary = await usageTracker.getUsageSummary(user.id, subscriptionTier);
       setUsageSummary(summary);
     } catch (error) {
