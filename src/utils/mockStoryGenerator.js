@@ -123,15 +123,22 @@ export function generateMockStory({
   // Generate mock metadata
   const imagePrompt = `${childName} in a ${theme} scene, ${imageStyles[Math.floor(Math.random() * imageStyles.length)]}`;
   
+  // Use a deterministic seed based on story content for consistent images
+  // This ensures the same story always gets the same images
+  const storySeed = story.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const imageIndexSeed = storySeed % 100;
+  
   // Select appropriate mock images based on theme
   const themeImages = mockImages[theme] || mockImages.default;
-  const selectedImage = themeImages[Math.floor(Math.random() * themeImages.length)];
+  const selectedImageIndex = imageIndexSeed % themeImages.length;
+  const selectedImage = themeImages[selectedImageIndex];
   
-  // Generate multiple images for the story (3-4 images)
-  const numImages = 3 + Math.floor(Math.random() * 2); // 3 or 4 images
-  const storyImages = [];
-  for (let i = 0; i < numImages; i++) {
-    const imageIndex = (Math.floor(Math.random() * themeImages.length) + i) % themeImages.length;
+  // Generate multiple images for the story (always include the main image first)
+  const numImages = 4; // Consistent number of images
+  const storyImages = [selectedImage]; // Always include the main image first
+  
+  for (let i = 1; i < numImages; i++) {
+    const imageIndex = (selectedImageIndex + i) % themeImages.length;
     storyImages.push(themeImages[imageIndex]);
   }
   
