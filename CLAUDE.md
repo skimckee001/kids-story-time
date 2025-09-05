@@ -219,13 +219,14 @@ When making changes, verify:
 ## Session Handover Protocol
 When starting a new session:
 1. Read this CLAUDE.md file first
-2. Check SESSION_SUMMARY_2025-08-31.md for latest changes
+2. **CHECK SESSION_SUMMARY_2025-09-05.md for LATEST STATUS** ⬅️ MOST RECENT
 3. Review TODO.md for pending tasks
 4. Verify you're in correct directory: `/Users/skimckee/Documents/Github/kids-story-time`
 5. Run `npm run dev` to start development
 
 ## Important File References
-- **Latest Session**: SESSION_SUMMARY_2025-08-31.md
+- **Latest Session**: SESSION_SUMMARY_2025-09-05.md ⬅️ MOST RECENT (iPhone issues)
+- **Previous Session**: SESSION_SUMMARY_2025-08-31.md
 - **Pending Tasks**: TODO.md
 - **Deployment Guide**: DEPLOYMENT_GUIDE.md
 - **API Setup**: API-SETUP.md
