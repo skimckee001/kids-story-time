@@ -685,6 +685,8 @@ function App() {
           child_name: childName,
           reading_level: readingLevel,
           image_url: mockData.imageUrl,
+          imageUrl: mockData.imageUrl, // Add both formats for compatibility
+          images: mockData.images || [mockData.imageUrl], // Include multiple images
           image_prompt: mockData.imagePrompt,
           created_at: new Date().toISOString(),
           is_demo: true
@@ -1077,6 +1079,8 @@ function App() {
             child_name: childName,
             reading_level: readingLevel,
             image_url: mockData.imageUrl,
+            imageUrl: mockData.imageUrl, // Add both formats for compatibility
+            images: mockData.images || [mockData.imageUrl], // Include multiple images
             created_at: new Date().toISOString(),
             is_demo: true
           };
