@@ -123,9 +123,10 @@ export function generateMockStory({
   // Generate mock metadata
   const imagePrompt = `${childName} in a ${theme} scene, ${imageStyles[Math.floor(Math.random() * imageStyles.length)]}`;
   
-  // Use a deterministic seed based on story content for consistent images
-  // This ensures the same story always gets the same images
-  const storySeed = story.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  // Use a deterministic seed based on child name and theme for consistent images
+  // This ensures the same input parameters always get the same images
+  const seedString = `${childName}-${theme}-${themes.join('-')}`;
+  const storySeed = seedString.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const imageIndexSeed = storySeed % 100;
   
   // Select appropriate mock images based on theme

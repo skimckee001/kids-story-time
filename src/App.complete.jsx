@@ -1242,6 +1242,26 @@ function App() {
 
   const updateSavedStoryImage = async (storyId, imageUrl) => {
     try {
+      // Check if this is a test user or local dev
+      const isTestUser = user?.id?.startsWith('test-') || 
+                        !import.meta.env.VITE_SUPABASE_URL || 
+                        import.meta.env.VITE_SUPABASE_URL.includes('dummy');
+      
+      if (isTestUser) {
+        // Update localStorage story
+        const libraryStories = JSON.parse(localStorage.getItem('libraryStories') || '[]');
+        const storyIndex = libraryStories.findIndex(s => s.id === storyId);
+        
+        if (storyIndex !== -1) {
+          libraryStories[storyIndex].image_url = imageUrl;
+          libraryStories[storyIndex].imageUrl = imageUrl; // Store both formats
+          localStorage.setItem('libraryStories', JSON.stringify(libraryStories));
+          console.log('Story image updated in localStorage library');
+        }
+        return;
+      }
+      
+      // For real users, update in Supabase
       const { error } = await supabase
         .from('stories')
         .update({ image_url: imageUrl })

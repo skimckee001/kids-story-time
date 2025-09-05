@@ -7,6 +7,17 @@ import './StoryDisplay.css';
 import '../App.original.css';
 
 function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, subscriptionTier, starPoints, childProfile, onShowAchievements, onShowRewards, onShowDashboard, onShowProfileManager, bedtimeModeActive, onToggleBedtime, onStarsUpdate }) {
+  // Normalize story data to handle both snake_case and camelCase
+  const normalizedStory = {
+    ...story,
+    imageUrl: story?.imageUrl || story?.image_url,
+    childName: story?.childName || story?.child_name,
+    readingLevel: story?.readingLevel || story?.reading_level
+  };
+  
+  // Use normalized story for the rest of the component
+  story = normalizedStory;
+  
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [rating, setRating] = useState(0);
