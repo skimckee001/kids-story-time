@@ -35,7 +35,6 @@ import {
 } from './utils/storyEnhancements';
 import './App.original.css';
 import './styles/desktop-fixes.css';
-import './styles/iphone-edge-to-edge.css'; // Edge-to-edge iPhone layout (remove to revert)
 
 // Story length options matching the current HTML
 const STORY_LENGTHS = [
