@@ -67,14 +67,16 @@
     width: auto !important;
   }
   
-  /* Compact header - with proper padding to match containers */
+  /* Compact header - match container width */
   .header,
   .header-container {
     background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
     position: sticky;
     top: 0;
     z-index: var(--z-sticky);
-    width: 100% !important;
+    width: calc(100% - calc(2 * var(--space-4))) !important;
+    margin: 0 var(--space-4);
+    border-radius: var(--radius-lg);
   }
   
   .header-content {
@@ -92,7 +94,8 @@
   /* Tagline with proper padding */
   .header-tagline,
   .tagline {
-    padding: 0 var(--space-4);
+    margin: 0 var(--space-4);
+    padding: var(--space-2) 0;
     font-size: var(--text-sm);
   }
   
@@ -102,14 +105,16 @@
     margin: var(--space-2) var(--space-4);
     padding: var(--space-2) var(--space-4);
     border-radius: var(--radius-lg);
+    width: calc(100% - calc(2 * var(--space-4)));
   }
   
-  /* Pills/navigation with proper padding */
+  /* Pills/navigation - this width is correct, others should match */
   .quick-actions,
   .hero-pills,
   .header-navigation {
-    padding: 0 var(--space-4);
-    margin: var(--space-3) 0;
+    margin: var(--space-3) var(--space-4);
+    padding: 0;
+    width: calc(100% - calc(2 * var(--space-4)));
   }
   
   /* === ACCORDION STEPS === */
