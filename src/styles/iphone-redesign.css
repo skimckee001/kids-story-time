@@ -15,6 +15,11 @@
   --space-6: 24px;
   --space-8: 32px;
   
+  /* Page gutters with safe-area support */
+  --gutter: 16px;
+  --gutter-safe-left: max(var(--gutter), env(safe-area-inset-left));
+  --gutter-safe-right: max(var(--gutter), env(safe-area-inset-right));
+  
   /* Border Radius */
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -41,6 +46,65 @@
   --z-toast: 40;
 }
 
+/* === GLOBAL BOX-SIZING === */
+* {
+  box-sizing: border-box;
+}
+
+/* === PAGE WRAPPER === */
+.page {
+  padding-left: var(--gutter-safe-left);
+  padding-right: var(--gutter-safe-right);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* === FORM ALIGNMENT FIXES === */
+/* 0) One rule to force consistent horizontal edges for the builder */
+.page form,
+.page form .step-section,
+.page form .step-section > .section-inner {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  /* the shell itself should NOT add side padding */
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 1) Put the padding on a single inner wrapper so cards and CTA share the same gutter */
+.page form .step-section > .section-inner {
+  padding-left: var(--gutter-safe-left) !important;
+  padding-right: var(--gutter-safe-right) !important;
+}
+
+/* 2) Kill legacy width caps commonly found on form shells */
+.page form [class*="container"],
+.page form [class*="wrap"],
+.page form [class*="inner"],
+.page form [class*="grid"] {
+  max-width: none !important;
+}
+
+/* 3) Ensure inputs actually stretch */
+.page form .field,
+.page form input,
+.page form select,
+.page form textarea {
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* 4) Collapse any two-column grids on mobile (grids often make the form look narrower) */
+@media (max-width: 767px) {
+  .page form .form-grid,
+  .page form .grid {
+    display: block !important;
+  }
+}
+
 /* === MOBILE-FIRST BASE STYLES === */
 @media screen and (max-width: 768px) {
   
@@ -50,21 +114,18 @@
     padding-bottom: calc(60px + env(safe-area-inset-bottom)); /* Space for bottom tabs */
   }
   
-  /* Container with slight padding to match Library */
-  .container {
-    max-width: none !important;
-    width: 100% !important;
-    padding-left: var(--space-4) !important;
-    padding-right: var(--space-4) !important;
-  }
+  /* Container removed - no longer needed */
+  /* Content now directly in app container */
   
-  /* Summary steps with proper padding */
+  /* Summary steps - full width within page wrapper */
   .summary-steps,
   .steps-summary,
   .step-indicators {
-    margin: var(--space-3) var(--space-4) !important;
-    max-width: calc(100% - var(--space-8)) !important;
-    width: auto !important;
+    margin-top: var(--space-3) !important;
+    margin-bottom: var(--space-3) !important;
+    padding: var(--space-3) var(--space-4) !important;
+    width: 100% !important;
+    max-width: none !important;
   }
   
   /* Compact header - match container width */
@@ -91,43 +152,50 @@
     margin: 0;
   }
   
-  /* Tagline with proper padding */
+  /* Tagline - full width within page wrapper */
   .header-tagline,
   .tagline {
-    margin: 0 var(--space-4);
+    margin: 0;
     padding: var(--space-2) 0;
     font-size: var(--text-sm);
+    width: 100%;
   }
   
-  /* Launch special with proper padding */
+  /* Launch special - full width within page wrapper */
   .launch-special,
   .beta-banner {
-    margin: var(--space-2) var(--space-4);
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-2);
     padding: var(--space-2) var(--space-4);
     border-radius: var(--radius-lg);
-    width: calc(100% - calc(2 * var(--space-4)));
+    width: 100%;
   }
   
-  /* Pills/navigation - this width is correct, others should match */
+  /* Pills/navigation - full width within page wrapper */
   .quick-actions,
   .hero-pills,
-  .header-navigation {
-    margin: var(--space-3) var(--space-4);
+  .header-navigation,
+  .quick-actions-bar {
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
     padding: 0;
-    width: calc(100% - calc(2 * var(--space-4)));
+    width: 100%;
   }
   
   /* === ACCORDION STEPS === */
   .step-section {
-    margin: var(--space-3) var(--space-4); /* Add horizontal margin to match Library */
+    margin-top: var(--space-3) !important;
+    margin-bottom: var(--space-3) !important;
+    width: 100% !important;
+    max-width: none !important;
     background: white;
-    border-radius: var(--radius-lg); /* Restore border radius */
+    border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
   
   .step-header {
-    padding: var(--space-4);
+    padding: var(--space-4) 0; /* Remove horizontal padding - will come from section-inner */
     background: #f9fafb;
     border-bottom: 1px solid #e5e7eb;
     display: flex;
@@ -156,7 +224,7 @@
   }
   
   .step-content {
-    padding: var(--space-4);
+    padding: var(--space-4) 0; /* Remove horizontal padding - will come from section-inner */
     display: none;
   }
   
@@ -258,7 +326,7 @@
     bottom: calc(60px + env(safe-area-inset-bottom)); /* Above tab bar */
     left: 0;
     right: 0;
-    padding: var(--space-3) var(--space-4);
+    padding: 12px var(--gutter-safe-right) calc(12px + env(safe-area-inset-bottom)) var(--gutter-safe-left);
     background: linear-gradient(to top, white 60%, rgba(255, 255, 255, 0.95));
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -362,8 +430,10 @@
   
   /* === CONTINUE READING CARD === */
   .continue-reading-card {
-    margin: var(--space-3) var(--space-4);
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-3);
     padding: var(--space-4);
+    width: 100%;
     background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
     border-radius: var(--radius-lg);
     border: 1px solid #ddd6fe;
@@ -404,7 +474,7 @@
   .story-generator,
   form {
     max-width: none !important;
-    width: 100%;
+    width: 100% !important;
   }
   
   .section {

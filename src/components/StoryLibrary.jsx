@@ -239,7 +239,7 @@ function StoryLibrary({ user: propUser, subscriptionTier: propTier, onBack }) {
         isLibraryPage={true}
       />
       
-      <div className="library-container">
+      <div className="page">
         {/* Library Title Section */}
         <div className="library-title-section">
           <h1>My Story Library</h1>

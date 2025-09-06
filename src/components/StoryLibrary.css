@@ -5,12 +5,7 @@
   padding: 20px;
 }
 
-/* Ensure all content boxes have same width */
-.library-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}
+/* Container removed - using unified .page wrapper from iphone-redesign.css */
 
 /* Header override for library page */
 .library-page .header-container {
@@ -110,9 +105,6 @@
   gap: 15px;
   flex-wrap: wrap;
   align-items: center;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
   width: 100%;
 }
 
@@ -195,8 +187,6 @@
 
 /* Stories Container */
 .stories-container {
-  max-width: 1200px;
-  margin: 0 auto;
   width: 100%;
   background: white;
   padding: 30px;

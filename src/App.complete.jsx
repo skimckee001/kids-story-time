@@ -619,9 +619,7 @@ function App() {
     setSelectedChildProfile(null);
   };
 
-  const handleGenerateStory = async (e) => {
-    e.preventDefault();
-    
+  const handleGenerateStory = async () => {
     if (!readingLevel) {
       alert('Please select a reading level');
       return;
@@ -1634,16 +1632,19 @@ function App() {
               </div>
             )}
           </div>
-          <div className="tagline">Join thousands of families creating magical bedtime moments</div>
           
-          {/* Beta Banner */}
-          <div className="beta-banner">
-            <div className="beta-title">🎉 LAUNCH SPECIAL - First Month FREE on All Plans!</div>
-            {/* Launch special subtitle removed for mobile clarity */}
-          </div>
-          
-          {/* Quick Actions Bar */}
-          <div className="quick-actions-bar" style={{
+          {/* Navigation section wrapped in page wrapper */}
+          <div className="page">
+            <div className="tagline">Join thousands of families creating magical bedtime moments</div>
+            
+            {/* Beta Banner */}
+            <div className="beta-banner">
+              <div className="beta-title">🎉 LAUNCH SPECIAL - First Month FREE on All Plans!</div>
+              {/* Launch special subtitle removed for mobile clarity */}
+            </div>
+            
+            {/* Quick Actions Bar */}
+            <div className="quick-actions-bar" style={{
               display: 'flex',
               justifyContent: 'center',
               gap: '12px',
@@ -1766,9 +1767,11 @@ function App() {
                 </button>
               )}
             </div>
+          </div>
         </header>
         
-        <div className="container">
+        {/* Main content wrapped in page wrapper */}
+        <main className="page">
         {/* Account Section - Hidden during beta period */}
         {!user && false && ( // Disabled - Beta banner serves this purpose
           <div className="account-section">
@@ -1791,12 +1794,7 @@ function App() {
           </div>
         )}
 
-        {/* Main Form */}
-        <div className="main-content" style={{
-          maxWidth: '100%',
-          width: '100%',
-          boxSizing: 'border-box'
-        }}>
+        {/* Main Form - removed main-content wrapper */}
           {/* Reading Streak Display - TEMPORARILY HIDDEN */}
           {/* {selectedChildProfile && (
             <>
@@ -1910,8 +1908,7 @@ function App() {
             </div>
           )}
           
-          <form id="storyForm" onSubmit={handleGenerateStory}>
-            {/* STEP 1: Who is this story for? - ACCORDION */}
+          {/* STEP 1: Who is this story for? - ACCORDION */}
             <div className={`step-section ${step1Open ? '' : 'collapsed'}`}>
               <div 
                 className={`step-header ${step1Open ? 'active' : ''}`}
@@ -2189,14 +2186,12 @@ function App() {
                 </div>
               </div>
             )}
-
-          </form>
           
           {/* Sticky Generate Button */}
           <div className="generate-button-wrapper">
             <button 
-              type="submit"
-              form="storyForm" 
+              type="button"
+              onClick={handleGenerateStory}
               className={`generate-story-btn ${isGenerating ? 'generating' : ''}`}
               disabled={isGenerating || (!user && storiesRemaining <= 0)}
             >
@@ -2231,7 +2226,7 @@ function App() {
               <div className="tab-label">Profile</div>
             </button>
           </div>
-        </div>
+        </main>
 
         {/* Upgrade Section - Separate Box */}
         {/* Show upgrade section only if there's a next tier available */}
@@ -2410,7 +2405,6 @@ function App() {
           <p style={{ color: 'white', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>&copy; 2025 Kids Story Time.</p>
           <p style={{ color: 'white', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>All rights reserved.</p>
         </footer>
-      </div>
 
       {/* Bedtime Mode Modal */}
       <BedtimeModeModal
