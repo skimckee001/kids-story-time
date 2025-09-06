@@ -560,24 +560,36 @@ function App() {
     
     // Paid tiers get styles based on reading level
     // Get available styles for the current age group
-    const availableStyles = getAvailableStylesForAge(readingLevel);
+    const availableStyles = getAvailableStylesForAge(readingLevel) || [];
     const recommendedStyle = getOptimalImageStyle(readingLevel, selectedThemes);
     
     // Build the style options list
-    const styleOptions = [
-      {
+    const styleOptions = [];
+    
+    // Add smart choice if we have a recommendation
+    if (recommendedStyle && recommendedStyle.style) {
+      styleOptions.push({
         id: 'age-appropriate',
         label: `Smart Choice (${recommendedStyle.style.name})`,
         icon: '✨',
         description: recommendedStyle.explanation,
         prompt: recommendedStyle.style.prompt
-      }
-    ];
+      });
+    } else {
+      // Fallback if no recommendation available
+      styleOptions.push({
+        id: 'age-appropriate',
+        label: 'Smart Choice',
+        icon: '✨',
+        description: 'Best for your age',
+        prompt: ''
+      });
+    }
     
     // Add available enhanced styles for this age group
     availableStyles.forEach(style => {
-      // Don't duplicate the recommended style
-      if (style.id !== recommendedStyle.style.id) {
+      // Don't duplicate the recommended style if it exists
+      if (!recommendedStyle || !recommendedStyle.style || style.id !== recommendedStyle.style.id) {
         styleOptions.push({
           id: style.id,
           label: style.name,
@@ -696,11 +708,13 @@ function App() {
       
       // Get the appropriate image style prompt using enhanced system
       const recommendedStyleConfig = getOptimalImageStyle(readingLevel, selectedThemes);
-      const effectiveStyle = imageStyle === 'age-appropriate' ? recommendedStyleConfig.style.id : imageStyle;
+      const effectiveStyle = imageStyle === 'age-appropriate' && recommendedStyleConfig?.style 
+        ? recommendedStyleConfig.style.id 
+        : imageStyle;
       
       // Get the image prompt from the enhanced style or fallback to existing styles
       let imagePrompt = '';
-      if (imageStyle === 'age-appropriate' && recommendedStyleConfig) {
+      if (imageStyle === 'age-appropriate' && recommendedStyleConfig?.style) {
         imagePrompt = recommendedStyleConfig.style.prompt;
       } else {
         const selectedStyle = getImageStyles().find(s => s.id === effectiveStyle);
