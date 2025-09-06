@@ -19,6 +19,7 @@ import DevTestPanel from './components/DevTestPanel';
 import { getTierLimits, canGenerateStory, canUseAIIllustration, getUpgradeMessage } from './utils/subscriptionTiers';
 import AuthenticationManager from './components/AuthenticationManager';
 import { useEnhancedAuth } from './hooks/useEnhancedAuth.jsx';
+import { getOptimalImageStyle, getAvailableStylesForAge } from './utils/enhancedImageStyles';
 import { initAllEnhancements } from './utils/stepperEnhancements';
 import { usageTracker } from './utils/usageTracker';
 import logger from './utils/logger';
@@ -547,7 +548,7 @@ function App() {
     if (!isPaidTier) {
       return [
         {
-          id: 'cartoon',
+          id: 'bright-cartoon',
           label: 'Cartoon Fun (Free)',
           icon: '🎨',
           description: 'Colorful & playful',
@@ -557,93 +558,37 @@ function App() {
       ];
     }
     
-    // Paid tiers get all styles based on reading level
-    const isYounger = ['pre-reader', 'early-phonics', 'beginning-reader'].includes(readingLevel);
-    const isOlder = ['fluent-reader', 'insightful-reader'].includes(readingLevel);
+    // Paid tiers get styles based on reading level
+    // Get available styles for the current age group
+    const availableStyles = getAvailableStylesForAge(readingLevel);
+    const recommendedStyle = getOptimalImageStyle(readingLevel, selectedThemes);
     
-    const allStyles = [
+    // Build the style options list
+    const styleOptions = [
       {
         id: 'age-appropriate',
-        label: 'Smart Choice',
+        label: `Smart Choice (${recommendedStyle.style.name})`,
         icon: '✨',
-        description: '',
-        prompt: '' // Will be determined based on age
-      },
-      {
-        id: 'cartoon',
-        label: 'Cartoon Fun',
-        icon: '🎨',
-        description: 'Colorful & playful',
-        prompt: 'bright cartoon style, child-friendly, vibrant colors',
-        ageRange: [3, 10]
-      },
-      {
-        id: 'watercolor',
-        label: 'Watercolor',
-        icon: '🖌️',
-        description: 'Soft & dreamy',
-        prompt: 'watercolor painting style, soft edges, pastel colors',
-        ageRange: [4, 12]
-      },
-      {
-        id: 'storybook',
-        label: 'Classic Book',
-        icon: '📖',
-        description: 'Traditional illustrations',
-        prompt: 'classic children\'s book illustration, detailed, warm',
-        ageRange: [5, 14]
-      },
-      {
-        id: 'realistic',
-        label: 'Realistic',
-        icon: '📸',
-        description: 'Photo-like quality',
-        prompt: 'photorealistic style, highly detailed, natural lighting, realistic proportions, life-like, photography style',
-        ageRange: [8, 16]
-      },
-      {
-        id: 'anime',
-        label: 'Anime/Manga',
-        icon: '🎌',
-        description: 'Japanese style art',
-        prompt: 'anime style illustration, manga art, expressive',
-        ageRange: [10, 16]
-      },
-      {
-        id: 'comic',
-        label: 'Comic Book',
-        icon: '💥',
-        description: 'Action-packed style',
-        prompt: 'comic book style, dynamic poses, bold colors',
-        ageRange: [8, 16]
-      },
-      {
-        id: 'fantasy',
-        label: 'Fantasy Art',
-        icon: '🐉',
-        description: 'Epic & magical',
-        prompt: 'fantasy art style, magical, detailed, atmospheric',
-        ageRange: [10, 16]
+        description: recommendedStyle.explanation,
+        prompt: recommendedStyle.style.prompt
       }
     ];
     
-    // Filter styles based on age appropriateness
-    if (isYounger) {
-      return allStyles.filter(s => 
-        s.id === 'age-appropriate' || 
-        !s.ageRange || 
-        s.ageRange[0] <= 8
-      ).slice(0, 5); // Limit choices for younger kids
-    } else if (isOlder) {
-      return allStyles.filter(s => 
-        s.id === 'age-appropriate' || 
-        !s.ageRange || 
-        s.ageRange[1] >= 10
-      );
-    }
+    // Add available enhanced styles for this age group
+    availableStyles.forEach(style => {
+      // Don't duplicate the recommended style
+      if (style.id !== recommendedStyle.style.id) {
+        styleOptions.push({
+          id: style.id,
+          label: style.name,
+          icon: '🎨',
+          description: style.description,
+          prompt: style.prompt
+        });
+      }
+    });
     
-    // Default: show age-appropriate selection
-    return allStyles.slice(0, 6);
+    return styleOptions;
   };
 
   const handleLogout = async () => {
@@ -750,21 +695,16 @@ function App() {
       logger.info(`Using story generation ${useV2 ? 'V2' : 'V1'} at ${apiUrl}`);
       
       // Get the appropriate image style prompt using enhanced system
-      const recommendedStyle = getEnhancedImageStyle(readingLevel, selectedThemes);
-      const effectiveStyle = imageStyle === 'age-appropriate' ? recommendedStyle : imageStyle;
-      const selectedStyle = getImageStyles().find(s => s.id === effectiveStyle);
-      let imagePrompt = selectedStyle?.prompt || '';
+      const recommendedStyleConfig = getOptimalImageStyle(readingLevel, selectedThemes);
+      const effectiveStyle = imageStyle === 'age-appropriate' ? recommendedStyleConfig.style.id : imageStyle;
       
-      // Enhanced age-specific image prompts
-      if (imageStyle === 'age-appropriate') {
-        const stylePrompts = {
-          'cartoon': 'bright cartoon style, child-friendly, vibrant colors, simple shapes, cheerful',
-          'watercolor': 'soft watercolor painting, dreamy atmosphere, pastel colors, gentle brush strokes',
-          'storybook': 'classic children\'s book illustration, detailed, warm colors, inviting',
-          'realistic': 'semi-realistic digital art, detailed textures, dynamic lighting, cinematic',
-          'anime': 'anime/manga style, expressive characters, dynamic poses, detailed backgrounds'
-        };
-        imagePrompt = stylePrompts[recommendedStyle] || stylePrompts['storybook'];
+      // Get the image prompt from the enhanced style or fallback to existing styles
+      let imagePrompt = '';
+      if (imageStyle === 'age-appropriate' && recommendedStyleConfig) {
+        imagePrompt = recommendedStyleConfig.style.prompt;
+      } else {
+        const selectedStyle = getImageStyles().find(s => s.id === effectiveStyle);
+        imagePrompt = selectedStyle?.prompt || '';
       }
       
       const response = await fetch(apiUrl, {

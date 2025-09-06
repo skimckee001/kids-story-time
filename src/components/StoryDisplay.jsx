@@ -1151,6 +1151,33 @@ function StoryDisplay({ story, onBack, onSave, onShowLibrary, onShowAuth, user, 
             {/* Title */}
             <h1 className="story-title">{story.title}</h1>
             
+            {/* Story Quality Indicators */}
+            {story.metadata && (
+              <div className="story-quality-indicators" style={{
+                display: 'flex',
+                gap: '15px',
+                padding: '10px',
+                backgroundColor: '#f8f9fa',
+                borderRadius: '8px',
+                marginBottom: '15px',
+                fontSize: '14px',
+                color: '#6c757d'
+              }}>
+                {story.metadata.qualityScore && (
+                  <span>📊 Quality: {story.metadata.qualityScore}/100</span>
+                )}
+                {story.metadata.wordCount && (
+                  <span>📝 Words: {story.metadata.wordCount}</span>
+                )}
+                {story.metadata.readingTime && (
+                  <span>⏱️ Reading Time: {story.metadata.readingTime} min</span>
+                )}
+                {story.metadata.model && (
+                  <span>🤖 Model: {story.metadata.model}</span>
+                )}
+              </div>
+            )}
+            
             {/* Story Image - Landscape format at top */}
             {story.imageUrl && (
               <div style={{
