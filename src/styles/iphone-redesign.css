@@ -58,14 +58,13 @@
     padding-right: var(--space-4) !important;
   }
   
-  /* Summary steps full width - extend beyond container padding */
+  /* Summary steps with proper padding */
   .summary-steps,
   .steps-summary,
   .step-indicators {
-    margin: var(--space-3) calc(-1 * var(--space-4)) !important;
-    width: calc(100% + calc(2 * var(--space-4))) !important;
-    max-width: none !important;
-    padding: 0 var(--space-4);
+    margin: var(--space-3) var(--space-4) !important;
+    max-width: calc(100% - var(--space-8)) !important;
+    width: auto !important;
   }
   
   /* Compact header - with proper padding to match containers */
@@ -115,12 +114,11 @@
   
   /* === ACCORDION STEPS === */
   .step-section {
-    margin: var(--space-3) calc(-1 * var(--space-4)); /* Negative margin to counteract container padding */
+    margin: var(--space-3) var(--space-4); /* Add horizontal margin to match Library */
     background: white;
-    border-radius: 0; /* Full bleed */
+    border-radius: var(--radius-lg); /* Restore border radius */
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    width: calc(100% + calc(2 * var(--space-4))); /* Full width plus container padding */
   }
   
   .step-header {
@@ -359,13 +357,11 @@
   
   /* === CONTINUE READING CARD === */
   .continue-reading-card {
-    margin: var(--space-3) calc(-1 * var(--space-4));
+    margin: var(--space-3) var(--space-4);
     padding: var(--space-4);
     background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
-    border-radius: 0;
-    border-top: 1px solid #ddd6fe;
-    border-bottom: 1px solid #ddd6fe;
-    width: calc(100% + calc(2 * var(--space-4)));
+    border-radius: var(--radius-lg);
+    border: 1px solid #ddd6fe;
   }
   
   .continue-reading-card h3 {
