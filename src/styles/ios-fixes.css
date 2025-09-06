@@ -254,20 +254,204 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Fix iOS rubber-band scrolling issues */
+/* Fix iOS rubber-band scrolling issues - CORRECTED */
+/* NOTE: The previous position: fixed approach was causing the main content to be 
+   in a separate scrolling context, making users scroll the wrong layer.
+   This new approach fixes iOS issues without breaking normal scrolling. */
+
 body {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow: auto;
+  /* Use normal position instead of fixed */
+  position: relative;
+  /* Prevent rubber-band bouncing without breaking scroll */
+  overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
+  /* Ensure proper height for full screen apps */
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
 }
 
-/* Revert body fix for desktop */
-@media (min-width: 769px) {
+/* For iOS Safari, ensure proper viewport height */
+@supports (-webkit-touch-callout: none) {
   body {
-    position: static;
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* ============================================
+   ADDITIONAL iOS SCROLLING FIXES
+   ============================================ */
+
+/* Ensure the main app container doesn't interfere with scrolling */
+.min-h-screen {
+  /* Use viewport units that work better on iOS */
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+/* Fix for iOS Safari's variable viewport height */
+@supports (-webkit-touch-callout: none) {
+  .min-h-screen,
+  .h-screen {
+    min-height: -webkit-fill-available;
+    height: -webkit-fill-available;
+  }
+}
+
+/* Prevent multiple scrolling contexts */
+.overflow-y-auto,
+.overflow-auto {
+  /* Only use momentum scrolling where intended */
+  -webkit-overflow-scrolling: touch;
+  /* Prevent nested scrolling conflicts */
+  overscroll-behavior: contain;
+}
+
+/* Ensure main content area scrolls properly */
+main,
+.main-content,
+[role="main"] {
+  /* Allow natural scrolling */
+  overflow: visible;
+  /* Prevent creating unnecessary scroll contexts */
+  position: relative;
+}
+
+/* Fix for modal and overlay scrolling issues */
+.modal,
+.overlay,
+.fixed {
+  /* Prevent body scroll when modal is open */
+  overscroll-behavior: contain;
+}
+
+/* When modal is open, prevent background scrolling */
+body.modal-open {
+  /* Use this class when modal is open */
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================================
+   CRITICAL iOS SCROLLING PATCHES
+   ============================================ */
+
+/* Fix for iOS Safari address bar height changes */
+:root {
+  --vh: 1vh;
+}
+
+@supports (-webkit-touch-callout: none) {
+  :root {
+    --vh: calc(var(--vh, 1vh));
+  }
+}
+
+/* Use custom vh for full height elements */
+.full-height-ios {
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+/* Prevent momentum scrolling interference */
+html {
+  /* Ensure smooth scrolling without interference */
+  scroll-behavior: smooth;
+  /* Prevent overscroll effects that confuse users */
+  overscroll-behavior: none;
+}
+
+/* Fix for flexbox containers that might interfere with scrolling */
+.flex,
+.flex-col {
+  /* Prevent flex containers from creating scroll contexts */
+  min-height: 0;
+  /* Allow content to determine height naturally */
+  overflow: visible;
+}
+
+/* Ensure React root doesn't interfere */
+#root {
+  /* Allow natural document flow */
+  position: relative;
+  overflow: visible;
+  /* Full viewport height without interference */
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+/* Fix for sticky positioning on iOS */
+.sticky,
+[data-sticky] {
+  /* Use webkit prefix for better iOS support */
+  position: -webkit-sticky;
+  position: sticky;
+  /* Ensure sticky works with native scrolling */
+  z-index: 10;
+}
+
+/* Prevent touch-action conflicts */
+* {
+  /* Allow default touch behavior for scrolling */
+  touch-action: manipulation;
+}
+
+/* Override touch-action for scrollable areas */
+.scrollable,
+.overflow-auto,
+.overflow-y-auto,
+.overflow-x-auto {
+  touch-action: pan-y pan-x;
+}
+
+/* Special fix for horizontal scrolling */
+.overflow-x-auto {
+  touch-action: pan-x;
+}
+
+/* ============================================
+   FINAL iOS SAFARI MOMENTUM SCROLLING FIX
+   ============================================ */
+
+/* Critical: Ensure native iOS scrolling works properly */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari specific fixes */
+  
+  /* Remove any conflicting overflow settings */
+  html, body {
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    overflow-y: auto;   /* Allow vertical scroll */
+  }
+  
+  /* Ensure main app container allows scrolling */
+  .min-h-screen {
+    overflow: visible;
+    /* Remove any height constraints that interfere */
+    max-height: none;
+  }
+  
+  /* Fix for content that might be positioned incorrectly */
+  main, .main-content, [role="main"] {
+    /* Ensure content is in normal document flow */
+    position: relative;
+    z-index: 1;
+    /* Allow natural scrolling */
+    overflow: visible;
+  }
+  
+  /* Ensure sidebar doesn't interfere with main content scrolling */
+  aside, nav, .sidebar {
+    /* Keep sidebars in their own stacking context */
+    z-index: 50;
+    /* Don't let sidebar overflow interfere */
+    overflow-x: hidden;
+  }
+  
+  /* Fix for any flex containers that might cause issues */
+  .flex.h-screen {
+    /* Prevent full height flex from interfering */
+    height: auto;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
   }
 }
