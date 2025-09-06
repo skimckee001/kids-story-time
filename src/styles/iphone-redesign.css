@@ -50,17 +50,22 @@
     padding-bottom: calc(60px + env(safe-area-inset-bottom)); /* Space for bottom tabs */
   }
   
-  /* Make summary steps and container full width on mobile */
+  /* Container with slight padding to match Library */
+  .container {
+    max-width: none !important;
+    width: 100% !important;
+    padding-left: var(--space-4) !important;
+    padding-right: var(--space-4) !important;
+  }
+  
+  /* Summary steps maintain full width within container */
   .summary-steps,
   .steps-summary,
-  .step-indicators,
-  .container {
+  .step-indicators {
     margin-left: 0 !important;
     margin-right: 0 !important;
     max-width: none !important;
     width: 100% !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
   }
   
   /* Compact header - now full width */
@@ -103,17 +108,15 @@
   
   /* === ACCORDION STEPS === */
   .step-section {
-    margin: var(--space-3) 0; /* Remove horizontal margin for full width */
+    margin: var(--space-3) var(--space-4); /* Add horizontal margin to match Library */
     background: white;
-    border-radius: 0; /* Remove border radius for edge-to-edge */
+    border-radius: var(--radius-lg); /* Restore border radius */
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
   
   .step-header {
     padding: var(--space-4);
-    padding-left: calc(var(--space-4) + env(safe-area-inset-left));
-    padding-right: calc(var(--space-4) + env(safe-area-inset-right));
     background: #f9fafb;
     border-bottom: 1px solid #e5e7eb;
     display: flex;
@@ -143,8 +146,6 @@
   
   .step-content {
     padding: var(--space-4);
-    padding-left: calc(var(--space-4) + env(safe-area-inset-left));
-    padding-right: calc(var(--space-4) + env(safe-area-inset-right));
     display: none;
   }
   
@@ -350,14 +351,11 @@
   
   /* === CONTINUE READING CARD === */
   .continue-reading-card {
-    margin: var(--space-3) 0;
+    margin: var(--space-3) var(--space-4);
     padding: var(--space-4);
-    padding-left: calc(var(--space-4) + env(safe-area-inset-left));
-    padding-right: calc(var(--space-4) + env(safe-area-inset-right));
     background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
-    border-radius: 0;
-    border-top: 1px solid #ddd6fe;
-    border-bottom: 1px solid #ddd6fe;
+    border-radius: var(--radius-lg);
+    border: 1px solid #ddd6fe;
   }
   
   .continue-reading-card h3 {
