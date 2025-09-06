@@ -50,6 +50,16 @@
     padding-bottom: calc(60px + env(safe-area-inset-bottom)); /* Space for bottom tabs */
   }
   
+  /* Make summary steps full width */
+  .summary-steps,
+  .steps-summary,
+  .step-indicators {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+  
   /* Compact header */
   .header {
     padding: var(--space-3) var(--space-4);
@@ -81,15 +91,17 @@
   
   /* === ACCORDION STEPS === */
   .step-section {
-    margin: var(--space-3) var(--space-4);
+    margin: var(--space-3) 0; /* Remove horizontal margin for full width */
     background: white;
-    border-radius: var(--radius-lg);
+    border-radius: 0; /* Remove border radius for edge-to-edge */
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
   
   .step-header {
     padding: var(--space-4);
+    padding-left: calc(var(--space-4) + env(safe-area-inset-left));
+    padding-right: calc(var(--space-4) + env(safe-area-inset-right));
     background: #f9fafb;
     border-bottom: 1px solid #e5e7eb;
     display: flex;
@@ -119,6 +131,8 @@
   
   .step-content {
     padding: var(--space-4);
+    padding-left: calc(var(--space-4) + env(safe-area-inset-left));
+    padding-right: calc(var(--space-4) + env(safe-area-inset-right));
     display: none;
   }
   
@@ -324,11 +338,14 @@
   
   /* === CONTINUE READING CARD === */
   .continue-reading-card {
-    margin: var(--space-3) var(--space-4);
+    margin: var(--space-3) 0;
     padding: var(--space-4);
+    padding-left: calc(var(--space-4) + env(safe-area-inset-left));
+    padding-right: calc(var(--space-4) + env(safe-area-inset-right));
     background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
-    border-radius: var(--radius-lg);
-    border: 1px solid #ddd6fe;
+    border-radius: 0;
+    border-top: 1px solid #ddd6fe;
+    border-bottom: 1px solid #ddd6fe;
   }
   
   .continue-reading-card h3 {
@@ -357,6 +374,16 @@
   /* === REDUCE VERTICAL SPACING === */
   .content {
     padding: var(--space-3) 0;
+    max-width: none !important; /* Override any max-width constraints */
+    width: 100%;
+  }
+  
+  /* Remove max-width from story form on mobile */
+  .story-form,
+  .story-generator,
+  form {
+    max-width: none !important;
+    width: 100%;
   }
   
   .section {
