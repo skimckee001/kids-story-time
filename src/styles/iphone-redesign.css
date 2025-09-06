@@ -1,0 +1,566 @@
+/* 
+ * iPhone-First Redesign Styles
+ * Created: January 6, 2025
+ * Purpose: Simplify UI for iPhone users and prepare for App Store
+ */
+
+/* === DESIGN TOKENS === */
+:root {
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+  
+  /* Typography */
+  --text-xs: 13px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  
+  /* Touch Targets */
+  --touch-min: 44px;
+  
+  /* Z-index layers */
+  --z-base: 1;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-modal: 30;
+  --z-toast: 40;
+}
+
+/* === MOBILE-FIRST BASE STYLES === */
+@media screen and (max-width: 768px) {
+  
+  /* Reduce overall padding */
+  .app {
+    padding: 0;
+    padding-bottom: calc(60px + env(safe-area-inset-bottom)); /* Space for bottom tabs */
+  }
+  
+  /* Compact header */
+  .header {
+    padding: var(--space-3) var(--space-4);
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+  }
+  
+  .header h1 {
+    font-size: var(--text-xl);
+    margin: 0;
+  }
+  
+  .header-tagline {
+    display: none; /* Hide tagline on mobile */
+  }
+  
+  /* Remove launch special banner or make it minimal */
+  .launch-special {
+    display: none;
+  }
+  
+  /* Hide the pills row (Stars, Badges, Library) */
+  .quick-actions,
+  .hero-pills {
+    display: none;
+  }
+  
+  /* === ACCORDION STEPS === */
+  .step-section {
+    margin: var(--space-3) var(--space-4);
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .step-header {
+    padding: var(--space-4);
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    min-height: var(--touch-min);
+  }
+  
+  .step-header.active {
+    background: white;
+    font-weight: 600;
+  }
+  
+  .step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #8b5cf6;
+    color: white;
+    font-size: var(--text-xs);
+    margin-right: var(--space-2);
+  }
+  
+  .step-content {
+    padding: var(--space-4);
+    display: none;
+  }
+  
+  .step-content.active {
+    display: block;
+  }
+  
+  .step-section.collapsed .step-content {
+    display: none;
+  }
+  
+  .step-section.collapsed .step-header {
+    border-bottom: none;
+  }
+  
+  /* Chevron icon for accordion */
+  .step-header::after {
+    content: '›';
+    font-size: 20px;
+    color: #6b7280;
+    transition: transform 0.2s;
+  }
+  
+  .step-header.active::after {
+    transform: rotate(90deg);
+  }
+  
+  /* === FORM INPUTS === */
+  input[type="text"],
+  input[type="email"],
+  select,
+  textarea,
+  .form-control,
+  .form-select {
+    font-size: var(--text-base) !important; /* Prevents iOS zoom */
+    min-height: var(--touch-min);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    border: 1px solid #d1d5db;
+    width: 100%;
+  }
+  
+  label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+    display: block;
+    color: #374151;
+  }
+  
+  /* === THEME CHIPS === */
+  .themes-section {
+    padding: 0;
+  }
+  
+  .themes-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: var(--space-2);
+  }
+  
+  .theme-card {
+    flex: 0 0 auto;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-full);
+    border: 2px solid #e5e7eb;
+    background: white;
+    min-height: var(--touch-min);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    transition: all 0.2s;
+  }
+  
+  .theme-card.selected {
+    border-color: #8b5cf6;
+    background: #f5f3ff;
+  }
+  
+  .theme-card:active {
+    transform: scale(0.95);
+  }
+  
+  .theme-emoji {
+    font-size: 18px;
+  }
+  
+  /* Hide the theme grid's complex layout */
+  .themes-container {
+    max-height: none;
+    overflow: visible;
+  }
+  
+  /* === STICKY GENERATE BUTTON === */
+  .generate-button-wrapper {
+    position: fixed;
+    bottom: calc(60px + env(safe-area-inset-bottom)); /* Above tab bar */
+    left: 0;
+    right: 0;
+    padding: var(--space-3) var(--space-4);
+    background: linear-gradient(to top, white 60%, rgba(255, 255, 255, 0.95));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: var(--z-sticky);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .generate-story-btn {
+    width: 100%;
+    min-height: 52px;
+    border-radius: var(--radius-lg);
+    font-size: var(--text-base);
+    font-weight: 700;
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  }
+  
+  .generate-story-btn:active {
+    transform: scale(0.98);
+  }
+  
+  /* === COMPACT USAGE DISPLAY === */
+  .usage-section,
+  .plan-usage {
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  .usage-cards {
+    display: none; /* Hide large cards */
+  }
+  
+  .usage-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+  }
+  
+  .usage-chip {
+    padding: var(--space-1) var(--space-3);
+    background: #f3f4f6;
+    border-radius: var(--radius-full);
+    color: #6b7280;
+    white-space: nowrap;
+  }
+  
+  .usage-chip.warning {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  
+  .usage-chip.upgrade {
+    background: #8b5cf6;
+    color: white;
+    font-weight: 600;
+  }
+  
+  /* === BOTTOM TAB BAR === */
+  .bottom-tabs {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(60px + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: var(--z-sticky);
+  }
+  
+  .tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2);
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 11px;
+    gap: var(--space-1);
+    min-height: var(--touch-min);
+  }
+  
+  .tab-item.active {
+    color: #8b5cf6;
+  }
+  
+  .tab-icon {
+    font-size: 22px;
+  }
+  
+  .tab-label {
+    margin-top: 2px;
+  }
+  
+  /* === CONTINUE READING CARD === */
+  .continue-reading-card {
+    margin: var(--space-3) var(--space-4);
+    padding: var(--space-4);
+    background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+    border-radius: var(--radius-lg);
+    border: 1px solid #ddd6fe;
+  }
+  
+  .continue-reading-card h3 {
+    font-size: var(--text-base);
+    margin: 0 0 var(--space-2) 0;
+    color: #5b21b6;
+  }
+  
+  .continue-reading-card p {
+    font-size: var(--text-sm);
+    color: #6b7280;
+    margin: 0;
+  }
+  
+  .continue-btn {
+    margin-top: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    background: #8b5cf6;
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+  
+  /* === REDUCE VERTICAL SPACING === */
+  .content {
+    padding: var(--space-3) 0;
+  }
+  
+  .section {
+    margin-bottom: var(--space-4);
+  }
+  
+  h2 {
+    font-size: var(--text-lg);
+    margin: var(--space-3) var(--space-4);
+  }
+  
+  h3 {
+    font-size: var(--text-base);
+    margin: var(--space-2) 0;
+  }
+  
+  /* === HIDE DESKTOP ELEMENTS === */
+  .desktop-only,
+  .pricing-section,
+  .upgrade-card-large,
+  .footer-spacer {
+    display: none;
+  }
+  
+  /* === GENDER SELECTION AS CHIPS === */
+  .gender-selection {
+    display: flex;
+    gap: var(--space-2);
+    margin: var(--space-3) 0;
+  }
+  
+  .gender-btn {
+    flex: 1;
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 2px solid #e5e7eb;
+    background: white;
+    min-height: var(--touch-min);
+    font-size: var(--text-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+  }
+  
+  .gender-btn.selected {
+    border-color: #8b5cf6;
+    background: #f5f3ff;
+  }
+  
+  /* === STORY LENGTH AS SEGMENTED CONTROL === */
+  .story-length-selector {
+    display: flex;
+    background: #f3f4f6;
+    border-radius: var(--radius-md);
+    padding: 2px;
+    margin: var(--space-3) 0;
+  }
+  
+  .length-option {
+    flex: 1;
+    padding: var(--space-2);
+    border-radius: calc(var(--radius-md) - 2px);
+    background: transparent;
+    border: none;
+    font-size: var(--text-xs);
+    color: #6b7280;
+    text-align: center;
+    min-height: 36px;
+  }
+  
+  .length-option.selected {
+    background: white;
+    color: #8b5cf6;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* === MODAL ADJUSTMENTS === */
+  .modal,
+  .popup {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    bottom: 0;
+    top: auto;
+    max-height: 90vh;
+  }
+  
+  /* === PROFILE DROPDOWN IN HEADER === */
+  .profile-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: white;
+    color: #8b5cf6;
+    border: none;
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+  
+  /* === LOADING STATE === */
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-modal);
+  }
+  
+  /* === CUSTOM PROMPT FIELD === */
+  .custom-prompt-field {
+    margin-top: var(--space-3);
+  }
+  
+  .custom-prompt-field textarea {
+    min-height: 80px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  
+  /* === IMAGE STYLE SELECTOR === */
+  .image-style-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-3) 0;
+  }
+  
+  .image-style-option {
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid #e5e7eb;
+    background: white;
+    font-size: var(--text-xs);
+    color: #6b7280;
+  }
+  
+  .image-style-option.selected {
+    border-color: #8b5cf6;
+    background: #f5f3ff;
+    color: #8b5cf6;
+  }
+}
+
+/* === ENSURE DESKTOP UNAFFECTED === */
+@media screen and (min-width: 769px) {
+  /* Keep all existing desktop styles */
+  .step-section {
+    /* Use existing step styling */
+  }
+  
+  .bottom-tabs {
+    display: none; /* Hide mobile tab bar on desktop */
+  }
+  
+  .generate-button-wrapper {
+    position: static; /* Not sticky on desktop */
+  }
+}
+
+/* === ANIMATION === */
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.step-content.active {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* === ACCESSIBILITY === */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus states for keyboard navigation */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.tab-item:focus-visible {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 2px;
+}
+
+/* === HIGH CONTRAST MODE === */
+@media (prefers-contrast: high) {
+  .theme-card,
+  .gender-btn,
+  .length-option {
+    border-width: 3px;
+  }
+  
+  .generate-story-btn {
+    border: 2px solid currentColor;
+  }
+}

@@ -35,6 +35,7 @@ import {
 } from './utils/storyEnhancements';
 import './App.original.css';
 import './styles/desktop-fixes.css';
+import './styles/iphone-redesign.css';
 
 // Story length options matching the current HTML
 const STORY_LENGTHS = [
@@ -176,6 +177,12 @@ function App() {
   const [showReferralProgram, setShowReferralProgram] = useState(false);
   const [showUserContent, setShowUserContent] = useState(false);
   const [showTierTester, setShowTierTester] = useState(false);
+  
+  // Accordion state for iPhone redesign
+  const [step1Open, setStep1Open] = useState(true);
+  const [step2Open, setStep2Open] = useState(false);
+  const [step3Open, setStep3Open] = useState(false);
+  
   const { triggerCelebration, CelebrationComponent } = useCelebration();
 
   // Check for dev mode
@@ -1887,395 +1894,343 @@ function App() {
             ))}
           </div>
           
-          <form onSubmit={handleGenerateStory}>
-            {/* STEP 1: Who is this story for? */}
-            <div className="story-step" id="step1" style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-              marginBottom: '16px',
-              width: '100%',
-              boxSizing: 'border-box'
-            }}>
-              <div style={{ padding: window.innerWidth <= 480 ? '16px' : '20px' }}>
-                <header className="step-header" style={{marginBottom: '12px'}}>
-                  <span style={{fontSize: '24px'}}>👤</span>
-                  <h3 className="step-title">
-                    <span className="eyebrow">Step 1</span>
-                    Who is this for?
-                  </h3>
-                </header>
+          {/* Continue Reading Card */}
+          {currentStory && (
+            <div className="continue-reading-card">
+              <h3>📖 Continue Your Story</h3>
+              <p>Pick up where you left off with "{currentStory.title}"</p>
+              <button 
+                className="continue-btn"
+                onClick={() => {
+                  setShowStory(true);
+                }}
+              >
+                Continue Reading
+              </button>
+            </div>
+          )}
+          
+          <form id="storyForm" onSubmit={handleGenerateStory}>
+            {/* STEP 1: Who is this story for? - ACCORDION */}
+            <div className={`step-section ${step1Open ? '' : 'collapsed'}`}>
+              <div 
+                className={`step-header ${step1Open ? 'active' : ''}`}
+                onClick={() => setStep1Open(!step1Open)}
+              >
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span className="step-number">1</span>
+                  <div>
+                    <div style={{ fontSize: '16px', fontWeight: '600' }}>Who is this for?</div>
+                    <div style={{ fontSize: '13px', color: '#6b7280' }}>Child name & gender</div>
+                  </div>
+                </div>
+              </div>
               
-              {/* Child's Name and Gender */}
-              <div className="form-group">
-                <label htmlFor="childName">
-                  Child's name (or character story is about)
-                  {selectedChildProfile && (
-                    <span 
-                      onClick={() => setShowProfileManager(true)}
-                      style={{ 
-                        marginLeft: '10px', 
-                        fontSize: '13px', 
-                        fontWeight: 'normal',
-                        color: '#667eea',
-                        cursor: 'pointer',
-                        textDecoration: 'underline'
-                      }}
-                    >
-                      (Profile: {selectedChildProfile.name})
-                    </span>
-                  )}
-                </label>
-                <div className="name-gender-row">
+              <div className={`step-content ${step1Open ? 'active' : ''}`}>
+                {/* Child's Name and Gender */}
+                <div className="form-group">
+                  <label htmlFor="childName">
+                    Child's name (or character story is about)
+                    {selectedChildProfile && (
+                      <span 
+                        onClick={() => setShowProfileManager(true)}
+                        style={{ 
+                          marginLeft: '10px', 
+                          fontSize: '13px', 
+                          fontWeight: 'normal',
+                          color: '#667eea',
+                          cursor: 'pointer',
+                          textDecoration: 'underline'
+                        }}
+                      >
+                        (Profile: {selectedChildProfile.name})
+                      </span>
+                    )}
+                  </label>
+                  
                   <input
                     type="text"
                     id="childName"
                     value={childName}
                     onChange={(e) => setChildName(e.target.value)}
                     placeholder="Enter name (optional)"
-                    className="name-input"
-                    style={{
-                      flex: '1',
-                      padding: '10px',
-                      border: '2px solid #e2e8f0',
-                      borderRadius: '8px',
-                      fontSize: '14px'
-                    }}
+                    className="form-control"
                   />
-                  <div className="gender-buttons" style={{
-                    display: 'flex',
-                    gap: '8px'
-                  }}>
+                  
+                  {/* Gender Selection as Chips */}
+                  <div className="gender-selection">
                     <button
                       type="button"
-                      className={`gender-btn ${genderSelection.boy ? 'active' : ''}`}
+                      className={`gender-btn ${genderSelection.boy ? 'selected' : ''}`}
                       onClick={() => setGenderSelection(prev => ({ ...prev, boy: !prev.boy }))}
-                      title="Boy"
-                      style={{
-                        padding: '10px 16px',
-                        border: genderSelection.boy ? '2px solid #667eea' : '2px solid #e2e8f0',
-                        borderRadius: '8px',
-                        background: genderSelection.boy ? 'linear-gradient(135deg, #667eea, #764ba2)' : 'white',
-                        color: genderSelection.boy ? 'white' : '#666',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s'
-                      }}
                     >
-                      <span className="gender-icon">👦</span>
-                      <span className="gender-text" style={{marginLeft: '4px'}}>Boy</span>
+                      👦 Boy
                     </button>
                     <button
                       type="button"
-                      className={`gender-btn ${genderSelection.girl ? 'active' : ''}`}
+                      className={`gender-btn ${genderSelection.girl ? 'selected' : ''}`}
                       onClick={() => setGenderSelection(prev => ({ ...prev, girl: !prev.girl }))}
-                      title="Girl"
-                      style={{
-                        padding: '10px 16px',
-                        border: genderSelection.girl ? '2px solid #667eea' : '2px solid #e2e8f0',
-                        borderRadius: '8px',
-                        background: genderSelection.girl ? 'linear-gradient(135deg, #ec4899, #be185d)' : 'white',
-                        color: genderSelection.girl ? 'white' : '#666',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s'
-                      }}
                     >
-                      <span className="gender-icon">👧</span>
-                      <span className="gender-text" style={{marginLeft: '4px'}}>Girl</span>
+                      👧 Girl
                     </button>
+                  </div>
+                  
+                  <label style={{
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '8px', 
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    marginTop: '12px'
+                  }}>
+                    <input
+                      type="checkbox"
+                      id="includeNameInStory"
+                      checked={includeNameInStory}
+                      onChange={(e) => setIncludeNameInStory(e.target.checked)}
+                    />
+                    Include name as main character
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* STEP 2: Story Details - ACCORDION */}
+            <div className={`step-section ${step2Open ? '' : 'collapsed'}`}>
+              <div 
+                className={`step-header ${step2Open ? 'active' : ''}`}
+                onClick={() => setStep2Open(!step2Open)}
+              >
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span className="step-number">2</span>
+                  <div>
+                    <div style={{ fontSize: '16px', fontWeight: '600' }}>Story Details</div>
+                    <div style={{ fontSize: '13px', color: '#6b7280' }}>Reading level, themes & ideas</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className={`step-content ${step2Open ? 'active' : ''}`}>
+                {/* Reading Level - MOVED FROM STEP 1 */}
+                <div className="form-group">
+                  <label htmlFor="readingLevel">Reading Level (default: Early Phonics)</label>
+                  <select
+                    id="readingLevel"
+                    className="form-select"
+                    value={readingLevel}
+                    onChange={(e) => setReadingLevel(e.target.value)}
+                    required
+                  >
+                    <option value="pre-reader">Pre-Reader (ages 3–6)</option>
+                    <option value="early-phonics">Early Phonics Reader (ages 4–7)</option>
+                    <option value="beginning-reader">Beginning Reader (ages 5–8)</option>
+                    <option value="developing-reader">Developing Reader (ages 6–10)</option>
+                    <option value="fluent-reader">Fluent Reader (ages 8–13)</option>
+                    <option value="insightful-reader">Insightful Reader (ages 10–16+)</option>
+                  </select>
+                </div>
+                
+                {/* Compact Theme Selection */}
+                <div className="form-group">
+                  <label>Choose themes (up to 3)</label>
+                  <div className="themes-grid">
+                    {getAvailableThemes().slice(0, 12).map(theme => (
+                      <button
+                        key={theme.id}
+                        type="button"
+                        className={`theme-card ${selectedThemes.includes(theme.id) ? 'selected' : ''}`}
+                        onClick={() => toggleTheme(theme.id)}
+                      >
+                        <span className="theme-emoji">{theme.emoji}</span>
+                        <span>{theme.label}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
                 
-                <label style={{
-                  display: 'inline-flex', 
-                  alignItems: 'center', 
-                  gap: '8px', 
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  marginTop: '12px',
-                  color: '#333',
-                  background: 'rgba(255,255,255,0.8)',
-                  padding: '4px 8px',
-                  borderRadius: '4px'
-                }}>
-                  <input
-                    type="checkbox"
-                    id="includeNameInStory"
-                    name="includeNameInStory"
-                    checked={includeNameInStory}
-                    onChange={(e) => setIncludeNameInStory(e.target.checked)}
-                    style={{
-                      margin: 0, 
-                      cursor: 'pointer',
-                      width: '18px',
-                      height: '18px',
-                      accentColor: '#667eea',
-                      WebkitAppearance: 'none',
-                      appearance: 'none',
-                      backgroundColor: includeNameInStory ? '#667eea' : 'white',
-                      border: '2px solid #667eea',
-                      borderRadius: '4px',
-                      position: 'relative',
-                      flexShrink: 0
-                    }}
-                  />
-                  Include name as main character
-                </label>
-              </div>
-              
-              {/* Reading Level */}
-              <div className="form-group" style={{marginBottom: 0}}>
-                <label htmlFor="readingLevel">Reading Level</label>
-                <select
-                  id="readingLevel"
-                  className="form-select"
-                  value={readingLevel}
-                  onChange={(e) => setReadingLevel(e.target.value)}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '10px',
-                    border: '2px solid #e2e8f0',
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    background: 'white'
-                  }}
-                >
-                  <option value="pre-reader">Pre-Reader (ages 3–6)</option>
-                  <option value="early-phonics">Early Phonics Reader (ages 4–7)</option>
-                  <option value="beginning-reader">Beginning Reader (ages 5–8)</option>
-                  <option value="developing-reader">Developing Reader (ages 6–10)</option>
-                  <option value="fluent-reader">Fluent Reader (ages 8–13)</option>
-                  <option value="insightful-reader">Insightful Reader (ages 10–16+)</option>
-                </select>
-              </div>
-              </div>
-            </div>
-
-            {/* STEP 2: What's the story about? */}
-            <div className="story-step" id="step2" style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-              marginBottom: '16px',
-              width: '100%',
-              boxSizing: 'border-box'
-            }}>
-              <div style={{ padding: window.innerWidth <= 480 ? '16px' : '20px' }}>
-                <header className="step-header" style={{marginBottom: '12px'}}>
-                  <span style={{fontSize: '24px'}}>✨</span>
-                  <h3 className="step-title">
-                    <span className="eyebrow">Step 2</span>
-                    Story idea
-                  </h3>
-                </header>
-              
-              {/* Story Prompt */}
-              <div className="form-group">
-                <label htmlFor="customPrompt">
-                  Tell me your story idea
-                </label>
-                <div className="prompt-container" style={{position: 'relative'}}>
-                  <textarea
-                    id="customPrompt"
-                    value={customPrompt}
-                    onChange={(e) => setCustomPrompt(e.target.value)}
-                    rows="4"
-                    placeholder="E.g., A brave princess who discovers a friendly dragon in her garden..."
-                    className="prompt-textarea"
-                    style={{
-                      width: '100%',
-                      padding: '12px',
-                      paddingRight: '50px',
-                      border: '2px solid #e2e8f0',
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      resize: 'vertical'
-                    }}
-                  />
-                  <button
+                {/* Custom Story Prompt */}
+                <div className="custom-prompt-field">
+                  <label htmlFor="customPrompt">Tell me your story idea</label>
+                  <div style={{ position: 'relative' }}>
+                    <textarea
+                      id="customPrompt"
+                      value={customPrompt}
+                      onChange={(e) => setCustomPrompt(e.target.value)}
+                      rows="3"
+                      placeholder="A brave princess who discovers a friendly dragon..."
+                      className="form-control"
+                    />
+                    <button
+                      type="button"
+                      className={`voice-btn ${isRecording ? 'recording' : ''}`}
+                      onClick={handleVoiceRecord}
+                      title={isRecording ? 'Stop recording' : 'Start voice recording'}
+                      style={{
+                        position: 'absolute',
+                        right: '8px',
+                        top: '8px',
+                        padding: '6px',
+                        background: isRecording ? '#ef4444' : '#8b5cf6',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '32px',
+                        height: '32px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        fontSize: '14px'
+                      }}
+                    >
+                      {isRecording ? '⏹' : '🎤'}
+                    </button>
+                  </div>
+                  <button 
                     type="button"
-                    className={`voice-btn ${isRecording ? 'recording' : ''}`}
-                    onClick={handleVoiceRecord}
-                    title={isRecording ? 'Stop recording' : 'Start voice recording'}
+                    onClick={() => alert('Story Tips:\n\n• Be specific about the setting\n• Include your child\'s interests\n• Add a lesson or moral\n• Mention favorite characters\n• The more detail, the better!')}
                     style={{
-                      position: 'absolute',
-                      right: '10px',
-                      top: '10px',
-                      padding: '8px',
-                      background: isRecording ? '#ef4444' : 'linear-gradient(135deg, #667eea, #764ba2)',
-                      color: 'white',
+                      marginTop: '8px',
+                      background: 'none',
                       border: 'none',
-                      borderRadius: '50%',
-                      width: '36px',
-                      height: '36px',
+                      color: '#8b5cf6',
+                      fontSize: '13px',
+                      cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer'
+                      gap: '4px'
                     }}
                   >
-                    {isRecording ? '🔴' : '🎤'}
+                    💡 Story writing tips
                   </button>
                 </div>
-                <button 
-                  type="button" 
-                  className="info-btn tips-btn" 
-                  onClick={() => alert('Story Tips:\n\n• Be specific about the setting\n• Include your child\'s interests\n• Add a lesson or moral\n• Mention favorite characters\n• The more detail, the better!')}
-                  style={{
-                    marginTop: '8px',
-                    marginLeft: '0',
-                    padding: '0',
-                    background: 'none',
-                    border: 'none',
-                    color: '#667eea',
-                    fontSize: '13px',
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    textAlign: 'left'
-                  }}
-                >
-                  💡 Tips for great stories
-                </button>
-              </div>
-              
-              {/* Theme Selection with Labels */}
-              <div className="form-group" style={{marginBottom: 0}}>
-                <label>Choose themes (optional)</label>
-                <p className="help" id="theme-help" style={{
-                  fontSize: '13px',
-                  opacity: 0.7,
-                  margin: '8px 0 4px'
-                }}>Choose up to 3 themes for your story</p>
-                <div className="theme-grid" role="group" aria-labelledby="theme-help">
-                  {getAvailableThemes().slice(0, 12).map(theme => (
-                    <button
-                      key={theme.id}
-                      type="button"
-                      className={`theme-chip ${selectedThemes.includes(theme.id) ? 'selected' : ''}`}
-                      aria-pressed={selectedThemes.includes(theme.id)}
-                      data-theme={theme.id}
-                      onClick={() => toggleTheme(theme.id)}
-                    >
-                      <span style={{fontSize: '18px'}}>{theme.emoji}</span>
-                      <span>{theme.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
               </div>
             </div>
 
-            {/* STEP 3: Choose your style */}
-            <div className="story-step" id="step3" style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-              marginBottom: '16px',
-              width: '100%',
-              boxSizing: 'border-box'
-            }}>
-              <div style={{ padding: window.innerWidth <= 480 ? '16px' : '20px' }}>
-                <header className="step-header" style={{marginBottom: '12px'}}>
-                  <span style={{fontSize: '24px'}}>🎨</span>
-                  <h3 className="step-title">
-                    <span className="eyebrow">Step 3</span>
-                    Style options
-                  </h3>
-                </header>
+            {/* STEP 3: Style Options - ACCORDION */}
+            <div className={`step-section ${step3Open ? '' : 'collapsed'}`}>
+              <div 
+                className={`step-header ${step3Open ? 'active' : ''}`}
+                onClick={() => setStep3Open(!step3Open)}
+              >
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span className="step-number">3</span>
+                  <div>
+                    <div style={{ fontSize: '16px', fontWeight: '600' }}>Style Options</div>
+                    <div style={{ fontSize: '13px', color: '#6b7280' }}>Length & image style</div>
+                  </div>
+                </div>
+              </div>
               
-              <div style={{
-                display: 'flex',
-                flexDirection: window.innerWidth <= 768 ? 'column' : 'row',
-                gap: '16px',
-                alignItems: 'flex-start'
-              }}>
-                {/* Story Length */}
-                <div className="form-group" style={{marginBottom: 0, display: 'flex', flexDirection: 'column', flex: '1 1 0', minWidth: 0}}>
-                  <label htmlFor="storyLength" style={{marginBottom: '8px', display: 'block'}}>
-                    <span style={{fontSize: '20px', marginRight: '8px'}}>⏱️</span>
-                    Story Length
-                  </label>
-                  <select
-                    id="storyLength"
-                    className="form-select"
-                    value={storyLength}
-                    onChange={(e) => setStoryLength(e.target.value)}
-                    required
-                    style={{
-                      width: '100%',
-                      padding: '10px',
-                      border: '2px solid #e2e8f0',
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      background: 'white',
-                      height: '42px'
-                    }}
-                  >
+              <div className={`step-content ${step3Open ? 'active' : ''}`}>
+                {/* Story Length as Segmented Control */}
+                <div className="form-group">
+                  <label>Story Length</label>
+                  <div className="story-length-selector">
                     {STORY_LENGTHS.map(length => (
-                      <option key={length.id} value={length.id}>
+                      <button
+                        key={length.id}
+                        type="button"
+                        className={`length-option ${storyLength === length.id ? 'selected' : ''}`}
+                        onClick={() => setStoryLength(length.id)}
+                      >
                         {length.label}
-                      </option>
+                      </button>
                     ))}
-                  </select>
+                  </div>
                 </div>
                 
-                {/* Illustration Style */}
-                <div className="form-group" style={{marginBottom: 0, display: 'flex', flexDirection: 'column', flex: '1 1 0', minWidth: 0}}>
-                  <label htmlFor="imageStyle" style={{marginBottom: '8px', display: 'block'}}>
-                    <span style={{fontSize: '20px', marginRight: '8px'}}>🎭</span>
-                    Illustration Style
-                  </label>
-                  <select
-                    id="imageStyle"
-                    className="form-select"
-                    value={imageStyle}
-                    onChange={(e) => setImageStyle(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '10px',
-                      border: '2px solid #e2e8f0',
-                      borderRadius: '8px',
-                      fontSize: '14px',
-                      background: 'white',
-                      height: '42px'
-                    }}
-                  >
+                {/* Image Style Selection */}
+                <div className="form-group">
+                  <label>Illustration Style</label>
+                  <div className="image-style-selector">
                     {getImageStyles().map(style => (
-                      <option key={style.id} value={style.id}>
+                      <button
+                        key={style.id}
+                        type="button"
+                        className={`image-style-option ${imageStyle === style.id ? 'selected' : ''}`}
+                        onClick={() => setImageStyle(style.id)}
+                      >
                         {style.label}
-                      </option>
+                      </button>
                     ))}
-                  </select>
+                  </div>
                 </div>
               </div>
-              </div>
             </div>
+            
+            {/* Compact Usage Display as Chips */}
+            {user && (
+              <div className="usage-section">
+                <div className="usage-chips">
+                  <span className="usage-chip">
+                    {storiesRemaining} stories today
+                  </span>
+                  {monthlyStoriesUsed > 0 && (
+                    <span className="usage-chip">
+                      {monthlyStoriesUsed} this month
+                    </span>
+                  )}
+                  {aiIllustrationsUsed > 0 && (
+                    <span className="usage-chip">
+                      {aiIllustrationsUsed} AI images used
+                    </span>
+                  )}
+                  {narrationsUsed > 0 && (
+                    <span className="usage-chip">
+                      {narrationsUsed} narrations used
+                    </span>
+                  )}
+                  {storiesRemaining <= 1 && (
+                    <span className="usage-chip upgrade">
+                      Upgrade for more
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
 
-            {/* Generate Button */}
+          </form>
+          
+          {/* Sticky Generate Button */}
+          <div className="generate-button-wrapper">
             <button 
-              type="submit" 
-              className={`generate-btn ${isGenerating ? 'generating' : ''}`}
+              type="submit"
+              form="storyForm" 
+              className={`generate-story-btn ${isGenerating ? 'generating' : ''}`}
               disabled={isGenerating || (!user && storiesRemaining <= 0)}
             >
               {isGenerating ? 'Creating your magical story...' : 
                !user ? '✨ Create Story! ✨' : '✨ Generate Story! ✨'}
             </button>
+          </div>
+          
+          {/* Bottom Tab Navigation */}
+          <div className="bottom-tabs">
+            <button 
+              className="tab-item active"
+              onClick={() => {}}
+            >
+              <div className="tab-icon">✨</div>
+              <div className="tab-label">Create</div>
+            </button>
             
-            {/* Enhanced Plan Status with Usage Tracking */}
-            {user && (
-              <UsageDisplay 
-                user={user}
-                subscriptionTier={subscriptionTier}
-                storiesRemaining={storiesRemaining}
-                monthlyStoriesUsed={monthlyStoriesUsed}
-                aiIllustrationsUsed={aiIllustrationsUsed}
-                narrationsUsed={narrationsUsed}
-              />
-            )}
-
-          </form>
+            <button 
+              className="tab-item"
+              onClick={() => setShowLibrary(true)}
+            >
+              <div className="tab-icon">📚</div>
+              <div className="tab-label">Library</div>
+            </button>
+            
+            <button 
+              className="tab-item"
+              onClick={() => setShowProfileManager(true)}
+            >
+              <div className="tab-icon">👤</div>
+              <div className="tab-label">Profile</div>
+            </button>
+          </div>
         </div>
 
         {/* Upgrade Section - Separate Box */}
