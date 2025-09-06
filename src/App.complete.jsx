@@ -1362,9 +1362,8 @@ function App() {
       {/* Onboarding Tooltips for First-Time Users */}
       {!user && <OnboardingTooltips onComplete={() => logger.info('Onboarding completed')} />}
       
-      <div className="container">
-        {/* Header */}
-        <header className="header-container">
+      {/* Header - Full Width */}
+      <header className="header-container">
           <div className="header-content">
             <div className="header-left" style={{ cursor: 'pointer' }} onClick={() => window.location.reload()}>
               <div className="logo-icon">
@@ -1768,7 +1767,8 @@ function App() {
               )}
             </div>
         </header>
-
+        
+        <div className="container">
         {/* Account Section - Hidden during beta period */}
         {!user && false && ( // Disabled - Beta banner serves this purpose
           <div className="account-section">
